@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "leadership_slides",
+  "info": {
+    "singularName": "leadership-slide",
+    "pluralName": "leadership-slides",
+    "displayName": "Leadership Slide",
+    "description": "CEO, COO and Reel slides for the About page Leadership section"
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": ["leader", "reel"],
+      "required": true
+    },
+    "num": { "type": "string", "required": true },
+    "title": { "type": "string", "required": true },
+    "role": { "type": "string" },
+    "intro": { "type": "text", "required": true },
+    "bgImage": { "type": "media", "multiple": false, "required": false, "allowedTypes": ["images"] },
+    "cardImage": { "type": "media", "multiple": false, "required": false, "allowedTypes": ["images"] },
+    "ctaLabel": { "type": "string", "default": "View Profile" },
+    "ctaHref": { "type": "string" },
+    "order": { "type": "integer", "required": true, "default": 1 }
+  }
+}

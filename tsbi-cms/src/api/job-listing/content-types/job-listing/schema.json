@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "job_listings",
+  "info": {
+    "singularName": "job-listing",
+    "pluralName": "job-listings",
+    "displayName": "Job Listing",
+    "description": "Open positions shown on the Careers page"
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": {},
+  "attributes": {
+    "role": { "type": "string", "required": true },
+    "department": { "type": "string", "required": true },
+    "location": { "type": "string", "default": "Full-time · Mumbai" },
+    "experience": { "type": "string" },
+    "skills": { "type": "json" },
+    "responsibilities": { "type": "json" },
+    "order": { "type": "integer", "default": 99 }
+  }
+}

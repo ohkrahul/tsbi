@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "client_brands",
+  "info": {
+    "singularName": "client-brand",
+    "pluralName": "client-brands",
+    "displayName": "Client Brand",
+    "description": "Brand entries for the home page client wheel and the Clients page"
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": {},
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "type": { "type": "string", "required": true },
+    "caption": { "type": "string" },
+    "accent": { "type": "string", "default": "#e0197d" },
+    "image": { "type": "media", "multiple": false, "required": false, "allowedTypes": ["images"] },
+    "cells": { "type": "json" },
+    "isEntertainment": { "type": "boolean", "default": false },
+    "showOnHome": { "type": "boolean", "default": true },
+    "order": { "type": "integer", "default": 99 }
+  }
+}

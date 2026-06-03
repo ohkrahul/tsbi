@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "work_items",
+  "info": {
+    "singularName": "work-item",
+    "pluralName": "work-items",
+    "displayName": "Work Item",
+    "description": "Cards shown on the Work/Portfolio grid"
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": {},
+  "attributes": {
+    "client": { "type": "string", "required": true },
+    "title": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "chips": { "type": "json" },
+    "bg": { "type": "string" },
+    "category": {
+      "type": "enumeration",
+      "enum": ["Campaigns", "Films", "Social", "Websites", "Tech"],
+      "required": true
+    },
+    "isSpan2": { "type": "boolean", "default": false },
+    "order": { "type": "integer", "default": 99 }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "journal_articles",
+  "info": {
+    "singularName": "journal-article",
+    "pluralName": "journal-articles",
+    "displayName": "Journal Article",
+    "description": "Blog posts and thought leadership pieces"
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": {},
+  "attributes": {
+    "category": {
+      "type": "enumeration",
+      "enum": ["Thought Leadership", "Insights", "Behind the Idea", "Culture", "Trends"],
+      "required": true
+    },
+    "title": { "type": "string", "required": true },
+    "excerpt": { "type": "text", "required": true },
+    "publishedAt": { "type": "date" },
+    "readTime": { "type": "string" },
+    "gradient": { "type": "string" },
+    "coverImage": { "type": "media", "multiple": false, "required": false, "allowedTypes": ["images"] },
+    "content": { "type": "richtext" },
+    "slug": { "type": "uid", "targetField": "title", "required": true }
+  }
+}

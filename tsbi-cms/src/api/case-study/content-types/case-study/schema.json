@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "case_studies",
+  "info": {
+    "singularName": "case-study",
+    "pluralName": "case-studies",
+    "displayName": "Case Study",
+    "description": "Full case study pages — client projects with concept, frames, and metrics"
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "client": { "type": "string", "required": true },
+    "title": { "type": "string", "required": true },
+    "year": { "type": "integer", "required": true },
+    "tags": { "type": "json", "required": false },
+    "services": { "type": "string" },
+    "deliverables": { "type": "string" },
+    "platforms": { "type": "string" },
+    "conceptTitle": { "type": "string" },
+    "conceptBody": { "type": "text" },
+    "heroGrad": { "type": "string" },
+    "heroImage": { "type": "media", "multiple": false, "required": false, "allowedTypes": ["images"] },
+    "conceptGrad": { "type": "string" },
+    "conceptImage": { "type": "media", "multiple": false, "required": false, "allowedTypes": ["images"] },
+    "frames": { "type": "json" },
+    "metrics": { "type": "json" },
+    "category": { "type": "string" },
+    "shortDescription": { "type": "text" },
+    "accent": { "type": "string" },
+    "gradFrom": { "type": "string" },
+    "gradTo": { "type": "string" },
+    "coverImage": { "type": "media", "multiple": false, "required": false, "allowedTypes": ["images"] },
+    "isSpan2": { "type": "boolean", "default": false },
+    "order": { "type": "integer", "default": 99 }
+  }
+}

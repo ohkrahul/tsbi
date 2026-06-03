@@ -1,0 +1,44 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_setting",
+  "info": {
+    "singularName": "site-setting",
+    "pluralName": "site-settings",
+    "displayName": "Site Settings",
+    "description": "Global site settings — stats, metadata, footer text"
+  },
+  "options": { "draftAndPublish": false },
+  "pluginOptions": {},
+  "attributes": {
+    "heroStats": {
+      "type": "json",
+      "default": [
+        { "val": "300+", "label": "Films" },
+        { "val": "150+", "label": "Brands" },
+        { "val": "12", "label": "Years" },
+        { "val": "98%", "label": "Retained" }
+      ]
+    },
+    "aboutStats": {
+      "type": "json",
+      "default": [
+        { "val": "150+", "label": "Talents Managed", "pink": true },
+        { "val": "300+", "label": "Projects Done" },
+        { "val": "98%", "label": "Client Retention" },
+        { "val": "12+", "label": "Years of Impact" }
+      ]
+    },
+    "workMetrics": {
+      "type": "json",
+      "default": [
+        { "val": "300+", "label": "Projects Delivered", "pink": true },
+        { "val": "150+", "label": "Talent Partners" },
+        { "val": "98%", "label": "Client Retention" },
+        { "val": "12+", "label": "Years of Impact" }
+      ]
+    },
+    "metaTitle": { "type": "string", "default": "TSBI – The Small Big Idea" },
+    "metaDescription": { "type": "text" },
+    "footerTagline": { "type": "string", "default": "The Small Big Idea." }
+  }
+}
