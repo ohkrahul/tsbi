@@ -10,10 +10,7 @@ out/
 dist/
 build/
 
-# env files
-.env
-.env.local
-.env.*.local
+
 
 # logs
 npm-debug.log*
