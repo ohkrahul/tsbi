@@ -31,6 +31,7 @@ export default function HeroSection({ stats }: { stats?: HeroStat[] }) {
               ))}
             </div>
           </div>
+          
         </div>
    
       </div>
