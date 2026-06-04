@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 const workLinks = [
@@ -17,27 +18,32 @@ export default function Footer() {
   return (
     <footer className="footer-root">
       <div className="ft-grid">
+
+        {/* Brand column */}
         <div>
-          <Link href="/" style={{ textDecoration: 'none' }}>
-            <svg style={{ width: 'auto', height: 48, marginBottom: 16 }} viewBox="0 0 130 44" fill="none">
-              <text x="0" y="21" fontFamily="Georgia,serif" fontSize="22" fontWeight="900" fill="#e0197d">ts</text>
-              <text x="0" y="41" fontFamily="Georgia,serif" fontSize="22" fontWeight="900" fill="#1a6aff">bi</text>
-              <rect x="34" y="8" width="1" height="28" fill="rgba(255,255,255,.2)" rx="1"/>
-              <text x="41" y="23" fontFamily="Arial,Helvetica,sans-serif" fontSize="7.5" letterSpacing="1.8" fill="rgba(255,255,255,.4)">THE SMALL</text>
-              <text x="41" y="36" fontFamily="Arial,Helvetica,sans-serif" fontSize="7.5" letterSpacing="1.8" fill="rgba(255,255,255,.4)">BIG IDEA</text>
-            </svg>
+          <Link href="/" style={{ textDecoration: 'none', display: 'inline-block', marginBottom: 22 }}>
+            <div style={{ background: '#fff', borderRadius: 10, padding: '10px 16px', display: 'inline-flex', alignItems: 'center' }}>
+              <Image
+                src="/tsbilogo.png"
+                alt="The Small Big Idea"
+                width={160}
+                height={56}
+                style={{ height: 46, width: 'auto', display: 'block' }}
+                priority
+              />
+            </div>
           </Link>
           <p className="ft-desc">
-            The Small Big Idea. Strategy &amp; Creative, undivided.<br/>
-            Mumbai · Delhi · Bangalore · Dubai
+            To give our clients ideas that will send their head spinning and execute it with the same passion that we displayed while selling it to them. Also, to pick up their phones on some Saturdays with a smile.
           </p>
           <div className="ft-social" style={{ marginTop: 24 }}>
             <a className="ft-social-btn" href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
             <a className="ft-social-btn" href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a className="ft-social-btn" href="https://twitter.com" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a className="ft-social-btn" href="https://youtube.com" target="_blank" rel="noopener noreferrer">YouTube</a>
           </div>
         </div>
 
+        {/* Work links */}
         <div>
           <p className="ft-col-title">Work</p>
           <ul className="ft-links">
@@ -47,6 +53,7 @@ export default function Footer() {
           </ul>
         </div>
 
+        {/* Agency links */}
         <div>
           <p className="ft-col-title">Agency</p>
           <ul className="ft-links">
@@ -56,23 +63,44 @@ export default function Footer() {
           </ul>
         </div>
 
+        {/* Offices */}
         <div>
-          <p className="ft-col-title">Get in Touch</p>
-          <ul className="ft-links">
-            <li><a href="mailto:hello@tsbi.in">hello@tsbi.in</a></li>
-            <li><a href="tel:+919876543210">+91 98765 43210</a></li>
-          </ul>
-          <a
-            className="ft-address"
-            href="https://maps.google.com/?q=Neelkamal+Building,+Deonar,+Govandi+East,+Mumbai+400088"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📍 Neelkamal Building,<br/>
-            Next to Satyam Tower, Deonar,<br/>
-            Govandi East, Mumbai – 400088
-          </a>
+          <p className="ft-col-title">Our Offices</p>
+
+          <div style={{ marginBottom: 24 }}>
+            <p style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#e0197d', marginBottom: 6 }}>TSBI HQ — Mumbai</p>
+            <a
+              className="ft-address"
+              href="https://maps.google.com/?q=401+Satyam+Tower,+Deonar,+Govandi+East,+Mumbai+400088"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              401 Satyam Tower, Deonar,<br />
+              Govandi East, Mumbai 400088
+            </a>
+            <a href="mailto:communication@tsbi.in" className="ft-address" style={{ marginTop: 6, display: 'block' }}>
+              communication@tsbi.in
+            </a>
+          </div>
+
+          <div>
+            <p style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#e0197d', marginBottom: 6 }}>TSBI Arabia — Dubai</p>
+            <a
+              className="ft-address"
+              href="https://maps.google.com/?q=The+Meydan+Hotel,+Nad+Al+Sheba,+Dubai"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Business Center 1, M Floor<br />
+              The Meydan Hotel, Nad Al Sheba,<br />
+              Dubai, U.A.E.
+            </a>
+            <a href="mailto:enquiries@tsbiglobal.com" className="ft-address" style={{ marginTop: 6, display: 'block' }}>
+              enquiries@tsbiglobal.com
+            </a>
+          </div>
         </div>
+
       </div>
 
       <div className="ft-bottom">

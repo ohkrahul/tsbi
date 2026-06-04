@@ -8,14 +8,54 @@ export interface ClientItem {
 }
 
 /* ── 6 brands — single source of truth ── */
-const BRANDS = [
-  { name: 'Dharma Production',    category: 'Entertainment',    imgs: { main: '/images/banner-home2-2-400x500.jpg',    alt1: '/images/gallery-slider-01-410x410.jpg',  alt2: '/images/bg-home1-counter-400x500.jpg'    }, url: '/work/dharma-production'    },
-  { name: 'Warner Music India',   category: 'Music Label',      imgs: { main: '/images/banner-01-400x500.jpg',         alt1: '/images/gallery-slider-02-400x500.jpg',  alt2: '/images/portfolio-popup-10-400x500.jpg'  }, url: '/work/warner-music-india'   },
-  { name: 'Mumbai Indians',       category: "Women's Sports",   imgs: { main: '/images/banner-home3-1-400x500.jpg',    alt1: '/images/career-detail-01-400x500.jpg',   alt2: '/images/portfolio-popup-12-400x500.jpg'  }, url: '/work/mumbai-indians'       },
-  { name: 'GSK',                  category: 'Pharma',           imgs: { main: '/images/portfolio-popup-12-400x500.jpg',alt1: '/images/bg-about-company-400x500.jpg',   alt2: '/images/gallery-slider-01-410x410.jpg'   }, url: '/work/gsk'                  },
-  { name: 'Ashok Leyland',        category: 'Automobile',       imgs: { main: '/images/bg-about-company-400x500.jpg',  alt1: '/images/banner-home2-2-400x500.jpg',     alt2: '/images/career-detail-01-400x500.jpg'    }, url: '/work/ashok-leyland'        },
-  { name: 'Dabur UAE',            category: 'FMCG',             imgs: { main: '/images/portfolio-popup-10-400x500.jpg',alt1: '/images/portfolio-popup-12-400x500.jpg', alt2: '/images/gallery-slider-02-400x500.jpg'   }, url: '/work/dabur-uae'            },
-] as const;
+type Brand = {
+  name: string; category: string;
+  imgs: { main: string; alt1: string; alt2: string };
+  url: string;
+  brandDescription?: string;
+  films?: { title: string; slug: string; category: string; youtube?: string; description?: string }[];
+};
+
+const BRANDS: Brand[] = [
+  {
+    name: 'Dharma Productions', category: 'Film Marketing · Entertainment',
+    imgs: { main: '/images/banner-home2-2-400x500.jpg', alt1: '/images/banner-home3-1-400x500.jpg', alt2: '/images/portfolio-popup-12-400x500.jpg' },
+    url: '/work/dharma-production',
+    films: [
+      { title: 'Sunny Sanskari Ki Tulsi Kumari', slug: 'dharma-production',  category: 'Romantic Comedy',  youtube: '9FUd-D4FWjw', description: "Rom-coms don't thrive on subtlety — they thrive on chaos, chemistry, and cultural noise. We turned cast energy, heartbreak, and music trends into a high-voltage social ecosystem where Bijuria and Panwadi ignited millions of reels." },
+      { title: 'Kesari Chapter 2',               slug: 'kesari-chapter-2',   category: 'Historical Drama', youtube: 'r-7g08INMSI',  description: "Marketing a century-old courtroom trial for Gen Z needed a radical shift. A disruptive blank-screen teaser hijacked all feeds and sparked nationwide curiosity — turning audiences from passive spectators into active witnesses." },
+    ],
+  },
+  {
+    name: 'Mumbai Indians', category: 'Logistics · IPL',
+    imgs: { main: '/images/banner-home3-1-400x500.jpg', alt1: '/images/career-detail-01-400x500.jpg', alt2: '/images/portfolio-popup-12-400x500.jpg' },
+    url: '/work/mumbai-indians',
+    films: [
+      { title: 'DHL × Mumbai Indians — Life Ka Filter', slug: 'mumbai-indians', category: 'IPL Campaign', youtube: 'MJofvf2lBNY', description: "Two campaigns, one shoot. Cricketers asserting #ThatsMyGame — their game is cricket, not dancing — while 'Dil Se Indian' captured the indomitable Mumbai spirit, subtly weaving in DHL's reach across social feeds." },
+    ],
+  },
+  {
+    name: 'Devgn Films', category: 'Film Marketing · Entertainment',
+    imgs: { main: '/images/portfolio-popup-10-400x500.jpg', alt1: '/images/banner-home3-1-400x500.jpg', alt2: '/images/bg-about-company-400x500.jpg' },
+    url: '/work/son-of-sardaar-2',
+    films: [
+      { title: 'Son Of Sardaar 2', slug: 'son-of-sardaar-2', category: 'Comedy', youtube: 'HSX_KPfbP1o', description: "Fun itself was the strategy. #PehlaTuDujaTu turned even trolls into participants. Cast podcasts, nostalgia-fuelled songs, and fan amplification built one clear idea across platforms: Fun = Son Of Sardaar 2." },
+      { title: 'MAA',              slug: 'maa-devgn',         category: 'Horror', youtube: 'zwtZj6YB9xk',  description: "Fear meets faith. We inducted MAA into the Shaitaan universe, replaced surnames with mothers' names in the credits (a first in Indian cinema), and deployed terror train takeovers and AI-led storytelling to make evil feel real." },
+    ],
+  },
+  {
+    name: 'Disney India', category: 'Entertainment · Food',
+    imgs: { main: '/images/portfolio-popup-10-400x500.jpg', alt1: '/images/banner-home2-2-400x500.jpg', alt2: '/images/bg-about-company-400x500.jpg' },
+    url: '/work/disney-india',
+    brandDescription: "How we married health with taste for Disney India. The 'Disney Delicious Minis' series — headlined by Chef Saransh Goila (winner, Food Food Maha Challenge) and celebrity Chef Chinu Vaze — brought healthy recipes to life through Disney characters and movie references. A wholesome package for adults and kids alike, across 24 short videos.",
+    films: [
+      { title: 'Chef Saransh Goila — Healthy Recipes', slug: 'disney-india', category: 'Disney Delicious Minis', youtube: 'qzHtzyuk_g4' },
+      { title: 'Chef Chinu Vaze — Disney Delights',    slug: 'disney-india', category: 'Disney Delicious Minis', youtube: '1q_orBISRN0' },
+      { title: 'Disney Delicious — Vol. 3',             slug: 'disney-india', category: 'Disney Delicious Minis', youtube: 'v5f9W7T1b6w' },
+      { title: 'Disney Delicious — Vol. 4',             slug: 'disney-india', category: 'Disney Delicious Minis', youtube: 'dyVdaCIIMfc' },
+    ],
+  },
+];
 
 const TOTAL     = BRANDS.length; // 6
 const SIDEBAR   = '#140e20';
@@ -72,12 +112,12 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
 
   return (
     <section ref={sectionRef} style={{ height: `${TOTAL * 100}vh`, background: SIDEBAR, position: 'relative' }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'grid', gridTemplateColumns: '26% 24% 50%' }}>
+      <div style={{ position: 'sticky', top: 80, height: 'calc(100vh - 80px)', overflow: 'hidden', display: 'grid', gridTemplateColumns: '28% 30% 42%' }}>
 
         {/* ══ LEFT SIDEBAR ══ */}
         <div style={{
           position: 'relative', background: SIDEBAR,
-          padding: '44px 28px 36px 48px',
+          padding: '36px 28px 36px 48px',
           display: 'flex', flexDirection: 'column',
           borderRight: '1px solid rgba(255,255,255,0.07)',
           boxShadow: 'inset 0 -120px 160px rgba(224,25,125,0.06)',
@@ -172,7 +212,35 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
               <div style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)', marginBottom: 24 }}>
                 {brand.category}
               </div>
-              <div style={{ width: 28, height: 2, background: '#e0197d', borderRadius: 1, marginBottom: 40 }} />
+              <div style={{ width: 28, height: 2, background: '#e0197d', borderRadius: 1, marginBottom: 20 }} />
+
+              {brand.brandDescription && (
+                <p style={{ margin: '0 0 24px', fontFamily: 'var(--fm)', fontSize: 11, lineHeight: 1.7, color: 'rgba(0,0,0,0.56)' }}>
+                  {brand.brandDescription}
+                </p>
+              )}
+
+              {brand.films && !(brand.brandDescription) && (
+                <div style={{ marginBottom: 32 }}>
+                  <div style={{ fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.35)', marginBottom: 12 }}>Campaigns</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {brand.films.map((film, fi) => (
+                      <a key={`${film.slug}-${fi}`} href={`/work/${film.slug}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', group: 'true' } as React.CSSProperties}
+                        onMouseEnter={e => { const el = e.currentTarget; el.style.opacity = '1'; }}
+                        onMouseLeave={e => { const el = e.currentTarget; el.style.opacity = '0.72'; }}
+                      >
+                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#e0197d', flexShrink: 0 }} />
+                        <div>
+                          <div style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(12px,1.1vw,15px)', fontWeight: 600, color: '#0a0a0a', lineHeight: 1.2 }}>{film.title}</div>
+                          <div style={{ fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e0197d', marginTop: 2 }}>{film.category}</div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <ExploreBtn url={brand.url} />
             </motion.div>
           </AnimatePresence>
@@ -187,23 +255,97 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
               <motion.div key={brand.name}
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 transition={{ duration: 0.35 }}
-                style={{ position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '3fr 2fr', gridTemplateRows: '1fr 1fr', gap: 10 }}
+                style={
+                  (brand.films?.length ?? 0) >= 3 && brand.films?.some(f => f.youtube)
+                    ? { position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '165px 165px', gap: 10, padding: '24px', alignContent: 'center' }
+                    : brand.films?.some(f => f.youtube)
+                      ? { position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', gap: 12, padding: '24px', justifyContent: 'center' }
+                      : { position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '3fr 2fr', gridTemplateRows: '1fr 1fr', gap: 10 }
+                }
               >
-                <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ gridRow: 'span 2', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 14px 48px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
-                  <img src={brand.imgs.main} alt={brand.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.55s ease' }}
-                    onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.52, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 8px 28px rgba(0,0,0,0.08)', cursor: 'pointer' }}>
-                  <img src={brand.imgs.alt1} alt={`${brand.name} 2`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.55s ease' }}
-                    onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
-                </motion.div>
-                <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.52, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 8px 28px rgba(0,0,0,0.08)', cursor: 'pointer' }}>
-                  <img src={brand.imgs.alt2} alt={`${brand.name} 3`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'contrast(1.05) saturate(0.85)', transition: 'transform 0.55s ease' }}
-                    onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
-                </motion.div>
+                {(brand.films?.length ?? 0) >= 3 && brand.films?.some(f => f.youtube) ? (
+                  brand.films!.map((film, i) => (
+                    <motion.a
+                      key={`${film.slug}-${i}`}
+                      href={`/work/${film.slug}`}
+                      initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.4, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                      style={{ position: 'relative', borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 4px 14px rgba(0,0,0,0.14)', cursor: 'pointer', textDecoration: 'none', display: 'block' }}
+                    >
+                      <img src={`https://img.youtube.com/vi/${film.youtube ?? ''}/hqdefault.jpg`} alt={film.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }}
+                        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.07)')}
+                        onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                      />
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%)' }} />
+                      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 26, height: 26, borderRadius: '50%', background: '#e0197d', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(224,25,125,0.5)', flexShrink: 0 }}>
+                          <svg width="9" height="9" viewBox="0 0 14 14" fill="none"><path d="M3 2l9 5-9 5V2z" fill="#fff" /></svg>
+                        </div>
+                      </div>
+                      <div style={{ position: 'absolute', bottom: 8, left: 10 }}>
+                        <div style={{ fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e0197d' }}>Ep {i + 1}</div>
+                      </div>
+                    </motion.a>
+                  ))
+                ) : brand.films?.some(f => f.youtube) ? (
+                  brand.films!.map((film, i) => (
+                    <motion.div
+                      key={`${film.slug}-${i}`}
+                      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.52, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                      style={{ display: 'flex', flexDirection: 'column', gap: 10, flexShrink: 0 }}
+                    >
+                      <a
+                        href={`/work/${film.slug}`}
+                        style={{ height: 230, position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 24px rgba(0,0,0,0.18)', cursor: 'pointer', textDecoration: 'none', display: 'block', flexShrink: 0 }}
+                      >
+                        <img
+                          src={`https://img.youtube.com/vi/${film.youtube ?? ''}/hqdefault.jpg`}
+                          alt={film.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.55s ease' }}
+                          onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.06)')}
+                          onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                        />
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.22) 45%, transparent 100%)' }} />
+                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#e0197d', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 12px rgba(224,25,125,0.45)', flexShrink: 0 }}>
+                            <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
+                              <path d="M3 2l9 5-9 5V2z" fill="#fff" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div style={{ position: 'absolute', bottom: 12, left: 14, right: 14 }}>
+                          <div style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(11px,1vw,13px)', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: 3 }}>{film.title}</div>
+                          <div style={{ fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#e0197d' }}>{film.category}</div>
+                        </div>
+                      </a>
+                      {film.description && (
+                        <p style={{ margin: 0, fontFamily: 'var(--fm)', fontSize: 10.5, lineHeight: 1.65, color: 'rgba(0,0,0,0.58)', padding: '0 2px' }}>
+                          {film.description}
+                        </p>
+                      )}
+                    </motion.div>
+                  ))
+                ) : (
+                  <>
+                    <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+                      style={{ gridRow: 'span 2', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 14px 48px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
+                      <img src={brand.imgs.main} alt={brand.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.55s ease' }}
+                        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.52, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                      style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 8px 28px rgba(0,0,0,0.08)', cursor: 'pointer' }}>
+                      <img src={brand.imgs.alt1} alt={`${brand.name} 2`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.55s ease' }}
+                        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.52, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                      style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 8px 28px rgba(0,0,0,0.08)', cursor: 'pointer' }}>
+                      <img src={brand.imgs.alt2} alt={`${brand.name} 3`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'contrast(1.05) saturate(0.85)', transition: 'transform 0.55s ease' }}
+                        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
+                    </motion.div>
+                  </>
+                )}
               </motion.div>
             </AnimatePresence>
           </div>
