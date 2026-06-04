@@ -18,36 +18,8 @@ export default function HeroSection({ stats }: { stats?: HeroStat[] }) {
       <div className="hero-bg-photo">
         <div className="hero-photo-inner">
           <div className="hero-photo-people">
-            {/* Cinematic contact-sheet grid */}
-            <div className="hero-visual-grid">
-              <div className="hvg-frame" style={{ backgroundImage: "url('/images/banner-home2-2-400x500.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                <div className="hvg-badge">Creative</div>
-              </div>
-              <div className="hvg-frame" style={{ backgroundImage: "url('/images/about-company-410x410.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(45,0,64,.45)' }} />
-                <svg width="100%" height="100%" viewBox="0 0 200 200" style={{ position: 'relative', zIndex: 1 }}>
-                  <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(224,25,125,.5)" strokeWidth="1"/>
-                  <circle cx="100" cy="100" r="38" fill="none" stroke="rgba(224,25,125,.3)" strokeWidth="1"/>
-                </svg>
-              </div>
-              <div className="hvg-frame" style={{ backgroundImage: "url('/images/gallery-slider-02-400x500.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,16,32,.5)' }} />
-                <div className="hvg-badge" style={{ position: 'relative', zIndex: 1 }}>Media</div>
-              </div>
-              <div className="hvg-frame" style={{ backgroundImage: "url('/images/banner-01-400x500.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,26,64,.45)' }} />
-              </div>
-              <div className="hvg-frame" style={{ backgroundImage: "url('/images/portfolio-popup-10-400x500.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(18,8,32,.4)' }} />
-                <div className="hvg-badge" style={{ position: 'relative', zIndex: 1 }}>Film</div>
-              </div>
-              <div className="hvg-frame" style={{ backgroundImage: "url('/images/why-work-with-us.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,26,16,.45)' }} />
-                <svg width="100%" height="100%" viewBox="0 0 200 200" style={{ opacity: .55, position: 'relative', zIndex: 1 }}>
-                  <polygon points="75,55 150,100 75,145" fill="rgba(255,255,255,.7)"/>
-                </svg>
-              </div>
-            </div>
+            {/* Single hero image */}
+            <div className="hero-single-image" style={{ backgroundImage: "url('/newImages/image-172-scaled-1.jpeg')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
 
             {/* Stats bar */}
             <div className="hero-visual-stats">

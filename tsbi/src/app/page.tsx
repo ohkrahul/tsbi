@@ -2,6 +2,7 @@ import HeroSection from '@/components/home/HeroSection';
 import OrbitSection from '@/components/home/OrbitSection';
 import ProdStrip from '@/components/home/ProdStrip';
 import CapSection from '@/components/home/CapSection';
+import ContentProductionSection from '@/components/home/ContentProductionSection';
 import StoriesSection from '@/components/home/StoriesSection';
 import GalaxySection from '@/components/home/GalaxySection';
 import ServicesPreview from '@/components/home/ServicesPreview';
@@ -32,12 +33,13 @@ export default async function HomePage() {
     <>
       <HeroSection stats={heroStats} />
       <OrbitSection />
-      <GalaxySection />
+      {/* <GalaxySection /> */}
       <ProdStrip />
-      <CapSection />
-      <StoriesSection />
-      <ServicesPreview />
+      <ContentProductionSection />
+      {/* <CapSection /> */}
       <ClientsSection initialClients={clients} />
+      <StoriesSection />
+      {/* <ServicesPreview /> */}
       <FooterCTA />
     </>
   );

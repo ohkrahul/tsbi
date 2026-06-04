@@ -1,41 +1,64 @@
 import Link from 'next/link';
 
 const cards = [
-  { num: '01', cat: 'Documentary Film', title: 'Saigon Souls', meta: '4:30 min · 2024', img: '/images/portfolio-popup-10-400x500.jpg', overlay: 'rgba(26,42,64,.6)' },
-  { num: '02', cat: 'Brand Film', title: 'GLOW | 正念', meta: '2:15 min · 2024', img: '/images/banner-home2-400x500.jpg', overlay: 'rgba(13,32,53,.6)' },
-  { num: '03', cat: 'Campaign Film', title: 'Fromanother Love', meta: "1:30 min · L'Oréal", img: '/images/bg-home1-counter-400x500.jpg', overlay: 'rgba(16,32,56,.6)' },
-  { num: '04', cat: 'Motion Graphics', title: 'FWA of the Day', meta: '9:45 min · 2026', img: '/images/career-detail-01-400x500.jpg', overlay: 'rgba(26,16,32,.6)' },
-  { num: '05', cat: 'Brand Film', title: 'Sidewave Launch', meta: '3:20 min · 2025', img: '/images/portfolio-popup-12-400x500.jpg', overlay: 'rgba(48,21,0,.6)' },
-  { num: '06', cat: 'Social Series', title: 'Saigon After Hours', meta: '8 Episodes · 2024', img: '/images/gallery-slider-02-400x500.jpg', overlay: 'rgba(10,32,21,.6)' },
+  { num: '01', cat: 'Liver ki Suno', title: 'Divyanka', link: 'https://www.instagram.com/reel/DLIJ0Ufy0j5/' },
+  { num: '02', cat: 'Liver ki Suno', title: 'Karanvir Bohra', link: 'https://www.instagram.com/reel/DMu1BIrT57o/' },
+  { num: '03', cat: 'Liver ki Suno', title: 'Gaelyn Mendonca', link: 'https://www.instagram.com/reel/DNkRlYjTyMp/' },
+  { num: '04', cat: 'Liver ki Suno', title: 'Venkatesh Iyer', link: 'https://www.instagram.com/reel/DOdk5ywEm9r/' },
+  { num: '05', cat: 'Do Haath Teen Minute', title: 'Hina Khan', link: 'https://www.instagram.com/reel/DPgTkkZiMFe/' },
+  { num: '06', cat: 'Do Haath Teen Minute', title: 'Saiyami Kher', link: 'https://www.instagram.com/reel/DQ3zO8xDODq/' },
+  { num: '07', cat: 'Do Haath Teen Minute', title: 'PriyaMani', link: 'https://www.instagram.com/reel/DRCJoCzilk-/' },
+  { num: '08', cat: 'Do Haath Teen Minute', title: 'Roshni Walia', link: 'https://www.instagram.com/reel/DQ9Dof4jOB6/' },
+  { num: '09', cat: 'Tyohaar with TBZ', title: 'Priyadarsini', link: 'https://www.instagram.com/p/DPlofZOjcEa/' },
+  { num: '10', cat: 'Tyohaar with TBZ', title: 'Mazel Vyas', link: 'https://www.instagram.com/p/DPBasHljcow/' },
+  { num: '11', cat: 'Tyohaar with TBZ', title: 'Jinal Padiaa', link: 'https://www.instagram.com/reel/DPJDd9pjRU_/' },
+  { num: '12', cat: 'Dohra Detachable Jewellery', title: 'Surabhi & Samridhi', link: 'https://www.instagram.com/reel/DRuNUD0k1zg/' },
+  { num: '13', cat: 'Dohra Detachable Jewellery', title: 'Harshita Roopchandani', link: 'https://www.instagram.com/reel/DR4vuWNDXul/' },
+  { num: '14', cat: 'Pepe Jeans: Great Denim', title: 'Sushil Bhagtani', link: 'https://www.instagram.com/p/DQUCl81k87E/' },
+  { num: '15', cat: 'Pepe Jeans: Great Denim', title: 'Kinshuk Gujral', link: 'https://www.instagram.com/p/DP0dTT8EcU7/' },
+  { num: '16', cat: 'Pepe Jeans: Great Denim', title: 'Arun Sharma', link: 'https://www.instagram.com/p/DQuJBfwiBD6/' },
 ];
-
-// Duplicate for infinite loop
-const doubled = [...cards, ...cards];
 
 export default function ProdStrip() {
   return (
     <section className="prod-section">
       <div className="prod-header reveal">
         <div>
-          <div className="sec-label"><span className="num">03</span> Content Production</div>
-          <h2 className="prod-h2">From concept to final cut.<br/>Content that connects.</h2>
+          <div className="sec-label"><span className="num">03</span> Influencer Management</div>
+          <h2 className="prod-h2">From brief to viral.<br/>Campaigns that connect.</h2>
         </div>
         <Link href="/work" className="btn-border" style={{ marginBottom: 4 }}>See All Work →</Link>
       </div>
 
       <div className="prod-track-outer">
         <div className="prod-track">
-          {doubled.map((card, i) => (
-            <div className="pc" key={i}>
-              <div className="pc-bg" style={{ backgroundImage: `url(${card.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-              <div style={{ position: 'absolute', inset: 0, background: card.overlay }} />
-              <div className="pc-frame" />
+          {cards.map((card, i) => (
+            <div className="pc" key={i} style={{ overflow: 'hidden' }}>
               <div className="pc-num">{card.num}</div>
-              <div className="pc-play"><div className="pc-play-tri" /></div>
-              <div className="pc-bot">
+              <iframe
+                src={`${card.link}embed/`}
+                scrolling="no"
+                allowFullScreen
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  border: 'none',
+                  pointerEvents: 'none',
+                }}
+              />
+              {/* clickable overlay — opens reel in new tab */}
+              <a
+                href={card.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ position: 'absolute', inset: 0, zIndex: 2 }}
+                aria-label={`${card.title} — ${card.cat}`}
+              />
+              <div className="pc-bot" style={{ zIndex: 3, position: 'relative' }}>
                 <div className="pc-cat">{card.cat}</div>
-                <div className="pc-title">{card.title}</div>
-                <div className="pc-meta">{card.meta}</div>
+                {/* <div className="pc-title">{card.title}</div> */}
               </div>
             </div>
           ))}
