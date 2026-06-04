@@ -52,7 +52,7 @@ export default function OrbitSection() {
         </div>
 
         {/* ── RIGHT ORBIT VISUAL ── */}
-        <div className="reveal d2 relative h-[680px] flex-1 overflow-visible">
+        <div className="reveal d2 relative h-[680px] flex-1 overflow-hidden">
           <svg className="h-full w-full" viewBox="0 0 640 560" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <radialGradient id="coreBlob" cx="50%" cy="50%" r="50%">

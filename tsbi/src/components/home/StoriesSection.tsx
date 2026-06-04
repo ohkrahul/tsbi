@@ -253,7 +253,7 @@ export default function StoriesSection() {
         position: 'relative',
         background: 'linear-gradient(135deg, #ff5c0d 0%, #ff3d12 55%, #e63200 100%)',
         overflow: 'hidden',
-        padding: '72px 48px 60px',
+        padding: '88px 48px 72px',
       }}
     >
       {/* Radial glow */}
@@ -269,7 +269,7 @@ export default function StoriesSection() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-end',
-        marginBottom: 40,
+        marginBottom: 56,
         position: 'relative',
         zIndex: 1,
       }}>
@@ -300,8 +300,8 @@ export default function StoriesSection() {
             </span>
           </motion.div>
 
-          {/* Headline — use paddingTop on the clip wrapper so ascenders aren't cut */}
-          <div style={{ overflow: 'hidden', paddingTop: '0.08em' }}>
+          {/* paddingTop lets ascenders breathe; paddingBottom lets descenders breathe */}
+          <div style={{ overflow: 'hidden', paddingTop: '0.12em', paddingBottom: '0.04em' }}>
             <motion.div
               initial={{ y: '110%' }}
               animate={isInView ? { y: 0 } : {}}
@@ -311,7 +311,7 @@ export default function StoriesSection() {
               Reels that
             </motion.div>
           </div>
-          <div style={{ overflow: 'hidden', paddingTop: '0.06em' }}>
+          <div style={{ overflow: 'hidden', paddingTop: '0.06em', paddingBottom: '0.14em' }}>
             <motion.div
               initial={{ y: '110%' }}
               animate={isInView ? { y: 0 } : {}}
