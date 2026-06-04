@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -48,13 +49,7 @@ export default function Nav() {
   return (
     <nav className={`nav-root${scrolled ? ' scrolled' : ''}`}>
       <Link href="/" className="nav-logo">
-        <svg className="nav-logo-svg" viewBox="0 0 130 44" fill="none" style={{ width: 'auto', height: 38 }}>
-          <text x="0" y="21" fontFamily="Georgia,serif" fontSize="22" fontWeight="900" fill="#e0197d">ts</text>
-          <text x="0" y="41" fontFamily="Georgia,serif" fontSize="22" fontWeight="900" fill="#1a6aff">bi</text>
-          <rect x="34" y="8" width="1" height="28" fill="rgba(10,10,10,.15)" rx="1"/>
-          <text x="41" y="23" fontFamily="Arial,Helvetica,sans-serif" fontSize="7.5" letterSpacing="1.8" fill="rgba(10,10,10,.45)">THE SMALL</text>
-          <text x="41" y="36" fontFamily="Arial,Helvetica,sans-serif" fontSize="7.5" letterSpacing="1.8" fill="rgba(10,10,10,.45)">BIG IDEA</text>
-        </svg>
+        <Image src="/tsbilogo.png" alt="The Small Big Idea" width={140} height={48} style={{ height: 38, width: 'auto' }} priority />
       </Link>
 
       <ul className="nav-links">

@@ -32,18 +32,12 @@ export default function HeroSection({ stats }: { stats?: HeroStat[] }) {
             </div>
           </div>
         </div>
-        <div className="hero-photo-overlay" />
+   
       </div>
 
-      {/* Left vertical section numbers */}
+  
       <div className="hero-section-nums">
-        <span className="hsn active">01</span>
-        <span className="hsn">02</span>
-        <span className="hsn">03</span>
-        <span className="hsn">04</span>
-        <span className="hsn">05</span>
-        <span className="hsn">06</span>
-        <span className="hsn">07</span>
+       
       </div>
 
       {/* Main content */}
@@ -67,22 +61,9 @@ export default function HeroSection({ stats }: { stats?: HeroStat[] }) {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="hero-scroll-indicator">
-        <div className="hsi-line" />
-        <span className="hsi-label">Scroll</span>
-      </div>
+     
 
-      {/* Showreel pill */}
-      <div className="hero-showreel">
-        <div className="hero-play">
-          <div className="hero-play-tri" />
-        </div>
-        <div className="hero-sr-text">
-          <div className="hero-sr-title">Showreel 2025</div>
-          <div className="hero-sr-sub">Play full showreel — 02:15</div>
-        </div>
-      </div>
+    
     </section>
   );
 }

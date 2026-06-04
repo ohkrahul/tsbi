@@ -178,9 +178,9 @@ body {
   position: relative; min-height: 100vh; overflow: hidden;
   display: flex; align-items: center; background: var(--white);
 }
-.hero-bg-photo { position: absolute; right: 0; top: 0; bottom: 0; width: 100%; overflow: hidden; }
+.hero-bg-photo { position: absolute; right: 0; top: 0; bottom: 0; width: 63%; overflow: hidden; border-radius: 55% 0 0 45% / 52% 0 0 48%; }
 .hero-photo-inner { position: absolute; inset: 0; }
-.hero-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 32%, rgba(255,255,255,.7) 40%, rgba(255,255,255,.2) 50%, transparent 58%); }
+.hero-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.25) 18%, transparent 38%); }
 .hero-photo-people { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 /* hero single image */
 .hero-single-image { position: absolute; inset: 0; }
