@@ -16,7 +16,7 @@ export default function FooterCTA() {
         <Link href="/contact" className="btn-fill" style={{ background: 'var(--magenta)' }}>
           Let's Talk →
         </Link>
-        <Link href="/work" className="btn-border">
+        <Link href="/case-studies" className="btn-border">
           See Our Work
         </Link>
       </div>

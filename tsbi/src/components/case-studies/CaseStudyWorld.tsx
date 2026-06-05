@@ -104,7 +104,7 @@ export default function CaseStudyWorld() {
 
   const handleHotspot = useCallback((slug: string) => {
     setTransitioning(true);
-    setTimeout(() => router.push(`/work/${slug}`), 700);
+    setTimeout(() => router.push('/case-studies'), 700);
   }, [router]);
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export default function CaseStudyWorld() {
 
   if (!mounted) return <div className="cs-world-section" style={{ background: '#050910' }} />;
 
-  if (!webGLOK) return <CaseStudyFallbackCarousel studies={caseStudies} onNavigate={(slug) => router.push(`/work/${slug}`)} />;
+  if (!webGLOK) return <CaseStudyFallbackCarousel studies={caseStudies} onNavigate={(slug) => router.push('/case-studies')} />;
 
   return (
     <div className="cs-world-section" role="region" aria-label="Case Study Gallery">
