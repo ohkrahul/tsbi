@@ -103,9 +103,10 @@ export default function CaseStudyWorld() {
   }, [transitioning]);
 
   const handleHotspot = useCallback((slug: string) => {
+    if (transitioning) return;
     setTransitioning(true);
-    setTimeout(() => router.push('/case-studies'), 700);
-  }, [router]);
+    setTimeout(() => router.push(`/case-studies/${slug}`), 900);
+  }, [router, transitioning]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -121,10 +122,14 @@ export default function CaseStudyWorld() {
 
   if (!mounted) return <div className="cs-world-section" style={{ background: '#050910' }} />;
 
-  if (!webGLOK) return <CaseStudyFallbackCarousel studies={caseStudies} onNavigate={(slug) => router.push('/case-studies')} />;
+  if (!webGLOK) return <CaseStudyFallbackCarousel studies={caseStudies} onNavigate={(slug) => router.push(`/case-studies/${slug}`)} />;
 
   return (
-    <div className="cs-world-section" role="region" aria-label="Case Study Gallery">
+    <div
+      className={`cs-world-section${transitioning ? ' is-transitioning' : ''}`}
+      role="region"
+      aria-label="Case Study Gallery"
+    >
       <Canvas
         className="cs-world-canvas"
         camera={{ position: [initIdx * SPACING, 0, 9], fov: 50, near: 0.1, far: 100 }}

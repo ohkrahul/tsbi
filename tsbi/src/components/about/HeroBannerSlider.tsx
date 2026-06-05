@@ -41,6 +41,7 @@ export default function HeroBannerSlider() {
   return (
     <div
       className="hbs-root"
+      
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -55,7 +56,7 @@ export default function HeroBannerSlider() {
             alt={s.alt}
             fill
             sizes="100vw"
-            style={{ objectFit: 'cover', objectPosition: '50% 20%' }}
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
             priority={i === 0}
           />
           {/* gradient overlays */}
