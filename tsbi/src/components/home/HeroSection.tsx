@@ -53,7 +53,7 @@ export default function HeroSection({ stats }: { stats?: HeroStat[] }) {
           We turn small ideas into big impact through creativity, technology and culture.
         </p>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          <Link href="/work" className="btn-fill">
+          <Link href="/case-studies" className="btn-fill">
             Explore Our Work <span className="arr">→</span>
           </Link>
           <Link href="/services" className="btn-border">

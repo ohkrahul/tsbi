@@ -20,7 +20,7 @@ const BRANDS: Brand[] = [
   {
     name: 'Dharma Productions', category: 'Film Marketing · Entertainment',
     imgs: { main: '/images/banner-home2-2-400x500.jpg', alt1: '/images/banner-home3-1-400x500.jpg', alt2: '/images/portfolio-popup-12-400x500.jpg' },
-    url: '/work/dharma-production',
+    url: '/case-studies',
     films: [
       { title: 'Sunny Sanskari Ki Tulsi Kumari', slug: 'dharma-production',  category: 'Romantic Comedy',  youtube: '9FUd-D4FWjw', description: "Rom-coms don't thrive on subtlety — they thrive on chaos, chemistry, and cultural noise. We turned cast energy, heartbreak, and music trends into a high-voltage social ecosystem where Bijuria and Panwadi ignited millions of reels." },
       { title: 'Kesari Chapter 2',               slug: 'kesari-chapter-2',   category: 'Historical Drama', youtube: 'r-7g08INMSI',  description: "Marketing a century-old courtroom trial for Gen Z needed a radical shift. A disruptive blank-screen teaser hijacked all feeds and sparked nationwide curiosity — turning audiences from passive spectators into active witnesses." },
@@ -29,7 +29,7 @@ const BRANDS: Brand[] = [
   {
     name: 'Mumbai Indians', category: 'Logistics · IPL',
     imgs: { main: '/images/banner-home3-1-400x500.jpg', alt1: '/images/career-detail-01-400x500.jpg', alt2: '/images/portfolio-popup-12-400x500.jpg' },
-    url: '/work/mumbai-indians',
+    url: '/case-studies',
     films: [
       { title: 'DHL × Mumbai Indians — Life Ka Filter', slug: 'mumbai-indians', category: 'IPL Campaign', youtube: 'MJofvf2lBNY', description: "Two campaigns, one shoot. Cricketers asserting #ThatsMyGame — their game is cricket, not dancing — while 'Dil Se Indian' captured the indomitable Mumbai spirit, subtly weaving in DHL's reach across social feeds." },
     ],
@@ -37,7 +37,7 @@ const BRANDS: Brand[] = [
   {
     name: 'Devgn Films', category: 'Film Marketing · Entertainment',
     imgs: { main: '/images/portfolio-popup-10-400x500.jpg', alt1: '/images/banner-home3-1-400x500.jpg', alt2: '/images/bg-about-company-400x500.jpg' },
-    url: '/work/son-of-sardaar-2',
+    url: '/case-studies',
     films: [
       { title: 'Son Of Sardaar 2', slug: 'son-of-sardaar-2', category: 'Comedy', youtube: 'HSX_KPfbP1o', description: "Fun itself was the strategy. #PehlaTuDujaTu turned even trolls into participants. Cast podcasts, nostalgia-fuelled songs, and fan amplification built one clear idea across platforms: Fun = Son Of Sardaar 2." },
       { title: 'MAA',              slug: 'maa-devgn',         category: 'Horror', youtube: 'zwtZj6YB9xk',  description: "Fear meets faith. We inducted MAA into the Shaitaan universe, replaced surnames with mothers' names in the credits (a first in Indian cinema), and deployed terror train takeovers and AI-led storytelling to make evil feel real." },
@@ -46,7 +46,7 @@ const BRANDS: Brand[] = [
   {
     name: 'Disney India', category: 'Entertainment · Food',
     imgs: { main: '/images/portfolio-popup-10-400x500.jpg', alt1: '/images/banner-home2-2-400x500.jpg', alt2: '/images/bg-about-company-400x500.jpg' },
-    url: '/work/disney-india',
+    url: '/case-studies',
     brandDescription: "How we married health with taste for Disney India. The 'Disney Delicious Minis' series — headlined by Chef Saransh Goila (winner, Food Food Maha Challenge) and celebrity Chef Chinu Vaze — brought healthy recipes to life through Disney characters and movie references. A wholesome package for adults and kids alike, across 24 short videos.",
     films: [
       { title: 'Chef Saransh Goila — Healthy Recipes', slug: 'disney-india', category: 'Disney Delicious Minis', youtube: 'qzHtzyuk_g4' },
@@ -225,7 +225,7 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
                   <div style={{ fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.35)', marginBottom: 12 }}>Campaigns</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {brand.films.map((film, fi) => (
-                      <a key={`${film.slug}-${fi}`} href={`/work/${film.slug}`}
+                      <a key={`${film.slug}-${fi}`} href="/case-studies"
                         style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', group: 'true' } as React.CSSProperties}
                         onMouseEnter={e => { const el = e.currentTarget; el.style.opacity = '1'; }}
                         onMouseLeave={e => { const el = e.currentTarget; el.style.opacity = '0.72'; }}
@@ -267,7 +267,7 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
                   brand.films!.map((film, i) => (
                     <motion.a
                       key={`${film.slug}-${i}`}
-                      href={`/work/${film.slug}`}
+                      href="/case-studies"
                       initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.4, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
                       style={{ position: 'relative', borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 4px 14px rgba(0,0,0,0.14)', cursor: 'pointer', textDecoration: 'none', display: 'block' }}
@@ -297,7 +297,7 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
                       style={{ display: 'flex', flexDirection: 'column', gap: 10, flexShrink: 0 }}
                     >
                       <a
-                        href={`/work/${film.slug}`}
+                        href="/case-studies"
                         style={{ height: 230, position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 24px rgba(0,0,0,0.18)', cursor: 'pointer', textDecoration: 'none', display: 'block', flexShrink: 0 }}
                       >
                         <img

@@ -27,7 +27,7 @@ export default function ProdStrip() {
           <div className="sec-label"><span className="num">03</span> Influencer Management</div>
           <h2 className="prod-h2">From brief to viral.<br/>Campaigns that connect.</h2>
         </div>
-        <Link href="/work" className="btn-border" style={{ marginBottom: 4 }}>See All Work →</Link>
+        <Link href="/case-studies" className="btn-border" style={{ marginBottom: 4 }}>See All Work →</Link>
       </div>
 
       <div className="prod-track-outer">

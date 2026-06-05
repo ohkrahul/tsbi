@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const workLinks = [
-  { href: '/work', label: 'All Work' },
+  { href: '/case-studies', label: 'Case Studies' },
   { href: '/case-studies', label: 'Case Studies' },
   { href: '/clients', label: 'Our Clients' },
 ];
