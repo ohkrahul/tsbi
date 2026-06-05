@@ -16,7 +16,7 @@ const DEFAULT_SLIDES: Slide[] = [
   // ── 01  Hari — full-bleed portrait background ────────
   {
     id: 1, type: 'photo', num: '01',
-    title: 'Harikrishnan (Hari) Pillai',
+    title: 'Harikrishnan Pillai',
     role: 'Co-Founder & Chief Executive Officer',
     intro: '',
     bgImage: '/main%20ppl/backgound%20ceo.jpg',
@@ -26,9 +26,9 @@ const DEFAULT_SLIDES: Slide[] = [
   // ── 02  Hari — white bg, portrait left, bio right ────
   {
     id: 2, type: 'leader', num: '02',
-    title: 'Harikrishnan (Hari) Pillai',
+    title: 'Harikrishnan Pillai',
     role: 'Co-Founder & Chief Executive Officer',
-    intro: 'Harikrishnan (Hari) Pillai is the Co-Founder and CEO of TheSmallBigIdea (TSBI), a prominent Mumbai-based digital and social media marketing agency founded in 2014. With over 15 years of industry experience, he specialises in building brand strategies and integrating creative, content, and technology for various major brands.',
+    intro: 'Harikrishnan Pillai is the Co-Founder and CEO of TheSmallBigIdea (TSBI), a prominent Mumbai-based digital and social media marketing agency founded in 2014. With over 15 years of industry experience, he specialises in building brand strategies and integrating creative, content, and technology for various major brands.',
     bgImage: '/main%20ppl/backgound%20ceo.jpg',
     cardImage: '/main%20ppl/hari.jpeg',
     ctaLabel: 'View Profile', ctaHref: '/about#leadership',
