@@ -2,6 +2,7 @@ import Link from 'next/link';
 import LeadershipReelShowcase from '@/components/about/LeadershipReelShowcase';
 import SmallBigStoryTimeline from '@/components/about/SmallBigStoryTimeline';
 import AboutAwardsSection from '@/components/about/AboutAwardsSection';
+import HeroBannerSlider from '@/components/about/HeroBannerSlider';
 import { getLeadershipSlides, mediaUrl } from '@/lib/strapi';
 
 const stripItems = [
@@ -34,15 +35,8 @@ export default async function AboutPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="ab-hero">
-        <div className="ab-hero-content">
-          <div className="sec-label">Our Story</div>
-          <h1 className="ab-h1">
-            We Don't<br/>Just Make<br/>Content. We<br/><em>Move Culture.</em>
-          </h1>
-        </div>
-      </section>
+      {/* Hero Banner Slider */}
+      <HeroBannerSlider />
 
       {/* Expanding strip */}
       <div className="ab-strip">

@@ -7,9 +7,9 @@ import { usePathname } from 'next/navigation';
 
 const serviceLinks = [
   { href: '/services/content-production', label: 'Content Production' },
-  { href: '/services/performance', label: 'Performance Management' },
+  // { href: '/services/performance', label: 'Performance Management' },
   { href: '/services/seo', label: 'SEO' },
-  { href: '/services/digital-transformation', label: 'Digital Transformation' },
+  // { href: '/services/digital-transformation', label: 'Digital Transformation' },
   { href: '/services/influencer-management', label: 'Influencer Management' },
   { href: '/services/social-media', label: 'Social Media' },
 ];
@@ -20,6 +20,7 @@ const navLinks = [
   { href: '/careers', label: 'Careers' },
   { href: '/case-studies', label: 'Case Studies' },
   { href: '/clients', label: 'Clients' },
+  { href: '/media', label: 'Media' },
 ];
 
 export default function Nav() {
