@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 /* ─── Data ─────────────────────────────────────────── */
-type SlideType = 'leader' | 'reel';
+type SlideType = 'leader' | 'reel' | 'photo';
 interface Slide {
   id: number; type: SlideType; num: string;
   title: string; role?: string; intro: string;
@@ -13,37 +13,45 @@ interface Slide {
 }
 
 const DEFAULT_SLIDES: Slide[] = [
+  // ── 01  Hari — full-bleed portrait background ────────
   {
-    id: 1, type: 'leader', num: '01',
-    title: 'Rahul Gupta', role: 'Founder · Chief Executive Officer',
-    intro: 'The vision and creative force behind TSBI. 12 years building campaigns, brands and digital ecosystems across India, Southeast Asia and the Middle East.',
-    bgImage: '/images/why-work-with-us.jpg',
-    cardImage: '/images/career-detail-01-400x500.jpg',
-    ctaLabel: 'View Profile', ctaHref: '/about#leadership',
+    id: 1, type: 'photo', num: '01',
+    title: 'Harikrishnan (Hari) Pillai',
+    role: 'Co-Founder & Chief Executive Officer',
+    intro: '',
+    bgImage: '/main%20ppl/backgound%20ceo.jpg',
+    cardImage: '/main%20ppl/backgound%20ceo.jpg',
+    ctaLabel: '', ctaHref: null,
   },
+  // ── 02  Hari — white bg, portrait left, bio right ────
   {
     id: 2, type: 'leader', num: '02',
-    title: 'Priya Sharma', role: 'Chief Operating Officer',
-    intro: 'The operational force turning ambitious ideas into scalable, measurable execution across every client engagement at TSBI.',
-    bgImage: '/images/bg-about-company-768x627.jpg',
-    cardImage: '/images/bg-home1-counter-400x500.jpg',
+    title: 'Harikrishnan (Hari) Pillai',
+    role: 'Co-Founder & Chief Executive Officer',
+    intro: 'Harikrishnan (Hari) Pillai is the Co-Founder and CEO of TheSmallBigIdea (TSBI), a prominent Mumbai-based digital and social media marketing agency founded in 2014. With over 15 years of industry experience, he specialises in building brand strategies and integrating creative, content, and technology for various major brands.',
+    bgImage: '/main%20ppl/backgound%20ceo.jpg',
+    cardImage: '/main%20ppl/hari.jpeg',
     ctaLabel: 'View Profile', ctaHref: '/about#leadership',
   },
+  // ── 03  Manish — full-bleed background ──────────────
   {
-    id: 3, type: 'reel', num: '03',
-    title: 'TSBI Reel 01',
-    intro: 'A fast-moving look at campaigns, culture and content created by TSBI. 300+ films. 150+ brands. One obsession.',
-    bgImage: '/images/banner-home2-2.jpg',
-    cardImage: '/images/banner-home3-1-400x500.jpg',
-    ctaLabel: 'Play Reel', ctaHref: null,
+    id: 3, type: 'photo', num: '03',
+    title: 'Manish Solanki',
+    role: 'Chief Operating Officer',
+    intro: '',
+    bgImage: '/main%20ppl/coo%20backgorund.webp',
+    cardImage: '/main%20ppl/coo%20backgorund.webp',
+    ctaLabel: '', ctaHref: null,
   },
+  // ── 04  Manish — white bg, portrait left, bio right ──
   {
-    id: 4, type: 'reel', num: '04',
-    title: 'TSBI Reel 02',
-    intro: 'Stories, systems and social-first work built to move brands. Digital transformation at full creative scale.',
-    bgImage: '/images/banner-01.jpg',
-    cardImage: '/images/portfolio-popup-12-400x500.jpg',
-    ctaLabel: 'Play Reel', ctaHref: null,
+    id: 4, type: 'leader', num: '04',
+    title: 'Manish Solanki',
+    role: 'Chief Operating Officer',
+    intro: 'Manish found his early passion in Marketing during his college days. With over 8 years of experience, he started in client servicing with SSC&B Lintas and Publicis Ambience — working on brands like HDFC Mutual Funds, Capgemini, Nerolac, ICICI and Videocon d2h. He later moved to CRISIL Ratings as Brand Manager and then entered television, working with ZEE TV and Times Television Network. Manish has headed the Global broadcast for the World\'s Biggest India Day Parade live from New York.',
+    bgImage: '/main%20ppl/coo%20backgorund.webp',
+    cardImage: '/main%20ppl/manish.jpg',
+    ctaLabel: 'View Profile', ctaHref: '/about#leadership',
   },
 ];
 
@@ -68,39 +76,87 @@ function Tri({ size = 16 }: { size?: number }) {
 }
 
 /* ─── Sub-components ────────────────────────────────── */
-function LeaderCard({ slide }: { slide: Slide }) {
+
+/** Full-portrait slide — no card, just name + role at bottom-left */
+function PhotoSlide({ slide }: { slide: Slide }) {
   return (
     <div style={{
-      display: 'flex', width: 'clamp(380px,36vw,500px)',
-      borderRadius: 4, overflow: 'hidden',
-      boxShadow: '0 32px 80px rgba(0,0,0,.65)',
+      position: 'absolute',
+      bottom: 88,
+      left: 160,
+      zIndex: 20,
     }}>
-      {/* Portrait photo */}
-      <div style={{ width: 168, flexShrink: 0, position: 'relative', minHeight: 420 }}>
+      <div style={{
+        ...fm,
+        fontSize: 9,
+        letterSpacing: '0.28em',
+        textTransform: 'uppercase',
+        color: 'rgba(255,255,255,0.55)',
+        marginBottom: 12,
+      }}>
+        {slide.role}
+      </div>
+      <h2 style={{
+        ...fd,
+        fontSize: 'clamp(36px,4.5vw,68px)',
+        fontWeight: 900,
+        color: '#fff',
+        lineHeight: 0.96,
+        letterSpacing: '-0.025em',
+        margin: 0,
+        textShadow: '0 4px 32px rgba(0,0,0,0.5)',
+      }}>
+        {slide.title}
+      </h2>
+    </div>
+  );
+}
+
+/** Full-viewport 2-column bio layout: portrait LEFT, white text panel RIGHT */
+function LeaderBioLayout({ slide }: { slide: Slide }) {
+  return (
+    <div style={{ position: 'absolute', inset: 0, display: 'flex' }}>
+      {/* ── Left: portrait photo ── */}
+      <div style={{
+        flex: '0 0 44%',
+        position: 'relative', overflow: 'hidden',
+      }}>
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: `url(${slide.cardImage})`,
-          backgroundSize: 'cover', backgroundPosition: 'center top',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 15%',
+        }} />
+        {/* subtle right-edge fade into white panel */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to right, transparent 70%, rgba(255,255,255,0.6) 100%)',
         }} />
       </div>
-      {/* Text */}
+
+      {/* ── Right: white text panel ── */}
       <div style={{
-        flex: 1, padding: '36px 28px',
-        display: 'flex', flexDirection: 'column',
-        background: CREAM,
+        flex: 1,
+        background: '#fff',
+        display: 'flex', alignItems: 'center',
+        padding: '0 7% 0 6%',
+        borderLeft: '1px solid rgba(0,0,0,0.06)',
       }}>
-        <div style={{ ...fm, fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: MAGENTA, marginBottom: 10 }}>{slide.num}</div>
-        <div style={{ ...fm, fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(10,10,10,.42)', marginBottom: 12 }}>{slide.role}</div>
-        <h3 style={{ ...fd, fontSize: 'clamp(20px,2.2vw,27px)', fontWeight: 700, color: INK, lineHeight: 1.1, letterSpacing: '-0.01em', marginBottom: 16 }}>{slide.title}</h3>
-        <p style={{ fontSize: 12, fontWeight: 300, lineHeight: 1.8, color: 'rgba(10,10,10,.55)', flex: 1, marginBottom: 24 }}>{slide.intro}</p>
-        {slide.ctaHref && (
-          <Link href={slide.ctaHref} style={{
-            ...fm, fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: INK, textDecoration: 'none',
-            borderBottom: '1px solid rgba(10,10,10,.25)', paddingBottom: 2,
-            alignSelf: 'flex-start', display: 'inline-block',
-          }}>{slide.ctaLabel} →</Link>
-        )}
+        <div style={{ maxWidth: 460 }}>
+          <div style={{ ...fm, fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: MAGENTA, marginBottom: 10 }}>{slide.num}</div>
+          <div style={{ ...fm, fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(10,10,10,.4)', marginBottom: 16 }}>{slide.role}</div>
+          <h3 style={{ ...fd, fontSize: 'clamp(22px,2.4vw,32px)', fontWeight: 700, color: INK, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 18 }}>{slide.title}</h3>
+          <div style={{ width: 28, height: 2, background: MAGENTA, borderRadius: 1, marginBottom: 22 }} />
+          <p style={{ fontSize: 14, fontWeight: 300, lineHeight: 1.85, color: 'rgba(10,10,10,.58)', marginBottom: 30 }}>{slide.intro}</p>
+          {slide.ctaHref && (
+            <Link href={slide.ctaHref} style={{
+              ...fm, fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase',
+              color: INK, textDecoration: 'none',
+              borderBottom: '1px solid rgba(10,10,10,.22)', paddingBottom: 2,
+              display: 'inline-block',
+            }}>{slide.ctaLabel} →</Link>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -170,17 +226,18 @@ function ReelCard({ slide, onPlay }: { slide: Slide; onPlay: () => void }) {
 /* ─── Mobile card ───────────────────────────────────── */
 function MobileSlideCard({ slide, onPlay }: { slide: Slide; onPlay: () => void }) {
   const isReel = slide.type === 'reel';
+  const isPhoto = slide.type === 'photo';
   return (
     <div style={{
       background: '#0a0d14', borderRadius: 6, overflow: 'hidden',
       boxShadow: '0 16px 48px rgba(0,0,0,.5)',
     }}>
-      {/* Image header */}
-      <div style={{ position: 'relative', aspectRatio: isReel ? '16/9' : '3/2', overflow: 'hidden' }}>
+      {/* Image header — show for photo slides and reels only */}
+      <div style={{ position: 'relative', aspectRatio: isReel ? '16/9' : '3/2', overflow: 'hidden', display: isPhoto ? 'block' : isReel ? 'block' : 'none' }}>
         <div style={{
           position: 'absolute', inset: 0,
           backgroundImage: `url(${slide.cardImage})`,
-          backgroundSize: 'cover', backgroundPosition: 'center',
+          backgroundSize: 'cover', backgroundPosition: 'center 18%',
         }} />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.4)' }} />
         {isReel && (
@@ -234,7 +291,9 @@ function MobileSlideCard({ slide, onPlay }: { slide: Slide; onPlay: () => void }
 }
 
 export default function LeadershipReelShowcase({ initialSlides }: { initialSlides?: Slide[] } = {}) {
-  const SLIDES = initialSlides?.length ? initialSlides : DEFAULT_SLIDES;
+  // Always use DEFAULT_SLIDES so the 4-slide sequence is preserved.
+  // CMS overrides are ignored unless they have ≥ 4 entries.
+  const SLIDES = (initialSlides?.length ?? 0) >= 4 ? initialSlides! : DEFAULT_SLIDES;
   const sectionRef = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
   const [reelOpen, setReelOpen] = useState<number | null>(null);
@@ -349,28 +408,34 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
               position: 'absolute',
               top: '-8%', left: '-4%', right: '-4%', bottom: '-8%',
               backgroundImage: `url(${s.bgImage})`,
-              backgroundSize: 'cover', backgroundPosition: 'center',
+              backgroundSize: 'cover', backgroundPosition: 'center 18%',
               transform: rm ? 'none' : `translateY(${(i - active) * 8}%)`,
               transition: rm ? 'none' : 'transform 1s cubic-bezier(0.16,1,0.3,1)',
             }} />
-            {/* Dark overlay */}
+            {/* Overlay — white for bio slides, gradient for photo/reel slides */}
             <div style={{
               position: 'absolute', inset: 0,
-              background: 'linear-gradient(135deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.44) 100%)',
+              background: s.type === 'leader'
+                ? '#fff'   /* fully opaque — LeaderBioLayout renders its own layout on top */
+                : s.type === 'photo'
+                  ? 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.12) 55%, rgba(0,0,0,0.08) 100%)'
+                  : 'linear-gradient(135deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.44) 100%)',
             }} />
           </div>
         ))}
 
-        {/* Section label — top left */}
+        {/* Section label — top left (colour adapts to dark/light background) */}
+        {(() => { const isLight = SLIDES[active].type === 'leader'; return (
         <div style={{
           position: 'absolute', top: 108, left: 48, zIndex: 20,
           ...fm, fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: 'rgba(255,255,255,.32)',
+          color: isLight ? 'rgba(10,10,10,.4)' : 'rgba(255,255,255,.32)',
           display: 'flex', alignItems: 'center', gap: 10,
         }}>
-          <div style={{ width: 14, height: 1, background: 'rgba(255,255,255,.25)' }} />
+          <div style={{ width: 14, height: 1, background: isLight ? 'rgba(10,10,10,.25)' : 'rgba(255,255,255,.25)' }} />
           Leadership &amp; Reels
         </div>
+        ); })()}
 
         {/* Watermark number */}
         <div style={{
@@ -397,52 +462,55 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
                 padding: '9px 0', background: 'none', border: 'none', cursor: 'pointer',
               }}
             >
+              {(() => { const isLight = SLIDES[active].type === 'leader'; return (<>
               <div style={{
                 width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
-                background: i === active ? MAGENTA : 'rgba(255,255,255,.2)',
+                background: i === active ? MAGENTA : isLight ? 'rgba(10,10,10,.18)' : 'rgba(255,255,255,.2)',
                 transform: i === active ? 'scale(1.5)' : 'scale(1)',
                 transition: 'background .35s, transform .35s',
               }} />
               <div style={{ textAlign: 'left' }}>
                 <div style={{
                   ...fm, fontSize: 8, letterSpacing: '0.25em', textTransform: 'uppercase',
-                  color: i === active ? MAGENTA : 'rgba(255,255,255,.22)',
+                  color: i === active ? MAGENTA : isLight ? 'rgba(10,10,10,.28)' : 'rgba(255,255,255,.22)',
                   transition: 'color .3s', marginBottom: 2,
                 }}>{s.num}</div>
                 <div style={{
                   ...fm, fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase',
-                  color: i === active ? 'rgba(255,255,255,.62)' : 'rgba(255,255,255,.18)',
+                  color: i === active ? (isLight ? INK : 'rgba(255,255,255,.62)') : isLight ? 'rgba(10,10,10,.25)' : 'rgba(255,255,255,.18)',
                   transition: 'color .3s',
                 }}>
-                  {s.type === 'leader' ? s.title.split(' ').slice(-1)[0] : s.title}
+                  {s.type === 'photo'  ? s.title.split(' ').slice(-1)[0] + ' ↗'
+                 : s.type === 'leader' ? s.title.split(' ').slice(-1)[0] + ' —'
+                 : s.title}
                 </div>
               </div>
+              </>); })()}
             </button>
           ))}
         </nav>
 
         {/* ── Card area ── */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 15,
-          display: 'flex', alignItems: 'center',
-          justifyContent: 'flex-end',
-          padding: '0 8% 0 160px',
-        }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={rm ? {} : { opacity: 0, y: 32, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={rm ? {} : { opacity: 0, y: -22, scale: 0.985 }}
-              transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {SLIDES[active].type === 'leader'
-                ? <LeaderCard slide={SLIDES[active]} />
-                : <ReelCard slide={SLIDES[active]} onPlay={() => setReelOpen(active)} />
-              }
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={rm ? {} : { opacity: 0, y: 32, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={rm ? {} : { opacity: 0, y: -22, scale: 0.985 }}
+            transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
+            style={{ position: 'absolute', inset: 0, zIndex: 15 }}
+          >
+            {SLIDES[active].type === 'photo' ? (
+              <PhotoSlide slide={SLIDES[active]} />
+            ) : SLIDES[active].type === 'leader' ? (
+              <LeaderBioLayout slide={SLIDES[active]} />
+            ) : (
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 8% 0 160px' }}>
+                <ReelCard slide={SLIDES[active]} onPlay={() => setReelOpen(active)} />
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
 
         {/* Scroll cue */}
         <div style={{

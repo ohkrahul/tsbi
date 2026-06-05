@@ -28,7 +28,7 @@ function ExploreBtn({ url }: { url: string }) {
     <a href={url} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{ display: 'inline-flex', alignItems: 'center', gap: 16, textDecoration: 'none' }}>
       <motion.div
-        animate={{ background: hov ? '#e0197d' : 'transparent' }}
+        animate={{ background: hov ? '#e0197d' : 'rgba(0,0,0,0)' }}
         transition={{ duration: 0.22 }}
         style={{ width: 44, height: 44, borderRadius: '50%', border: `1px solid ${hov ? '#e0197d' : 'rgba(0,0,0,0.22)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'border-color 0.22s' }}
       >

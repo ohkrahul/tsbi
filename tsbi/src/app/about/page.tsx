@@ -1,34 +1,20 @@
 import Link from 'next/link';
 import LeadershipReelShowcase from '@/components/about/LeadershipReelShowcase';
-import { getLeadershipSlides, getSiteSettings, mediaUrl } from '@/lib/strapi';
+import SmallBigStoryTimeline from '@/components/about/SmallBigStoryTimeline';
+import AboutAwardsSection from '@/components/about/AboutAwardsSection';
+import { getLeadershipSlides, mediaUrl } from '@/lib/strapi';
 
 const stripItems = [
-  { label: 'Culture', img: '/images/banner-home2-2-400x500.jpg', overlay: 'rgba(26,34,64,.55)' },
-  { label: 'Production', img: '/images/bg-about-company-400x500.jpg', overlay: 'rgba(32,10,40,.55)' },
-  { label: 'People', img: '/images/why-work-with-us.jpg', overlay: 'rgba(48,21,0,.5)' },
-  { label: 'Strategy', img: '/images/portfolio-popup-10-400x500.jpg', overlay: 'rgba(5,21,16,.55)' },
-  { label: 'Studio', img: '/images/banner-01-400x500.jpg', overlay: 'rgba(10,26,48,.55)' },
+  { label: 'Culture',    img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM.jpeg',      overlay: 'rgba(26,34,64,.38)' },
+  { label: 'Production', img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM%20%281%29.jpeg', overlay: 'rgba(32,10,40,.38)' },
+  { label: 'People',     img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM%20%282%29.jpeg', overlay: 'rgba(20,16,60,.38)' },
+  { label: 'Strategy',   img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM%20%283%29.jpeg', overlay: 'rgba(5,21,16,.38)' },
+  { label: 'Studio',     img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM%20%284%29.jpeg', overlay: 'rgba(10,26,48,.38)' },
 ];
-
-const stats = [
-  { val: '150+', label: 'Talents Managed', pink: true },
-  { val: '300+', label: 'Projects Done', pink: false },
-  { val: '98%', label: 'Client Retention', pink: false },
-  { val: '12+', label: 'Years of Impact', pink: false },
-];
-
-const timeline = [
-  { year: '2012', title: 'Founded in Mumbai', desc: 'Started with three people, one camera and an unshakeable belief in the power of small ideas.' },
-  { year: '2016', title: 'Influencer Division Launched', desc: "Built one of India's first dedicated influencer management arms. 50+ talents in the first year." },
-  { year: '2020', title: 'Tech & Performance Wing', desc: 'Launched our technology and data division — digital product, performance marketing and analytics under one roof.' },
-  { year: '2025', title: '150+ Talents, Dubai Expansion', desc: 'Operating across Mumbai and Dubai. One of India\'s most formidable independent creative agencies.' },
-];
-
 
 export default async function AboutPage() {
-  const [cmsSlides, settings] = await Promise.all([
+  const [cmsSlides] = await Promise.all([
     getLeadershipSlides(),
-    getSiteSettings(),
   ]);
 
   const leadershipSlides = cmsSlides.length
@@ -45,10 +31,6 @@ export default async function AboutPage() {
         ctaHref: s.ctaHref,
       }))
     : undefined;
-
-  const aboutStats = settings?.aboutStats?.length
-    ? settings.aboutStats
-    : stats;
 
   return (
     <>
@@ -73,49 +55,11 @@ export default async function AboutPage() {
         ))}
       </div>
 
-      {/* Story + Stats */}
-      <section className="ab-story">
-        <div className="ab-story-text">
-          <div className="sec-label">Origins</div>
-          <h2 className="ab-story-h2">It Started With a<br/><em>Small Big Idea.</em></h2>
-          <p className="ab-story-body">
-            TSBI was founded on the belief that great ideas don't need big budgets — they need the right people,
-            the right strategy and the courage to execute brilliantly. Over twelve years, we've grown from a scrappy
-            creative team into a full-service agency powering some of India's most talked-about campaigns.
-            <br/><br/>
-            We are creative directors, strategists, media planners, technologists and producers united by one
-            obsession: making things that matter.
-          </p>
-          <Link href="/work" className="btn-fill" style={{ marginTop: 36 }}>See Our Work →</Link>
-        </div>
-
-        <div className="ab-stats">
-          {aboutStats.map(s => (
-            <div key={s.label} className="ab-stat">
-              <div className={`ab-stat-val${'pink' in s && s.pink ? ' pink' : ''}`}>{s.val}</div>
-              <div className="ab-stat-label">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Story + Awards */}
+      <AboutAwardsSection />
 
       {/* Timeline */}
-      <section className="ab-timeline">
-        <div className="sec-label">The Journey</div>
-        <h2 className="ab-tl-h2">12 Years of<br/><em>Building</em></h2>
-        <div className="ab-tl-items">
-          {timeline.map(t => (
-            <div key={t.year} className="ab-tl-item">
-              <div className="ab-tl-year">{t.year}</div>
-              <div className="ab-tl-dot" />
-              <div className="ab-tl-content">
-                <div className="ab-tl-title">{t.title}</div>
-                <p className="ab-tl-desc">{t.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <SmallBigStoryTimeline />
 
       {/* Leadership & Reel Showcase */}
       <LeadershipReelShowcase initialSlides={leadershipSlides} />
