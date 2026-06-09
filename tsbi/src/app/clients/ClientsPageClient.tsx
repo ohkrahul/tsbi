@@ -11,47 +11,60 @@ export interface ClientEntry {
   logo?: string;   // path relative to /public  e.g. /images/clients/loreal.png
 }
 
+/* ── client name → case study / work URL ── */
+const CASE_STUDY_MAP: Record<string, string> = {
+  'Dharma Productions':  '/work/dharma-production',
+  'Devgn Films':         '/work/son-of-sardaar-2',
+  'Disney India':        '/work/disney-india',
+  'Mumbai Indians':      '/work/mumbai-indians',
+  'DHL':                 '/work/mumbai-indians',
+  'Ashok Leyland':       '/case-studies',
+};
+
 type Tab = 'all' | 'entertainment' | 'non-entertainment';
 
 /* ── Single logo card ── */
 function LogoCard({ client }: { client: ClientEntry }) {
   const [imgErr, setImgErr] = useState(false);
+  const [hov, setHov] = useState(false);
+  const workUrl = CASE_STUDY_MAP[client.name];
 
-  // Derive initials as fallback
   const initials = client.name
     .split(/[\s&·]+/)
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
 
-  return (
+  const card = (
     <div
       style={{
         background: '#fff',
         borderRadius: 16,
-        border: '1px solid rgba(0,0,0,0.07)',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+        border: `1px solid ${hov && workUrl ? 'rgba(224,25,125,0.3)' : 'rgba(0,0,0,0.07)'}`,
+        boxShadow: hov ? '0 12px 40px rgba(0,0,0,0.1)' : '0 4px 20px rgba(0,0,0,0.05)',
         padding: '28px 20px 22px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: 14,
-        cursor: 'default',
+        cursor: workUrl ? 'pointer' : 'default',
         transition: 'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
+        transform: hov ? 'translateY(-4px)' : 'translateY(0)',
+        position: 'relative',
+        overflow: 'hidden',
       }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.transform = 'translateY(-4px)';
-        el.style.boxShadow = '0 12px 40px rgba(0,0,0,0.1)';
-        el.style.borderColor = 'rgba(224,25,125,0.25)';
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.transform = 'translateY(0)';
-        el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
-        el.style.borderColor = 'rgba(0,0,0,0.07)';
-      }}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
     >
+      {/* "View Work" overlay for clients with case studies */}
+      {workUrl && hov && (
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(224,25,125,0.92) 0%, transparent 100%)', padding: '20px 0 10px', textAlign: 'center', pointerEvents: 'none' }}>
+          <span style={{ fontFamily: 'var(--fm)', fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            View Work →
+          </span>
+        </div>
+      )}
+
       {/* Logo image or initial fallback */}
       <div
         style={{
@@ -128,6 +141,10 @@ function LogoCard({ client }: { client: ClientEntry }) {
       </div>
     </div>
   );
+
+  return workUrl
+    ? <Link href={workUrl} style={{ textDecoration: 'none', display: 'block' }}>{card}</Link>
+    : card;
 }
 
 /* ── Page component ── */
