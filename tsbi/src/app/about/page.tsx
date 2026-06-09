@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import LeadershipReelShowcase from '@/components/about/LeadershipReelShowcase';
-import SmallBigStoryTimeline from '@/components/about/SmallBigStoryTimeline';
+import MarioTimeline from '@/components/about/MarioTimeline';
 import AboutAwardsSection from '@/components/about/AboutAwardsSection';
 import HeroSection from '@/components/home/HeroSection';
 import { getLeadershipSlides, mediaUrl } from '@/lib/strapi';
@@ -53,7 +53,7 @@ export default async function AboutPage() {
       <AboutAwardsSection />
 
       {/* Timeline */}
-      <SmallBigStoryTimeline />
+      <MarioTimeline />
 
       {/* Leadership & Reel Showcase */}
       <LeadershipReelShowcase initialSlides={leadershipSlides} />
