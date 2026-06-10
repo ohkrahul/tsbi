@@ -1,5 +1,5 @@
 import ClientsPageClient from './ClientsPageClient';
-import { getClientBrands } from '@/lib/strapi';
+import { getClientBrands, mediaUrl } from '@/lib/strapi';
 
 const FALLBACK_CLIENTS = [
   // ─────────── Entertainment & Media ──────────────────────────────────
@@ -95,8 +95,12 @@ export default async function ClientsPage() {
         type: b.type,
         accent: b.accent,
         isEntertainment: b.isEntertainment,
+<<<<<<< HEAD
         logo: b.image ?? undefined,
         slug: (b as { slug?: string }).slug ?? undefined,
+=======
+        logo: b.image ? mediaUrl(b.image) : undefined,
+>>>>>>> 783374c5d925cc851ff1bc60b4fb752384a16301
       }))
     : FALLBACK_CLIENTS;
 

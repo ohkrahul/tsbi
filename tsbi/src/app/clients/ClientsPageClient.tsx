@@ -12,11 +12,23 @@ export interface ClientEntry {
   slug?: string;   // case study slug — card becomes a link when set
 }
 
+/* ── client name → case study / work URL ── */
+const CASE_STUDY_MAP: Record<string, string> = {
+  'Dharma Productions':  '/work/dharma-production',
+  'Devgn Films':         '/work/son-of-sardaar-2',
+  'Disney India':        '/work/disney-india',
+  'Mumbai Indians':      '/work/mumbai-indians',
+  'DHL':                 '/work/mumbai-indians',
+  'Ashok Leyland':       '/case-studies',
+};
+
 type Tab = 'all' | 'entertainment' | 'non-entertainment';
 
 /* ── Single logo card ── */
 function LogoCard({ client }: { client: ClientEntry }) {
   const [imgErr, setImgErr] = useState(false);
+  const [hov, setHov] = useState(false);
+  const workUrl = CASE_STUDY_MAP[client.name];
 
   const initials = client.name
     .split(/[\s&·]+/)
@@ -24,6 +36,7 @@ function LogoCard({ client }: { client: ClientEntry }) {
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
 
+<<<<<<< HEAD
   const cardStyle: React.CSSProperties = {
     background: '#fff',
     borderRadius: 16,
@@ -74,6 +87,49 @@ function LogoCard({ client }: { client: ClientEntry }) {
       )}
 
       <div style={{ width: '100%', height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px' }}>
+=======
+  const card = (
+    <div
+      style={{
+        background: '#fff',
+        borderRadius: 16,
+        border: `1px solid ${hov && workUrl ? 'rgba(224,25,125,0.3)' : 'rgba(0,0,0,0.07)'}`,
+        boxShadow: hov ? '0 12px 40px rgba(0,0,0,0.1)' : '0 4px 20px rgba(0,0,0,0.05)',
+        padding: '28px 20px 22px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 14,
+        cursor: workUrl ? 'pointer' : 'default',
+        transition: 'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
+        transform: hov ? 'translateY(-4px)' : 'translateY(0)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+    >
+      {/* "View Work" overlay for clients with case studies */}
+      {workUrl && hov && (
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(224,25,125,0.92) 0%, transparent 100%)', padding: '20px 0 10px', textAlign: 'center', pointerEvents: 'none' }}>
+          <span style={{ fontFamily: 'var(--fm)', fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            View Work →
+          </span>
+        </div>
+      )}
+
+      {/* Logo image or initial fallback */}
+      <div
+        style={{
+          width: '100%',
+          height: 96,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0 8px',
+        }}
+      >
+>>>>>>> 783374c5d925cc851ff1bc60b4fb752384a16301
         {client.logo && !imgErr ? (
           <img
             src={client.logo}
@@ -123,6 +179,10 @@ function LogoCard({ client }: { client: ClientEntry }) {
       {inner}
     </div>
   );
+
+  return workUrl
+    ? <Link href={workUrl} style={{ textDecoration: 'none', display: 'block' }}>{card}</Link>
+    : card;
 }
 
 /* ── Page component ── */
