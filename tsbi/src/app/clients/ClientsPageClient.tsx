@@ -9,6 +9,7 @@ export interface ClientEntry {
   accent: string;
   isEntertainment: boolean;
   logo?: string;   // path relative to /public  e.g. /images/clients/loreal.png
+  slug?: string;   // case study slug — card becomes a link when set
 }
 
 type Tab = 'all' | 'entertainment' | 'non-entertainment';
@@ -17,115 +18,109 @@ type Tab = 'all' | 'entertainment' | 'non-entertainment';
 function LogoCard({ client }: { client: ClientEntry }) {
   const [imgErr, setImgErr] = useState(false);
 
-  // Derive initials as fallback
   const initials = client.name
     .split(/[\s&·]+/)
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
 
-  return (
-    <div
-      style={{
-        background: '#fff',
-        borderRadius: 16,
-        border: '1px solid rgba(0,0,0,0.07)',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-        padding: '28px 20px 22px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 14,
-        cursor: 'default',
-        transition: 'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.transform = 'translateY(-4px)';
-        el.style.boxShadow = '0 12px 40px rgba(0,0,0,0.1)';
-        el.style.borderColor = 'rgba(224,25,125,0.25)';
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.transform = 'translateY(0)';
-        el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
-        el.style.borderColor = 'rgba(0,0,0,0.07)';
-      }}
-    >
-      {/* Logo image or initial fallback */}
-      <div
-        style={{
-          width: '100%',
-          height: 96,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0 8px',
-        }}
-      >
+  const cardStyle: React.CSSProperties = {
+    background: '#fff',
+    borderRadius: 16,
+    border: '1px solid rgba(0,0,0,0.07)',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+    padding: '28px 20px 22px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 14,
+    cursor: client.slug ? 'pointer' : 'default',
+    transition: 'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
+    textDecoration: 'none',
+    position: 'relative',
+  };
+
+  const handleEnter = (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget as HTMLElement;
+    el.style.transform = 'translateY(-4px)';
+    el.style.boxShadow = '0 12px 40px rgba(0,0,0,0.1)';
+    el.style.borderColor = 'rgba(224,25,125,0.25)';
+  };
+  const handleLeave = (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget as HTMLElement;
+    el.style.transform = 'translateY(0)';
+    el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
+    el.style.borderColor = 'rgba(0,0,0,0.07)';
+  };
+
+  const inner = (
+    <>
+      {client.slug && (
+        <div style={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          background: 'var(--magenta)',
+          color: '#fff',
+          fontFamily: 'var(--fm)',
+          fontSize: 8,
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          padding: '3px 7px',
+          borderRadius: 20,
+        }}>
+          View Case Study
+        </div>
+      )}
+
+      <div style={{ width: '100%', height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px' }}>
         {client.logo && !imgErr ? (
           <img
             src={client.logo}
             alt={`${client.name} logo`}
             onError={() => setImgErr(true)}
-            style={{
-              maxWidth: '100%',
-              maxHeight: 90,
-              width: 'auto',
-              height: 'auto',
-              objectFit: 'contain',
-              display: 'block',
-            }}
+            style={{ maxWidth: '100%', maxHeight: 90, width: 'auto', height: 'auto', objectFit: 'contain', display: 'block' }}
           />
         ) : (
-          /* Text initials fallback — shown until you upload a logo */
-          <div
-            style={{
-              width: 72,
-              height: 72,
-              borderRadius: 12,
-              background: `${client.accent}18`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: 'var(--fd)',
-              fontSize: 22,
-              fontWeight: 900,
-              color: client.accent,
-              letterSpacing: '-0.02em',
-            }}
-          >
+          <div style={{
+            width: 72, height: 72, borderRadius: 12,
+            background: `${client.accent}18`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontFamily: 'var(--fd)', fontSize: 22, fontWeight: 900,
+            color: client.accent, letterSpacing: '-0.02em',
+          }}>
             {initials}
           </div>
         )}
       </div>
 
-      {/* Brand name */}
       <div style={{ textAlign: 'center' }}>
-        <div
-          style={{
-            fontFamily: 'var(--fd)',
-            fontSize: 'clamp(13px,1.4vw,16px)',
-            fontWeight: 700,
-            color: 'var(--ink)',
-            lineHeight: 1.2,
-            marginBottom: 5,
-          }}
-        >
+        <div style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(13px,1.4vw,16px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.2, marginBottom: 5 }}>
           {client.name}
         </div>
-        <div
-          style={{
-            fontFamily: 'var(--fm)',
-            fontSize: 9,
-            letterSpacing: '0.13em',
-            textTransform: 'uppercase',
-            color: 'var(--magenta)',
-          }}
-        >
+        <div style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.13em', textTransform: 'uppercase', color: 'var(--magenta)' }}>
           {client.type}
         </div>
       </div>
+    </>
+  );
+
+  if (client.slug) {
+    return (
+      <Link
+        href={`/case-studies/${client.slug}`}
+        style={cardStyle}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+      >
+        {inner}
+      </Link>
+    );
+  }
+
+  return (
+    <div style={cardStyle} onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
+      {inner}
     </div>
   );
 }
@@ -140,10 +135,13 @@ export default function ClientsPageClient({ clients }: { clients: ClientEntry[] 
     { key: 'non-entertainment', label: 'Non-Entertainment'         },
   ];
 
-  const current =
+  const filtered =
     tab === 'all'               ? clients
     : tab === 'entertainment'   ? clients.filter((c) =>  c.isEntertainment)
     :                             clients.filter((c) => !c.isEntertainment);
+
+  // Sort alphabetically
+  const current = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <>
@@ -174,13 +172,7 @@ export default function ClientsPageClient({ clients }: { clients: ClientEntry[] 
 
       {/* Logo grid */}
       <section className="cl-section" style={{ background: 'var(--off)' }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))',
-            gap: 14,
-          }}
-        >
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 14 }}>
           {current.map((client) => (
             <LogoCard key={client.name} client={client} />
           ))}

@@ -55,10 +55,12 @@ export default async function HomePage() {
 
       <OrbitSection />
       {/* <GalaxySection /> */}
-      <ProdStrip />
-      <ContentProductionSection />
+     
       {/* <CapSection /> */}
       <ClientsSection initialClients={clients} />
+       <ContentProductionSection />
+       <ProdStrip />
+
       <StoriesSection />
       {/* <ServicesPreview /> */}
       <FooterCTA />
