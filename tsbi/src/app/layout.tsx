@@ -3,7 +3,6 @@ import { Playfair_Display, DM_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import Preloader from "@/components/Preloader";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const playfair = Playfair_Display({
@@ -48,7 +47,6 @@ export default function RootLayout({
       className={`${playfair.variable} ${dmSans.variable} ${spaceGrotesk.variable}`}
     >
       <body>
-        <Preloader />
         <ScrollReveal />
         <Nav />
         {children}

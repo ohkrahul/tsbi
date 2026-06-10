@@ -1,3 +1,4 @@
+import Preloader from '@/components/Preloader';
 import HeroBannerSlider from '@/components/about/HeroBannerSlider';
 import OrbitSection from '@/components/home/OrbitSection';
 import ProdStrip from '@/components/home/ProdStrip';
@@ -34,6 +35,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <Preloader />
       <HeroBannerSlider />
 
       <div className="ab-strip">
