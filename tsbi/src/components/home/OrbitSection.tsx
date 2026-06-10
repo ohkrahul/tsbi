@@ -33,13 +33,6 @@ export default function OrbitSection() {
             into meaningful influence that moves culture forward.
           </p>
 
-          {/* <Link
-            href="/work"
-            className="mb-10 inline-flex items-center gap-2 rounded-full bg-[#1a1a1a] px-7 py-[14px] font-mono text-[11px] uppercase tracking-[.14em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#c4517a]"
-          >
-            + Explore Network
-          </Link> */}
-
           <div className="flex items-center gap-4">
             <span className="text-sm leading-none text-[#c4517a]">✦</span>
             <div>
@@ -75,7 +68,6 @@ export default function OrbitSection() {
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
-              {/* Circular clip masks for image badges */}
               <clipPath id="clip31"><circle cx="0" cy="0" r="31"/></clipPath>
               <clipPath id="clip25"><circle cx="0" cy="0" r="25"/></clipPath>
               <clipPath id="clipCore"><circle cx="320" cy="280" r="82"/></clipPath>
@@ -112,85 +104,90 @@ export default function OrbitSection() {
             {/* core blob */}
             <ellipse cx="320" cy="280" rx="118" ry="118" fill="url(#coreBlob)" filter="url(#coreGlowF)"/>
             <ellipse cx="320" cy="280" rx="82"  ry="82"  fill="#f2bcd6" opacity="0.6"/>
+            {/* hari.png — centre */}
             <image href="/logoss/hari.png"
               x="238" y="198" width="164" height="164"
               clipPath="url(#clipCore)" preserveAspectRatio="xMidYMid slice"/>
             <circle cx="320" cy="280" r="82" fill="none" stroke="#e0b0cc" strokeWidth="1.5" opacity="0.6"/>
 
-            {/* ═══ OUTER ORBIT — CW 22s ═══ */}
+            {/* ═══ OUTER ORBIT — CW 22s ═══
+                Positions (CX, CY) on the outermost ellipse (rx=275, ry=158)
+                Right(595,280)  Bottom(320,438)  Left(45,280)  Top(320,122) */}
             <g style={{ transformOrigin: '320px 280px', animation: 'orbit1 22s linear infinite' }}>
 
-              {/* Right — Google */}
+              {/* Right — GSK */}
               <g transform="translate(595,280)" filter="url(#bs)">
                 <circle r="38" fill="white" stroke="#c8a868" strokeWidth="1.6"/>
-                <image href="/logoss/google-logo.webp"
+                <image href="/logoss/GSK_Logo_PNG5.png"
                   x="-22" y="-22" width="44" height="44"
                   clipPath="url(#clip31)" preserveAspectRatio="xMidYMid meet"/>
                 <circle r="31" fill="none" stroke="#c8a868" strokeWidth="1"/>
               </g>
 
-              {/* Bottom — Meta */}
+              {/* Bottom — Mumbai Indians */}
               <g transform="translate(320,438)" filter="url(#bs)">
                 <circle r="38" fill="white" stroke="#c8a868" strokeWidth="1.6"/>
-                <image href="/logoss/meta.webp"
+                <image href="/logoss/MI.jpg"
                   x="-22" y="-22" width="44" height="44"
                   clipPath="url(#clip31)" preserveAspectRatio="xMidYMid meet"/>
                 <circle r="31" fill="none" stroke="#c8a868" strokeWidth="1"/>
               </g>
 
-              {/* Left — PhonePe */}
+              {/* Left — Ashok Leyland */}
               <g transform="translate(45,280)" filter="url(#bs)">
                 <circle r="38" fill="white" stroke="#c8a868" strokeWidth="1.6"/>
-                <image href="/logoss/phonepe.jpg"
+                <image href="/logoss/ashok%20leyland.png"
                   x="-22" y="-22" width="44" height="44"
                   clipPath="url(#clip31)" preserveAspectRatio="xMidYMid meet"/>
                 <circle r="31" fill="none" stroke="#c8a868" strokeWidth="1"/>
               </g>
 
-              {/* Top — Cricbuzz */}
+              {/* Top — Dharma Productions */}
               <g transform="translate(320,122)" filter="url(#bs)">
                 <circle r="33" fill="white" stroke="#c8a868" strokeWidth="1.6"/>
-                <image href="/logoss/crickbuzz.png"
+                <image href="/logoss/dharma%20production.png"
                   x="-20" y="-20" width="40" height="40"
                   clipPath="url(#clip25)" preserveAspectRatio="xMidYMid meet"/>
                 <circle r="26" fill="none" stroke="#c8a868" strokeWidth="1"/>
               </g>
             </g>
 
-            {/* ═══ INNER ORBIT — CCW 14s ═══ */}
+            {/* ═══ INNER ORBIT — CCW 14s ═══
+                Positions on the middle ellipse (rx=198, ry=114)
+                Upper-right(460,199)  Lower-right(460,361)  Lower-left(180,361)  Upper-left(180,199) */}
             <g style={{ transformOrigin: '320px 280px', animation: 'orbit1 14s linear infinite reverse' }}>
 
-              {/* Upper right — JioHotstar */}
+              {/* Upper right — IDFC First Bank */}
               <g transform="translate(460,199)" filter="url(#bs)">
                 <circle r="32" fill="white" stroke="#c0a0b8" strokeWidth="1.4"/>
-                <image href="/logoss/jiohotsar.png"
+                <image href="/logoss/Logo_of_IDFC_First_Bank.svg.png"
                   x="-18" y="-18" width="36" height="36"
                   clipPath="url(#clip25)" preserveAspectRatio="xMidYMid meet"/>
                 <circle r="25" fill="none" stroke="#c0a0b8" strokeWidth="0.8"/>
               </g>
 
-              {/* Lower right — Google */}
+              {/* Lower right — Gulf Giants */}
               <g transform="translate(460,361)" filter="url(#bs)">
                 <circle r="32" fill="white" stroke="#c0a0b8" strokeWidth="1.4"/>
-                <image href="/logoss/google-logo.webp"
+                <image href="/logoss/gulf%20giants.png"
                   x="-18" y="-18" width="36" height="36"
                   clipPath="url(#clip25)" preserveAspectRatio="xMidYMid meet"/>
                 <circle r="25" fill="none" stroke="#c0a0b8" strokeWidth="0.8"/>
               </g>
 
-              {/* Lower left — Cricbuzz */}
+              {/* Lower left — AGL */}
               <g transform="translate(180,361)" filter="url(#bs)">
                 <circle r="32" fill="white" stroke="#c0a0b8" strokeWidth="1.4"/>
-                <image href="/logoss/crickbuzz.png"
+                <image href="/logoss/agl.png"
                   x="-18" y="-18" width="36" height="36"
                   clipPath="url(#clip25)" preserveAspectRatio="xMidYMid meet"/>
                 <circle r="25" fill="none" stroke="#c0a0b8" strokeWidth="0.8"/>
               </g>
 
-              {/* Upper left — Meta */}
+              {/* Upper left — TBZ */}
               <g transform="translate(180,199)" filter="url(#bs)">
                 <circle r="32" fill="white" stroke="#c0a0b8" strokeWidth="1.4"/>
-                <image href="/logoss/meta.webp"
+                <image href="/logoss/Tbz_logo.jpg"
                   x="-18" y="-18" width="36" height="36"
                   clipPath="url(#clip25)" preserveAspectRatio="xMidYMid meet"/>
                 <circle r="25" fill="none" stroke="#c0a0b8" strokeWidth="0.8"/>

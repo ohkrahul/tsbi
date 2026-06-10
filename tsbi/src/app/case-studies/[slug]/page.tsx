@@ -69,9 +69,12 @@ export default async function CaseStudyDetailPage({
             Brand Story <em>and Execution</em>
           </h2>
           <p className="cs-concept-body">{study.shortDescription}</p>
-          <div style={{ marginTop: 28 }}>
+          <div style={{ marginTop: 28, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
             <Link href="/case-studies" className="btn-border">
-              Back To Case Studies
+              ← Case Studies
+            </Link>
+            <Link href="/clients" className="btn-border" style={{ borderColor: 'var(--magenta)', color: 'var(--magenta)' }}>
+              Our Clients →
             </Link>
           </div>
         </div>

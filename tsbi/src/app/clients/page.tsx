@@ -3,9 +3,9 @@ import { getClientBrands, mediaUrl } from '@/lib/strapi';
 
 const FALLBACK_CLIENTS = [
   // ─────────── Entertainment & Media ──────────────────────────────────
-  { name: 'Dharma Productions',   type: 'Film · Entertainment',    accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/dharma%20production.png'               },
-  { name: 'Devgn Films',          type: 'Film · Entertainment',    accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/devgan.png'                            },
-  { name: 'Disney India',         type: 'Entertainment',           accent: '#0051a5', isEntertainment: true,  logo: '/entertainment/disney%20india.png'                    },
+  { name: 'Dharma Productions',   type: 'Film · Entertainment',    accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/dharma%20production.png',               slug: 'dharma-production'   },
+  { name: 'Devgn Films',          type: 'Film · Entertainment',    accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/devgan.png',                            slug: 'son-of-sardaar-2'    },
+  { name: 'Disney India',         type: 'Entertainment',           accent: '#0051a5', isEntertainment: true,  logo: '/entertainment/disney%20india.png',                    slug: 'disney-india'        },
   { name: 'Warner Bros',          type: 'Film · Studio',           accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/warner%20bros.png'                     },
   { name: 'Warner Music India',   type: 'Music Label',             accent: '#f05100', isEntertainment: true,  logo: '/entertainment/warner%20msuic.png'                    },
   { name: 'North Records',        type: 'Music Label',             accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/north%20recorods.webp'                 },
@@ -26,7 +26,7 @@ const FALLBACK_CLIENTS = [
   { name: 'Shark Tank India',     type: 'Reality TV',              accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/shark%20tank.png'                      },
   { name: 'Dhaan Dhoom',          type: 'Entertainment',           accent: '#f07a1a', isEntertainment: true,  logo: '/entertainment/dhaan%20dhoom.png'                     },
   // Sports
-  { name: 'Mumbai Indians',       type: 'Sports · IPL',            accent: '#004ba0', isEntertainment: true,  logo: '/entertainment/MI.jpg'                                },
+  { name: 'Mumbai Indians',       type: 'Sports · IPL',            accent: '#004ba0', isEntertainment: true,  logo: '/entertainment/MI.jpg',                                slug: 'mumbai-indians'      },
   { name: 'Jaipur Pink Panthers', type: 'Sports · Pro Kabaddi',    accent: '#e040a0', isEntertainment: true,  logo: '/entertainment/Jaipur_Pink_panthers_logo.jpg'         },
   { name: 'KKR',                  type: 'Sports · IPL',            accent: '#3a0ca3', isEntertainment: true,  logo: '/entertainment/kkr.jpg'                               },
   { name: 'Gujarat Giants',       type: 'Sports · Pro Kabaddi',    accent: '#1a9080', isEntertainment: true,  logo: '/entertainment/gujrat%20giants.png'                   },
@@ -78,7 +78,7 @@ const FALLBACK_CLIENTS = [
   { name: 'KidZania',             type: 'Family Entertainment',     accent: '#f0c000', isEntertainment: false, logo: '/non-entertainment/kidsznia.png'                      },
   { name: 'TBZ',                  type: 'Jewellery · Luxury',       accent: '#c89b3c', isEntertainment: false, logo: '/non-entertainment/Tbz_logo.jpg'                      },
   // Logistics & B2B
-  { name: 'DHL',                  type: 'Logistics',                accent: '#ffcc00', isEntertainment: false, logo: '/non-entertainment/dhl.png'                           },
+  { name: 'DHL',                  type: 'Logistics',                accent: '#ffcc00', isEntertainment: false, logo: '/non-entertainment/dhl.png',                            slug: 'mumbai-indians'      },
   { name: 'Great White',          type: 'Electricals',              accent: '#1a3070', isEntertainment: false, logo: '/non-entertainment/GreatWhite-logo-696x364.png'        },
   { name: 'AGL',                  type: 'Industry',                 accent: '#003087', isEntertainment: false, logo: '/non-entertainment/agl.png'                           },
   { name: 'INTOIT',               type: 'Technology',               accent: '#1a6aff', isEntertainment: false, logo: '/non-entertainment/final_logo_INTOIT-02_89b8d92c-0882-4d89-8215-fc7bbe82fb29.webp' },
@@ -95,7 +95,12 @@ export default async function ClientsPage() {
         type: b.type,
         accent: b.accent,
         isEntertainment: b.isEntertainment,
+<<<<<<< HEAD
+        logo: b.image ?? undefined,
+        slug: (b as { slug?: string }).slug ?? undefined,
+=======
         logo: b.image ? mediaUrl(b.image) : undefined,
+>>>>>>> 783374c5d925cc851ff1bc60b4fb752384a16301
       }))
     : FALLBACK_CLIENTS;
 

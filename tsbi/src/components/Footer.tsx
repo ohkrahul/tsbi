@@ -3,8 +3,7 @@ import Link from 'next/link';
 
 const workLinks = [
   { href: '/case-studies', label: 'Case Studies' },
-  { href: '/case-studies', label: 'Case Studies' },
-  { href: '/clients', label: 'Our Clients' },
+  { href: '/clients',      label: 'Our Clients'  },
 ];
 
 const agencyLinks = [
