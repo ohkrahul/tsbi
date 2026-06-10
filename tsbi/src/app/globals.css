@@ -679,6 +679,9 @@ body {
 .cs-ic:last-child { border-right: none; }
 .cs-ic-label { font-family: var(--fm); font-size: 8px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 .cs-ic-val { font-size: 14px; font-weight: 500; color: var(--ink); }
+.cs-video-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; margin: 44px 0; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+.cs-video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.cs-video-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .cs-concept { padding: 80px 48px; display: flex; gap: 80px; align-items: flex-start; }
 .cs-concept-text { flex: 1; }
 .cs-concept-h2 { font-family: var(--fd); font-size: clamp(32px,5vw,52px); font-weight: 700; line-height: 1.05; margin-bottom: 24px; }
@@ -997,11 +1000,19 @@ body {
 /* ── CASE STUDY 3D WORLD ─────────────────────────────── */
 .cs-world-section {
   position: relative; width: 100%; height: 100vh; min-height: 560px;
-  overflow: hidden; background: #fff;
-  transition: opacity .55s ease, transform .85s cubic-bezier(.22,1,.36,1);
+  overflow: hidden; background: #050910;
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.4,0,1,1);
+  transform-origin: center center;
 }
-.cs-world-canvas {
-  transition: transform .85s cubic-bezier(.22,1,.36,1), filter .55s ease;
+.cs-world-section.is-transitioning { opacity: 0; transform: scale(1.08); }
+.cs-world-canvas { transition: none; }
+
+@keyframes csDetailReveal {
+  from { opacity: 0; transform: scale(1.06); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+.cs-detail-main {
+  animation: csDetailReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .cs-world-overlay {
   position: absolute; inset: 0; pointer-events: none; z-index: 10;

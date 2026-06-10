@@ -28,26 +28,28 @@ export default function CaseStudyPortal({ study, index, activeIndex, onHotspot, 
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    // 16:9 canvas — matches YouTube thumbnail ratio perfectly
+    const CW = 640, CH = 360;
     const canvas = document.createElement('canvas');
-    canvas.width = 512; canvas.height = 720;
+    canvas.width = CW; canvas.height = CH;
     const ctx = canvas.getContext('2d')!;
 
     const drawLabels = () => {
-      // Gradient overlay for cinematic depth
-      const grd = ctx.createLinearGradient(0, 0, 0, 720);
-      grd.addColorStop(0, study.gradFrom + '88');
-      grd.addColorStop(1, study.gradTo + 'cc');
+      // Bottom dark gradient for text readability
+      const grd = ctx.createLinearGradient(0, 0, 0, CH);
+      grd.addColorStop(0.55, 'transparent');
+      grd.addColorStop(1, 'rgba(0,0,0,0.75)');
       ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, 512, 720);
-      // Client name bottom
-      ctx.font = 'bold 26px Georgia, serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.65)';
+      ctx.fillRect(0, 0, CW, CH);
+      // Client name bottom-left
+      ctx.font = 'bold 22px Georgia, serif';
+      ctx.fillStyle = '#fff';
       ctx.textAlign = 'left';
-      ctx.fillText(study.clientName, 28, 676);
+      ctx.fillText(study.clientName, 18, CH - 16);
       // Category top-left
-      ctx.font = '300 14px sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.35)';
-      ctx.fillText(study.category.toUpperCase(), 28, 46);
+      ctx.font = '11px sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      ctx.fillText(study.category.toUpperCase(), 18, 28);
       const t = new THREE.CanvasTexture(canvas);
       setTexture(t);
     };
@@ -55,16 +57,22 @@ export default function CaseStudyPortal({ study, index, activeIndex, onHotspot, 
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
-      ctx.drawImage(img, 0, 0, 512, 720);
+      // Fill canvas with object-fit: cover (center-crop)
+      const iA = img.naturalWidth / (img.naturalHeight || 1);
+      const cA = CW / CH;
+      let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+      if (iA > cA) { sw = img.naturalHeight * cA; sx = (img.naturalWidth - sw) / 2; }
+      else         { sh = img.naturalWidth / cA;  sy = (img.naturalHeight - sh) / 2; }
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, CW, CH);
       drawLabels();
     };
     img.onerror = () => {
       // Fallback: solid gradient
-      const grd = ctx.createLinearGradient(0, 0, 400, 720);
+      const grd = ctx.createLinearGradient(0, 0, CW, CH);
       grd.addColorStop(0, study.gradFrom);
       grd.addColorStop(1, study.gradTo);
       ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, 512, 720);
+      ctx.fillRect(0, 0, CW, CH);
       drawLabels();
     };
     img.src = study.image;
@@ -83,7 +91,7 @@ export default function CaseStudyPortal({ study, index, activeIndex, onHotspot, 
 
   useFrame(() => {
     if (!meshRef.current || !matRef.current) return;
-    const lf = 0.07;
+    const lf = 0.12;
     const d = index - activeIndex;
     const ad = Math.abs(d);
     const tZ = d === 0 ? 0 : ad === 1 ? -1.2 : -2.5;
@@ -105,7 +113,7 @@ export default function CaseStudyPortal({ study, index, activeIndex, onHotspot, 
   return (
     <group position={[index * spacing, 0, 0]}>
       <mesh ref={meshRef}>
-        <planeGeometry args={[4.5, 6.5]} />
+        <planeGeometry args={[5.6, 3.15]} />
         <meshBasicMaterial ref={matRef} map={texture} transparent />
       </mesh>
       {isActive && !transitioning && (

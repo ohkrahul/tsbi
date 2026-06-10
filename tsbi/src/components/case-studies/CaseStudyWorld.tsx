@@ -8,7 +8,7 @@ import type { CaseStudyGalleryItem } from '@/lib/caseStudies';
 import CaseStudyPortal from './CaseStudyPortal';
 import CaseStudyFallbackCarousel from './CaseStudyFallbackCarousel';
 
-const SPACING = 6;
+const SPACING = 7;
 
 // Scene: lives inside Canvas, can use useThree
 interface SceneProps {
@@ -31,15 +31,17 @@ function Scene({ studies, activeIndex, onHotspot, transitioning }: SceneProps) {
     });
   }, [activeIndex, camera]);
 
-  // Camera zooms forward on transition click
+  // Smooth zoom-in toward active card on click
   useEffect(() => {
     if (transitioning) {
       gsap.to(camera.position, {
-        z: 3.5,
-        duration: 0.65,
-        ease: 'power2.in',
+        z: 6.5,
+        duration: 0.45,
+        ease: 'power3.in',
         overwrite: 'auto',
       });
+    } else {
+      gsap.to(camera.position, { z: 9, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
     }
   }, [transitioning, camera]);
 
@@ -105,7 +107,7 @@ export default function CaseStudyWorld() {
   const handleHotspot = useCallback((slug: string) => {
     if (transitioning) return;
     setTransitioning(true);
-    setTimeout(() => router.push(`/case-studies/${slug}`), 900);
+    setTimeout(() => router.push(`/case-studies/${slug}`), 480);
   }, [router, transitioning]);
 
   useEffect(() => {

@@ -1,10 +1,9 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { caseStudies } from '@/lib/caseStudies';
 
 export function generateStaticParams() {
-  return caseStudies.map((study) => ({ slug: study.slug }));
+  return caseStudies.map((s) => ({ slug: s.slug }));
 }
 
 export default async function CaseStudyDetailPage({
@@ -13,34 +12,86 @@ export default async function CaseStudyDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const study = caseStudies.find((item) => item.slug === slug);
+  const idx   = caseStudies.findIndex((s) => s.slug === slug);
+  const study = caseStudies[idx];
 
-  if (!study) {
-    notFound();
-  }
+  if (!study) notFound();
+
+  const prev = idx > 0                         ? caseStudies[idx - 1] : null;
+  const next = idx < caseStudies.length - 1    ? caseStudies[idx + 1] : null;
+  const total = caseStudies.length;
 
   return (
-    <main>
-      <section className="cs-hero">
-        <div
-          className="cs-hero-visual"
-          style={{
-            backgroundImage: `url(${study.image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-        <div className="cs-hero-bg" />
+    <main className="cs-detail-main">
+      {/* ── HERO ── */}
+      <section
+        className="cs-hero"
+        style={{
+          background: `linear-gradient(135deg, ${study.gradFrom} 0%, ${study.gradTo} 100%)`,
+          minHeight: '52vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          padding: '120px 64px 56px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Background image with overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: `url(${study.image})`,
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          opacity: 0.25,
+        }} />
+        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to top, ${study.gradFrom}f0 0%, ${study.gradFrom}80 50%, transparent 100%)` }} />
 
-        <div className="cs-tags">
+        {/* Breadcrumb */}
+        <div style={{ position: 'absolute', top: 104, left: 64, display: 'flex', alignItems: 'center', gap: 16, zIndex: 2 }}>
+          <Link href="/case-studies" style={{ fontFamily: 'var(--fm)', fontSize: 11, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', letterSpacing: '0.12em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            Case Studies
+          </Link>
+          <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 11 }}>•</span>
+          <span style={{ fontFamily: 'var(--fm)', fontSize: 11, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.08em' }}>
+            {String(idx + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          </span>
+        </div>
+
+        {/* Tags */}
+        <div className="cs-tags" style={{ position: 'relative', zIndex: 2 }}>
           <span className="cs-tag">{study.category}</span>
           <span className="cs-tag">{study.year}</span>
         </div>
-        <h1 className="cs-title">{study.title}</h1>
-        <p className="cs-client">{study.clientName}</p>
+
+        {/* Title + client */}
+        <h1 className="cs-title" style={{ position: 'relative', zIndex: 2, marginTop: 14 }}>
+          {study.title}
+        </h1>
+        <p className="cs-client" style={{ position: 'relative', zIndex: 2 }}>
+          {study.clientName}
+        </p>
       </section>
 
-      <section className="cs-info-row">
+      {/* ── VIDEO / THUMBNAIL ── */}
+      <div style={{ padding: '0 64px', maxWidth: 1200, margin: '0 auto' }}>
+        <div className="cs-video-wrap">
+          {study.youtube ? (
+            <iframe
+              src={`https://www.youtube.com/embed/${study.youtube}?rel=0&modestbranding=1`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title={study.title}
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={study.image} alt={study.title} />
+          )}
+        </div>
+      </div>
+
+      {/* ── INFO ROW ── */}
+      <div className="cs-info-row" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 64px' }}>
         <div className="cs-ic">
           <div className="cs-ic-label">Client</div>
           <div className="cs-ic-val">{study.clientName}</div>
@@ -51,42 +102,92 @@ export default async function CaseStudyDetailPage({
         </div>
         <div className="cs-ic">
           <div className="cs-ic-label">Category</div>
-          <div className="cs-ic-val">{study.category}</div>
+          <div className="cs-ic-val">{study.category.split(' · ').join(' / ')}</div>
         </div>
         <div className="cs-ic">
           <div className="cs-ic-label">Services</div>
           <div className="cs-ic-val">{study.services.join(', ')}</div>
         </div>
-        <div className="cs-ic">
-          <div className="cs-ic-label">Overview</div>
-          <div className="cs-ic-val">{study.shortDescription}</div>
+      </div>
+
+      {/* ── CAMPAIGN CONCEPT ── */}
+      <section style={{ padding: '72px 64px', maxWidth: 1200, margin: '0 auto' }}>
+        <div style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--magenta)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ width: 28, height: 2, background: 'var(--magenta)', display: 'inline-block', borderRadius: 1 }} />
+          The Campaign
+        </div>
+        <div style={{ maxWidth: 780 }}>
+          {study.concept.split('\n\n').map((para, i) => (
+            <p key={i} style={{
+              fontFamily: 'var(--fm)',
+              fontSize: 15,
+              lineHeight: 1.85,
+              color: 'rgba(10,10,10,0.72)',
+              fontWeight: 300,
+              marginBottom: i < study.concept.split('\n\n').length - 1 ? 24 : 0,
+            }}>
+              {para}
+            </p>
+          ))}
         </div>
       </section>
 
-      <section className="cs-concept">
-        <div className="cs-concept-text">
-          <h2 className="cs-concept-h2">
-            Brand Story <em>and Execution</em>
-          </h2>
-          <p className="cs-concept-body">{study.shortDescription}</p>
-          <div style={{ marginTop: 28, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-            <Link href="/case-studies" className="btn-border">
-              ← Case Studies
-            </Link>
-            <Link href="/clients" className="btn-border" style={{ borderColor: 'var(--magenta)', color: 'var(--magenta)' }}>
-              Our Clients →
-            </Link>
-          </div>
-        </div>
+      {/* ── PREV / NEXT NAVIGATION ── */}
+      <div style={{
+        borderTop: '1px solid rgba(0,0,0,0.07)',
+        padding: '36px 64px',
+        display: 'grid',
+        gridTemplateColumns: '1fr auto 1fr',
+        gap: 20,
+        alignItems: 'center',
+        maxWidth: 1200,
+        margin: '0 auto',
+      }}>
+        {/* Prev */}
+        {prev ? (
+          <Link href={`/case-studies/${prev.slug}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <span style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              Previous
+            </span>
+            <span style={{ fontFamily: 'var(--fm)', fontSize: 15, fontWeight: 600, color: 'var(--ink)' }}>{prev.clientName}</span>
+            <span style={{ fontFamily: 'var(--fm)', fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>{prev.title}</span>
+          </Link>
+        ) : <div />}
 
-        <div className="cs-concept-img">
-          <Image
-            src={study.image}
-            alt={study.clientName}
-            fill
-            sizes="(max-width: 768px) 100vw, 360px"
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
-          />
+        {/* All studies */}
+        <Link href="/case-studies" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 40, height: 40, borderRadius: '50%', border: '1.5px solid rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3"/><rect x="8" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3"/><rect x="1" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3"/><rect x="8" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3"/></svg>
+          </div>
+          <span style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)' }}>All Work</span>
+        </Link>
+
+        {/* Next */}
+        {next ? (
+          <Link href={`/case-studies/${next.slug}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-end', textAlign: 'right' }}>
+            <span style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', gap: 6 }}>
+              Next
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </span>
+            <span style={{ fontFamily: 'var(--fm)', fontSize: 15, fontWeight: 600, color: 'var(--ink)' }}>{next.clientName}</span>
+            <span style={{ fontFamily: 'var(--fm)', fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>{next.title}</span>
+          </Link>
+        ) : <div />}
+      </div>
+
+      {/* ── CTA ── */}
+      <section className="fcta-section" style={{ padding: '80px 64px' }}>
+        <h2 className="fcta-h2" style={{ fontSize: 'clamp(26px,3.6vw,42px)' }}>
+          Want Results Like These?
+        </h2>
+        <div className="fcta-actions" style={{ marginTop: 24 }}>
+          <Link href="/contact" className="btn-fill" style={{ background: 'var(--magenta)' }}>
+            Start a Conversation →
+          </Link>
+          <Link href="/case-studies" className="btn-border">
+            ← All Case Studies
+          </Link>
         </div>
       </section>
     </main>
