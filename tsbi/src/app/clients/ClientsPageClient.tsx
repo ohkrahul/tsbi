@@ -12,14 +12,16 @@ export interface ClientEntry {
   slug?: string;   // case study slug — card becomes a link when set
 }
 
-/* ── client name → case study / work URL ── */
+/* ── client name → case study slug ── */
 const CASE_STUDY_MAP: Record<string, string> = {
-  'Dharma Productions':  '/work/dharma-production',
-  'Devgn Films':         '/work/son-of-sardaar-2',
-  'Disney India':        '/work/disney-india',
-  'Mumbai Indians':      '/work/mumbai-indians',
-  'DHL':                 '/work/mumbai-indians',
-  'Ashok Leyland':       '/case-studies',
+  'Dharma Productions':       '/case-studies/dharma-production',
+  'Devgn Films':              '/case-studies/son-of-sardaar-2',
+  'Disney India':             '/case-studies/disney-india',
+  'Mumbai Indians':           '/case-studies/mumbai-indians',
+  'DHL':                      '/case-studies/mumbai-indians',
+  'Ashok Leyland':            '/case-studies/ashok-leyland-diwali',
+  'Zydus':                    '/case-studies/zydus-liver-ki-suno',
+  'Aamir Khan Productions':   '/case-studies/sitaare-zameen-par',
 };
 
 type Tab = 'all' | 'entertainment' | 'non-entertainment';
@@ -27,8 +29,8 @@ type Tab = 'all' | 'entertainment' | 'non-entertainment';
 /* ── Single logo card ── */
 function LogoCard({ client }: { client: ClientEntry }) {
   const [imgErr, setImgErr] = useState(false);
-  const [hov, setHov] = useState(false);
-  const workUrl = CASE_STUDY_MAP[client.name];
+  const [hov, setHov]       = useState(false);
+  const caseUrl = CASE_STUDY_MAP[client.name];
 
   const initials = client.name
     .split(/[\s&·]+/)
@@ -36,152 +38,48 @@ function LogoCard({ client }: { client: ClientEntry }) {
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
 
-<<<<<<< HEAD
-  const cardStyle: React.CSSProperties = {
-    background: '#fff',
-    borderRadius: 16,
-    border: '1px solid rgba(0,0,0,0.07)',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-    padding: '28px 20px 22px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 14,
-    cursor: client.slug ? 'pointer' : 'default',
-    transition: 'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
-    textDecoration: 'none',
-    position: 'relative',
-  };
-
-  const handleEnter = (e: React.MouseEvent<HTMLElement>) => {
-    const el = e.currentTarget as HTMLElement;
-    el.style.transform = 'translateY(-4px)';
-    el.style.boxShadow = '0 12px 40px rgba(0,0,0,0.1)';
-    el.style.borderColor = 'rgba(224,25,125,0.25)';
-  };
-  const handleLeave = (e: React.MouseEvent<HTMLElement>) => {
-    const el = e.currentTarget as HTMLElement;
-    el.style.transform = 'translateY(0)';
-    el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
-    el.style.borderColor = 'rgba(0,0,0,0.07)';
-  };
-
-  const inner = (
-    <>
-      {client.slug && (
-        <div style={{
-          position: 'absolute',
-          top: 10,
-          right: 10,
-          background: 'var(--magenta)',
-          color: '#fff',
-          fontFamily: 'var(--fm)',
-          fontSize: 8,
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          padding: '3px 7px',
-          borderRadius: 20,
-        }}>
-          View Case Study
-        </div>
-      )}
-
-      <div style={{ width: '100%', height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px' }}>
-=======
   const card = (
     <div
       style={{
-        background: '#fff',
-        borderRadius: 16,
-        border: `1px solid ${hov && workUrl ? 'rgba(224,25,125,0.3)' : 'rgba(0,0,0,0.07)'}`,
+        background: '#fff', borderRadius: 16,
+        border: `1px solid ${hov && caseUrl ? 'rgba(224,25,125,0.3)' : 'rgba(0,0,0,0.07)'}`,
         boxShadow: hov ? '0 12px 40px rgba(0,0,0,0.1)' : '0 4px 20px rgba(0,0,0,0.05)',
-        padding: '28px 20px 22px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 14,
-        cursor: workUrl ? 'pointer' : 'default',
+        padding: '28px 20px 22px', display: 'flex', flexDirection: 'column',
+        alignItems: 'center', gap: 14,
+        cursor: caseUrl ? 'pointer' : 'default',
         transition: 'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
         transform: hov ? 'translateY(-4px)' : 'translateY(0)',
-        position: 'relative',
-        overflow: 'hidden',
+        position: 'relative', overflow: 'hidden',
       }}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
     >
-      {/* "View Work" overlay for clients with case studies */}
-      {workUrl && hov && (
+      {caseUrl && hov && (
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(224,25,125,0.92) 0%, transparent 100%)', padding: '20px 0 10px', textAlign: 'center', pointerEvents: 'none' }}>
-          <span style={{ fontFamily: 'var(--fm)', fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            View Work →
-          </span>
+          <span style={{ fontFamily: 'var(--fm)', fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.12em', textTransform: 'uppercase' }}>View Case Study →</span>
         </div>
       )}
 
-      {/* Logo image or initial fallback */}
-      <div
-        style={{
-          width: '100%',
-          height: 96,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0 8px',
-        }}
-      >
->>>>>>> 783374c5d925cc851ff1bc60b4fb752384a16301
+      <div style={{ width: '100%', height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px' }}>
         {client.logo && !imgErr ? (
-          <img
-            src={client.logo}
-            alt={`${client.name} logo`}
-            onError={() => setImgErr(true)}
-            style={{ maxWidth: '100%', maxHeight: 90, width: 'auto', height: 'auto', objectFit: 'contain', display: 'block' }}
-          />
+          <img src={client.logo} alt={`${client.name} logo`} onError={() => setImgErr(true)}
+            style={{ maxWidth: '100%', maxHeight: 90, width: 'auto', height: 'auto', objectFit: 'contain', display: 'block' }} />
         ) : (
-          <div style={{
-            width: 72, height: 72, borderRadius: 12,
-            background: `${client.accent}18`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: 'var(--fd)', fontSize: 22, fontWeight: 900,
-            color: client.accent, letterSpacing: '-0.02em',
-          }}>
+          <div style={{ width: 72, height: 72, borderRadius: 12, background: `${client.accent}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--fd)', fontSize: 22, fontWeight: 900, color: client.accent, letterSpacing: '-0.02em' }}>
             {initials}
           </div>
         )}
       </div>
 
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(13px,1.4vw,16px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.2, marginBottom: 5 }}>
-          {client.name}
-        </div>
-        <div style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.13em', textTransform: 'uppercase', color: 'var(--magenta)' }}>
-          {client.type}
-        </div>
+        <div style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(13px,1.4vw,16px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.2, marginBottom: 5 }}>{client.name}</div>
+        <div style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.13em', textTransform: 'uppercase', color: 'var(--magenta)' }}>{client.type}</div>
       </div>
-    </>
-  );
-
-  if (client.slug) {
-    return (
-      <Link
-        href={`/case-studies/${client.slug}`}
-        style={cardStyle}
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
-      >
-        {inner}
-      </Link>
-    );
-  }
-
-  return (
-    <div style={cardStyle} onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
-      {inner}
     </div>
   );
 
-  return workUrl
-    ? <Link href={workUrl} style={{ textDecoration: 'none', display: 'block' }}>{card}</Link>
+  return caseUrl
+    ? <Link href={caseUrl} style={{ textDecoration: 'none', display: 'block' }}>{card}</Link>
     : card;
 }
 
