@@ -1,11 +1,73 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 // Shared brand orange (matches the home Social Media section).
 const ORANGE_GRAD = 'linear-gradient(135deg, #ff5c0d 0%, #ff3d12 55%, #e63200 100%)';
+
+/* ── YouTube social media campaign work ── */
+type YTWork = {
+  client: string; house?: string; category: string;
+  title: string; desc: string; videoId: string; caseStudySlug?: string;
+};
+const youtubeWork: YTWork[] = [
+  { client: 'Sunny Sanskari Ki Tulsi Kumari', house: 'Dharma Productions', category: 'Film Marketing · Romantic Comedy', title: 'Chaos Sells Romance', desc: "Rom-coms don't thrive on subtlety — they thrive on chaos, chemistry, and cultural noise. We turned cast energy, heartbreak, and music trends into a high-voltage social ecosystem where Bijuria and Panwadi ignited millions of reels.", videoId: '9FUd-D4FWjw', caseStudySlug: 'dharma-production' },
+  { client: 'MAA', house: 'Devgn Films', category: 'Film Marketing · Horror', title: 'End Credit Goes To MAA', desc: "Blending supernatural fear with maternal strength, we inducted MAA into the Shaitaan universe and replaced surnames with mothers' names in the credits — a first in Indian cinema.", videoId: 'zwtZj6YB9xk', caseStudySlug: 'maa-devgn' },
+  { client: 'Sitaare Zameen Par', house: 'Aamir Khan Productions', category: 'Film Marketing · Entertainment', title: 'Imperfectly Perfect Teaser', desc: "A handcrafted pop-up cutout aesthetic revealing the film's 10 Sitaare one by one before the trailer drop. Playful honesty over polished perfection.", videoId: 'YH6k5weqwy8', caseStudySlug: 'sitaare-zameen-par' },
+  { client: 'Son Of Sardaar 2', house: 'Devgn Films', category: 'Film Marketing · Comedy', title: 'Jahan Son Hai, Wahan Fun Hai', desc: "#PehlaTuDujaTu turned even trolls into participants. Cast chemistry, behind-the-scenes chaos and the PO PO song established one idea: Fun = Son Of Sardaar 2.", videoId: 'RaJGfQ_bb18', caseStudySlug: 'son-of-sardaar-2' },
+  { client: 'ICICI Direct', category: 'Banking · Campaign Film', title: 'Yes To Udhaar — MTF Campaign', desc: "Drawing on India's 'Aaj Nagad, Kal Udhaar' kirana culture, we reframed ICICI Direct MTF's credit trading as a relatable, culturally resonant proposition for everyday investors.", videoId: 'wawKnq3860g' },
+  { client: 'Kesari Chapter 2', house: 'Dharma Productions', category: 'Film Marketing · Historical', title: 'Witness The History', desc: "A blank-screen teaser hijacked all feeds. Progressive reveals of Akshay Kumar, R Madhavan and Ananya Panday turned audiences from passive spectators into active witnesses.", videoId: 'r-7g08INMSI', caseStudySlug: 'kesari-chapter-2' },
+];
+
+function YouTubeCard({ w, index }: { w: YTWork; index: number }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.55, delay: 0.08 * index, ease: [0.22, 1, 0.36, 1] }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'box-shadow .3s, transform .3s', boxShadow: hovered ? '0 18px 50px rgba(0,0,0,.12)' : '0 2px 12px rgba(0,0,0,.04)', transform: hovered ? 'translateY(-4px)' : 'none' }}
+    >
+      {/* Thumbnail */}
+      <a href={`https://www.youtube.com/watch?v=${w.videoId}`} target="_blank" rel="noopener noreferrer"
+        style={{ display: 'block', position: 'relative', aspectRatio: '16/9', background: '#111', textDecoration: 'none' }}
+      >
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(https://img.youtube.com/vi/${w.videoId}/hqdefault.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center', transform: hovered ? 'scale(1.05)' : 'scale(1)', transition: 'transform .5s ease' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,.7) 0%, rgba(0,0,0,.05) 55%, transparent 100%)' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: `translate(-50%,-50%) scale(${hovered ? 1.12 : 1})`, width: 52, height: 52, borderRadius: '50%', background: 'rgba(255,255,255,.92)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform .3s ease' }}>
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="#111" /></svg>
+        </div>
+      </a>
+      {/* Content */}
+      <div style={{ padding: '20px 20px 22px', display: 'flex', flexDirection: 'column', gap: 7, flex: 1 }}>
+        <span style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '.13em', textTransform: 'uppercase', color: 'var(--magenta)' }}>{w.category}</span>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+          <span style={{ fontFamily: 'var(--fb)', fontSize: 17, fontWeight: 700, color: 'var(--ink)' }}>{w.client}</span>
+          {w.house && <span style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--muted)' }}>{w.house}</span>}
+        </div>
+        <span style={{ fontFamily: 'var(--fd)', fontStyle: 'italic', fontSize: 15, color: 'var(--ink2)', lineHeight: 1.3 }}>{w.title}</span>
+        <p style={{ fontFamily: 'var(--fb)', fontSize: 13, fontWeight: 300, lineHeight: 1.7, color: 'var(--muted)', margin: '2px 0 0' }}>{w.desc}</p>
+        <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginTop: 'auto', paddingTop: 12 }}>
+          <a href={`https://www.youtube.com/watch?v=${w.videoId}`} target="_blank" rel="noopener noreferrer"
+            style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--magenta)', textDecoration: 'none', borderBottom: '1px solid var(--magenta)' }}>
+            Watch on YouTube →
+          </a>
+          {w.caseStudySlug && (
+            <Link href={`/case-studies/${w.caseStudySlug}`}
+              style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--ink)', textDecoration: 'none', borderBottom: '1px solid var(--ink)' }}>
+              View Case Study →
+            </Link>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 const platforms = [
   { name: 'Instagram', color: '#e0197d' },
@@ -54,6 +116,153 @@ const reels = [
     reelId: 'DViU2BVCGRr',
   },
 ];
+
+
+// ── Phone-frame reel slider ─────────────────────────────────────────────────
+function smCDist(i: number, active: number, n: number) {
+  const d = ((i - active) % n + n) % n;
+  return d > n / 2 ? d - n : d;
+}
+
+const PHONE_W    = 220;
+const PHONE_H    = 430;
+const PHONE_STRIDE = 210;
+
+function PhoneReelSlider() {
+  const [active, setActive]       = useState(0);
+  const [containerW, setContainerW] = useState(660);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
+  const N = reels.length;
+
+  useEffect(() => {
+    const m = () => { if (containerRef.current) setContainerW(containerRef.current.offsetWidth); };
+    m();
+    window.addEventListener('resize', m);
+    return () => window.removeEventListener('resize', m);
+  }, []);
+
+  const resetTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => setActive(p => (p + 1) % N), 4500);
+  };
+  useEffect(() => { resetTimer(); return () => { if (timerRef.current) clearInterval(timerRef.current); }; }, []);
+
+  const goTo = (i: number) => { setActive(((i % N) + N) % N); resetTimer(); };
+
+  return (
+    <div style={{ width: '100%' }}>
+      <div ref={containerRef} style={{ position: 'relative', height: PHONE_H + 60, overflow: 'hidden' }}>
+        {reels.map((reel, i) => {
+          const d       = smCDist(i, active, N);
+          if (Math.abs(d) > 2) return null;
+          const isAct   = d === 0;
+          const absDist = Math.abs(d);
+          const x       = containerW / 2 - PHONE_W / 2 + d * PHONE_STRIDE;
+          const scale   = isAct ? 1 : absDist === 1 ? 0.82 : 0.66;
+          const opacity = isAct ? 1 : absDist === 1 ? 0.72 : 0.36;
+          const rotateY = isAct ? 0 : d < 0 ? 22 : -22;
+
+          return (
+            <motion.div
+              key={reel.reelId}
+              animate={{ x, scale, opacity, rotateY }}
+              transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+              onClick={() => !isAct && goTo(i)}
+              style={{
+                position: 'absolute', top: 10, left: 0,
+                width: PHONE_W, height: PHONE_H,
+                borderRadius: 34, overflow: 'hidden',
+                background: '#0a0a0a',
+                border: isAct ? '2px solid rgba(255,92,13,0.9)' : '1.5px solid rgba(255,255,255,0.15)',
+                boxShadow: isAct
+                  ? '0 0 0 1px rgba(255,92,13,0.35), 0 0 48px rgba(255,92,13,0.28), 0 22px 60px rgba(0,0,0,0.65)'
+                  : '0 10px 40px rgba(0,0,0,0.55)',
+                zIndex: 10 - absDist,
+                cursor: isAct ? 'default' : 'pointer',
+                transformPerspective: 1100,
+              }}
+            >
+              {/* Phone notch */}
+              <div style={{ position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)', width: 72, height: 9, background: '#000', borderRadius: 9, zIndex: 20 }} />
+
+              {/* Thumbnail */}
+              <img src={reel.img} alt={reel.title}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+
+              {/* Dark overlay */}
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.05) 55%, transparent 100%)' }} />
+
+              {/* Category badge */}
+              {isAct && (
+                <div style={{ position: 'absolute', top: 32, right: 12, fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#fff', background: 'rgba(255,92,13,0.82)', borderRadius: 4, padding: '3px 9px', zIndex: 5 }}>
+                  {reel.categories[0]}
+                </div>
+              )}
+
+              {/* Play button */}
+              {isAct && (
+                <a href={`https://www.instagram.com/reel/${reel.reelId}/`} target="_blank" rel="noopener noreferrer"
+                  onClick={e => e.stopPropagation()}
+                  style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 54, height: 54, borderRadius: '50%', background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', zIndex: 10 }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="#111" /></svg>
+                </a>
+              )}
+
+              {/* Bottom info */}
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '18px 14px' }}>
+                <div style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 5 }}>{reel.brand}</div>
+                <div style={{ fontFamily: 'var(--fd)', fontSize: isAct ? 15 : 12, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>{reel.title}</div>
+                {isAct && (
+                  <div style={{ display: 'flex', gap: 5, marginTop: 8, flexWrap: 'wrap' }}>
+                    {reel.categories.map(cat => (
+                      <span key={cat} style={{ fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: 100, background: 'rgba(255,255,255,0.14)', color: 'rgba(255,255,255,0.8)' }}>{cat}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* ── Nav: arrows + counter + progress ── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, paddingTop: 6 }}>
+        <button onClick={() => goTo(active - 1)}
+          style={{ width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
+        >
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontFamily: 'var(--fm)', fontSize: 16, fontWeight: 700, color: '#ff5c0d', letterSpacing: '-0.01em', minWidth: 26, textAlign: 'right' }}>
+            {String(active + 1).padStart(2, '0')}
+          </span>
+          <span style={{ fontFamily: 'var(--fm)', fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/ {String(N).padStart(2, '0')}</span>
+          <div style={{ width: 90, height: 3, background: 'rgba(255,255,255,0.18)', borderRadius: 3, position: 'relative', marginLeft: 6 }}>
+            <motion.div
+              animate={{ width: `${((active + 1) / N) * 100}%` }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              style={{ position: 'absolute', left: 0, top: 0, height: '100%', background: '#ff5c0d', borderRadius: 3 }}
+            />
+            <motion.div
+              animate={{ left: `${((active + 1) / N) * 100}%` }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              style={{ position: 'absolute', top: '50%', translateY: '-50%', width: 11, height: 11, borderRadius: '50%', background: '#ff5c0d', marginLeft: -5, marginTop: -4 }}
+            />
+          </div>
+        </div>
+
+        <button onClick={() => goTo(active + 1)}
+          style={{ width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
+        >
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  );
+}
 
 // Floating reel cards shown on the right of the hero.
 const heroCards = [
@@ -358,8 +567,17 @@ function ReelCard({ reel, index }: { reel: (typeof reels)[0]; index: number }) {
 }
 
 export default function SocialMediaPage() {
+  const { scrollYProgress } = useScroll();
+  const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 20 });
+  // Orange through hero, quick fade to dark so both reels + YouTube show on dark bg
+  const bgColor = useTransform(
+    smooth,
+    [0,        0.15,      0.16,      0.28,      0.75,      0.88,     1   ],
+    ['#ff5c0d','#ff5c0d','#c93600','#0f0806','#0f0806','#cc3600','#ff5c0d']
+  );
+
   return (
-    <>
+    <motion.main style={{ background: bgColor }}>
       {/* ── HERO: brand orange feed ── */}
       <section
         style={{
@@ -389,7 +607,7 @@ export default function SocialMediaPage() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 40, width: '100%', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
           {/* ── LEFT: copy ── */}
-          <div style={{ flex: '1 1 440px', minWidth: 300 }}>
+          <div style={{ flex: '1 1 400px', minWidth: 280 }}>
             {/* Pill */}
             <div
               style={{
@@ -450,18 +668,9 @@ export default function SocialMediaPage() {
             </p>
           </div>
 
-          {/* ── RIGHT: floating reel collage ── */}
-          <div
-            style={{
-              flex: '1 1 440px',
-              minWidth: 320,
-              position: 'relative',
-              height: 'clamp(420px, 70vh, 620px)',
-            }}
-          >
-            {heroCards.map((c) => (
-              <HeroCard key={c.reelId} c={c} />
-            ))}
+          {/* ── RIGHT: phone reel slider ── */}
+          <div style={{ flex: '1 1 500px', minWidth: 340, display: 'flex', justifyContent: 'center' }}>
+            <PhoneReelSlider />
           </div>
         </div>
       </section>
@@ -499,8 +708,8 @@ export default function SocialMediaPage() {
         ))}
       </div> */}
 
-      {/* ── REELS SHOWCASE (same data + colour as home) ── */}
-      <section style={{ background: ORANGE_GRAD, position: 'relative', overflow: 'hidden', padding: '88px 48px 80px' }}>
+      {/* ── REELS SHOWCASE ── */}
+      <section style={{ background: 'transparent', position: 'relative', overflow: 'hidden', padding: '88px 48px 80px' }}>
         <div
           style={{
             position: 'absolute',
@@ -582,6 +791,17 @@ export default function SocialMediaPage() {
       </section> */}
 
 
+      {/* ── YOUTUBE CAMPAIGN WORK ── */}
+      <section style={{ background: 'transparent', padding: '80px 48px', position: 'relative' }}>
+        <div className="sec-label" style={{ marginBottom: 12, color: 'rgba(255,255,255,0.55)', position: 'relative' }}>YouTube Campaign Work</div>
+        <h2 style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(28px,3.6vw,48px)', fontWeight: 900, letterSpacing: '-0.02em', color: '#fff', lineHeight: 1, marginBottom: 48, maxWidth: 640, position: 'relative' }}>
+          Social-first campaigns. Crafted for YouTube.
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 28 }}>
+          {youtubeWork.map((w, i) => <YouTubeCard key={w.videoId} w={w} index={i} />)}
+        </div>
+      </section>
+
       {/* ── CTA: brand orange ── */}
       <section
         style={{
@@ -620,6 +840,6 @@ export default function SocialMediaPage() {
           </Link>
         </div>
       </section>
-    </>
+    </motion.main>
   );
 }

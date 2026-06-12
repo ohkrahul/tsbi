@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 type Campaign = {
@@ -37,86 +37,6 @@ But we didn't stop there. Capitalising on the same shoot, we crafted a second ca
     videos: ['MJofvf2lBNY', 'KlDctPUfuHI'],
   },
   {
-    client: 'Sunny Sanskari Ki Tulsi Kumari',
-    house: 'Dharma Productions',
-    category: 'Film Marketing / Entertainment (Romantic Comedy)',
-    title: 'Chaos Sells Romance',
-    desc: `Rom-coms don't thrive on subtlety — they thrive on chaos, chemistry, and cultural noise. For Sunny Sanskari Ki Tulsi Kumari, we leaned fully into that truth, turning cast energy, heartbreak, and music trends into a high-voltage social ecosystem where chaos sold romance.
-
-The campaign was built around the infectious chemistry of Varun Dhawan and Janhvi Kapoor, amplified through songs, reels, memes, and unfiltered shoot content. Rohit and Sanya's love for dance became a cultural trigger, pushing audiences to create millions of reels using the film's tracks — especially Bijuria and Panwadi, whose hook steps quickly took over Instagram feeds.
-
-Instead of polished promotions, the team embraced messiness: fun, chaotic cast videos where heartbreak and entertainment co-existed as the central narrative. AI-led creative units were introduced to break the cookie-cutter rom-com feed, giving Dharma's social presence a fresh, disruptive edge. Offline, screenings transformed into mini fan-festivals — where fans didn't just watch the film, but danced, interacted, and became part of its energy.
-
-By making chaos and entertainment the heroes, the campaign fuelled speculation, fandom debates, and repeat engagement — turning “who ends up with whom” into a shared cultural question. The result was sustained buzz, massive music-led virality, and a strong emotional connect that positioned the film as a celebration of modern love, confusion, and second chances long before audiences stepped into theatres.`,
-    videos: [],
-  },
-  {
-    client: 'MAA',
-    house: 'Devgn Films',
-    category: 'Film Marketing / Entertainment (Horror)',
-    title: 'End Credit Goes To MAA',
-    desc: `In a market where horror-comedy dominates box-office success, launching a pure horror film demanded a strategic expansion of both audience and universe. With MAA, we set out to grow the horror fanbase by blending supernatural fear with the emotional force of maternal strength — anchored in the idea “End credit goes to MAA.”
-
-The campaign strategically inducted MAA into a larger supernatural arc by leveraging the Shaitaan universe, introducing R Madhavan at the trailer launch to instantly deepen credibility and intrigue among horror loyalists. To broaden appeal beyond core horror audiences, we reframed the narrative around faith, belief, and motherhood — most powerfully by replacing surnames with mothers' names in the film credits, a first in Indian cinema.
-
-To amplify emotional resonance, icons like Kajol and Usha Uthup came together during the song launch to celebrate maternal strength. For hardcore horror fans, immersive fear-first experiences were rolled out through paranormal-themed podcasts, terror train takeovers, and atmospheric digital storytelling that visualised a formless evil using AI-led narratives.
-
-By oscillating between fear and faith, the campaign positioned MAA as more than just a horror release — it became an emotionally charged universe where belief stands as the ultimate weapon against evil, expanding the genre's appeal and bringing pure horror back into mainstream cultural conversation.`,
-    videos: [],
-  },
-  {
-    client: 'Sitaare Zameen Par',
-    house: 'Aamir Khan Productions',
-    category: 'Film Marketing / Entertainment',
-    title: 'Imperfectly Perfect Teaser',
-    desc: `In a social feed dominated by algorithmically perfect visuals and polished teaser drops, standing out meant doing the opposite. For Sitaare Zameen Par, we chose to disrupt the scroll by embracing imperfection with the 'Imperfectly Perfect Teaser' — a handcrafted, tactile announcement unit designed to spark curiosity ahead of the trailer launch.
-
-Instead of sleek motion graphics, the campaign leaned into a pop-up cutout aesthetic. Printed images of the film's 10 Sitaare were revealed one by one, culminating in the reveal of Aamir Khan and the announcement that the trailer would drop the very next day. The deliberate roughness and handmade feel broke visual monotony and instantly caught attention.
-
-Rolled out across social platforms, the imperfect design became its biggest strength — inviting intrigue, conversation, and organic pickup by fan and media pages. By rejecting visual perfection and leaning into playful honesty, Sitaare Zameen Par set the tone for what was to come: a film that's raw, emotional, and refreshingly human long before audiences hit play on the trailer.`,
-    videos: [],
-  },
-  {
-    client: 'Son Of Sardaar 2',
-    house: 'Devgn Films',
-    category: 'Film Marketing / Entertainment (Comedy)',
-    title: 'Jahan Son Hai, Wahan Fun Hai',
-    desc: `In a crowded comedy landscape where humour often blends into sameness, standing out meant shifting focus from promotion to pure vibe. For Son Of Sardaar 2, we made fun itself the strategy with the campaign 'Jahan Son Hai, Wahan Fun Hai' — selling the energy of the film, not just the film.
-
-The campaign leaned heavily into the cast's natural chemistry, converting behind-the-scenes humour into pop-culture momentum. What began as a simple step evolved into the viral trend #PehlaTuDujaTu, turning even trolls into participants. Quick, exclusive social assets featuring the ensemble were created at speed, capturing spontaneous moments that felt authentic and infectious.
-
-To deepen engagement, casual round-table interactions showcased the cast's camaraderie, while long-form content like a cast podcast extended the fun beyond short clips. Audience nostalgia for the original film was tapped into with the release of the PO PO song, reinforcing familiarity while reigniting excitement.
-
-Amplified by third-party pages and fan communities, the campaign firmly established one idea across platforms: Fun = Son Of Sardaar 2. By letting audiences witness the cast enjoying themselves, the campaign rebuilt buzz, reignited conversation, and made people want to join the fun long before release.`,
-    videos: [],
-  },
-  {
-    client: 'Zydus Lifesciences',
-    category: 'Healthcare / Public Health Awareness',
-    title: '#LiverKiSuno',
-    desc: `Health awareness campaigns often rely on fear, statistics, or medical jargon — especially when the condition is serious. With #LiverKiSuno, we chose to flip that approach by using humour as the strategy, turning apathy around fatty liver disease into attention, conversation, and action.
-
-Fatty liver affects nearly 40% of Indians, yet remains ignored because it shows no early symptoms and doesn't feel urgent. The key barrier wasn't lack of care — it was lack of relatability. So we gave the liver a voice. Through everyday humour, familiar situations, and culturally rooted comedy, the campaign made the liver “complain” in ways people could instantly recognise and laugh with, without trivialising the science.
-
-By collaborating with India's most trusted comedians — Johnny Lever, Jamie Lever, and Suresh Menon — the campaign transformed a silent, neglected condition into content people wanted to watch, share, and discuss at home. Humour became the hook, while medical credibility remained the backbone, ensuring the message stayed accurate, responsible, and impactful.
-
-Built on the simple, culturally intuitive idea of listening to your liver before it's forced to scream, #LiverKiSuno proved that laughter can be a powerful behavioural tool — repositioning preventive healthcare as something conversational, not clinical, while reinforcing Zydus Lifesciences as a brand willing to rethink how serious health conversations are started at scale.`,
-    videos: [],
-  },
-  {
-    client: 'Zydus Lifesciences',
-    category: 'Healthcare / Public Health Awareness',
-    title: '#LifeKaFilter',
-    desc: `Health communication often struggles to break through because medical science feels intimidating and distant. With #LifeKaFilter, we reframed kidney health into a simple, everyday idea — something everyone already understands. Just like every morning begins with a filter for tea or coffee, life itself depends on an internal filter: our kidneys.
-
-By using the familiar metaphor of a beverage filter, the campaign demystified the complex role of kidneys and turned a daunting medical topic into a relatable, mainstream conversation. Instead of fear-based messaging, #LifeKaFilter focused on awareness, simplicity, and daily relevance — making people pause and reflect on what silently filters their lives every day.
-
-Born from the urgent reality that Chronic Kidney Disease often goes undetected due to low awareness, the campaign built a large, credible content ecosystem. Expert-led podcasts with leading oncologists and nephrologists added depth and trust, while promo films, influencer hygiene content, and print integrations ensured scale and mass visibility.
-
-By blending education with familiarity, and science with storytelling, #LifeKaFilter succeeded in making kidney health a part of everyday discourse — positioning Zydus Lifesciences as a brand committed not just to treatment, but to proactive public health awareness at scale.`,
-    videos: [],
-  },
-  {
     client: 'Danone',
     category: 'Food',
     title: "Nurses' Day Tribute Film",
@@ -124,31 +44,6 @@ By blending education with familiarity, and science with storytelling, #LifeKaFi
 
 When tasked with creating a Nurses' Day asset for Danone India, we decided to illuminate this selfless, motherly nature of paediatric nurses through a poignant and touching film. This tribute celebrated and thanked the paediatric nurses — the unsung heroes who become the first friends and guardians of our children — honouring their relentless compassion and devotion.`,
     videos: ['D8cXWh7g2kk'],
-  },
-  {
-    client: 'ICICI Direct',
-    category: 'Banking',
-    title: 'Yes To Udhaar — ICICI Direct MTF',
-    desc: `When it comes to trading there's always a belief that it's for the experts and the monetarily affluent. To break that stigma and take a relatable route to the core messaging of ICICI Direct MTF — which lets users trade on credit — we drew inspiration from the age-old 'Aaj Nagad, Kal Udhaar' saying of India's kiranawalas, who are totally against giving credit, and tied it back to trading with ICICI Direct MTF.`,
-    videos: [],
-  },
-  {
-    client: 'ICICI Direct',
-    category: 'Banking',
-    title: 'Yes To Udhaar — The Kirana Wala',
-    desc: `The lack of money should never be a reason to lose out on important opportunities. We drew this message through the portrayal of a funny yet khadoos Kirana Wala and a simpleton who wants to buy groceries but whose empty pockets — and the kirana wala's 'Aaj Nagad, Kal Udhaar' policy — won't allow him to.
-
-But ICICI Direct MTF is different. 'Never miss an opportunity with ICICI Direct MTF' is the message we nailed through the portrayal.`,
-    videos: [],
-  },
-  {
-    client: 'ICICI Direct',
-    category: 'Banking',
-    title: 'E-ATM — Intezaar Sharma',
-    desc: `Rather than building a traditional narrative around a product — the common advertising route — we built a character who needs to be rescued from the curse of waiting. Intezaar Sharma, based on Murphy's Law ('whatever could go wrong, will go wrong'), is always told 'Kal aana' all his life… until ICICI E-ATM offers him instant withdrawals within 5 minutes.
-
-An interesting mix of music and visual aid lends to the strong character of Intezaar Sharma in this ad for ICICI Direct — a man rejected everywhere and told to wait, until ICICI Direct E-ATM enters his life with instant withdrawals on trading in only 5 minutes.`,
-    videos: [],
   },
   {
     client: 'ICICI Direct',
@@ -218,24 +113,10 @@ We set out to evoke our audience's wanderlust — recasting Thailand as a destin
 The outcome: healthy oil leads to a healthy you. A healthy you gives you the opportunity to do more — it allows you to say 'CAN' to everything.`,
     videos: ['m-ekod_mEzk'],
   },
-  {
-    client: 'Kesari Chapter 2',
-    house: 'Dharma Productions',
-    category: 'Film Marketing / Entertainment',
-    title: 'Witness The History',
-    desc: `In an entertainment-heavy landscape where film promotions often rely on spectacle, song launches, and predictable hype, marketing a century-old courtroom trial for Gen Z needed a radical shift. With Kesari Chapter 2, we chose to break convention by turning audiences from passive spectators into active witnesses through the campaign 'Witness the History.'
-
-The campaign began with a disruptive, all-platform blank-screen teaser that hijacked feeds and sparked nationwide curiosity. This bold silence set the tone for a story that history had forgotten but needed to be heard. Progressive reveals of Akshay Kumar, R Madhavan, and Ananya Panday followed, carefully balancing mass appeal with cultural relevance.
-
-We amplified the first-ever Akshay vs Maddy courtroom face-off as pop-culture fuel, igniting organic fandom conversations and dialogue-led storytelling. By rooting the narrative in emotion, confrontation, and truth, the campaign summoned a new generation to witness C. Sankaran Nair's forgotten legal battle against the British Empire.
-
-Through social-first disruption and culturally resonant storytelling, Kesari Chapter 2 was positioned not just as a film, but as a national moment — one that revived history, rebuilt star power, and made the past feel urgent, visceral, and unmissable today.`,
-    videos: [],
-  },
 ];
 
 const ticker =
-  'ASHOK LEYLAND  ·  DHL  ·  DHARMA  ·  DEVGN FILMS  ·  ZYDUS  ·  DANONE  ·  ICICI DIRECT  ·  DISNEY  ·  THAILAND TOURISM  ·  PROTEINX  ·  ';
+  'ASHOK LEYLAND  ·  DHL  ·  DANONE  ·  ICICI DIRECT  ·  DISNEY  ·  THAILAND TOURISM  ·  PROTEINX  ·  SANDU  ·  THE Q  ·  VIBHA  ·  CANAPURE  ·  ';
 
 const stats = [
   { val: '21', label: 'Campaigns' },
@@ -243,97 +124,134 @@ const stats = [
   { val: 'In-house', label: 'Studio & Post' },
 ];
 
-// Floating video cards shown on the right of the hero.
-const heroCards = [
-  { id: '37CCZAHaYx8', brand: 'Ashok Leyland', tag: 'Brand Film', x: '6%', y: '4%', rot: '-7deg', z: 6, delay: 0 },
-  { id: '4D4H43PBEEo', brand: 'ICICI Direct', tag: 'Campaign', x: '50%', y: '0%', rot: '6deg', z: 5, delay: 0.5 },
-  { id: 'qzHtzyuk_g4', brand: 'Disney', tag: 'Series', x: '2%', y: '42%', rot: '4deg', z: 4, delay: 1 },
-  { id: 'BglRilfoGOA', brand: 'Thailand Tourism', tag: 'Brand Film', x: '54%', y: '44%', rot: '-5deg', z: 3, delay: 1.5 },
-  { id: 'MJofvf2lBNY', brand: 'DHL × MI', tag: 'Social', x: '28%', y: '74%', rot: '3deg', z: 7, delay: 2 },
+// Hero slider data
+const SLIDER_DATA = [
+  { id: '37CCZAHaYx8', brand: 'Ashok Leyland',       title: 'Khushiyon Ki Steering', tag: 'Brand Film', dur: '02:48' },
+  { id: '4D4H43PBEEo', brand: 'ICICI Direct',        title: 'Flash Trade',            tag: 'Campaign',   dur: '01:15' },
+  { id: 'qzHtzyuk_g4', brand: 'Disney',               title: 'Delicious Minis',        tag: 'Series',     dur: '01:08' },
+  { id: 'BglRilfoGOA', brand: 'Thailand Tourism',     title: 'Evoking Wanderlust',     tag: 'Brand Film', dur: '01:42' },
+  { id: 'MJofvf2lBNY', brand: 'DHL × Mumbai Indians', title: 'Dil Se Indian',          tag: 'Social',     dur: '00:30' },
 ];
 
-function HeroCard({ c }: { c: (typeof heroCards)[0] }) {
-  const [hovered, setHovered] = useState(false);
+const CARD_W  = 480;
+const CARD_H  = 300;   // ~16:10
+const STRIDE  = 500;   // card width + gap — makes ±1 cards peek on each side
+
+function cDist(i: number, active: number, n: number) {
+  const d = ((i - active) % n + n) % n;
+  return d > n / 2 ? d - n : d;
+}
+
+function HeroSlider() {
+  const [active, setActive]     = useState(0);
+  const [containerW, setContainerW] = useState(640);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    const m = () => { if (containerRef.current) setContainerW(containerRef.current.offsetWidth); };
+    m();
+    window.addEventListener('resize', m);
+    return () => window.removeEventListener('resize', m);
+  }, []);
+
+  const resetTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => setActive(p => (p + 1) % SLIDER_DATA.length), 4500);
+  };
+  useEffect(() => { resetTimer(); return () => { if (timerRef.current) clearInterval(timerRef.current); }; }, []);
+
+  const goTo = (i: number) => { setActive(((i % SLIDER_DATA.length) + SLIDER_DATA.length) % SLIDER_DATA.length); resetTimer(); };
+  const N = SLIDER_DATA.length;
+
   return (
-    <motion.a
-      href={`https://www.youtube.com/watch?v=${c.id}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      initial={{ opacity: 0, y: 60, rotate: 0 }}
-      animate={{
-        opacity: 1,
-        y: [0, -12, 0, 8, 0],
-        rotate: hovered ? 0 : parseFloat(c.rot),
-        transition: {
-          opacity: { duration: 0.6, delay: c.delay * 0.25 },
-          rotate: { duration: 0.35 },
-          y: { duration: 6, delay: c.delay, repeat: Infinity, ease: 'easeInOut' },
-        },
-      }}
-      whileHover={{ scale: 1.05 }}
-      style={{
-        position: 'absolute',
-        left: c.x,
-        top: c.y,
-        zIndex: c.z,
-        width: 'clamp(170px, 20vw, 250px)',
-        display: 'block',
-        borderRadius: 14,
-        overflow: 'hidden',
-        aspectRatio: '16/10',
-        background: '#111',
-        textDecoration: 'none',
-        boxShadow: hovered
-          ? '0 22px 60px rgba(224,25,125,.4), 0 4px 20px rgba(26,106,255,.25)'
-          : '0 10px 34px rgba(0,0,0,.45)',
-        border: hovered ? '1.5px solid rgba(224,25,125,.7)' : '1.5px solid rgba(255,255,255,.08)',
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `url(https://img.youtube.com/vi/${c.id}/hqdefault.jpg)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          transform: hovered ? 'scale(1.06)' : 'scale(1)',
-          transition: 'transform .5s ease',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.1) 55%, transparent 100%)',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: `translate(-50%,-50%) scale(${hovered ? 1.15 : 1})`,
-          width: 44,
-          height: 44,
-          borderRadius: '50%',
-          background: 'rgba(255,255,255,.92)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'transform .3s ease',
-        }}
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="#111" />
-        </svg>
+    <div ref={containerRef} style={{ position: 'relative', width: '100%', height: CARD_H + 56, overflow: 'hidden' }}>
+      {SLIDER_DATA.map((c, i) => {
+        const dist   = cDist(i, active, N);
+        const isAct  = dist === 0;
+        const absDist = Math.abs(dist);
+        if (absDist > 2) return null;
+
+        const x       = containerW / 2 - CARD_W / 2 + dist * STRIDE;
+        const scale   = isAct ? 1 : absDist === 1 ? 0.85 : 0.72;
+        const opacity = isAct ? 1 : absDist === 1 ? 0.62 : 0.28;
+
+        return (
+          <motion.div
+            key={c.id}
+            animate={{ x, scale, opacity }}
+            transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+            onClick={() => !isAct && goTo(i)}
+            style={{
+              position: 'absolute', top: 4, left: 0,
+              width: CARD_W, height: CARD_H,
+              borderRadius: 16, overflow: 'hidden',
+              cursor: isAct ? 'default' : 'pointer',
+              zIndex: isAct ? 10 : absDist === 1 ? 5 : 1,
+              boxShadow: isAct
+                ? '0 0 0 2px #7700cc, 0 0 0 3.5px #e0197d, 0 0 32px rgba(119,0,204,0.55), 0 0 60px rgba(224,25,125,0.22)'
+                : '0 8px 32px rgba(0,0,0,0.55)',
+            }}
+          >
+            <img src={`https://img.youtube.com/vi/${c.id}/hqdefault.jpg`} alt={c.brand}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)' }} />
+
+            {/* Tag badge */}
+            {isAct && (
+              <div style={{ position: 'absolute', top: 13, left: 13, fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#fff', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 4, padding: '4px 10px' }}>
+                {c.tag}
+              </div>
+            )}
+
+            {/* Play */}
+            {isAct && (
+              <a href={`https://www.youtube.com/watch?v=${c.id}`} target="_blank" rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 54, height: 54, borderRadius: '50%', background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', zIndex: 2 }}
+              >
+                <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="#111" /></svg>
+              </a>
+            )}
+
+            {/* Bottom info */}
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '14px 16px' }}>
+              {isAct && (
+                <div style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(15px,1.8vw,20px)', fontWeight: 700, color: '#fff', lineHeight: 1.15, marginBottom: 2 }}>
+                  {c.brand}
+                </div>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                <div style={{ fontFamily: 'var(--fb)', fontSize: isAct ? 12 : 10, color: 'rgba(255,255,255,0.58)', lineHeight: 1.2 }}>{c.title}</div>
+                {isAct && <div style={{ fontFamily: 'var(--fm)', fontSize: 10, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em', flexShrink: 0, marginLeft: 8 }}>{c.dur}</div>}
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+
+      {/* Arrows */}
+      {(['prev','next'] as const).map(dir => (
+        <button key={dir} onClick={() => goTo(dir === 'prev' ? (active - 1 + N) % N : (active + 1) % N)}
+          style={{ position: 'absolute', top: CARD_H / 2 + 4, ...(dir === 'prev' ? { left: `calc(50% - ${CARD_W/2 + 28}px)` } : { left: `calc(50% + ${CARD_W/2 - 10}px)` }), transform: 'translateY(-50%)', width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 20, padding: 0 }}
+        >
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+            {dir === 'prev'
+              ? <path d="M9 2L4 7l5 5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              : <path d="M5 2l5 5-5 5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            }
+          </svg>
+        </button>
+      ))}
+
+      {/* Dots */}
+      <div style={{ position: 'absolute', bottom: 4, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 7 }}>
+        {SLIDER_DATA.map((_, i) => (
+          <button key={i} onClick={() => goTo(i)}
+            style={{ width: i === active ? 22 : 7, height: 7, borderRadius: 4, background: i === active ? '#e0197d' : 'rgba(255,255,255,0.28)', border: 'none', cursor: 'pointer', padding: 0, transition: 'all 0.32s cubic-bezier(0.22,1,0.36,1)' }} />
+        ))}
       </div>
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '10px 14px' }}>
-        <div style={{ fontFamily: 'var(--fm)', fontSize: 8.5, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.6)', marginBottom: 2 }}>{c.tag}</div>
-        <div style={{ fontFamily: 'var(--fb)', fontSize: 12, fontWeight: 700, color: '#fff' }}>{c.brand}</div>
-      </div>
-    </motion.a>
+    </div>
   );
 }
 
@@ -638,18 +556,9 @@ export default function ContentProductionPage() {
             </div>
           </div>
 
-          {/* ── RIGHT: floating video collage ── */}
-          <div
-            style={{
-              flex: '1 1 440px',
-              minWidth: 320,
-              position: 'relative',
-              height: 'clamp(420px, 70vh, 620px)',
-            }}
-          >
-            {heroCards.map((c) => (
-              <HeroCard key={c.id} c={c} />
-            ))}
+          {/* ── RIGHT: hero video slider ── */}
+          <div style={{ flex: '1 1 440px', minWidth: 320 }}>
+            <HeroSlider />
           </div>
         </div>
       </section>
