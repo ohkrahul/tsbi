@@ -236,10 +236,10 @@ function PhoneReelSlider() {
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontFamily: 'var(--fm)', fontSize: 16, fontWeight: 700, color: '#ff5c0d', letterSpacing: '-0.01em', minWidth: 26, textAlign: 'right' }}>
+          {/* <span style={{ fontFamily: 'var(--fm)', fontSize: 16, fontWeight: 700, color: '#ff5c0d', letterSpacing: '-0.01em', minWidth: 26, textAlign: 'right' }}>
             {String(active + 1).padStart(2, '0')}
-          </span>
-          <span style={{ fontFamily: 'var(--fm)', fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/ {String(N).padStart(2, '0')}</span>
+          </span> */}
+          {/* <span style={{ fontFamily: 'var(--fm)', fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/ {String(N).padStart(2, '0')}</span> */}
           <div style={{ width: 90, height: 3, background: 'rgba(255,255,255,0.18)', borderRadius: 3, position: 'relative', marginLeft: 6 }}>
             <motion.div
               animate={{ width: `${((active + 1) / N) * 100}%` }}

@@ -48,154 +48,139 @@ const reels: { type: 'reel' | 'p'; code: string; img: string }[] = [
   { type: 'p',    code: 'DP_z6w3j3yF',  img: '/media/thumb/25.png' },
 ];
 
-/* ─── Hero data ─────────────────────────────────────── */
-type PhoneItem = {
-  img:      string;
-  username: string;
-  caption:  string;
-  likes:    string;
-  views:    string;
-  rot:      number;
-  cta?:     string;
+/* ─── Hero scattered cards ──────────────────────────── */
+/* Update `handle` values to match the actual creator for each thumbnail */
+type HeroCard = {
+  img:     string;
+  handle:  string;
+  caption: string;
+  w:       number;
+  h:       number;
+  rot:     number;
+  z:       number;
+  delay:   number;
+  left?:   string;
+  right?:  string;
+  top?:    string;
+  bottom?: string;
 };
 
-const phoneData: PhoneItem[] = [
-  { img: '/influncer/1.png', username: 'rohanpreetsingh', caption: 'NEW DROP',          likes: '1.2M', views: '98K',  rot: -8 },
-  { img: '/influncer/2.png', username: 'kritika.khurana',  caption: 'Power moves only.', likes: '875K', views: '65K',  rot:  0, cta: 'Shop Now' },
-  { img: '/influncer/3.png', username: 'aashnashroff',    caption: 'Glow all day.',     likes: '520K', views: '42K',  rot:  7 },
+const heroCards: HeroCard[] = [
+  {
+    img: '/media/thumb/4.png',
+    handle: 'card-4',
+    caption: 'BOLD MOVES',
+    w: 145, h: 275, rot: -10, z: 1, delay: 0.25,
+    left: '0%', top: '18%',
+  },
+  {
+    img: '/media/thumb/2.png',
+    handle: 'card-2',
+    caption: 'REAL IMPACT',
+    w: 245, h: 465, rot: 1, z: 4, delay: 0,
+    left: '13%', top: '0%',
+  },
+  {
+    img: '/media/thumb/8.png',
+    handle: 'card-8',
+    caption: 'RULES? I MAKE THEM.',
+    w: 200, h: 380, rot: 8, z: 3, delay: 0.3,
+    left: '44%', top: '11%',
+  },
+  {
+    img: '/media/thumb/22.png',
+    handle: 'card-22',
+    caption: 'GLOW. EVERY DAY.',
+    w: 158, h: 298, rot: -5, z: 2, delay: 0.45,
+    left: '56%', bottom: '0%',
+  },
+  {
+    img: '/media/thumb/17.png',
+    handle: 'card-17',
+    caption: 'PURE VIBES.',
+    w: 142, h: 268, rot: -6, z: 1, delay: 0.55,
+    left: '1%', bottom: '7%',
+  },
+  {
+    img: '/media/thumb/24.png',
+    handle: 'card-24',
+    caption: 'SHINE ON.',
+    w: 150, h: 282, rot: 5, z: 1, delay: 0.65,
+    left: '63%', top: '42%',
+  },
 ];
 
 const heroPills = ['Talent Discovery', 'Campaigns', 'Creator Strategy', 'Reporting', 'Celebrity', 'UGC'];
-const trustedBy = ['pepe jeans', 'mama earth', 'boAt', 'purplle', 'SUGAR', 'derma+'];
+const trustedBy = ['Pepe jeans', 'Zydus', 'TBZ'];
 
-/* ─── Donut chart ───────────────────────────────────── */
-function DonutChart() {
-  const size = 68, r = 24;
-  const cx = size / 2, cy = size / 2;
-  const circ = 2 * Math.PI * r;
-  const segs = [
-    { pct: 32, color: MAGENTA   },
-    { pct: 28, color: BLUE      },
-    { pct: 25, color: '#7c3aed' },
-    { pct: 15, color: '#f59e0b' },
-  ];
-  let cum = 0;
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}
-         style={{ display: 'block', transform: 'rotate(-90deg)' }}>
-      <circle cx={cx} cy={cy} r={r} fill="none"
-              stroke="rgba(255,255,255,.07)" strokeWidth={9} />
-      {segs.map((s, i) => {
-        const dash = (s.pct / 100) * circ;
-        const el = (
-          <circle key={i} cx={cx} cy={cy} r={r} fill="none"
-                  stroke={s.color} strokeWidth={9}
-                  strokeDasharray={`${dash} ${circ - dash}`}
-                  strokeDashoffset={-cum} />
-        );
-        cum += dash;
-        return el;
-      })}
-    </svg>
-  );
-}
-
-/* ─── Phone card ────────────────────────────────────── */
-function PhoneCard({ d, delay }: { d: PhoneItem; delay: number }) {
+/* ─── Single influencer card ────────────────────────── */
+function InfluencerCard({ c }: { c: HeroCard }) {
+  const isMain = c.z === 4;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: [0, -9, 0, 6, 0] }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: [0, -8, 0, 5, 0] }}
       transition={{
-        opacity: { duration: 0.6, delay },
-        y: { duration: 7, delay, repeat: Infinity, ease: 'easeInOut' },
+        opacity: { duration: 0.6, delay: c.delay },
+        y: { duration: 7 + c.delay * 0.5, delay: c.delay, repeat: Infinity, ease: 'easeInOut' },
       }}
       style={{
-        width: 190,
-        height: 360,
-        borderRadius: 28,
+        position: 'absolute',
+        ...(c.left   !== undefined && { left:   c.left   }),
+        ...(c.right  !== undefined && { right:  c.right  }),
+        ...(c.top    !== undefined && { top:    c.top    }),
+        ...(c.bottom !== undefined && { bottom: c.bottom }),
+        zIndex: c.z,
+        width:  c.w,
+        height: c.h,
+        borderRadius: 26,
         overflow: 'hidden',
-        border: '1.5px solid rgba(255,255,255,0.18)',
-        background: '#0a0a0a',
-        position: 'relative',
-        rotate: d.rot,
-        boxShadow: d.rot === 0
-          ? '0 28px 80px rgba(139,92,246,0.45), 0 6px 30px rgba(0,0,0,0.6)'
-          : '0 14px 50px rgba(0,0,0,0.5)',
+        border: isMain
+          ? `1.5px solid rgba(224,25,125,.55)`
+          : `1.5px solid rgba(255,255,255,.14)`,
+        background: '#080808',
+        rotate: c.rot,
+        boxShadow: isMain
+          ? '0 32px 90px rgba(124,58,237,.5), 0 8px 35px rgba(0,0,0,.65)'
+          : '0 16px 55px rgba(0,0,0,.55)',
         flexShrink: 0,
       }}
     >
       {/* Notch */}
       <div style={{
-        position: 'absolute', top: 9, left: '50%', transform: 'translateX(-50%)',
-        width: 46, height: 6, background: '#000', borderRadius: 3, zIndex: 10,
+        position: 'absolute', top: 8, left: '50%', transform: 'translateX(-50%)',
+        width: 44, height: 5, background: '#000', borderRadius: 3, zIndex: 10,
       }} />
 
-      {/* Image */}
+      {/* Full-bleed image */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={d.img} alt={d.username}
+      <img src={c.img} alt={c.handle}
            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
 
-      {/* Top gradient + username */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 80,
-        background: 'linear-gradient(to bottom, rgba(0,0,0,.78) 0%, transparent 100%)',
-        padding: '18px 11px 0',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <div style={{
-            width: 20, height: 20, borderRadius: '50%', overflow: 'hidden',
-            border: '1.5px solid rgba(255,255,255,.6)', flexShrink: 0,
-          }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={d.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 9, fontWeight: 700, color: '#fff', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{d.username}</div>
-            <div style={{ fontSize: 7.5, color: 'rgba(255,255,255,.6)' }}>Sponsored</div>
-          </div>
-          <div style={{ display: 'flex', gap: 2.5, flexShrink: 0 }}>
-            {[0,1,2].map(i => (
-              <div key={i} style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,.65)' }} />
-            ))}
-          </div>
-        </div>
-      </div>
 
-      {/* Bottom gradient + engagement */}
+      {/* Bottom: caption + icons */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
-        background: 'linear-gradient(to top, rgba(0,0,0,.92) 0%, transparent 100%)',
-        padding: '24px 11px 11px',
+        background: 'linear-gradient(to top, rgba(0,0,0,.94) 0%, transparent 100%)',
+        padding: '28px 11px 13px',
       }}>
-        {d.caption && (
-          <div style={{ fontSize: 10, fontWeight: 700, color: '#fff', marginBottom: 7, lineHeight: 1.3 }}>
-            {d.caption}
-          </div>
-        )}
-        {d.cta && (
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 5,
-            background: 'rgba(255,255,255,.92)', borderRadius: 20,
-            padding: '5px 11px', fontSize: 8.5, fontWeight: 700, color: '#111',
-            marginBottom: 7,
-          }}>
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5">
-              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-            </svg>
-            {d.cta}
-          </div>
-        )}
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill={MAGENTA} style={{ opacity: 0.9 }}>
+        <div style={{
+          fontSize: isMain ? 14 : 11,
+          fontWeight: 900, color: '#fff',
+          lineHeight: 1.2, letterSpacing: '.03em',
+          marginBottom: 8, textShadow: '0 2px 10px rgba(0,0,0,.6)',
+        }}>
+          {c.caption}
+        </div>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill={MAGENTA}>
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.75)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(255,255,255,.72)">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2">
-            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" strokeWidth="2">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
           </svg>
         </div>
       </div>
@@ -203,113 +188,143 @@ function PhoneCard({ d, delay }: { d: PhoneItem; delay: number }) {
   );
 }
 
-/* ─── Phone frame collage ───────────────────────────── */
-function PhoneFrameCollage() {
+/* ─── Influencer collage (scattered layout) ─────────── */
+function InfluencerCollage() {
   return (
-    <div style={{ position: 'relative', height: 'clamp(520px,76vh,640px)', overflow: 'visible' }}>
-      {/* Purple glow behind phones */}
+    <div style={{ position: 'relative', height: 'clamp(580px,84vh,740px)', overflow: 'visible' }}>
+
+      {/* Deep purple glow at bottom-right */}
       <div style={{
-        position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-        width: '80%', height: 240,
-        background: 'radial-gradient(ellipse at 50% 100%, rgba(124,58,237,.5) 0%, transparent 70%)',
+        position: 'absolute', bottom: -40, right: '10%',
+        width: '70%', height: 300,
+        background: 'radial-gradient(ellipse at 60% 100%, rgba(120,40,230,.6) 0%, transparent 70%)',
+        zIndex: 0, pointerEvents: 'none',
+      }} />
+      {/* Magenta glow behind center card */}
+      <div style={{
+        position: 'absolute', top: '25%', left: '30%',
+        width: 280, height: 280,
+        background: 'radial-gradient(circle, rgba(224,25,125,.22) 0%, transparent 70%)',
         zIndex: 0, pointerEvents: 'none',
       }} />
 
-      {/* Left phone */}
-      <div style={{ position: 'absolute', left: '13%', bottom: 14, zIndex: 1 }}>
-        <PhoneCard d={phoneData[0]} delay={0.15} />
-      </div>
+      {/* ─ 4 influencer cards ─ */}
+      {heroCards.map((c) => (
+        <InfluencerCard key={c.handle} c={c} />
+      ))}
 
-      {/* Center phone */}
-      <div style={{ position: 'absolute', left: '50%', bottom: 60, zIndex: 3, transform: 'translateX(-50%)' }}>
-        <PhoneCard d={phoneData[1]} delay={0} />
-      </div>
+      {/* ─ Trending #1 badge ─ */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.6 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.8, type: 'spring', stiffness: 200 }}
+        style={{
+          position: 'absolute', top: '42%', left: '9%', zIndex: 8,
+          width: 74, height: 74, borderRadius: '50%',
+          background: `linear-gradient(135deg, ${MAGENTA}, #9333ea)`,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          boxShadow: `0 0 30px rgba(224,25,125,.6)`,
+          border: '2px solid rgba(255,255,255,.2)',
+        }}
+      >
+        <div style={{ fontSize: 18, lineHeight: 1 }}>🔥</div>
+        <div style={{ fontSize: 8, fontWeight: 700, color: '#fff', letterSpacing: '.06em', marginTop: 1 }}>TRENDING</div>
+        <div style={{ fontSize: 11, fontWeight: 900, color: '#fff', lineHeight: 1 }}>#1</div>
+      </motion.div>
 
-      {/* Right phone */}
-      <div style={{ position: 'absolute', right: '13%', bottom: 14, zIndex: 2 }}>
-        <PhoneCard d={phoneData[2]} delay={0.3} />
-      </div>
+      {/* ─ Engagement chip near main card ─ */}
+      {/* <motion.div
+        initial={{ opacity: 0, x: -16 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1.0, duration: 0.5 }}
+        style={{
+          position: 'absolute', top: '30%', left: '42%', zIndex: 9,
+          background: 'rgba(8,14,38,.9)',
+          backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,.14)',
+          borderRadius: 30, padding: '7px 14px',
+          display: 'flex', alignItems: 'center', gap: 7,
+          boxShadow: '0 8px 30px rgba(0,0,0,.45)',
+        }}
+      >
+        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80', flexShrink: 0 }} />
+        <span style={{ fontSize: 12, fontWeight: 800, color: '#fff' }}>427K</span>
+        <span style={{ fontSize: 9, color: 'rgba(255,255,255,.55)' }}>Engagement</span>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+          <polyline points="16 7 22 7 22 13"/>
+        </svg>
+      </motion.div> */}
 
-      {/* Impact that scales — top-right floating card */}
+      {/* ─ Campaign Impact glass card (top-right) ─ */}
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.7, duration: 0.5 }}
         style={{
-          position: 'absolute', top: '4%', right: 0, zIndex: 10,
-          background: 'rgba(8,14,36,.92)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
+          position: 'absolute', top: '1%', right: '3%', zIndex: 10,
+          background: 'rgba(8,14,38,.92)',
+          backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
           border: '1px solid rgba(255,255,255,.12)',
-          borderRadius: 14,
-          padding: '14px 18px',
-          minWidth: 218,
-          boxShadow: '0 16px 50px rgba(0,0,0,.5)',
+          borderRadius: 14, padding: '14px 18px',
+          minWidth: 215, boxShadow: '0 16px 50px rgba(0,0,0,.5)',
         }}
       >
         <div style={{
           fontSize: 9.5, fontWeight: 600, letterSpacing: '.1em',
-          textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: 14,
+          textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: 13,
         }}>
-          Impact that scales
+          Campaign Impact
         </div>
         <div style={{ display: 'flex', gap: 18 }}>
           {[
-            { val: '6.25M', label: 'Total Views',  accent: MAGENTA },
-            { val: '530K',  label: 'Engagements', accent: MAGENTA },
-            { val: '15x',   label: 'Avg. ROI',    accent: BLUE    },
+            { val: '6.25M', label: 'Total Views'  },
+            { val: '530K',  label: 'Engagements' },
+            { val: '15x',   label: 'Avg. ROI'    },
           ].map(s => (
             <div key={s.label} style={{ textAlign: 'center' }}>
-              <div style={{
-                fontSize: 17, fontWeight: 800, color: '#fff',
-                lineHeight: 1, fontFamily: 'var(--fm)',
-              }}>{s.val}</div>
-              <div style={{ fontSize: 9, color: 'rgba(255,255,255,.45)', marginTop: 3 }}>{s.label}</div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', lineHeight: 1, fontFamily: 'var(--fm)' }}>{s.val}</div>
+              <div style={{ fontSize: 9, color: 'rgba(255,255,255,.44)', marginTop: 3 }}>{s.label}</div>
             </div>
           ))}
         </div>
       </motion.div>
 
-      {/* Campaign Snapshot — bottom-right floating card */}
+      {/* ─ Top Categories card (bottom-center) ─ */}
       <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.9, duration: 0.5 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.1, duration: 0.5 }}
         style={{
-          position: 'absolute', bottom: '14%', right: 0, zIndex: 10,
-          background: 'rgba(8,14,36,.92)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
+          position: 'absolute', bottom: '5%', left: '16%', zIndex: 9,
+          background: 'rgba(8,14,38,.92)',
+          backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
           border: '1px solid rgba(255,255,255,.12)',
-          borderRadius: 14,
-          padding: '14px 16px',
-          minWidth: 195,
-          boxShadow: '0 16px 50px rgba(0,0,0,.5)',
+          borderRadius: 14, padding: '12px 16px',
+          minWidth: 190, boxShadow: '0 16px 50px rgba(0,0,0,.5)',
         }}
       >
         <div style={{
-          fontSize: 9.5, fontWeight: 600, letterSpacing: '.1em',
-          textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: 12,
+          fontSize: 9, fontWeight: 600, letterSpacing: '.1em',
+          textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: 11,
         }}>
-          Campaign Snapshot
+          Top Categories
         </div>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <DonutChart />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 5, flex: 1 }}>
-            {[
-              { label: 'Nano',      pct: 32, color: MAGENTA   },
-              { label: 'Micro',     pct: 28, color: BLUE      },
-              { label: 'Macro',     pct: 25, color: '#7c3aed' },
-              { label: 'Celebrity', pct: 15, color: '#f59e0b' },
-            ].map(s => (
-              <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
-                <span style={{ fontSize: 9.5, color: 'rgba(255,255,255,.7)', flex: 1 }}>{s.label}</span>
-                <span style={{ fontSize: 9.5, color: 'rgba(255,255,255,.42)' }}>{s.pct}%</span>
-              </div>
-            ))}
+        {[
+          { label: 'Fashion',   pct: 38, color: MAGENTA   },
+          { label: 'Beauty',    pct: 28, color: BLUE      },
+          { label: 'Lifestyle', pct: 20, color: '#7c3aed' },
+          { label: 'Tech',      pct: 14, color: '#f59e0b' },
+        ].map(cat => (
+          <div key={cat.label} style={{ marginBottom: 7, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 9, color: 'rgba(255,255,255,.65)', width: 50, flexShrink: 0 }}>{cat.label}</span>
+            <div style={{ flex: 1, height: 5, background: 'rgba(255,255,255,.08)', borderRadius: 3, overflow: 'hidden' }}>
+              <div style={{ width: `${cat.pct}%`, height: '100%', background: cat.color, borderRadius: 3 }} />
+            </div>
+            <span style={{ fontSize: 9, color: 'rgba(255,255,255,.42)', width: 28, textAlign: 'right', flexShrink: 0 }}>{cat.pct}%</span>
           </div>
-        </div>
+        ))}
       </motion.div>
     </div>
   );
@@ -325,10 +340,7 @@ function ReelCard({ r }: { r: { type: 'reel' | 'p'; code: string; img: string } 
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); setIframeReady(false); }}
       style={{
-        position: 'relative',
-        borderRadius: 14,
-        overflow: 'hidden',
-        height: 420,
+        position: 'relative', borderRadius: 14, overflow: 'hidden', height: 420,
         border: `1px solid ${hovered ? 'rgba(224,25,125,0.45)' : 'rgba(255,255,255,0.08)'}`,
         background: '#111',
         boxShadow: hovered
@@ -345,8 +357,7 @@ function ReelCard({ r }: { r: { type: 'reel' | 'p'; code: string; img: string } 
         style={{
           position: 'absolute', inset: 0,
           backgroundImage: `url(${r.img})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: 'cover', backgroundPosition: 'center',
         }}
       />
       <motion.div
@@ -363,7 +374,7 @@ function ReelCard({ r }: { r: { type: 'reel' | 'p'; code: string; img: string } 
         transition={{ duration: 0.3 }}
         style={{
           position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-          width: 50, height: 50, borderRadius: '50%', background: 'rgba(255,255,255,0.9)',
+          width: 52, height: 52, borderRadius: '50%', background: 'rgba(255,255,255,0.9)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           zIndex: 2, pointerEvents: 'none',
         }}
@@ -382,7 +393,7 @@ function ReelCard({ r }: { r: { type: 'reel' | 'p'; code: string; img: string } 
           <iframe
             src={`https://www.instagram.com/${r.type}/${r.code}/embed/`}
             onLoad={() => setIframeReady(true)}
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none', display: 'block', overflow: 'hidden' }}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none', display: 'block' }}
             allow="autoplay; encrypted-media; picture-in-picture"
           />
         </motion.div>
@@ -398,9 +409,10 @@ export default function InfluencerManagementPage() {
       {/* ── HERO ── */}
       <section style={{
         background:
-          'radial-gradient(ellipse at 14% 40%, rgba(224,25,125,.2) 0%, transparent 52%),' +
-          'radial-gradient(ellipse at 84% 70%, rgba(26,106,255,.22) 0%, transparent 52%),' +
-          'linear-gradient(135deg,#050b1a 0%,#0d1528 100%)',
+          'radial-gradient(ellipse at 78% 55%, rgba(120,40,230,.55) 0%, transparent 52%),' +
+          'radial-gradient(ellipse at 12% 42%, rgba(224,25,125,.2) 0%, transparent 48%),' +
+          'radial-gradient(ellipse at 50% 95%, rgba(100,30,200,.3) 0%, transparent 50%),' +
+          'linear-gradient(135deg,#030712 0%,#0b0820 55%,#180432 100%)',
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
@@ -410,14 +422,27 @@ export default function InfluencerManagementPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 40, width: '100%', flexWrap: 'wrap' }}>
 
           {/* LEFT: copy */}
-          <div style={{ flex: '1 1 420px', minWidth: 300 }}>
-            <div className="sec-label" style={{ color: MAGENTA, marginBottom: 28 }}>
-              05 — Influence
+          <div style={{ flex: '1 1 400px', minWidth: 300 }}>
+
+            {/* Label pill */}
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              background: 'rgba(224,25,125,.14)',
+              border: '1px solid rgba(224,25,125,.35)',
+              borderRadius: 50, padding: '5px 14px',
+              marginBottom: 28,
+            }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill={MAGENTA}>
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <span style={{ fontSize: 10, fontWeight: 700, color: MAGENTA, letterSpacing: '.12em', textTransform: 'uppercase' }}>
+                Influencer Marketing, Reimagined
+              </span>
             </div>
 
             <h1 style={{
               fontFamily: 'var(--fd)',
-              fontSize: 'clamp(46px,5.8vw,86px)',
+              fontSize: 'clamp(46px,5.8vw,88px)',
               fontWeight: 900,
               lineHeight: 1.0,
               letterSpacing: '-0.04em',
@@ -426,16 +451,19 @@ export default function InfluencerManagementPage() {
             }}>
               Every Brand<br />
               Needs a{' '}
-              <em style={{ color: MAGENTA, fontStyle: 'italic' }}>Star.</em>
+              <span style={{
+                color: MAGENTA,
+                fontStyle: 'italic',
+                textDecoration: 'underline',
+                textDecorationColor: `${MAGENTA}60`,
+                textUnderlineOffset: 6,
+              }}>Star.</span>
             </h1>
 
             <p style={{
-              fontSize: 16,
-              color: 'rgba(255,255,255,.58)',
-              fontWeight: 300,
-              lineHeight: 1.75,
-              maxWidth: 460,
-              marginBottom: 26,
+              fontSize: 16, color: 'rgba(255,255,255,.58)',
+              fontWeight: 300, lineHeight: 1.75,
+              maxWidth: 450, marginBottom: 28,
             }}>
               Full-service influencer marketing and talent management from
               micro-communities to mega-reach — every tier, every category, end-to-end.
@@ -445,16 +473,11 @@ export default function InfluencerManagementPage() {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 30 }}>
               {heroPills.map(p => (
                 <div key={p} style={{
-                  display: 'inline-flex', alignItems: 'center',
-                  padding: '7px 15px',
+                  display: 'inline-flex', alignItems: 'center', padding: '7px 15px',
                   background: 'rgba(255,255,255,.07)',
                   border: '1px solid rgba(255,255,255,.12)',
-                  borderRadius: 50,
-                  fontSize: 13,
-                  color: 'rgba(255,255,255,.72)',
-                  fontFamily: 'var(--fm)',
-                  backdropFilter: 'blur(6px)',
-                  WebkitBackdropFilter: 'blur(6px)',
+                  borderRadius: 50, fontSize: 13,
+                  color: 'rgba(255,255,255,.72)', fontFamily: 'var(--fm)',
                 }}>
                   {p}
                 </div>
@@ -466,7 +489,7 @@ export default function InfluencerManagementPage() {
               <Link href="/case-studies" style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 background: MAGENTA, color: '#fff',
-                borderRadius: 50, padding: '13px 26px',
+                borderRadius: 50, padding: '13px 28px',
                 fontSize: 14, fontWeight: 600, fontFamily: 'var(--fm)',
                 textDecoration: 'none', letterSpacing: '.02em',
               }}>
@@ -477,7 +500,7 @@ export default function InfluencerManagementPage() {
                 background: 'rgba(255,255,255,.08)',
                 color: 'rgba(255,255,255,.75)',
                 border: '1.5px solid rgba(255,255,255,.2)',
-                borderRadius: 50, padding: '13px 26px',
+                borderRadius: 50, padding: '13px 28px',
                 fontSize: 14, fontWeight: 600, fontFamily: 'var(--fm)',
                 textDecoration: 'none', letterSpacing: '.02em',
               }}>
@@ -491,7 +514,7 @@ export default function InfluencerManagementPage() {
                 fontSize: 10, letterSpacing: '.18em', textTransform: 'uppercase',
                 color: 'rgba(255,255,255,.32)', fontFamily: 'var(--fm)', marginBottom: 14,
               }}>
-                Trusted by
+                Trusted by Visionary Brands
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                 {trustedBy.map((brand, i) => (
@@ -509,9 +532,9 @@ export default function InfluencerManagementPage() {
             </div>
           </div>
 
-          {/* RIGHT: phone collage */}
-          <div style={{ flex: '1 1 460px', minWidth: 340, position: 'relative' }}>
-            <PhoneFrameCollage />
+          {/* RIGHT: scattered influencer collage */}
+          <div style={{ flex: '1 1 520px', minWidth: 400, position: 'relative' }}>
+            <InfluencerCollage />
           </div>
         </div>
       </section>
@@ -529,23 +552,17 @@ export default function InfluencerManagementPage() {
         <h2 style={{
           fontFamily: 'var(--fd)',
           fontSize: 'clamp(28px,4vw,52px)',
-          fontWeight: 900,
-          letterSpacing: '-0.02em',
-          color: '#fff',
-          lineHeight: 1.05,
-          marginBottom: 12,
-          maxWidth: 760,
+          fontWeight: 900, letterSpacing: '-0.02em',
+          color: '#fff', lineHeight: 1.05,
+          marginBottom: 12, maxWidth: 760,
         }}>
           Content that earned its{' '}
           <em style={{ color: BLUE, fontStyle: 'italic' }}>reach.</em>
         </h2>
         <p style={{
-          fontSize: 15,
-          color: 'rgba(255,255,255,.55)',
-          fontWeight: 300,
-          lineHeight: 1.7,
-          maxWidth: 480,
-          marginBottom: 44,
+          fontSize: 15, color: 'rgba(255,255,255,.55)',
+          fontWeight: 300, lineHeight: 1.7,
+          maxWidth: 480, marginBottom: 44,
         }}>
           A selection of {reels.length} influencer-led reels and posts produced and managed by the TSBI team.
         </p>
@@ -562,18 +579,16 @@ export default function InfluencerManagementPage() {
 
       {/* ── TALENT STAT BAND ── */}
       <div style={{
-        background: 'rgba(255,255,255,.04)',
+        background: '#070e1e',
         borderTop: '1px solid rgba(255,255,255,.06)',
         borderBottom: '1px solid rgba(255,255,255,.06)',
         padding: '40px 48px',
-        display: 'flex',
-        gap: 0,
-        backgroundColor: '#070e1e',
+        display: 'flex', gap: 0,
       }}>
         {[
-          { val: '150+',        label: 'Active Talents' },
-          { val: 'All Categories', label: 'Covered'     },
-          { val: 'End-to-End',  label: 'Managed'        },
+          { val: '150+',           label: 'Active Talents' },
+          { val: 'All Categories', label: 'Covered'        },
+          { val: 'End-to-End',     label: 'Managed'        },
         ].map((stat, i) => (
           <div key={stat.label} style={{
             flex: 1, textAlign: 'center',
@@ -583,15 +598,13 @@ export default function InfluencerManagementPage() {
             <div style={{
               fontFamily: 'var(--fd)',
               fontSize: 'clamp(32px,4vw,56px)',
-              fontWeight: 900, color: '#fff',
-              lineHeight: 1, marginBottom: 8,
+              fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 8,
             }}>
               {stat.val}
             </div>
             <div style={{
-              fontFamily: 'var(--fm)',
-              fontSize: 9, letterSpacing: '.18em',
-              textTransform: 'uppercase', color: MAGENTA,
+              fontFamily: 'var(--fm)', fontSize: 9,
+              letterSpacing: '.18em', textTransform: 'uppercase', color: MAGENTA,
             }}>
               {stat.label}
             </div>
@@ -601,26 +614,17 @@ export default function InfluencerManagementPage() {
 
       {/* ── FEATURE CARDS ── */}
       <section style={{ background: 'var(--navy)', padding: '80px 48px' }}>
-        <div className="sec-label" style={{ color: MAGENTA, marginBottom: 40 }}>
-          What We Manage
-        </div>
+        <div className="sec-label" style={{ color: MAGENTA, marginBottom: 40 }}>What We Manage</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
           {cards.map((card) => (
             <div key={card.num} style={{
               background: 'rgba(255,255,255,.04)',
               border: '1px solid rgba(255,255,255,.06)',
-              borderRadius: 8,
-              padding: '28px 24px',
+              borderRadius: 8, padding: '28px 24px',
             }}>
-              <div style={{ fontFamily: 'var(--fm)', fontSize: 11, color: MAGENTA, letterSpacing: '.1em', marginBottom: 14 }}>
-                {card.num}
-              </div>
-              <div style={{ fontFamily: 'var(--fd)', fontSize: 20, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: 10 }}>
-                {card.title}
-              </div>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,.55)', fontWeight: 300, lineHeight: 1.65 }}>
-                {card.desc}
-              </p>
+              <div style={{ fontFamily: 'var(--fm)', fontSize: 11, color: MAGENTA, letterSpacing: '.1em', marginBottom: 14 }}>{card.num}</div>
+              <div style={{ fontFamily: 'var(--fd)', fontSize: 20, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: 10 }}>{card.title}</div>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,.55)', fontWeight: 300, lineHeight: 1.65 }}>{card.desc}</p>
             </div>
           ))}
         </div>
@@ -632,18 +636,13 @@ export default function InfluencerManagementPage() {
           'radial-gradient(ellipse at 85% 10%, rgba(26,106,255,.14) 0%, transparent 55%), #050b1a',
         padding: '80px 48px',
       }}>
-        <div className="sec-label" style={{ color: BLUE, marginBottom: 12 }}>
-          In the Spotlight
-        </div>
+        <div className="sec-label" style={{ color: BLUE, marginBottom: 12 }}>In the Spotlight</div>
         <h2 style={{
           fontFamily: 'var(--fd)',
           fontSize: 'clamp(28px,4vw,52px)',
-          fontWeight: 900,
-          letterSpacing: '-0.02em',
-          color: '#fff',
-          lineHeight: 1.05,
-          marginBottom: 44,
-          maxWidth: 760,
+          fontWeight: 900, letterSpacing: '-0.02em',
+          color: '#fff', lineHeight: 1.05,
+          marginBottom: 44, maxWidth: 760,
         }}>
           Talent and brands,{' '}
           <em style={{ color: MAGENTA, fontStyle: 'italic' }}>made unforgettable.</em>
@@ -657,11 +656,10 @@ export default function InfluencerManagementPage() {
             <div key={src} style={{
               borderRadius: 14, overflow: 'hidden',
               border: `1px solid ${i % 2 === 0 ? 'rgba(224,25,125,.35)' : 'rgba(26,106,255,.35)'}`,
-              boxShadow: '0 14px 40px rgba(0,0,0,.4)',
-              background: '#0d1528',
+              boxShadow: '0 14px 40px rgba(0,0,0,.4)', background: '#0d1528',
             }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt={`Influencer campaign spotlight ${i + 1}`}
+              <img src={src} alt={`Influencer spotlight ${i + 1}`}
                    style={{ width: '100%', height: 'auto', display: 'block' }} />
             </div>
           ))}
@@ -680,9 +678,8 @@ export default function InfluencerManagementPage() {
           &ldquo;We don&apos;t just connect brands to influencers. We build movements.&rdquo;
         </blockquote>
         <p style={{
-          fontFamily: 'var(--fm)',
-          fontSize: 10, letterSpacing: '.14em',
-          textTransform: 'uppercase', color: MAGENTA,
+          fontFamily: 'var(--fm)', fontSize: 10,
+          letterSpacing: '.14em', textTransform: 'uppercase', color: MAGENTA,
         }}>
           — TSBI Influencer Team
         </p>
@@ -690,13 +687,9 @@ export default function InfluencerManagementPage() {
 
       {/* ── CTA ── */}
       <section style={{
-        background: 'var(--magenta)',
-        padding: '80px 48px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: 40,
+        background: 'var(--magenta)', padding: '80px 48px',
+        display: 'flex', alignItems: 'center',
+        justifyContent: 'space-between', flexWrap: 'wrap', gap: 40,
       }}>
         <h2 style={{
           fontFamily: 'var(--fd)',

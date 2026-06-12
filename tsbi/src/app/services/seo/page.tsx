@@ -40,68 +40,166 @@ const timelineFeatures = [
   },
 ];
 
-// Floating client result cards shown on the right of the hero.
-const heroCards = [
-  { src: '/seo/2.png', label: 'Mahindra Manulife', x: '1%', y: '2%', rot: '-6deg', z: 6, delay: 0 },
-  { src: '/seo/3.png', label: 'Pepe Jeans London', x: '46%', y: '12%', rot: '5deg', z: 5, delay: 0.6 },
-  { src: '/seo/1.png', label: 'Sandu Pharma', x: '20%', y: '54%', rot: '-3deg', z: 7, delay: 1.2 },
-];
-
-function HeroCard({ c }: { c: (typeof heroCards)[0] }) {
+function HeroCard() {
   const [hovered, setHovered] = useState(false);
   return (
-    <motion.div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      initial={{ opacity: 0, y: 60, rotate: 0 }}
-      animate={{
-        opacity: 1,
-        y: [0, -12, 0, 8, 0],
-        rotate: hovered ? 0 : parseFloat(c.rot),
-        transition: {
-          opacity: { duration: 0.6, delay: c.delay * 0.25 },
-          rotate: { duration: 0.35 },
-          y: { duration: 6, delay: c.delay, repeat: Infinity, ease: 'easeInOut' },
-        },
-      }}
-      whileHover={{ scale: 1.05 }}
-      style={{
-        position: 'absolute',
-        left: c.x,
-        top: c.y,
-        zIndex: c.z,
-        width: 'clamp(170px, 22vw, 280px)',
-        background: '#fff',
-        borderRadius: 14,
-        overflow: 'hidden',
-        boxShadow: hovered
-          ? '0 22px 60px rgba(224,25,125,.45), 0 4px 24px rgba(26,106,255,.3)'
-          : '0 14px 40px rgba(0,0,0,.45)',
-        border: hovered
-          ? '1.5px solid rgba(224,25,125,.7)'
-          : '1.5px solid rgba(255,255,255,.12)',
-      }}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={c.src}
-        alt={`${c.label} SEO results`}
-        style={{ width: '100%', height: 'auto', display: 'block' }}
-      />
-      <div
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, position: 'relative', height: '100%' }}>
+      {/* Mahindra Manulife */}
+      <motion.div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0 }}
+        whileHover={{ scale: 1.02 }}
         style={{
-          fontFamily: 'var(--fm)',
-          fontSize: 9,
-          letterSpacing: '.12em',
-          textTransform: 'uppercase',
-          color: 'var(--ink)',
-          padding: '8px 12px',
-          borderTop: '1px solid var(--border)',
+          background: 'linear-gradient(135deg, rgba(224,25,125,.08) 0%, rgba(26,106,255,.08) 100%)',
+          borderRadius: 20,
+          padding: 28,
+          border: '1.5px solid',
+          borderImage: 'linear-gradient(135deg, rgba(224,25,125,.6) 0%, rgba(26,106,255,.4) 100%) 1',
+          boxShadow: hovered
+            ? '0 0 40px rgba(224,25,125,.3), 0 0 60px rgba(26,106,255,.2), inset 0 0 40px rgba(224,25,125,.1)'
+            : '0 0 20px rgba(224,25,125,.15), inset 0 0 20px rgba(224,25,125,.05)',
+          transition: 'all .3s ease',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16,
         }}
       >
-        {c.label}
-      </div>
-    </motion.div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div
+            style={{
+              fontFamily: 'var(--fm)',
+              fontSize: 9,
+              letterSpacing: '.15em',
+              textTransform: 'uppercase',
+              color: 'var(--magenta)',
+              fontWeight: 700,
+            }}
+          >
+            Case Study
+          </div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--magenta)' }}>mahindra<br />MANULIFE</div>
+        </div>
+
+        <div>
+          <h4 style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
+            Mahindra Manulife
+          </h4>
+          <p style={{ fontSize: 11, color: 'rgba(255,255,255,.6)', margin: 0 }}>
+            Insurance
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 11 }}>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 9, marginBottom: 4 }}>Organic Sessions</div>
+            <div style={{ color: '#fff', fontWeight: 700 }}>50.6K</div>
+            <div style={{ color: 'var(--magenta)', fontSize: 10, marginTop: 2 }}>+68.16%</div>
+          </div>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 9, marginBottom: 4 }}>Keywords (Top 3)</div>
+            <div style={{ color: '#fff', fontWeight: 700 }}>85</div>
+            <div style={{ color: 'var(--magenta)', fontSize: 10, marginTop: 2 }}>+84.78%</div>
+          </div>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 9, marginBottom: 4 }}>Keywords (Top 10)</div>
+            <div style={{ color: '#fff', fontWeight: 700 }}>189</div>
+            <div style={{ color: 'var(--magenta)', fontSize: 10, marginTop: 2 }}>+110%</div>
+          </div>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 9, marginBottom: 4 }}>Domain Rating</div>
+            <div style={{ color: '#fff', fontWeight: 700 }}>72</div>
+            <div style={{ color: 'var(--magenta)', fontSize: 10, marginTop: 2 }}>+33%</div>
+          </div>
+        </div>
+
+        <div style={{ borderTop: '1px solid rgba(255,255,255,.1)', paddingTop: 12 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#fff', marginBottom: 8 }}>The Result</div>
+          <p style={{ fontSize: 11, color: 'rgba(255,255,255,.7)', lineHeight: 1.5, margin: 0 }}>
+            Doubled organic traffic in 12 months with significant growth across key revenue pages.
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Sandu Pharma */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.2 }}
+        whileHover={{ scale: 1.02 }}
+        style={{
+          background: 'linear-gradient(135deg, rgba(34,197,94,.08) 0%, rgba(34,197,94,.04) 100%)',
+          borderRadius: 20,
+          padding: 28,
+          border: '1.5px solid',
+          borderImage: 'linear-gradient(135deg, rgba(34,197,94,.5) 0%, rgba(26,106,255,.3) 100%) 1',
+          boxShadow: '0 0 20px rgba(34,197,94,.15), inset 0 0 20px rgba(34,197,94,.05)',
+          transition: 'all .3s ease',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div
+            style={{
+              fontFamily: 'var(--fm)',
+              fontSize: 9,
+              letterSpacing: '.15em',
+              textTransform: 'uppercase',
+              color: '#22c55e',
+              fontWeight: 700,
+            }}
+          >
+            Case Study
+          </div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>Sandu<br />PHARMA</div>
+        </div>
+
+        <div>
+          <h4 style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
+            Sandu Pharmaceuticals
+          </h4>
+          <p style={{ fontSize: 11, color: 'rgba(255,255,255,.6)', margin: 0 }}>
+            Ayurveda / Wellness
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 11 }}>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 9, marginBottom: 4 }}>Organic Traffic</div>
+            <div style={{ color: '#fff', fontWeight: 700 }}>189K</div>
+            <div style={{ color: '#22c55e', fontSize: 10, marginTop: 2 }}>+119%</div>
+          </div>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 9, marginBottom: 4 }}>Content Generated</div>
+            <div style={{ color: '#fff', fontWeight: 700 }}>7.1K</div>
+            <div style={{ color: '#22c55e', fontSize: 10, marginTop: 2 }}>+143%</div>
+          </div>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 9, marginBottom: 4 }}>Top 10 Keywords</div>
+            <div style={{ color: '#fff', fontWeight: 700 }}>66%</div>
+            <div style={{ color: '#22c55e', fontSize: 10, marginTop: 2 }}>+122%</div>
+          </div>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 9, marginBottom: 4 }}>Domain Rating</div>
+            <div style={{ color: '#fff', fontWeight: 700 }}>59%</div>
+            <div style={{ color: '#22c55e', fontSize: 10, marginTop: 2 }}>+107%</div>
+          </div>
+        </div>
+
+        <div style={{ borderTop: '1px solid rgba(255,255,255,.1)', paddingTop: 12 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#fff', marginBottom: 8 }}>The Result</div>
+          <p style={{ fontSize: 11, color: 'rgba(255,255,255,.7)', lineHeight: 1.5, margin: 0 }}>
+            71% increase in impressions and 66% increase in organic clicks in 6 months.
+          </p>
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -338,6 +436,79 @@ function CaseStudyBlock({ cs, i }: { cs: CaseStudy; i: number }) {
   );
 }
 
+const seoClients = [
+  { name: 'Mahindra Manulife', industry: 'BFSI' },
+  { name: 'Pepe Jeans London', industry: 'E-commerce' },
+  { name: 'Sandu Pharma', industry: 'Wellness' },
+  { name: 'Purplle', industry: 'E-commerce' },
+  { name: 'derma+', industry: 'Healthcare' },
+  { name: 'mama earth', industry: 'FMCG' },
+  { name: 'boAt', industry: 'E-commerce' },
+  { name: 'SUGAR Cosmetics', industry: 'FMCG' },
+  { name: 'pepe jeans', industry: 'E-commerce' },
+];
+
+const industries = ['All', 'Healthcare', 'FMCG', 'E-commerce', 'Wellness', 'BFSI'];
+
+function BrandsSection() {
+  const [activeFilter, setActiveFilter] = useState('All');
+  const filtered = activeFilter === 'All' ? seoClients : seoClients.filter((c) => c.industry === activeFilter);
+
+  return (
+    <div>
+      {/* Filter tabs */}
+      <div style={{ display: 'flex', gap: 12, marginBottom: 48, flexWrap: 'wrap' }}>
+        {industries.map((ind) => (
+          <button
+            key={ind}
+            onClick={() => setActiveFilter(ind)}
+            style={{
+              padding: '10px 20px',
+              borderRadius: 20,
+              border: activeFilter === ind ? 'none' : '1px solid var(--border)',
+              background: activeFilter === ind ? 'var(--navy)' : 'var(--white)',
+              color: activeFilter === ind ? '#fff' : 'var(--ink)',
+              fontFamily: 'var(--fm)',
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: '.08em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              transition: 'all .2s ease',
+            }}
+          >
+            {ind}
+          </button>
+        ))}
+      </div>
+
+      {/* Brand grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 16 }}>
+        {filtered.map((client) => (
+          <div
+            key={client.name}
+            style={{
+              background: 'var(--white)',
+              border: '1px solid var(--border)',
+              borderRadius: 12,
+              padding: '24px 16px',
+              textAlign: 'center',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: 100,
+            }}
+          >
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.4 }}>
+              {client.name}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function SeoPage() {
   return (
     <>
@@ -358,9 +529,9 @@ export default function SeoPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 40, width: '100%', flexWrap: 'wrap' }}>
           {/* ── LEFT: copy ── */}
           <div style={{ flex: '1 1 440px', minWidth: 300 }}>
-            <div className="sec-label" style={{ color: 'var(--magenta)', marginBottom: 36 }}>
+            {/* <div className="sec-label" style={{ color: 'var(--magenta)', marginBottom: 36 }}>
               03 — SEO
-            </div>
+            </div> */}
 
             <div style={{ marginBottom: 36 }}>
               {['Rank.', 'Grow.'].map((word) => (
@@ -402,31 +573,70 @@ export default function SeoPage() {
                 fontWeight: 300,
                 lineHeight: 1.75,
                 maxWidth: 480,
+                marginBottom: 32,
               }}
             >
               Full-funnel SEO that drives sustainable organic growth — from technical audits to
               content strategies that search engines and audiences love.
             </p>
+
+            {/* Stats row */}
+            <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+              {[
+                { icon: 'user', label: '100+ brands', desc: 'Trusted partners' },
+                { icon: 'users', label: '10+ industries', desc: 'Across sectors' },
+                { icon: 'bolt', label: '9 yrs in SEO', desc: 'Since 2015' },
+              ].map((stat) => (
+                <div key={stat.label} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: '50%',
+                    background: 'rgba(224,25,125,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                  }}>
+                    {stat.icon === 'user' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--magenta)">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
+                      </svg>
+                    )}
+                    {stat.icon === 'users' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--magenta)">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M16 3a2 2 0 0 1 2 2v1h2a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1v1a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-1H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2V5a2 2 0 0 1 2-2h4z"/>
+                      </svg>
+                    )}
+                    {stat.icon === 'bolt' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--magenta)">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                      </svg>
+                    )}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--magenta)' }}>
+                      {stat.label}
+                    </div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,.5)', marginTop: 2 }}>
+                      {stat.desc}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* ── RIGHT: floating result collage ── */}
+          {/* ── RIGHT: case study cards ── */}
           <div
             style={{
               flex: '1 1 440px',
               minWidth: 320,
-              position: 'relative',
-              height: 'clamp(440px, 72vh, 640px)',
+              height: 'clamp(500px, 80vh, 720px)',
             }}
           >
-            {heroCards.map((c) => (
-              <HeroCard key={c.src} c={c} />
-            ))}
+            <HeroCard />
           </div>
         </div>
       </section>
 
       {/* ── TIMELINE FEATURES ── */}
-      <section style={{ background: 'var(--white)', padding: '80px 48px' }}>
+      {/* <section style={{ background: 'var(--white)', padding: '80px 48px' }}>
         <div className="sec-label" style={{ marginBottom: 48 }}>
           What We Do
         </div>
@@ -466,6 +676,186 @@ export default function SeoPage() {
               </div>
             </div>
           ))}
+        </div>
+      </section> */}
+
+      {/* ── SEO SERVICES WE DELIVERED ── */}
+      <section style={{ background: 'var(--white)', padding: '100px 48px' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <div className="sec-label" style={{ color: 'var(--magenta)', marginBottom: 14, justifyContent: 'center' }}>
+              Services
+            </div>
+            <h2
+              style={{
+                fontFamily: 'var(--fd)',
+                fontSize: 'clamp(30px,4vw,56px)',
+                fontWeight: 900,
+                color: 'var(--ink)',
+                letterSpacing: '-0.02em',
+                lineHeight: 1.08,
+                marginBottom: 16,
+              }}
+            >
+              SEO Services We Delivered
+            </h2>
+            <p
+              style={{
+                fontFamily: 'var(--fd)',
+                fontStyle: 'italic',
+                fontSize: 'clamp(16px,1.5vw,20px)',
+                color: 'var(--muted)',
+                lineHeight: 1.6,
+                maxWidth: 600,
+                margin: '0 auto',
+              }}
+            >
+              From foundational technical work to next-gen AI search optimization.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, maxWidth: 1200, margin: '0 auto' }}>
+            {[
+              'Technical SEO',
+              'On-Page SEO',
+              'Local SEO',
+              'E-commerce SEO',
+              'Healthcare SEO',
+              'Content SEO',
+              'Blog Optimization',
+              'Keyword Ranking Tracking',
+              'GSC & GA4 Analysis',
+              'AI SEO / AEO / GEO Optimization',
+            ].map((service) => (
+              <div
+                key={service}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  padding: '14px 18px',
+                  background: 'var(--white)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 12,
+                  transition: 'all .2s ease',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--magenta)';
+                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(224,25,125,.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--magenta)" style={{ flexShrink: 0 }}>
+                  <path d="M12 1C6.48 1 2 5.48 2 11s4.48 10 10 10 10-4.48 10-10S17.52 1 12 1zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 7 15.5 7 14 7.67 14 8.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 7 8.5 7 7 7.67 7 8.5 7.67 10 8.5 10zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                </svg>
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.3 }}>
+                  {service}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 8-STEP SEO PLAYBOOK ── */}
+      <section style={{ background: 'var(--off)', padding: '100px 48px' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <div className="sec-label" style={{ color: 'var(--magenta)', marginBottom: 14, justifyContent: 'center' }}>
+              Our Process
+            </div>
+            <h2
+              style={{
+                fontFamily: 'var(--fd)',
+                fontSize: 'clamp(30px,4vw,56px)',
+                fontWeight: 900,
+                color: 'var(--ink)',
+                letterSpacing: '-0.02em',
+                lineHeight: 1.08,
+                marginBottom: 16,
+              }}
+            >
+              An 8-Step SEO Playbook
+            </h2>
+            <p
+              style={{
+                fontFamily: 'var(--fd)',
+                fontStyle: 'italic',
+                fontSize: 'clamp(16px,1.5vw,20px)',
+                color: 'var(--muted)',
+                lineHeight: 1.6,
+                maxWidth: 600,
+                margin: '0 auto',
+              }}
+            >
+              Battle-tested across industries — from audit to monthly reporting.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20, maxWidth: 1200, margin: '0 auto' }}>
+            {[
+              { n: '01', title: 'SEO Audit', desc: 'Deep technical, content & backlink audit to baseline opportunity.' },
+              { n: '02', title: 'Keyword Research', desc: 'Intent-mapped keyword universe across the funnel.' },
+              { n: '03', title: 'Technical SEO', desc: 'Crawl, index, schema, speed & Core Web Vitals fixes.' },
+              { n: '04', title: 'On-Page Optimization', desc: 'Titles, metas, headings, internal links & content depth.' },
+              { n: '05', title: 'Content Strategy', desc: 'Topical authority through clusters & editorial roadmap.' },
+              { n: '06', title: 'Local SEO', desc: 'GBP, citations, location pages & review velocity.' },
+              { n: '07', title: 'Link Building', desc: 'Editorial, digital PR & niche-relevant backlinks.' },
+              { n: '08', title: 'Monthly Reporting', desc: 'Transparent dashboards tied to business outcomes.' },
+            ].map((step) => (
+              <div
+                key={step.n}
+                style={{
+                  background: 'var(--white)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 16,
+                  padding: 24,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 14,
+                  transition: 'all .2s ease',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 8px 28px rgba(0,0,0,.08)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 40,
+                    height: 40,
+                    background: 'var(--navy)',
+                    color: '#fff',
+                    borderRadius: 8,
+                    fontFamily: 'var(--fm)',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: '.1em',
+                  }}
+                >
+                  {step.n}
+                </div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.3 }}>
+                  {step.title}
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, margin: 0 }}>
+                  {step.desc}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -648,6 +1038,40 @@ export default function SeoPage() {
           </div>
         </div>
       </div>
+
+      {/* ── BRANDS WE HAVE WORKED WITH ── */}
+      <section style={{ background: 'var(--off)', padding: '80px 48px' }}>
+        <div className="sec-label" style={{ color: 'var(--magenta)', marginBottom: 14 }}>
+          Clients
+        </div>
+        <h2
+          style={{
+            fontFamily: 'var(--fd)',
+            fontSize: 'clamp(30px,4vw,56px)',
+            fontWeight: 900,
+            color: 'var(--ink)',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.08,
+            marginBottom: 20,
+          }}
+        >
+          Brands We Have Worked With
+        </h2>
+        <p
+          style={{
+            fontFamily: 'var(--fd)',
+            fontStyle: 'italic',
+            fontSize: 'clamp(17px,1.8vw,22px)',
+            color: 'var(--muted)',
+            lineHeight: 1.5,
+            marginBottom: 48,
+          }}
+        >
+          A snapshot of the brands trusting our SEO craft across industries.
+        </p>
+
+        <BrandsSection />
+      </section>
 
       {/* ── CTA: navy ── */}
       <section style={{ background: 'var(--navy)', padding: '80px 48px' }}>
