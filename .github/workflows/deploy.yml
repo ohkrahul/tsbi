@@ -36,12 +36,6 @@ jobs:
       - name: Pull Vercel environment info
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      # Make the pulled production env available to `next build` via .env.local
-      # (Next.js auto-loads it). The app's src/lib/db.ts requires DATABASE_URL at
-      # build time, so this must be present before `vercel build`.
-      - name: Load pulled env for Next build
-        run: cp .vercel/.env.production.local .env.local
-
       # The project's Root Directory is "tsbi" (used by the native git
       # integration). This workflow already runs inside ./tsbi, so clear it in
       # the local pulled project.json to stop `vercel deploy --prebuilt` from
