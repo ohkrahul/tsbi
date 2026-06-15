@@ -55,6 +55,59 @@ export default async function AboutPage() {
       {/* Timeline */}
       <MarioTimeline />
 
+      {/* Interactive quest entry point */}
+      {/* <section
+        style={{
+          padding: '72px 48px',
+          textAlign: 'center',
+          background: 'linear-gradient(135deg, #12002f 0%, #1b0748 60%, #2c1147 100%)',
+          color: '#fff',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: 'var(--fm)',
+            fontSize: 11,
+            letterSpacing: '0.24em',
+            textTransform: 'uppercase',
+            color: '#ff4fa3',
+            marginBottom: 16,
+          }}
+        >
+          Play the story ✦
+        </div>
+        <h2
+          style={{
+            fontFamily: 'var(--fd)',
+            fontSize: 'clamp(28px,4vw,48px)',
+            fontWeight: 900,
+            lineHeight: 1.05,
+            letterSpacing: '-0.02em',
+            margin: '0 auto 18px',
+            maxWidth: 640,
+          }}
+        >
+          Step into <em style={{ color: '#f7b84b', fontStyle: 'italic' }}>The SmallBig Story Quest</em>
+        </h2>
+        <p
+          style={{
+            fontFamily: 'var(--fb)',
+            fontSize: 15,
+            fontWeight: 300,
+            lineHeight: 1.7,
+            color: 'rgba(255,255,255,0.72)',
+            maxWidth: 480,
+            margin: '0 auto 30px',
+          }}
+        >
+          An interactive 2D adventure across our milestones — fall into the desert, follow the trail, and
+          unlock every chapter from 2014 to 2019.
+        </p>
+        <Link href="/about/journey" className="btn-fill" style={{ background: 'var(--magenta)' }}>
+          Enter the Journey →
+        </Link>
+      </section> */}
+
       {/* Leadership & Reel Showcase */}
       <LeadershipReelShowcase initialSlides={leadershipSlides} />
 

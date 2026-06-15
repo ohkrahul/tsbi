@@ -39,7 +39,13 @@
   --mono: 'Courier New', monospace;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* Keep the universal reset inside @layer base so Tailwind's utility
+   classes (margin/padding) — which live in a later layer — can override it.
+   Unlayered rules beat layered ones regardless of specificity, so leaving
+   this outside a layer would silently kill every `m-*`/`p-*`/`mx-auto` utility. */
+@layer base {
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+}
 html { scroll-behavior: smooth; }
 body {
   background: var(--white);

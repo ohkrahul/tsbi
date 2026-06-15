@@ -11,6 +11,7 @@ type Campaign = {
   title: string;
   desc: string;
   videos: string[]; // YouTube video IDs
+  caseStudySlug?: string; // Link to full case study
 };
 
 // Sourced from the TSBI Content Production sheet (21 campaigns).
@@ -25,6 +26,7 @@ The campaign highlighted how Diwali celebrations across the country are made pos
 
 By emotionally anchoring the brand to Diwali and showcasing its role as an enabler of togetherness, the campaign made a traditionally B2B brand culturally relevant, emotionally resonant, and central to India's festive supply chain — reinforcing Ashok Leyland as the brand that keeps the nation moving, especially when it matters most.`,
     videos: ['37CCZAHaYx8'],
+    caseStudySlug: 'ashok-leyland-diwali',
   },
   {
     client: 'DHL',
@@ -35,6 +37,7 @@ By emotionally anchoring the brand to Diwali and showcasing its role as an enabl
 
 But we didn't stop there. Capitalising on the same shoot, we crafted a second campaign: 'Dil Se Indian.' This showcased the indomitable spirit of the Mumbai Indians, capturing the essence and pride that lies in the heart of every Indian. We also subtly integrated the strengths of DHL, ensuring the videos travelled easily across social feeds, maximising engagement and reach.`,
     videos: ['MJofvf2lBNY', 'KlDctPUfuHI'],
+    caseStudySlug: 'mumbai-indians',
   },
   {
     client: 'Danone',
@@ -44,6 +47,7 @@ But we didn't stop there. Capitalising on the same shoot, we crafted a second ca
 
 When tasked with creating a Nurses' Day asset for Danone India, we decided to illuminate this selfless, motherly nature of paediatric nurses through a poignant and touching film. This tribute celebrated and thanked the paediatric nurses — the unsung heroes who become the first friends and guardians of our children — honouring their relentless compassion and devotion.`,
     videos: ['D8cXWh7g2kk'],
+    caseStudySlug: 'danone-nurses-day',
   },
   {
     client: 'ICICI Direct',
@@ -53,6 +57,7 @@ When tasked with creating a Nurses' Day asset for Danone India, we decided to il
 
 A Turkish ice-cream experience is an emotional rollercoaster — excitement that builds into anxiety, then irritation, then anger. That is not what trading should feel like. Trading shouldn't be an emotional rollercoaster, but a simple experience of investment — which is exactly what ICICI Direct Flash Trade provides.`,
     videos: ['4D4H43PBEEo'],
+    caseStudySlug: 'icici-flash-trade',
   },
   {
     client: 'Proteinx',
@@ -60,6 +65,7 @@ A Turkish ice-cream experience is an emotional rollercoaster — excitement that
     title: 'Protein Abhiyaan Anthem',
     desc: `The people are the strength of this country, and their strength comes from protein. We conceptualised and shot the Protein Abhiyaan Anthem for ProteinX India.`,
     videos: ['J4w6sjHgwlI'],
+    caseStudySlug: 'proteinx-abhiyaan',
   },
   {
     client: 'Sandu Pharma',
@@ -69,6 +75,7 @@ A Turkish ice-cream experience is an emotional rollercoaster — excitement that
 
 We made Sandu Pharma appeal to today's youth — honouring its heritage while speaking the language of a new generation.`,
     videos: ['yK-Te8ceD64', 'Ef0rp5tt9DM'],
+    caseStudySlug: 'sandu-pharma-youth',
   },
   {
     client: 'Disney',
@@ -78,6 +85,7 @@ We made Sandu Pharma appeal to today's youth — honouring its heritage while sp
 
 The two brilliant chefs brought their expertise to our film with unique takes on classic recipes. Chef Saransh Goila — author and winner of the Food Food Maha Challenge — and Chef Chinu Vaze, a celebrity chef, host, and writer, added their flair to the series of 24 short videos.`,
     videos: ['qzHtzyuk_g4', 'dyVdaCIIMfc'],
+    caseStudySlug: 'disney-india',
   },
   {
     client: 'The Q',
@@ -85,6 +93,7 @@ The two brilliant chefs brought their expertise to our film with unique takes on
     title: 'Sabse Alag, Sabke Liye',
     desc: `Right since its inception, The Q has been known for its distinctive strategy that brings the best of digital to TV. We conceptualised and established 'Sabse Alag, Sabke Liye' for the channel — capturing its uniquely inclusive positioning.`,
     videos: ['gGdQ1aL1LEY', 'rzcKC7OyfVY'],
+    caseStudySlug: 'the-q-sabse-alag',
   },
   {
     client: 'Vibha',
@@ -94,6 +103,7 @@ The two brilliant chefs brought their expertise to our film with unique takes on
 
 We didn't want to make the film a sad reflection on the kid's situation, but a happy, buoyant celebration of his curiosity. The kid's inquisitiveness became the hero of the campaign — travelling a full journey where it is ignored, made fun of, and even discouraged, but never truly fades away.`,
     videos: ['aUDe3d7HfUE'],
+    caseStudySlug: 'vibha-curious-kid',
   },
   {
     client: 'Thailand Tourism',
@@ -103,6 +113,7 @@ We didn't want to make the film a sad reflection on the kid's situation, but a h
 
 We set out to evoke our audience's wanderlust — recasting Thailand as a destination of premium, aspirational experiences.`,
     videos: ['BglRilfoGOA'],
+    caseStudySlug: 'thailand-tourism',
   },
   {
     client: 'Canapure Canola Oil',
@@ -112,6 +123,7 @@ We set out to evoke our audience's wanderlust — recasting Thailand as a destin
 
 The outcome: healthy oil leads to a healthy you. A healthy you gives you the opportunity to do more — it allows you to say 'CAN' to everything.`,
     videos: ['m-ekod_mEzk'],
+    caseStudySlug: 'canapure-canola-oil',
   },
 ];
 
@@ -428,23 +440,40 @@ function CampaignCard({ c }: { c: Campaign }) {
         </p>
 
         <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginTop: 'auto', paddingTop: 12 }}>
-          <button
-            onClick={() => setExpanded((v) => !v)}
-            style={{
-              fontFamily: 'var(--fm)',
-              fontSize: 10,
-              letterSpacing: '.12em',
-              textTransform: 'uppercase',
-              color: 'var(--ink)',
-              background: 'none',
-              border: 'none',
-              padding: 0,
-              cursor: 'pointer',
-              borderBottom: '1px solid var(--ink)',
-            }}
-          >
-            {expanded ? 'Read less' : 'Read more'}
-          </button>
+          {c.caseStudySlug ? (
+            <Link
+              href={`/case-studies/${c.caseStudySlug}`}
+              style={{
+                fontFamily: 'var(--fm)',
+                fontSize: 10,
+                letterSpacing: '.12em',
+                textTransform: 'uppercase',
+                color: 'var(--ink)',
+                textDecoration: 'none',
+                borderBottom: '1px solid var(--ink)',
+              }}
+            >
+              View Case Study →
+            </Link>
+          ) : (
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              style={{
+                fontFamily: 'var(--fm)',
+                fontSize: 10,
+                letterSpacing: '.12em',
+                textTransform: 'uppercase',
+                color: 'var(--ink)',
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                cursor: 'pointer',
+                borderBottom: '1px solid var(--ink)',
+              }}
+            >
+              {expanded ? 'Read less' : 'Read more'}
+            </button>
+          )}
 
           {hasVideo && (
             <a

@@ -1,0 +1,759 @@
+/* ════════════════════════════════════════════════════════════════════════
+   The SmallBig Story Quest — game UI styles
+   Scoped under .journey-root. Uses the brand fonts (--fd / --fb / --fm from
+   globals.css) with a premium desert-at-twilight palette.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Immersive route: hide the global chrome and lock body scroll. */
+body:has(.journey-root) {
+  overflow: hidden;
+  background: #0a0026;
+}
+body:has(.journey-root) .nav-root,
+body:has(.journey-root) .footer-root {
+  display: none !important;
+}
+
+.journey-root {
+  --jp-purple: #12002f;
+  --jp-purple2: #1b0748;
+  --jp-magenta: #e0197d;
+  --jp-pink: #ff4fa3;
+  --jp-gold: #f7b84b;
+  --jp-sand: #e9c78e;
+  --jp-parchment: #f7e6c4;
+  --jp-ink: #1a1028;
+
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(120% 120% at 50% 0%, #1b0748 0%, #12002f 60%, #0a0021 100%);
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--fb);
+}
+
+.journey-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.journey-canvas {
+  position: absolute;
+  inset: 0;
+}
+.journey-canvas canvas {
+  display: block;
+}
+
+/* ── shared buttons ─────────────────────────────────────────────────────── */
+.jbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--fm);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, var(--jp-magenta), #b5135f);
+  border: none;
+  padding: 14px 28px;
+  border-radius: 100px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  box-shadow: 0 8px 30px rgba(224, 25, 125, 0.45);
+}
+.jbtn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 12px 40px rgba(255, 79, 163, 0.6);
+}
+.jbtn .jarr {
+  transition: transform 0.2s;
+}
+.jbtn:hover .jarr {
+  transform: translateX(4px);
+}
+.jbtn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fm);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 13px 24px;
+  border-radius: 100px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.jbtn-ghost:hover {
+  border-color: var(--jp-gold);
+  color: #fff;
+}
+
+/* ── entry screen ───────────────────────────────────────────────────────── */
+.jentry {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 48px;
+  pointer-events: none;
+  z-index: 20;
+}
+.jentry > *,
+.jentry button,
+.jentry a {
+  pointer-events: auto;
+}
+.jentry-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.jentry-eyebrow {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--jp-pink);
+}
+.jentry-back {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.jentry-back:hover {
+  color: #fff;
+}
+.jentry-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.jentry-title {
+  font-family: var(--fd);
+  font-size: clamp(40px, 7vw, 88px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+.jentry-title em {
+  color: var(--jp-magenta);
+  font-style: italic;
+}
+.jentry-sub {
+  font-family: var(--fb);
+  font-size: clamp(14px, 1.6vw, 17px);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 22px 0 36px;
+  max-width: 520px;
+}
+.jentry-cta {
+  font-size: 13px;
+  padding: 17px 36px;
+}
+.jentry-howto {
+  margin-top: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.2s;
+}
+.jentry-howto:hover {
+  color: var(--jp-gold);
+}
+.jentry-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.jentry-hint {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── sound toggle ───────────────────────────────────────────────────────── */
+.jsound {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.jsound:hover {
+  color: #fff;
+}
+.jsound-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transition: all 0.2s;
+}
+.jsound-dot.on {
+  background: var(--jp-gold);
+  box-shadow: 0 0 10px var(--jp-gold);
+}
+
+/* ── HUD ────────────────────────────────────────────────────────────────── */
+.jhud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 18;
+}
+.jhud button {
+  pointer-events: auto;
+}
+.jhud-chapter {
+  position: absolute;
+  top: 28px;
+  left: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.jhud-year {
+  font-family: var(--fd);
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--jp-gold);
+  line-height: 1;
+  text-shadow: 0 0 18px rgba(247, 184, 75, 0.5);
+}
+.jhud-mtitle {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+.jhud-progress {
+  position: absolute;
+  top: 28px;
+  right: 40px;
+  width: 220px;
+  max-width: 38vw;
+}
+.jhud-progress-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 8px;
+}
+.jhud-progress-pct {
+  font-size: 14px;
+  color: var(--jp-gold);
+  font-weight: 600;
+}
+.jprogress-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.jprogress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--jp-magenta), var(--jp-gold));
+  border-radius: 4px;
+}
+.jhud-utils {
+  position: absolute;
+  bottom: 28px;
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.jchip {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 9px 16px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.jchip:hover {
+  border-color: var(--jp-gold);
+  color: #fff;
+}
+.jhud-nav {
+  position: absolute;
+  bottom: 28px;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.jnav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 46px;
+  height: 46px;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+}
+.jnav:hover:not(:disabled) {
+  background: var(--jp-magenta);
+  border-color: var(--jp-magenta);
+}
+.jnav:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.jnav-primary {
+  width: auto;
+  border-radius: 100px;
+  padding: 0 22px;
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--jp-magenta), #b5135f);
+  border-color: transparent;
+  box-shadow: 0 6px 24px rgba(224, 25, 125, 0.4);
+}
+.jhud-keyhint {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+/* ── modals / cards ─────────────────────────────────────────────────────── */
+.jmodal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 2, 24, 0.66);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 40;
+}
+.jcard {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: linear-gradient(160deg, #fbf2dc 0%, var(--jp-parchment) 100%);
+  color: var(--jp-ink);
+  border-radius: 18px;
+  padding: 40px 32px 30px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(224, 25, 125, 0.18);
+  text-align: center;
+}
+.jcard-narrow {
+  max-width: 400px;
+}
+.jcard-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(26, 16, 40, 0.08);
+  color: var(--jp-ink);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.jcard-close:hover {
+  background: var(--jp-magenta);
+  color: #fff;
+}
+.jcard-ribbon {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--fd);
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: linear-gradient(135deg, var(--jp-magenta), #b5135f);
+  padding: 8px 26px;
+  border-radius: 100px;
+  box-shadow: 0 10px 26px rgba(224, 25, 125, 0.45);
+}
+.jcard-illu {
+  width: 66px;
+  height: 66px;
+  margin: 14px auto 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(224, 25, 125, 0.1);
+  border: 1.5px solid rgba(224, 25, 125, 0.32);
+}
+.jcard-title {
+  font-family: var(--fd);
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+.jcard-desc {
+  font-family: var(--fb);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: #4a3f55;
+  margin: 0 0 22px;
+}
+.jcard-reward {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(247, 184, 75, 0.16);
+  border: 1px dashed rgba(180, 120, 20, 0.4);
+  margin-bottom: 24px;
+}
+.jcard-reward-label {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9a7b2a;
+}
+.jcard-reward-name {
+  font-family: var(--fd);
+  font-size: 18px;
+  font-weight: 800;
+  color: #b5135f;
+}
+.jcard-cta {
+  width: 100%;
+  justify-content: center;
+}
+.jrules {
+  list-style: none;
+  text-align: left;
+  margin: 18px 0 26px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.jrules li {
+  position: relative;
+  padding-left: 24px;
+  font-family: var(--fb);
+  font-size: 14px;
+  color: #4a3f55;
+  line-height: 1.5;
+}
+.jrules li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: var(--jp-magenta);
+}
+
+/* ── settings ───────────────────────────────────────────────────────────── */
+.jsettings {
+  margin: 8px 0 24px;
+}
+.jsetting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(26, 16, 40, 0.1);
+  font-family: var(--fm);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--jp-ink);
+}
+.jswitch {
+  width: 44px;
+  height: 24px;
+  border-radius: 100px;
+  border: none;
+  background: rgba(26, 16, 40, 0.18);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.jswitch.on {
+  background: var(--jp-magenta);
+}
+.jswitch-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+.jswitch.on .jswitch-knob {
+  transform: translateX(20px);
+}
+.jsettings-actions {
+  display: flex;
+  gap: 10px;
+}
+.jsettings-actions .jbtn-ghost,
+.jsettings-actions .jbtn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ── intro caption + skip ───────────────────────────────────────────────── */
+.jintro {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 22;
+}
+.jintro-caption {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--fd);
+  font-style: italic;
+  font-size: clamp(16px, 2.2vw, 24px);
+  color: rgba(255, 255, 255, 0.78);
+  text-align: center;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+.jskip {
+  position: absolute;
+  top: 28px;
+  right: 36px;
+  pointer-events: auto;
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 9px 18px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.jskip:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+/* ── journey complete ───────────────────────────────────────────────────── */
+.jcomplete {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  pointer-events: none;
+  z-index: 30;
+  background: radial-gradient(circle at 50% 70%, transparent 30%, rgba(10, 0, 33, 0.55) 100%);
+}
+.jcomplete a,
+.jcomplete button {
+  pointer-events: auto;
+}
+.jcomplete-title {
+  font-family: var(--fd);
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+.jcomplete-title em {
+  color: var(--jp-gold);
+  font-style: italic;
+}
+.jcomplete-text {
+  font-family: var(--fb);
+  font-size: clamp(14px, 1.6vw, 17px);
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 24px 0 36px;
+  max-width: 540px;
+}
+.jcomplete-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── toast ──────────────────────────────────────────────────────────────── */
+.jtoast {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 35;
+  font-family: var(--fm);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(26, 16, 40, 0.92);
+  border: 1px solid rgba(224, 25, 125, 0.5);
+  padding: 12px 22px;
+  border-radius: 100px;
+  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ── mobile controls ────────────────────────────────────────────────────── */
+.jmobile-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 12px;
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+  z-index: 19;
+  background: linear-gradient(to top, rgba(10, 0, 33, 0.85), transparent);
+}
+.jmobile-btn {
+  height: 56px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-family: var(--fm);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.jmobile-btn:disabled {
+  opacity: 0.35;
+}
+.jmobile-btn:not(.jmobile-primary) {
+  width: 64px;
+  flex-shrink: 0;
+  font-size: 22px;
+}
+.jmobile-primary {
+  flex: 1;
+  background: linear-gradient(135deg, var(--jp-magenta), #b5135f);
+  border-color: transparent;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+/* ════ responsive ════ */
+@media (max-width: 767px) {
+  .jentry {
+    padding: 22px 22px 28px;
+  }
+  .jhud-chapter {
+    top: 18px;
+    left: 18px;
+  }
+  .jhud-year {
+    font-size: 24px;
+  }
+  .jhud-progress {
+    top: 20px;
+    right: 18px;
+    width: 130px;
+  }
+  /* HUD desktop nav + utilities give way to MobileControls. */
+  .jhud-nav,
+  .jhud-utils,
+  .jhud-keyhint {
+    display: none;
+  }
+
+  /* Milestone card slides up as a bottom sheet. */
+  .jmodal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .jcard {
+    max-width: 100%;
+    border-radius: 22px 22px 0 0;
+    padding: 38px 22px calc(26px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-root * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.08s !important;
+  }
+}

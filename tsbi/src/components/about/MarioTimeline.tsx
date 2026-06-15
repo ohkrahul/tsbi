@@ -301,7 +301,7 @@ export default function MarioTimeline() {
   const isMobile = viewportW < 640;
 
   return (
-    <section ref={sectionRef} style={{ background:BG, overflow:'hidden', paddingTop:8 }}>
+    <section ref={sectionRef} style={{ background:BG, overflow:'hidden', paddingTop:8, paddingBottom:0 }}>
       <style dangerouslySetInnerHTML={{ __html: KF }} />
 
       {/* ── HEADER ── */}
@@ -337,10 +337,10 @@ export default function MarioTimeline() {
       >
         <ScoreHUD idx={activeIdx} total={milestones.length} />
 
-        {/* ── MARIO — tracks the active block via marioX motion value ── */}
+        {/* ── USER AVATAR — tracks the active block via marioX motion value ── */}
         <motion.img
           src="/mario/mario-49296.png"
-          alt="Mario"
+          alt="User"
           draggable={false}
           style={{
             position:'absolute',
@@ -350,7 +350,7 @@ export default function MarioTimeline() {
             width: 'auto',
             transform: 'translateX(-50%)',
             zIndex: 20,
-            imageRendering: 'pixelated',
+            borderRadius: '8px',
             filter: 'drop-shadow(0 4px 14px rgba(0,0,0,0.55))',
             pointerEvents: 'none',
             animation: isMoving ? 'marioRun 0.28s steps(2) infinite' : 'marioBounce 1.4s ease-in-out infinite',
@@ -409,27 +409,29 @@ export default function MarioTimeline() {
                         animate={{ opacity:1, y:0, scale:1 }}
                         exit={{ opacity:0, y:8, scale:0.96 }}
                         transition={{ duration:0.32, ease:[0.22,1,0.36,1] }}
-                        style={{ position:'absolute', bottom:'100%', left:'50%', transform:'translateX(-50%)', marginBottom:14, width:CARD_W, background: isFeat ? 'linear-gradient(140deg,#1a1070 0%,#0d0840 100%)' : '#0d0840', border:`2px solid ${isFeat?PINK:'rgba(236,15,121,0.55)'}`, borderRadius:12, padding:'14px 14px 12px', boxShadow:`0 0 0 1px rgba(236,15,121,0.15), 0 12px 40px rgba(0,0,0,0.7)`, pointerEvents:'none', zIndex:30 }}
+                        style={{ position:'absolute', bottom:'100%', left:'50%', transform:'translateX(-50%)', marginBottom:14, width:CARD_W, background: isFeat ? 'linear-gradient(140deg,#1a1070 0%,#0d0840 100%)' : '#0d0840', border:`2px solid ${isFeat?PINK:'rgba(236,15,121,0.8)'}`, borderRadius:12, padding:'18px 16px 16px', boxShadow:`0 0 0 1px rgba(236,15,121,0.25), 0 16px 50px rgba(0,0,0,0.8)`, pointerEvents:'none', zIndex:30 }}
                       >
                         {/* Triangle pointer */}
                         <div style={{ position:'absolute', bottom:-10, left:'50%', transform:'translateX(-50%)', width:0, height:0, borderLeft:'8px solid transparent', borderRight:'8px solid transparent', borderTop:`8px solid ${isFeat?PINK:'rgba(236,15,121,0.55)'}` }} />
 
                         {/* Icon + Year */}
-                        <div style={{ display:'flex', alignItems:'center', gap:9, marginBottom:10 }}>
-                          <div style={{ width:30, height:30, borderRadius:6, background:'rgba(236,15,121,0.15)', border:'1px solid rgba(236,15,121,0.3)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                            <Icon type={m.icon} size={15} color={PINK} />
+                        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:12 }}>
+                          <div style={{ width:32, height:32, borderRadius:6, background:'rgba(236,15,121,0.2)', border:'1.5px solid rgba(236,15,121,0.4)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                            <Icon type={m.icon} size={16} color={PINK} />
                           </div>
-                          <span style={{ fontFamily:'var(--fm)', fontSize:20, fontWeight:900, color:isFeat?'#f9c718':PINK, lineHeight:1, letterSpacing:'-0.01em', textShadow:`0 0 12px ${isFeat?'rgba(249,199,24,0.8)':'rgba(236,15,121,0.8)'}` }}>{m.year}</span>
-                          {isFeat && <span style={{ fontFamily:'var(--fm)', fontSize:8, color:'#f9c718', letterSpacing:'0.1em', marginLeft:2, fontWeight:700 }}>★ FEATURED</span>}
+                          <div>
+                            <span style={{ fontFamily:'var(--fm)', fontSize:8, letterSpacing:'0.15em', textTransform:'uppercase', color:'rgba(255,255,255,0.6)', display:'block', marginBottom:2, fontWeight:600 }}>Year</span>
+                            <span style={{ fontFamily:'var(--fd)', fontSize:18, fontWeight:900, color:isFeat?'#f9c718':PINK, lineHeight:1, letterSpacing:'-0.01em', textShadow:`0 0 12px ${isFeat?'rgba(249,199,24,0.8)':'rgba(236,15,121,0.8)'}`, display:'flex', alignItems:'center', gap:6 }}>{m.year} {isFeat && <span style={{ fontFamily:'var(--fm)', fontSize:9, color:'#f9c718', letterSpacing:'0.1em', fontWeight:700 }}>★</span>}</span>
+                          </div>
                         </div>
 
                         {/* Title — typewriter, starts at 200ms */}
-                        <div style={{ fontFamily:'var(--fm)', fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:'#fff', marginBottom:9, lineHeight:1.4, minHeight:14 }}>
+                        <div style={{ fontFamily:'var(--fm)', fontSize:13, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#fff', marginBottom:11, lineHeight:1.3, minHeight:18 }}>
                           <TypewriterText text={m.title} active={isAct && wasHit} delay={200} speed={22} />
                         </div>
 
                         {/* Desc — typewriter, starts after ~title finishes */}
-                        <p style={{ fontFamily:'var(--fm)', fontSize:11, color:'#fff', lineHeight:1.65, margin:0, minHeight:32, fontWeight:300, opacity:0.9 }}>
+                        <p style={{ fontFamily:'var(--fm)', fontSize:13, color:'#fff', lineHeight:1.7, margin:0, minHeight:40, fontWeight:300, opacity:1 }}>
                           <TypewriterText text={m.desc} active={isAct && wasHit} delay={200 + m.title.length * 22 + 180} speed={14} />
                         </p>
 
@@ -468,7 +470,7 @@ export default function MarioTimeline() {
       </div>
 
       {/* ── BOTTOM CONTROLS ── */}
-      <div style={{ padding:'20px 60px 48px', display:'flex', flexDirection:'column', alignItems:'center', gap:12 }}>
+      {/* <div style={{ padding:'20px 60px 48px', display:'flex', flexDirection:'column', alignItems:'center', gap:12 }}>
         <div style={{ display:'flex', alignItems:'center', gap:16, width:'100%', maxWidth:720 }}>
           {(['←','→'] as const).map((lbl) => {
             const [hov, setHov] = useState(false);
@@ -496,7 +498,7 @@ export default function MarioTimeline() {
         <div style={{ fontFamily:'var(--fm)', fontSize:8.5, letterSpacing:'0.24em', textTransform:'uppercase', color:'rgba(23,16,102,0.3)' }}>
           ← → keys · arrows · swipe to explore
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

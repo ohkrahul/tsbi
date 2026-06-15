@@ -1,600 +1,396 @@
+
 'use client';
-import { useEffect, useRef, useState, CSSProperties } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 
 /* ─── Data ─────────────────────────────────────────── */
 type SlideType = 'leader' | 'reel' | 'photo';
 interface Slide {
-  id: number; type: SlideType; num: string;
-  title: string; role?: string; intro: string;
-  bgImage: string; cardImage: string;
-  ctaLabel: string; ctaHref: string | null;
+  id: number;
+  type: SlideType;
+  num: string;
+  title: string;
+  role?: string;
+  intro: string;
+  bgImage: string;
+  cardImage: string;
+  ctaLabel: string;
+  ctaHref: string | null;
 }
 
 const DEFAULT_SLIDES: Slide[] = [
-  // ── 01  Hari — full-bleed portrait background ────────
   {
-    id: 1, type: 'photo', num: '01',
+    id: 2,
+    type: 'leader',
+    num: '01',
     title: 'Harikrishnan Pillai',
-    role: 'Co-Founder & Chief Executive Officer',
-    intro: '',
+    role: 'Founder & Chief Executive Officer',
+    intro:
+      'A visionary entrepreneur and business builder, Harikrishnan Pillai brings over 18 years of experience in strategy, marketing and scaling brands. His clarity of thought and long-term perspective continue to shape TSBI’s journey of meaningful impact.',
     bgImage: '/main%20ppl/backgound%20ceo.jpg',
-    cardImage: '/main%20ppl/backgound%20ceo.jpg',
-    ctaLabel: '', ctaHref: null,
+    cardImage: '/Hari/Hari.png',
+    ctaLabel: 'Know More',
+    ctaHref: '/about/leaders/harikrishnan-pillai',
   },
-  // ── 02  Hari — white bg, portrait left, bio right ────
   {
-    id: 2, type: 'leader', num: '02',
-    title: 'Harikrishnan Pillai',
-    role: 'Co-Founder & Chief Executive Officer',
-    intro: 'Harikrishnan Pillai is the Co-Founder and CEO of TheSmallBigIdea (TSBI), a prominent Mumbai-based digital and social media marketing agency founded in 2014. With over 15 years of industry experience, he specialises in building brand strategies and integrating creative, content, and technology for various major brands.',
-    bgImage: '/main%20ppl/backgound%20ceo.jpg',
-    cardImage: '/main%20ppl/hari.jpeg',
-    ctaLabel: 'View Profile', ctaHref: '/about#leadership',
-  },
-  // ── 03  Manish — full-bleed background ──────────────
-  {
-    id: 3, type: 'photo', num: '03',
+    id: 4,
+    type: 'leader',
+    num: '02',
     title: 'Manish Solanki',
-    role: 'Chief Operating Officer',
-    intro: '',
+    role: 'Co-Founder & Chief Operating Officer',
+    intro:
+      'A seasoned operator and brand strategist, Manish Solanki excels at unlocking growth and building high-performance teams. His deep understanding of markets and focus on operational excellence drive TSBI’s commitment to creating sustainable, scalable value.',
     bgImage: '/main%20ppl/coo%20backgorund.webp',
-    cardImage: '/main%20ppl/coo%20backgorund.webp',
-    ctaLabel: '', ctaHref: null,
-  },
-  // ── 04  Manish — white bg, portrait left, bio right ──
-  {
-    id: 4, type: 'leader', num: '04',
-    title: 'Manish Solanki',
-    role: 'Chief Operating Officer',
-    intro: 'Manish found his early passion in Marketing during his college days. With over 8 years of experience, he started in client servicing with SSC&B Lintas and Publicis Ambience — working on brands like HDFC Mutual Funds, Capgemini, Nerolac, ICICI and Videocon d2h. He later moved to CRISIL Ratings as Brand Manager and then entered television, working with ZEE TV and Times Television Network. Manish has headed the Global broadcast for the World\'s Biggest India Day Parade live from New York.',
-    bgImage: '/main%20ppl/coo%20backgorund.webp',
-    cardImage: '/main%20ppl/manish.jpg',
-    ctaLabel: 'View Profile', ctaHref: '/about#leadership',
+    cardImage: '/Manish/manish.png',
+    ctaLabel: 'Know More',
+    ctaHref: '/about/leaders/manish-solanki',
   },
 ];
 
-/* ─── Helpers ───────────────────────────────────────── */
-const fm: CSSProperties = { fontFamily: 'var(--fm)' };
-const fd: CSSProperties = { fontFamily: 'var(--fd)' };
-const MAGENTA = 'var(--magenta)';
-const INK = 'var(--ink)';
-const CREAM = 'rgba(252,250,247,0.97)';
+const FD = 'font-[family-name:var(--fd)]';
+const FM = 'font-[family-name:var(--fm)]';
+const WINE = '#8a234c';
 
-function Tri({ size = 16 }: { size?: number }) {
+const VALUES = [
+  {
+    label: 'Clarity in Purpose',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9.2" />
+        <polygon points="15.6 8.4 10.6 10.6 8.4 15.6 13.4 13.4 15.6 8.4" />
+      </svg>
+    ),
+  },
+  {
+    label: 'Integrity in Action',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 7.5 7 5l3.5 2.2 3-1.2L21 8.5" />
+        <path d="m7 13 2.2 2.1c.7.7 1.8.7 2.5 0L17 10" />
+        <path d="m12.4 8.6 2.3 2.3c.7.7 1.9.7 2.6 0L21 8.5" />
+        <path d="M3 7.5v8l3 1.5" />
+      </svg>
+    ),
+  },
+  {
+    label: 'Impact for Generations',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 19V10M9 19V6M14 19v-5M19 19V4" />
+        <path d="M3 19h18" />
+      </svg>
+    ),
+  },
+];
+
+function PlayIcon({ size = 16 }: { size?: number }) {
   return (
-    <div style={{
-      width: 0, height: 0,
-      borderTop: `${Math.round(size * .56)}px solid transparent`,
-      borderBottom: `${Math.round(size * .56)}px solid transparent`,
-      borderLeft: `${size}px solid rgba(255,255,255,.88)`,
-      marginLeft: Math.round(size * .2),
-      flexShrink: 0,
-    }} />
+    <span
+      className="inline-block"
+      style={{
+        width: 0,
+        height: 0,
+        borderTop: `${Math.round(size * 0.56)}px solid transparent`,
+        borderBottom: `${Math.round(size * 0.56)}px solid transparent`,
+        borderLeft: `${size}px solid #fff`,
+        marginLeft: Math.round(size * 0.2),
+      }}
+    />
   );
 }
 
-/* ─── Sub-components ────────────────────────────────── */
-
-/** Full-portrait slide — no card, just name + role at bottom-left */
-function PhotoSlide({ slide }: { slide: Slide }) {
+/* Small botanical sprig that sits beside each spine badge */
+function Sprig({ flip = false }: { flip?: boolean }) {
   return (
-    <div style={{
-      position: 'absolute',
-      bottom: 88,
-      left: 160,
-      zIndex: 20,
-    }}>
-      <div style={{
-        ...fm,
-        fontSize: 9,
-        letterSpacing: '0.28em',
-        textTransform: 'uppercase',
-        color: 'rgba(255,255,255,0.55)',
-        marginBottom: 12,
-      }}>
-        {slide.role}
-      </div>
-      <h2 style={{
-        ...fd,
-        fontSize: 'clamp(36px,4.5vw,68px)',
-        fontWeight: 900,
-        color: '#fff',
-        lineHeight: 0.96,
-        letterSpacing: '-0.025em',
-        margin: 0,
-        textShadow: '0 4px 32px rgba(0,0,0,0.5)',
-      }}>
-        {slide.title}
-      </h2>
-    </div>
+    <svg
+      width="46"
+      height="64"
+      viewBox="0 0 46 64"
+      fill="none"
+      stroke={WINE}
+      strokeWidth="1"
+      strokeLinecap="round"
+      aria-hidden
+      className="opacity-55"
+      style={{ transform: flip ? 'scaleX(-1)' : 'none' }}
+    >
+      <path d="M30 62C30 44 24 30 12 20" />
+      <path d="M26 50c-6-1-10-4-12-9 5-1 9 1 12 9Z" fill="rgba(138,35,76,.10)" />
+      <path d="M22 38c-5-2-8-6-9-11 5 0 8 3 9 11Z" fill="rgba(138,35,76,.10)" />
+      <path d="M18 27c-4-2-6-6-6-11 4 1 6 5 6 11Z" fill="rgba(138,35,76,.10)" />
+    </svg>
   );
 }
 
-/** Full-viewport 2-column bio layout: portrait LEFT, white text panel RIGHT */
-function LeaderBioLayout({ slide }: { slide: Slide }) {
-  return (
-    <div style={{ position: 'absolute', inset: 0, display: 'flex' }}>
-      {/* ── Left: portrait photo ── */}
-      <div style={{
-        flex: '0 0 44%',
-        position: 'relative', overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: `url(${slide.cardImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 15%',
-        }} />
-        {/* subtle right-edge fade into white panel */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(to right, transparent 70%, rgba(255,255,255,0.6) 100%)',
-        }} />
-      </div>
+function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; displayNum: string }) {
+  const photoLeft = index % 2 === 0;
 
-      {/* ── Right: white text panel ── */}
-      <div style={{
-        flex: 1,
-        background: '#fff',
-        display: 'flex', alignItems: 'center',
-        padding: '0 7% 0 6%',
-        borderLeft: '1px solid rgba(0,0,0,0.06)',
-      }}>
-        <div style={{ maxWidth: 460 }}>
-          <div style={{ ...fm, fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: MAGENTA, marginBottom: 10 }}>{slide.num}</div>
-          <div style={{ ...fm, fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(10,10,10,.4)', marginBottom: 16 }}>{slide.role}</div>
-          <h3 style={{ ...fd, fontSize: 'clamp(22px,2.4vw,32px)', fontWeight: 700, color: INK, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 18 }}>{slide.title}</h3>
-          <div style={{ width: 28, height: 2, background: MAGENTA, borderRadius: 1, marginBottom: 22 }} />
-          <p style={{ fontSize: 14, fontWeight: 300, lineHeight: 1.85, color: 'rgba(10,10,10,.58)', marginBottom: 30 }}>{slide.intro}</p>
-          {slide.ctaHref && (
-            <Link href={slide.ctaHref} style={{
-              ...fm, fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase',
-              color: INK, textDecoration: 'none',
-              borderBottom: '1px solid rgba(10,10,10,.22)', paddingBottom: 2,
-              display: 'inline-block',
-            }}>{slide.ctaLabel} →</Link>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReelCard({ slide, onPlay }: { slide: Slide; onPlay: () => void }) {
-  const [hovered, setHovered] = useState(false);
   return (
-    <div style={{
-      width: 'clamp(340px,34vw,480px)',
-      borderRadius: 4, overflow: 'hidden',
-      boxShadow: '0 32px 80px rgba(0,0,0,.65)',
-    }}>
-      {/* Thumbnail */}
+    <motion.article
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="relative grid grid-cols-1 items-center gap-y-7 text-center lg:grid-cols-2 lg:gap-x-[clamp(60px,9vw,140px)] lg:text-left"
+    >
+      {/* Photo */}
       <div
-        role="button" aria-label={`Play ${slide.title}`}
-        onClick={onPlay}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{ position: 'relative', aspectRatio: '16/9', overflow: 'hidden', cursor: 'pointer' }}
+        className={[
+          'relative mx-auto w-full max-w-[300px] lg:mx-0 lg:max-w-[340px]',
+          photoLeft ? 'lg:col-start-1 lg:justify-self-end' : 'lg:order-2 lg:col-start-2 lg:justify-self-start',
+        ].join(' ')}
       >
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: `url(${slide.cardImage})`,
-          backgroundSize: 'cover', backgroundPosition: 'center',
-          transform: hovered ? 'scale(1.04)' : 'scale(1)',
-          transition: 'transform .5s cubic-bezier(.16,1,.3,1)',
-        }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.38)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{
-            width: 62, height: 62, borderRadius: '50%',
-            border: '1.5px solid rgba(255,255,255,.7)',
-            background: 'rgba(0,0,0,.3)', backdropFilter: 'blur(6px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transform: hovered ? 'scale(1.1)' : 'scale(1)',
-            transition: 'transform .25s',
-          }}>
-            <Tri size={16} />
-          </div>
-        </div>
+        {/* offset accent frame */}
+        <span
+          className={[
+            'absolute z-0 rounded-[22px] border border-[#8a234c]/30 bg-white/35',
+            photoLeft ? 'top-4 left-4 -right-4 -bottom-4' : 'top-4 right-4 -left-4 -bottom-4',
+          ].join(' ')}
+        />
+        <div
+          className="relative z-[1] aspect-[4/5] overflow-hidden rounded-[20px] border border-[#8a234c]/20 bg-[#efe7df] bg-cover bg-top shadow-[0_30px_70px_rgba(75,15,40,0.16)]"
+          style={{ backgroundImage: `url(${slide.cardImage})` }}
+        />
       </div>
+
       {/* Text */}
-      <div style={{
-        padding: '28px 28px 32px',
-        display: 'flex', flexDirection: 'column',
-        background: CREAM,
-      }}>
-        <div style={{ ...fm, fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: MAGENTA, marginBottom: 8 }}>{slide.num}</div>
-        <div style={{ ...fm, fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: MAGENTA, marginBottom: 12, opacity: 0.75 }}>Production Reel</div>
-        <h3 style={{ ...fd, fontSize: 'clamp(20px,2.2vw,26px)', fontWeight: 700, color: INK, lineHeight: 1.1, marginBottom: 12 }}>{slide.title}</h3>
-        <p style={{ fontSize: 12, fontWeight: 300, lineHeight: 1.8, color: 'rgba(10,10,10,.55)', marginBottom: 22 }}>{slide.intro}</p>
-        <button
-          onClick={onPlay}
-          style={{
-            ...fm, fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: INK, background: 'none',
-            border: 'none', borderBottom: '1px solid rgba(10,10,10,.25)',
-            paddingBottom: 2, cursor: 'pointer', alignSelf: 'flex-start',
-          }}
-        >{slide.ctaLabel} →</button>
+      <div
+        className={[
+          'flex flex-col items-center pt-1.5 lg:items-start',
+          photoLeft ? 'lg:col-start-2' : 'lg:order-1 lg:col-start-1 lg:items-end lg:text-right',
+        ].join(' ')}
+      >
+        <h3 className={`${FD} m-0 text-[clamp(28px,3.4vw,40px)] font-bold leading-[1.05] tracking-[-0.01em] text-ink`}>
+          {slide.title}
+        </h3>
+
+        {slide.role && (
+          <p className={`${FM} mt-3 text-[11.5px] font-bold uppercase tracking-[.18em] text-magenta`}>
+            {slide.role}
+          </p>
+        )}
+
+        <p className="mt-5 max-w-[440px] text-[15px] font-light leading-[1.85] text-[#281c20]/65">
+          {slide.intro}
+        </p>
+
+        {slide.ctaHref && (
+          <Link
+            href={slide.ctaHref}
+            className={`${FM} mt-7 inline-flex items-center gap-2.5 rounded border border-[#8a234c]/35 bg-transparent px-[22px] py-[13px] text-[11px] font-bold uppercase tracking-[.18em] text-ink no-underline transition-colors duration-300 hover:border-magenta hover:bg-magenta hover:text-white`}
+          >
+            {slide.ctaLabel || 'Know More'} <span aria-hidden>→</span>
+          </Link>
+        )}
       </div>
-    </div>
+
+      {/* Spine badge + sprig (desktop only) */}
+      <div className="absolute left-1/2 top-1/2 z-[4] hidden -translate-x-1/2 -translate-y-1/2 flex-col items-center lg:flex">
+        <span className="absolute -top-[58px]" style={{ left: photoLeft ? 8 : undefined, right: photoLeft ? undefined : 8 }}>
+          <Sprig flip={!photoLeft} />
+        </span>
+        <span
+          className={`${FM} grid h-[50px] w-[50px] place-items-center rounded-full border-[3px] border-[#faf5ef] text-[13px] font-semibold tracking-[.04em] text-[#f7ede9] shadow-[0_10px_26px_rgba(75,15,40,0.28)]`}
+          style={{ background: WINE }}
+        >
+          {displayNum}
+        </span>
+      </div>
+    </motion.article>
   );
 }
 
-/* ─── Main component ────────────────────────────────── */
-/* ─── Mobile card ───────────────────────────────────── */
-function MobileSlideCard({ slide, onPlay }: { slide: Slide; onPlay: () => void }) {
-  const isReel = slide.type === 'reel';
-  const isPhoto = slide.type === 'photo';
+function ReelTile({ slide, onPlay }: { slide: Slide; onPlay: () => void }) {
   return (
-    <div style={{
-      background: '#0a0d14', borderRadius: 6, overflow: 'hidden',
-      boxShadow: '0 16px 48px rgba(0,0,0,.5)',
-    }}>
-      {/* Image header — show for photo slides and reels only */}
-      <div style={{ position: 'relative', aspectRatio: isReel ? '16/9' : '3/2', overflow: 'hidden', display: isPhoto ? 'block' : isReel ? 'block' : 'none' }}>
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: `url(${slide.cardImage})`,
-          backgroundSize: 'cover', backgroundPosition: 'center 18%',
-        }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.4)' }} />
-        {isReel && (
-          <button
-            aria-label={`Play ${slide.title}`}
-            onClick={onPlay}
-            style={{
-              position: 'absolute', inset: 0, background: 'none', border: 'none',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <div style={{
-              width: 56, height: 56, borderRadius: '50%',
-              border: '1.5px solid rgba(255,255,255,.75)', background: 'rgba(0,0,0,.35)',
-              backdropFilter: 'blur(6px)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <Tri size={14} />
-            </div>
-          </button>
-        )}
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      className="overflow-hidden rounded-[20px] border border-[#8a234c]/15 bg-white shadow-[0_18px_50px_rgba(75,15,40,0.08)]"
+    >
+      <button
+        onClick={onPlay}
+        aria-label={`Play ${slide.title}`}
+        className="relative aspect-video w-full cursor-pointer overflow-hidden border-0 bg-[#211118] p-0"
+      >
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${slide.cardImage})` }} />
+        <div className="absolute inset-0 grid place-items-center bg-[rgba(20,8,14,.3)]">
+          <span className="grid h-[60px] w-[60px] place-items-center rounded-full bg-magenta shadow-[0_16px_35px_rgba(0,0,0,0.25)]">
+            <PlayIcon size={16} />
+          </span>
+        </div>
+      </button>
+      <div className="p-[22px]">
+        <div className={`${FM} text-[10px] font-bold uppercase tracking-[.18em] text-magenta`}>{slide.num} · Reel</div>
+        <h3 className={`${FD} my-2 text-2xl leading-tight text-ink`}>{slide.title}</h3>
+        {slide.intro && <p className="m-0 text-sm leading-[1.7] text-[#281c20]/60">{slide.intro}</p>}
       </div>
-      {/* Text */}
-      <div style={{ padding: '24px 20px 28px', background: 'rgba(252,250,247,.97)' }}>
-        <div style={{ ...fm, fontSize: 9, letterSpacing: '.28em', textTransform: 'uppercase', color: MAGENTA, marginBottom: 6 }}>{slide.num}</div>
-        {slide.role && (
-          <div style={{ ...fm, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: 'rgba(10,10,10,.42)', marginBottom: 8 }}>{slide.role}</div>
-        )}
-        {!slide.role && (
-          <div style={{ ...fm, fontSize: 8, letterSpacing: '.16em', textTransform: 'uppercase', color: MAGENTA, marginBottom: 8, opacity: .75 }}>Production Reel</div>
-        )}
-        <h3 style={{ ...fd, fontSize: 'clamp(20px,5vw,26px)', fontWeight: 700, color: INK, lineHeight: 1.1, marginBottom: 10 }}>{slide.title}</h3>
-        <p style={{ fontSize: 13, fontWeight: 300, lineHeight: 1.75, color: 'rgba(10,10,10,.55)', marginBottom: 16 }}>{slide.intro}</p>
-        {slide.ctaHref && (
-          <Link href={slide.ctaHref} style={{
-            ...fm, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase',
-            color: INK, textDecoration: 'none',
-            borderBottom: '1px solid rgba(10,10,10,.25)', paddingBottom: 2,
-          }}>{slide.ctaLabel} →</Link>
-        )}
-        {isReel && (
-          <button onClick={onPlay} style={{
-            ...fm, fontSize: 8, letterSpacing: '.2em', textTransform: 'uppercase',
-            color: INK, background: 'none', border: 'none',
-            borderBottom: '1px solid rgba(10,10,10,.25)', paddingBottom: 2, cursor: 'pointer',
-          }}>{slide.ctaLabel} →</button>
-        )}
-      </div>
-    </div>
+    </motion.article>
   );
 }
 
 export default function LeadershipReelShowcase({ initialSlides }: { initialSlides?: Slide[] } = {}) {
-  // Always use DEFAULT_SLIDES so the 4-slide sequence is preserved.
-  // CMS overrides are ignored unless they have ≥ 4 entries.
-  const SLIDES = (initialSlides?.length ?? 0) >= 4 ? initialSlides! : DEFAULT_SLIDES;
-  const sectionRef = useRef<HTMLElement>(null);
-  const [active, setActive] = useState(0);
+  const slides = (initialSlides?.length ?? 0) >= 2 ? initialSlides! : DEFAULT_SLIDES;
   const [reelOpen, setReelOpen] = useState<number | null>(null);
-  const [mounted, setMounted] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-    const mq = window.matchMedia('(max-width: 767px)');
-    setIsMobile(mq.matches);
-    setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
-
-  /* Scroll-driven slide activation.
-     `mounted` in deps ensures the effect re-runs after the real section
-     (with the ref attached) replaces the SSR placeholder. */
-  useEffect(() => {
-    if (!mounted || isMobile) return;
-    const section = sectionRef.current;
-    if (!section) return;
-    const onScroll = () => {
-      const rect = section.getBoundingClientRect();
-      const scrollable = section.offsetHeight - window.innerHeight;
-      if (scrollable <= 0) return;
-      const progress = Math.max(0, Math.min(1, -rect.top / scrollable));
-      setActive(Math.min(SLIDES.length - 1, Math.floor(progress * SLIDES.length)));
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [mounted, isMobile]);
-
-  const goToSlide = (i: number) => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const scrollable = section.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: section.offsetTop + scrollable * (i / SLIDES.length), behavior: 'smooth' });
-  };
-
-  /* SSR placeholder — matches final section height so layout doesn't shift */
-  if (!mounted) {
-    return <section style={{ position: 'relative', height: `${SLIDES.length * 100}vh`, background: '#0a0d14' }} />;
-  }
-
-  /* ── Mobile layout ── */
-  if (isMobile) {
-    return (
-      <>
-        <section style={{ background: '#0a0d14', padding: '80px 20px 60px' }} aria-label="Leadership and Reels">
-          <div style={{ ...fm, fontSize: 10, letterSpacing: '.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,.32)', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 40 }}>
-            <div style={{ width: 14, height: 1, background: 'rgba(255,255,255,.25)' }} />
-            Leadership &amp; Reels
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            {SLIDES.map((s) => (
-              <MobileSlideCard key={s.id} slide={s} onPlay={() => setReelOpen(s.id - 1)} />
-            ))}
-          </div>
-        </section>
-        <AnimatePresence>
-          {reelOpen !== null && (
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              onClick={() => setReelOpen(null)}
-              style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.9)', zIndex: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 16px' }}
-            >
-              <motion.div
-                initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.92, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                onClick={e => e.stopPropagation()}
-                style={{ position: 'relative', width: '100%', aspectRatio: '16/9', borderRadius: 6, overflow: 'hidden' }}
-              >
-                <button onClick={() => setReelOpen(null)} style={{ position: 'absolute', top: -38, right: 0, zIndex: 10, background: 'none', border: 'none', color: 'rgba(255,255,255,.65)', cursor: 'pointer', ...fm, fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase' }}>✕ Close</button>
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${SLIDES[reelOpen].cardImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: 64, height: 64, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,.7)', background: 'rgba(0,0,0,.3)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Tri size={18} />
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </>
-    );
-  }
-
-  const rm = reducedMotion;
+  const leaders = useMemo(() => slides.filter((slide) => slide.type === 'leader'), [slides]);
+  const reels = useMemo(() => slides.filter((slide) => slide.type === 'reel'), [slides]);
 
   return (
-    <section ref={sectionRef} style={{ position: 'relative', height: `${SLIDES.length * 100}vh` }} aria-label="Leadership and Reels">
-
-      {/* ── Sticky viewport panel ── */}
-      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#0a0d14' }}>
-
-        {/* Stacked backgrounds */}
-        {SLIDES.map((s, i) => (
-          <div key={s.id} style={{
-            position: 'absolute', inset: 0,
-            opacity: i === active ? 1 : 0,
-            transition: rm ? 'none' : 'opacity 0.9s cubic-bezier(0.16,1,0.3,1)',
-            willChange: 'opacity',
-          }}>
-            {/* Parallax image — shifts subtly with active index */}
-            <div style={{
-              position: 'absolute',
-              top: '-8%', left: '-4%', right: '-4%', bottom: '-8%',
-              backgroundImage: `url(${s.bgImage})`,
-              backgroundSize: 'cover', backgroundPosition: 'center 18%',
-              transform: rm ? 'none' : `translateY(${(i - active) * 8}%)`,
-              transition: rm ? 'none' : 'transform 1s cubic-bezier(0.16,1,0.3,1)',
-            }} />
-            {/* Overlay — white for bio slides, gradient for photo/reel slides */}
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: s.type === 'leader'
-                ? '#fff'   /* fully opaque — LeaderBioLayout renders its own layout on top */
-                : s.type === 'photo'
-                  ? 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.12) 55%, rgba(0,0,0,0.08) 100%)'
-                  : 'linear-gradient(135deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.44) 100%)',
-            }} />
-          </div>
+    <section
+      aria-label="Leadership"
+      className="relative overflow-hidden px-[clamp(18px,5vw,72px)] py-[clamp(72px,8vw,120px)]"
+      style={{
+        background:
+          'radial-gradient(circle at 88% 8%, rgba(224,25,125,.10), transparent 38%), linear-gradient(180deg, #fbf6f0 0%, #f7efe8 100%)',
+      }}
+    >
+      {/* faint topographic texture, left edge */}
+      <svg
+        aria-hidden
+        width="420"
+        height="520"
+        viewBox="0 0 420 520"
+        fill="none"
+        stroke="rgba(138,35,76,.10)"
+        className="pointer-events-none absolute left-[-60px] top-10 z-0"
+      >
+        {Array.from({ length: 7 }).map((_, i) => (
+          <path key={i} d={`M${-40 + i * 14} 0C${120 + i * 10} ${120 + i * 8} ${40 + i * 12} ${300 - i * 6} ${200 + i * 8} 520`} />
         ))}
+      </svg>
 
-        {/* Section label — top left (colour adapts to dark/light background) */}
-        {(() => { const isLight = SLIDES[active].type === 'leader'; return (
-        <div style={{
-          position: 'absolute', top: 108, left: 48, zIndex: 20,
-          ...fm, fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: isLight ? 'rgba(10,10,10,.4)' : 'rgba(255,255,255,.32)',
-          display: 'flex', alignItems: 'center', gap: 10,
-        }}>
-          <div style={{ width: 14, height: 1, background: isLight ? 'rgba(10,10,10,.25)' : 'rgba(255,255,255,.25)' }} />
-          Leadership &amp; Reels
-        </div>
-        ); })()}
+      <div className="relative z-[1] mx-auto max-w-[1080px]">
+        {/* ── Header ── */}
+        <motion.header
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-[clamp(56px,7vw,92px)] text-center"
+        >
+          <div className={`${FM} mb-[22px] inline-flex items-center gap-3.5 text-[11px] font-bold uppercase tracking-[.26em] text-magenta`}>
+            <span className="h-px w-[30px] bg-magenta/50" />
+            Leadership at TSBI
+            <span className="h-px w-[30px] bg-magenta/50" />
+          </div>
 
-        {/* Watermark number */}
-        <div style={{
-          position: 'absolute', right: '-1%', bottom: '-4%', zIndex: 1,
-          pointerEvents: 'none', userSelect: 'none',
-          ...fd, fontSize: 'clamp(160px,20vw,300px)', fontWeight: 900,
-          color: 'rgba(255,255,255,.04)', lineHeight: 1, letterSpacing: '-0.04em',
-        }}>
-          {SLIDES[active].num}
-        </div>
+          <h2 className={`${FD} m-0 text-[clamp(34px,5.2vw,64px)] font-semibold leading-[1.08] tracking-[-0.01em] text-ink`}>
+            Guided by Purpose.
+            <br />
+            Driven by <em className="italic text-magenta">Impact.</em>
+          </h2>
 
-        {/* ── Left sidebar progress ── */}
-        <nav style={{
-          position: 'absolute', left: 44, top: '50%', transform: 'translateY(-50%)',
-          zIndex: 20, display: 'flex', flexDirection: 'column', gap: 0,
-        }}>
-          {SLIDES.map((s, i) => (
-            <button
-              key={s.id}
-              onClick={() => goToSlide(i)}
-              aria-label={`Go to ${s.title}`}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                padding: '9px 0', background: 'none', border: 'none', cursor: 'pointer',
-              }}
-            >
-              {(() => { const isLight = SLIDES[active].type === 'leader'; return (<>
-              <div style={{
-                width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
-                background: i === active ? MAGENTA : isLight ? 'rgba(10,10,10,.18)' : 'rgba(255,255,255,.2)',
-                transform: i === active ? 'scale(1.5)' : 'scale(1)',
-                transition: 'background .35s, transform .35s',
-              }} />
-              <div style={{ textAlign: 'left' }}>
-                <div style={{
-                  ...fm, fontSize: 8, letterSpacing: '0.25em', textTransform: 'uppercase',
-                  color: i === active ? MAGENTA : isLight ? 'rgba(10,10,10,.28)' : 'rgba(255,255,255,.22)',
-                  transition: 'color .3s', marginBottom: 2,
-                }}>{s.num}</div>
-                <div style={{
-                  ...fm, fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase',
-                  color: i === active ? (isLight ? INK : 'rgba(255,255,255,.62)') : isLight ? 'rgba(10,10,10,.25)' : 'rgba(255,255,255,.18)',
-                  transition: 'color .3s',
-                }}>
-                  {s.type === 'photo'  ? s.title.split(' ').slice(-1)[0] + ' ↗'
-                 : s.type === 'leader' ? s.title.split(' ').slice(-1)[0] + ' —'
-                 : s.title}
-                </div>
-              </div>
-              </>); })()}
-            </button>
+          {/* lotus flourish */}
+          <div className="my-5 flex justify-center">
+            <svg width="40" height="20" viewBox="0 0 40 20" fill="none" aria-hidden>
+              <path d="M20 18C20 18 14 14 14 7c0-3 3-5 6-5s6 2 6 5c0 7-6 11-6 11Z" fill="rgba(224,25,125,.18)" stroke="var(--magenta)" strokeWidth="1" />
+              <path d="M20 18C20 18 11 16 8 10c-1-2 0-5 2-5 4 0 9 6 10 13Z" fill="rgba(224,25,125,.12)" stroke="var(--magenta)" strokeWidth="0.8" />
+              <path d="M20 18C20 18 29 16 32 10c1-2 0-5-2-5-4 0-9 6-10 13Z" fill="rgba(224,25,125,.12)" stroke="var(--magenta)" strokeWidth="0.8" />
+            </svg>
+          </div>
+
+          <p className="mx-auto max-w-[540px] text-[15.5px] font-light leading-[1.8] text-[#281c20]/60">
+            At TSBI, our leadership blends deep expertise with a shared purpose to build businesses that create lasting value for people and communities.
+          </p>
+        </motion.header>
+
+        {/* ── Leaders zigzag with center spine ── */}
+        <div className="relative grid gap-y-[clamp(56px,7vw,96px)]">
+          <span
+            className="absolute left-1/2 top-5 bottom-5 hidden w-px -translate-x-1/2 lg:block"
+            style={{ background: 'linear-gradient(180deg, transparent, rgba(138,35,76,.35) 12%, rgba(138,35,76,.35) 88%, transparent)' }}
+          />
+          {leaders.map((leader, index) => (
+            <LeaderRow key={leader.id} slide={leader} index={index} displayNum={String(index + 1).padStart(2, '0')} />
           ))}
-        </nav>
+        </div>
 
-        {/* ── Card area ── */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={rm ? {} : { opacity: 0, y: 32, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={rm ? {} : { opacity: 0, y: -22, scale: 0.985 }}
-            transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
-            style={{ position: 'absolute', inset: 0, zIndex: 15 }}
-          >
-            {SLIDES[active].type === 'photo' ? (
-              <PhotoSlide slide={SLIDES[active]} />
-            ) : SLIDES[active].type === 'leader' ? (
-              <LeaderBioLayout slide={SLIDES[active]} />
-            ) : (
-              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 8% 0 160px' }}>
-                <ReelCard slide={SLIDES[active]} onPlay={() => setReelOpen(active)} />
+        {/* ── Values bar ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-[clamp(56px,7vw,96px)] flex flex-wrap items-center gap-[clamp(28px,4vw,56px)] rounded-[22px] border border-magenta/15 px-[clamp(28px,5vw,56px)] py-[clamp(28px,4vw,40px)]"
+          style={{ background: 'linear-gradient(120deg, rgba(224,25,125,.10), rgba(224,25,125,.05))' }}
+        >
+          <div className="flex flex-[1_1_360px] items-start gap-[18px]">
+            <span className={`${FD} text-[64px] leading-[0.7] text-magenta opacity-45`}>“</span>
+            <p className={`${FD} m-0 text-[clamp(18px,2vw,23px)] font-medium italic leading-[1.5] text-ink`}>
+              We believe in building with integrity, partnering with purpose, and scaling impact that lasts.
+            </p>
+          </div>
+
+          <div className="hidden w-px self-stretch bg-[#8a234c]/20 sm:block" />
+
+          <div className="flex flex-wrap gap-[clamp(22px,3vw,40px)]">
+            {VALUES.map((v) => (
+              <div key={v.label} className="flex min-w-[86px] flex-col gap-2.5">
+                <span className="text-magenta">{v.icon}</span>
+                <span className={`${FM} text-[11px] font-semibold leading-[1.45] tracking-[.06em] text-[#281c20]/70`}>
+                  {v.label}
+                </span>
               </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
+            ))}
+          </div>
+        </motion.div>
 
-        {/* Scroll cue */}
-        <div style={{
-          position: 'absolute', bottom: 44, left: '50%', transform: 'translateX(-50%)',
-          zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-          ...fm, fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase',
-          color: 'rgba(255,255,255,.3)',
-          opacity: active === 0 ? 1 : 0, transition: 'opacity .4s',
-          pointerEvents: 'none',
-        }}>
-          <div style={{ width: 1, height: 36, background: 'rgba(255,255,255,.18)' }} />
-          Scroll
-        </div>
+        {/* ── Reels (only if CMS provides) ── */}
+        {reels.length > 0 && (
+          <div className="mt-[72px]">
+            <div className={`${FM} mb-[22px] text-[11px] font-bold uppercase tracking-[.2em] text-magenta`}>
+              Reels &amp; Stories
+            </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {reels.map((reel) => (
+                <ReelTile key={reel.id} slide={reel} onPlay={() => setReelOpen(reel.id)} />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
-        {/* Bottom progress bar */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,.07)', zIndex: 20 }}>
-          <div style={{
-            height: 2, background: MAGENTA,
-            width: `${((active + 1) / SLIDES.length) * 100}%`,
-            transition: 'width .6s cubic-bezier(.16,1,.3,1)',
-          }} />
-        </div>
-
-      </div>{/* end sticky */}
-
-      {/* ── Reel modal ── */}
       <AnimatePresence>
         {reelOpen !== null && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.28 }}
+            transition={{ duration: 0.22 }}
             onClick={() => setReelOpen(null)}
-            style={{
-              position: 'fixed', inset: 0, background: 'rgba(0,0,0,.88)',
-              zIndex: 900, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
+            className="fixed inset-0 z-[900] grid place-items-center bg-[rgba(20,8,14,.9)] p-[18px]"
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.94, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-              onClick={e => e.stopPropagation()}
-              style={{
-                position: 'relative',
-                width: 'min(88vw,900px)', aspectRatio: '16/9',
-                borderRadius: 6, overflow: 'hidden',
-              }}
+              exit={{ scale: 0.94, opacity: 0 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(event) => event.stopPropagation()}
+              className="relative aspect-video w-[min(920px,92vw)] overflow-hidden rounded-[20px]"
             >
               <button
                 onClick={() => setReelOpen(null)}
-                style={{
-                  position: 'absolute', top: -44, right: 0, zIndex: 10,
-                  background: 'none', border: 'none',
-                  color: 'rgba(255,255,255,.65)', cursor: 'pointer',
-                  ...fm, fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase',
-                  transition: 'color .2s',
-                }}
-              >✕ Close</button>
-              <div style={{
-                position: 'absolute', inset: 0,
-                backgroundImage: `url(${SLIDES[reelOpen].cardImage})`,
-                backgroundSize: 'cover', backgroundPosition: 'center',
-              }} />
-              <div style={{
-                position: 'absolute', inset: 0, background: 'rgba(0,0,0,.5)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <div style={{
-                  width: 80, height: 80, borderRadius: '50%',
-                  border: '1.5px solid rgba(255,255,255,.7)',
-                  background: 'rgba(0,0,0,.3)', backdropFilter: 'blur(8px)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                  <Tri size={22} />
-                </div>
+                className={`${FM} absolute right-4 top-4 z-[3] cursor-pointer rounded-full border-0 bg-white/15 px-[13px] py-2.5 text-[11px] uppercase tracking-[.12em] text-white`}
+              >
+                Close
+              </button>
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${slides.find((slide) => slide.id === reelOpen)?.cardImage})` }}
+              />
+              <div className="absolute inset-0 grid place-items-center bg-[rgba(20,8,14,.45)]">
+                <span className="grid h-[86px] w-[86px] place-items-center rounded-full bg-magenta shadow-[0_18px_55px_rgba(0,0,0,0.34)]">
+                  <PlayIcon size={24} />
+                </span>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
     </section>
   );
 }
