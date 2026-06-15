@@ -12,12 +12,13 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
+# NOTE: All Vercel CLI commands run from the repository root (NOT ./tsbi).
+# The Vercel project's Root Directory is already set to "tsbi", so the CLI
+# resolves the app there itself. cd-ing into ./tsbi as well caused the path to
+# be doubled ( .../tsbi/tsbi ), which is what made deploys fail.
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./tsbi
 
     steps:
       - name: Checkout code
@@ -29,9 +30,6 @@ jobs:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: tsbi/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
