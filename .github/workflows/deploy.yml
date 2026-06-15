@@ -12,13 +12,12 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-# NOTE: All Vercel CLI commands run from the repository root (NOT ./tsbi).
-# The Vercel project's Root Directory is already set to "tsbi", so the CLI
-# resolves the app there itself. cd-ing into ./tsbi as well caused the path to
-# be doubled ( .../tsbi/tsbi ), which is what made deploys fail.
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./tsbi
 
     steps:
       - name: Checkout code
@@ -36,6 +35,13 @@ jobs:
 
       - name: Pull Vercel environment info
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      # The Vercel project's Root Directory is "tsbi" (needed by the native git
+      # integration). Since this workflow already runs inside ./tsbi, clear the
+      # Root Directory in the *local* pulled project.json so the prebuilt
+      # `vercel deploy` doesn't append it again (which produced ".../tsbi/tsbi").
+      - name: Normalize root directory for prebuilt deploy
+        run: node -e "const fs=require('fs'),f='.vercel/project.json',j=JSON.parse(fs.readFileSync(f,'utf8'));j.settings=j.settings||{};j.settings.rootDirectory=null;fs.writeFileSync(f,JSON.stringify(j));console.log('cleared rootDirectory for CLI')"
 
       - name: Build project
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
