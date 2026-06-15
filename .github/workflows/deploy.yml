@@ -36,10 +36,16 @@ jobs:
       - name: Pull Vercel environment info
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      # The Vercel project's Root Directory is "tsbi" (needed by the native git
-      # integration). Since this workflow already runs inside ./tsbi, clear the
-      # Root Directory in the *local* pulled project.json so the prebuilt
-      # `vercel deploy` doesn't append it again (which produced ".../tsbi/tsbi").
+      # Make the pulled production env available to `next build` via .env.local
+      # (Next.js auto-loads it). The app's src/lib/db.ts requires DATABASE_URL at
+      # build time, so this must be present before `vercel build`.
+      - name: Load pulled env for Next build
+        run: cp .vercel/.env.production.local .env.local
+
+      # The project's Root Directory is "tsbi" (used by the native git
+      # integration). This workflow already runs inside ./tsbi, so clear it in
+      # the local pulled project.json to stop `vercel deploy --prebuilt` from
+      # doubling the path to ".../tsbi/tsbi". Dashboard setting is untouched.
       - name: Normalize root directory for prebuilt deploy
         run: node -e "const fs=require('fs'),f='.vercel/project.json',j=JSON.parse(fs.readFileSync(f,'utf8'));j.settings=j.settings||{};j.settings.rootDirectory=null;fs.writeFileSync(f,JSON.stringify(j));console.log('cleared rootDirectory for CLI')"
 
