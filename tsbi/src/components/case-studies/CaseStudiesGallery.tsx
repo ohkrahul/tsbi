@@ -9,6 +9,7 @@ import type { CaseStudyGalleryItem } from '@/lib/caseStudies';
 /* ── Category filters ── */
 const FILTERS = [
   { label: 'All',                fn: (_: CaseStudyGalleryItem) => true },
+  { label: 'Digital & Tech',     fn: (s: CaseStudyGalleryItem) => s.track === 'tech' },
   { label: 'Film Marketing',     fn: (s: CaseStudyGalleryItem) => s.category.includes('Film Marketing') },
   { label: 'Digital Campaigns',  fn: (s: CaseStudyGalleryItem) => s.category.includes('Healthcare') || s.category.includes('Commercial') || s.category.includes('Preventive') },
   { label: 'Brand Partnerships', fn: (s: CaseStudyGalleryItem) => s.category.includes('Logistics') || s.category.includes('Defence') || s.category.includes('Food') },

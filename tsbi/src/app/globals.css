@@ -14,6 +14,10 @@
   --color-orange: #ff4c0c;
   --color-navy: #0d1528;
   --color-electric: #1a6aff;
+  /* Brand fonts exposed as Tailwind utilities: font-fd / font-fb / font-fm */
+  --font-fd: var(--font-playfair), Georgia, serif;
+  --font-fb: var(--font-dm-sans), system-ui, sans-serif;
+  --font-fm: var(--font-space-grotesk), 'Helvetica Neue', sans-serif;
 }
 
 :root {

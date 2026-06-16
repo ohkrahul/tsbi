@@ -231,14 +231,14 @@ export default function MediaPageClient({ articles }: { articles: Article[] }) {
                 className="media-article-row"
               >
                 {/* Logo */}
-                <div className="media-article-logo-wrap">
+                <div className="media-article-logo-wrap" style={{ backgroundColor: PUB_LOGO[article.source] ? 'transparent' : '#f0f0f0' }}>
                   {PUB_LOGO[article.source] ? (
                     <Image
                       src={PUB_LOGO[article.source]}
                       alt={article.source}
-                      width={120}
-                      height={48}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      width={220}
+                      height={68}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   ) : (
                     <span className="media-article-logo-text">{article.source}</span>

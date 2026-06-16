@@ -495,7 +495,7 @@ function AwardCard({ award, index }: { award:(typeof AWARD_CARDS)[0]; index:numb
           <span style={{ fontFamily:'var(--fd)', fontSize:15, fontWeight:800, color:PINK, letterSpacing:'-0.01em' }}>
             {award.count} Award{award.count > 1 ? 's' : ''}
           </span>
-          <span style={{ color:'rgba(0,0,0,0.3)', fontSize:13, transition:'transform 0.2s', transform:hov?'translateX(4px)':'translateX(0)', display:'inline-block' }}>→</span>
+          {/* <span style={{ color:'rgba(0,0,0,0.3)', fontSize:13, transition:'transform 0.2s', transform:hov?'translateX(4px)':'translateX(0)', display:'inline-block' }}>→</span> */}
         </div>
       </div>
     </motion.div>

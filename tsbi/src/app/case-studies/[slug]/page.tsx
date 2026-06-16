@@ -2,6 +2,22 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { caseStudies } from '@/lib/caseStudies';
 
+/* Small typographic helpers for the rich (tech) case-study layout. */
+function Heading({ children }: { children: string }) {
+  return (
+    <h2 style={{ fontFamily: 'var(--fd)', fontSize: 22, fontWeight: 700, color: 'var(--ink)', margin: '36px 0 12px', lineHeight: 1.2 }}>
+      {children}
+    </h2>
+  );
+}
+function Para({ children }: { children: string }) {
+  return (
+    <p style={{ fontFamily: 'var(--fm)', fontSize: 15, lineHeight: 1.85, color: 'rgba(10,10,10,0.72)', fontWeight: 300, margin: 0 }}>
+      {children}
+    </p>
+  );
+}
+
 export function generateStaticParams() {
   return caseStudies.map((s) => ({ slug: s.slug }));
 }
@@ -110,26 +126,79 @@ export default async function CaseStudyDetailPage({
         </div>
       </div>
 
-      {/* ── CAMPAIGN CONCEPT ── */}
+      {/* ── PROJECT / CAMPAIGN CONTENT ── */}
       <section style={{ padding: '72px 64px', maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--magenta)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 28, height: 2, background: 'var(--magenta)', display: 'inline-block', borderRadius: 1 }} />
-          The Campaign
+          {study.overview ? 'The Project' : 'The Campaign'}
         </div>
-        <div style={{ maxWidth: 780 }}>
-          {study.concept.split('\n\n').map((para, i) => (
-            <p key={i} style={{
-              fontFamily: 'var(--fm)',
-              fontSize: 15,
-              lineHeight: 1.85,
-              color: 'rgba(10,10,10,0.72)',
-              fontWeight: 300,
-              marginBottom: i < study.concept.split('\n\n').length - 1 ? 24 : 0,
-            }}>
-              {para}
-            </p>
-          ))}
-        </div>
+
+        {study.overview ? (
+          /* ── Rich (tech / digital transformation) layout ── */
+          <div style={{ maxWidth: 820 }}>
+            <Para>{study.overview}</Para>
+
+            {study.challenge && (<><Heading>The Challenge</Heading><Para>{study.challenge}</Para></>)}
+            {study.idea && (<><Heading>The Idea</Heading><Para>{study.idea}</Para></>)}
+
+            {study.experienceItems && study.experienceItems.length > 0 && (
+              <>
+                <Heading>The Experience</Heading>
+                {study.experienceIntro && <Para>{study.experienceIntro}</Para>}
+                <ul style={{ listStyle: 'none', padding: 0, margin: '8px 0 0', display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '10px 28px' }}>
+                  {study.experienceItems.map((item) => (
+                    <li key={item} style={{ position: 'relative', paddingLeft: 20, fontFamily: 'var(--fm)', fontSize: 14, lineHeight: 1.6, color: 'rgba(10,10,10,0.72)', fontWeight: 300 }}>
+                      <span style={{ position: 'absolute', left: 0, top: 8, width: 7, height: 7, borderRadius: '50%', background: study.accent }} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {study.impact && study.impact.length > 0 && (
+              <>
+                <Heading>Impact</Heading>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 4 }}>
+                  {study.impact.map((m, i) => (
+                    <div key={i} style={{
+                      flex: m.value ? '0 0 auto' : '1 1 280px',
+                      minWidth: m.value ? 150 : 280,
+                      padding: '20px 22px',
+                      borderRadius: 12,
+                      border: '1px solid rgba(0,0,0,0.08)',
+                      background: 'var(--off)',
+                      borderTop: `3px solid ${study.accent}`,
+                    }}>
+                      {m.value && (
+                        <div style={{ fontFamily: 'var(--fd)', fontSize: 34, fontWeight: 900, lineHeight: 1, color: 'var(--ink)', marginBottom: 8 }}>{m.value}</div>
+                      )}
+                      <div style={{ fontFamily: 'var(--fm)', fontSize: m.value ? 11 : 13.5, letterSpacing: m.value ? '0.12em' : '0', textTransform: m.value ? 'uppercase' : 'none', color: m.value ? 'var(--muted)' : 'rgba(10,10,10,0.72)', lineHeight: 1.5, fontWeight: 300 }}>{m.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {study.whyItWorked && (<><Heading>Why It Worked</Heading><Para>{study.whyItWorked}</Para></>)}
+          </div>
+        ) : (
+          /* ── Film / campaign layout (single concept block) ── */
+          <div style={{ maxWidth: 780 }}>
+            {study.concept.split('\n\n').map((para, i) => (
+              <p key={i} style={{
+                fontFamily: 'var(--fm)',
+                fontSize: 15,
+                lineHeight: 1.85,
+                color: 'rgba(10,10,10,0.72)',
+                fontWeight: 300,
+                marginBottom: i < study.concept.split('\n\n').length - 1 ? 24 : 0,
+              }}>
+                {para}
+              </p>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* ── PREV / NEXT NAVIGATION ── */}

@@ -7,7 +7,7 @@ export interface ClientItem {
   name: string; type: string; caption: string; accent: string; image: string; cells: string[];
 }
 
-/* ── 6 brands — single source of truth ── */
+/* ── brands — single source of truth ── */
 type Brand = {
   name: string; category: string;
   imgs: { main: string; alt1: string; alt2: string };
@@ -18,6 +18,12 @@ type Brand = {
 
 const BRANDS: Brand[] = [
   {
+    name: 'LuLu Hypermarket', category: 'Gamified Experience · Retail',
+    imgs: { main: '/tech/10.png', alt1: '/tech/1.png', alt2: '/tech/6.png' },
+    url: '/case-studies/lulu-wheel-of-fortune',
+    brandDescription: "Turning rewards into an interactive customer experience. We built a digital Wheel of Fortune for LuLu Hypermarket where shoppers could spin, participate and win — alongside gamified and digital builds for brands like Lipton and Bevzilla that drive participation, loyalty and recall.",
+  },
+  {
     name: 'Dharma Productions', category: 'Film Marketing · Entertainment',
     imgs: { main: '/images/banner-home2-2-400x500.jpg', alt1: '/images/banner-home3-1-400x500.jpg', alt2: '/images/portfolio-popup-12-400x500.jpg' },
     url: '/case-studies',
@@ -27,11 +33,12 @@ const BRANDS: Brand[] = [
     ],
   },
   {
-    name: 'Mumbai Indians', category: 'Logistics · IPL',
+    name: 'Logistics & Mobility', category: 'Commercial Vehicles · IPL',
     imgs: { main: '/images/banner-home3-1-400x500.jpg', alt1: '/images/career-detail-01-400x500.jpg', alt2: '/images/portfolio-popup-12-400x500.jpg' },
     url: '/case-studies',
     films: [
-      { title: 'DHL × Mumbai Indians — Life Ka Filter', slug: 'mumbai-indians', category: 'IPL Campaign', youtube: 'MJofvf2lBNY', description: "Two campaigns, one shoot. Cricketers asserting #ThatsMyGame — their game is cricket, not dancing — while 'Dil Se Indian' captured the indomitable Mumbai spirit, subtly weaving in DHL's reach across social feeds." },
+      { title: 'DHL × Mumbai Indians', slug: 'mumbai-indians', category: 'IPL Campaign', youtube: 'MJofvf2lBNY', description: "Two campaigns, one shoot. Cricketers asserting #ThatsMyGame — their game is cricket, not dancing — while 'Dil Se Indian' captured the indomitable Mumbai spirit, subtly weaving in DHL's reach across social feeds." },
+      { title: 'Ashok Leyland — #KhushiyonKiSteering', slug: 'ashok-leyland-diwali', category: 'Diwali Campaign', youtube: '37CCZAHaYx8', description: "Positioning a B2B brand as the unseen force powering India's festive joy — every sweet, diya and fabric reaching home on a journey Ashok Leyland enables. Subtle truck-element transitions made it culturally relevant and central to India's festive supply chain." },
     ],
   },
   {
@@ -51,13 +58,12 @@ const BRANDS: Brand[] = [
     films: [
       { title: 'Chef Saransh Goila — Healthy Recipes', slug: 'disney-india', category: 'Disney Delicious Minis', youtube: 'qzHtzyuk_g4' },
       { title: 'Chef Chinu Vaze — Disney Delights',    slug: 'disney-india', category: 'Disney Delicious Minis', youtube: '1q_orBISRN0' },
-      { title: 'Disney Delicious — Vol. 3',             slug: 'disney-india', category: 'Disney Delicious Minis', youtube: 'v5f9W7T1b6w' },
-      { title: 'Disney Delicious — Vol. 4',             slug: 'disney-india', category: 'Disney Delicious Minis', youtube: 'dyVdaCIIMfc' },
     ],
   },
+  
 ];
 
-const TOTAL     = BRANDS.length; // 6
+const TOTAL     = BRANDS.length;
 const SIDEBAR   = '#140e20';
 const ITEM_H    = 68;
 const WIN       = 5;
@@ -101,7 +107,8 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const brand = BRANDS[activeIdx];
+  // Clamp defensively: HMR / data changes can leave activeIdx out of range.
+  const brand = BRANDS[Math.min(Math.max(activeIdx, 0), TOTAL - 1)] ?? BRANDS[0];
   const go    = (d: 1 | -1) => setActiveIdx(p => Math.max(0, Math.min(TOTAL - 1, p + d)));
 
   /* sliding window */
@@ -260,7 +267,7 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
                     ? { position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '165px 165px', gap: 10, padding: '24px', alignContent: 'center' }
                     : brand.films?.some(f => f.youtube)
                       ? { position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', gap: 12, padding: '24px', justifyContent: 'center' }
-                      : { position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '3fr 2fr', gridTemplateRows: '1fr 1fr', gap: 10 }
+                      : { position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '1fr', gridTemplateRows: '1fr 1fr', gap: 12, padding: '24px', alignContent: 'center' }
                 }
               >
                 {(brand.films?.length ?? 0) >= 3 && brand.films?.some(f => f.youtube) ? (
@@ -330,18 +337,13 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
                 ) : (
                   <>
                     <motion.div initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-                      style={{ gridRow: 'span 2', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 14px 48px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
+                      style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 14px 48px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
                       <img src={brand.imgs.main} alt={brand.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.55s ease' }}
                         onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
                     </motion.div>
                     <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.52, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                       style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 8px 28px rgba(0,0,0,0.08)', cursor: 'pointer' }}>
                       <img src={brand.imgs.alt1} alt={`${brand.name} 2`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.55s ease' }}
-                        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
-                    </motion.div>
-                    <motion.div initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.52, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                      style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 8px 28px rgba(0,0,0,0.08)', cursor: 'pointer' }}>
-                      <img src={brand.imgs.alt2} alt={`${brand.name} 3`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'contrast(1.05) saturate(0.85)', transition: 'transform 0.55s ease' }}
                         onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')} onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
                     </motion.div>
                   </>
