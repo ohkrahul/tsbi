@@ -174,7 +174,7 @@ export const leaders: Record<LeaderSlug, LeaderProfile> = {
         description: 'Influencer marketing and AI-led experiences at TSBI',
       },
     ],
-    serviceSpecialties: ['Influencer Management', 'Content Production', 'Digital Transformation', 'Social Media'],
+    serviceSpecialties: ['Influencer Management', 'Content Production', 'Digital Transformation', 'Social Media', 'SEO & Organic Growth'],
   },
   'manish-solanki': {
     slug: 'manish-solanki',
@@ -311,7 +311,7 @@ export const leaders: Record<LeaderSlug, LeaderProfile> = {
         description: 'Oversees operations of the production division',
       },
     ],
-    serviceSpecialties: ['Digital Transformation', 'Influencer Management', 'Performance Management', 'Social Media'],
+    serviceSpecialties: ['Content Production', 'SEO & Organic Growth', 'Digital Transformation', 'Influencer Management', 'Social Media'],
   },
 };
 

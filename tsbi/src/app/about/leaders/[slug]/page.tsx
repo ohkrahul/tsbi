@@ -99,6 +99,38 @@ const styles = `
   }
 `;
 
+/* Key terms (brands, names, places) highlighted inside the biography. */
+const HL_TERMS = [
+  'TheSmallBigIdea', 'TSBI Studios Division', 'TSBI Studios', 'TSBI',
+  'Harikrishnan Pillai', 'Manish Solanki',
+  'GreatWhite Electricals', 'Zydus Lifesciences', 'Ashok Leyland',
+  'Reliance Broadcast Network', 'Reliance broadcast', 'Zee Entertainment', 'Zee network', 'ZEE TV', 'Zee TV',
+  'Times Television Network', 'Publicis Ambience', 'SSC&B Lintas', 'HDFC Mutual Funds', 'Videocon d2h',
+  'Ajay Devgn', 'Aaman Devgn', 'Rotary International', 'Rotaract',
+  'India Day Parade', 'New York', 'Capgemini', 'CRISIL', 'Nerolac', 'Sweden',
+  'MBA', 'OTT', 'FMCG', 'e-commerce', 'ICICI', 'DHL', 'VIP',
+];
+const HL_RE = new RegExp(
+  '(' +
+    HL_TERMS.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') +
+    '|\\b\\d{4}\\b|\\b\\d+\\+?\\s?(?:years?|countries|decades?|channel|person)\\b|\\b\\d+\\+|two decades|a decade|last decade' +
+    ')',
+  'g',
+);
+
+/** Split a paragraph and wrap key terms in a highlighted <strong>. */
+function highlightBio(text: string) {
+  return text.split(HL_RE).map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} style={{ color: 'var(--magenta)', fontWeight: 600 }}>
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  );
+}
+
 export default function LeaderPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const leader = getLeaderBySlug(slug);
@@ -587,7 +619,6 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
             {[
               { icon: '🎬', title: 'Content Production', service: 'production', desc: 'End-to-end production — films, reels, photography and social content' },
-              { icon: '📊', title: 'Performance Management', service: 'performance', desc: 'Paid social, programmatic and digital media optimization' },
               { icon: '🔍', title: 'SEO & Organic Growth', service: 'seo', desc: 'Full-funnel SEO strategies and sustainable organic visibility' },
               { icon: '⚙️', title: 'Digital Transformation', service: 'digital', desc: 'Web platforms, dashboards and data systems for smarter operations' },
               { icon: '⭐', title: 'Influencer Management', service: 'influencer', desc: 'Full-service talent management and influencer marketing' },
@@ -811,96 +842,6 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
         </div>
       </section>
 
-      {/* Download Profile Section */}
-      <section
-        style={{
-          position: 'relative',
-          padding: '80px 48px',
-          background: 'linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%)',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background:
-              'radial-gradient(circle at 20% 50%, rgba(224,25,125,.15) 0%, transparent 50%),' +
-              'radial-gradient(circle at 80% 80%, rgba(26,106,255,.1) 0%, transparent 50%)',
-            pointerEvents: 'none',
-          }}
-        />
-
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
-          <h2
-            style={{
-              fontFamily: 'var(--fd)',
-              fontSize: 'clamp(28px,4vw,40px)',
-              fontWeight: 900,
-              background: 'linear-gradient(135deg, #fff 0%, rgba(255,255,255,.8) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              marginBottom: 16,
-            }}
-          >
-            Share This Profile
-          </h2>
-
-          <p
-            style={{
-              fontSize: 14,
-              color: 'rgba(255,255,255,.8)',
-              lineHeight: 1.8,
-              marginBottom: 32,
-            }}
-          >
-            Download or share this profile with clients and partners to showcase professional expertise and experience.
-          </p>
-
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a
-              href={`mailto:?subject=${encodeURIComponent(`${leader.name} - Professional Profile`)}&body=${encodeURIComponent(`Check out the profile of ${leader.name}, ${leader.role} at TSBI:\n\n${leader.shortBio}`)}`}
-              style={{
-                padding: '14px 32px',
-                background: 'linear-gradient(135deg, var(--magenta), rgba(224,25,125,.8))',
-                color: '#fff',
-                textDecoration: 'none',
-                fontWeight: 700,
-                borderRadius: 8,
-                fontSize: 13,
-                letterSpacing: '.1em',
-                textTransform: 'uppercase',
-                display: 'inline-block',
-                border: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              📧 Email Profile
-            </a>
-            <Link
-              href={`/about/leaders/${slug}`}
-              style={{
-                padding: '14px 32px',
-                background: 'rgba(255,255,255,.1)',
-                border: '1px solid rgba(255,255,255,.2)',
-                color: '#fff',
-                fontWeight: 700,
-                borderRadius: 8,
-                fontSize: 13,
-                letterSpacing: '.1em',
-                textTransform: 'uppercase',
-                display: 'inline-block',
-                cursor: 'pointer',
-                textDecoration: 'none',
-              }}
-            >
-              🔗 Copy Profile Link
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Biography Section */}
       <section style={{ background: 'linear-gradient(135deg, #f5f3ef 0%, #faf9f7 100%)', padding: '100px 48px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
@@ -926,9 +867,9 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
               color: 'var(--ink)',
             }}
           >
-            {leader.fullBio.split('\n\n').map((para, idx) => (
-              <p key={idx} style={{ marginBottom: idx < leader.fullBio.split('\n\n').length - 1 ? 20 : 0 }}>
-                {para}
+            {leader.fullBio.split('\n\n').map((para, idx, arr) => (
+              <p key={idx} style={{ marginBottom: idx < arr.length - 1 ? 20 : 0 }}>
+                {highlightBio(para)}
               </p>
             ))}
           </div>
