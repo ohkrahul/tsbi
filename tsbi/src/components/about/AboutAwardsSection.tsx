@@ -245,6 +245,15 @@ export default function AboutAwardsSection() {
   const c2 = useCountUp(50,  1.2, statsVisible);
   const c3 = useCountUp(12,  1.0, statsVisible);
 
+  /* ── mobile flag ── */
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const m = () => setIsMobile(window.innerWidth < 768);
+    m();
+    window.addEventListener('resize', m);
+    return () => window.removeEventListener('resize', m);
+  }, []);
+
   /* ── Carousel with proper motion value ── */
   const [carouselIdx, setCarouselIdx] = useState(0);
   const carouselX    = useMotionValue(0);
@@ -262,10 +271,10 @@ export default function AboutAwardsSection() {
   return (
     <section
       ref={sectionRef}
-      style={{ background:'var(--off)', padding:'72px 48px 0', overflow:'hidden' }}
+      style={{ background:'var(--off)', padding: isMobile ? '48px 16px 0' : '72px 48px 0', overflow:'hidden' }}
     >
       {/* ════ TWO-COLUMN ════ */}
-      <div style={{ display:'flex', gap:56, alignItems:'center', flexWrap:'wrap' }}>
+      <div style={{ display:'flex', gap: isMobile ? 28 : 56, alignItems:'center', flexWrap:'wrap' }}>
 
         {/* LEFT */}
         <div style={{ flex:'1 1 340px', maxWidth:500 }}>
@@ -313,9 +322,9 @@ export default function AboutAwardsSection() {
           {/* glow */}
           <div style={{ position:'absolute', top:-50, right:-50, width:200, height:200, borderRadius:'50%', background:'radial-gradient(circle,rgba(233,30,126,0.07) 0%,transparent 70%)', pointerEvents:'none' }} />
 
-          <div style={{ display:'flex', gap:0, minHeight:270 }}>
+          <div style={{ display:'flex', flexDirection: isMobile ? 'column' : 'row', gap:0, minHeight: isMobile ? 'auto' : 270 }}>
             {/* text */}
-            <div style={{ flex:'0 0 auto', width:260, padding:'28px 24px 24px', display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
+            <div style={{ flex:'0 0 auto', width: isMobile ? '100%' : 260, padding: isMobile ? '24px 20px 16px' : '28px 24px 24px', display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
               <div>
                 <div style={{ fontFamily:'var(--fm)', fontSize:9, letterSpacing:'0.2em', textTransform:'uppercase', color:PINK, marginBottom:12 }}>Awards &amp; Recognitions</div>
                 <div style={{ fontFamily:'var(--fd)', fontSize:'clamp(18px,2.2vw,26px)', fontWeight:800, color:'#0a0a0a', lineHeight:1.1, marginBottom:4 }}>Honours that</div>
@@ -331,7 +340,7 @@ export default function AboutAwardsSection() {
             </div>
 
             {/* trophies */}
-            <div style={{ flex:1, background:'linear-gradient(135deg,#fdf9f5 0%,#f9f4ef 60%,#f5eeea 100%)', position:'relative', display:'flex', alignItems:'flex-end', justifyContent:'center', padding:'20px 12px 0', gap:4, overflow:'hidden' }}>
+            <div style={{ flex:1, minHeight: isMobile ? 170 : undefined, background:'linear-gradient(135deg,#fdf9f5 0%,#f9f4ef 60%,#f5eeea 100%)', position:'relative', display:'flex', alignItems:'flex-end', justifyContent:'center', padding:'20px 12px 0', gap:4, overflow:'hidden' }}>
               <div style={{ position:'absolute', bottom:'22%', left:'50%', transform:'translateX(-50%)', width:200, height:100, borderRadius:'50%', background:'radial-gradient(circle,rgba(184,121,34,0.13) 0%,transparent 70%)', pointerEvents:'none' }} />
               {HERO_TROPHIES.map((t, i) => (
                 <motion.div key={i}
@@ -361,11 +370,11 @@ export default function AboutAwardsSection() {
               { label:'Years of Recognition',  val:c3, suf:'+', pink:false },
               { label:'Drive to Go Further',   val:null, suf:'∞', pink:false },
             ].map((s, i) => (
-              <div key={s.label} style={{ padding:'18px 16px', borderRight:i<3?'1px solid rgba(0,0,0,0.06)':'none' }}>
-                <div style={{ fontFamily:'var(--fd)', fontSize:s.suf==='∞'?30:26, fontWeight:900, lineHeight:1, color:s.pink?PINK:'#0a0a0a', letterSpacing:'-0.02em', marginBottom:5 }}>
+              <div key={s.label} style={{ padding: isMobile ? '14px 8px' : '18px 16px', borderRight:i<3?'1px solid rgba(0,0,0,0.06)':'none' }}>
+                <div style={{ fontFamily:'var(--fd)', fontSize: isMobile ? (s.suf==='∞'?22:20) : (s.suf==='∞'?30:26), fontWeight:900, lineHeight:1, color:s.pink?PINK:'#0a0a0a', letterSpacing:'-0.02em', marginBottom:5 }}>
                   {s.val !== null ? s.val : ''}{s.suf}
                 </div>
-                <div style={{ fontFamily:'var(--fm)', fontSize:8, letterSpacing:'0.13em', textTransform:'uppercase', color:MUTED }}>{s.label}</div>
+                <div style={{ fontFamily:'var(--fm)', fontSize: isMobile ? 7.5 : 8, letterSpacing:'0.1em', textTransform:'uppercase', color:MUTED, lineHeight:1.3 }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -373,7 +382,7 @@ export default function AboutAwardsSection() {
       </div>
 
       {/* ════ AWARDS CAROUSEL ════ */}
-      <div style={{ marginTop:52, paddingBottom:36 }}>
+      <div style={{ marginTop: isMobile ? 36 : 52, paddingBottom:36 }}>
 
         {/* header */}
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:32 }}>

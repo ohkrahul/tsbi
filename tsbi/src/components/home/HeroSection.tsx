@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 interface HeroStat { val: string; label: string }
 
@@ -12,10 +15,24 @@ const DEFAULT_STATS: HeroStat[] = [
 export default function HeroSection({ stats }: { stats?: HeroStat[] }) {
   const heroStats = stats?.length ? stats : DEFAULT_STATS;
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const m = () => setIsMobile(window.innerWidth < 860);
+    m();
+    window.addEventListener('resize', m);
+    return () => window.removeEventListener('resize', m);
+  }, []);
+
   return (
-    <section className="hero">
+    <section
+      className="hero"
+      style={isMobile ? { flexDirection: 'column', alignItems: 'stretch', minHeight: 'auto', padding: '100px 20px 44px' } : undefined}
+    >
       {/* Right dark photo panel */}
-      <div className="hero-bg-photo">
+      <div
+        className="hero-bg-photo"
+        style={isMobile ? { display: 'block', position: 'relative', inset: 'auto', width: '100%', height: 300, borderRadius: 16, marginTop: 26, overflow: 'hidden', order: 2 } : undefined}
+      >
         <div className="hero-photo-inner">
           <div className="hero-photo-people">
             {/* Single hero image */}
@@ -31,18 +48,21 @@ export default function HeroSection({ stats }: { stats?: HeroStat[] }) {
               ))}
             </div>
           </div>
-          
+
         </div>
-   
+
       </div>
 
-  
+
       <div className="hero-section-nums">
-       
+
       </div>
 
       {/* Main content */}
-      <div className="hero-content reveal">
+      <div
+        className="hero-content reveal"
+        style={isMobile ? { order: 1, maxWidth: 'none', padding: 0 } : undefined}
+      >
         <div className="hero-eyebrow">
           A Creative <span className="eyebrow-dot">·</span> Media <span className="eyebrow-dot">·</span> Tech Company
         </div>
@@ -62,9 +82,9 @@ export default function HeroSection({ stats }: { stats?: HeroStat[] }) {
         </div>
       </div>
 
-     
 
-    
+
+
     </section>
   );
 }

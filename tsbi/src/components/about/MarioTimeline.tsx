@@ -119,10 +119,10 @@ function TypewriterText({ text, active, delay = 0, speed = 28 }: { text:string; 
 }
 
 /* ── score HUD ── */
-function ScoreHUD({ idx, total }: { idx:number; total:number }) {
+function ScoreHUD({ idx, total, compact=false }: { idx:number; total:number; compact?:boolean }) {
   const m = milestones[idx];
   return (
-    <div style={{ position:'absolute', top:12, left:0, right:0, zIndex:25, display:'flex', justifyContent:'center', gap:28, alignItems:'center', pointerEvents:'none' }}>
+    <div style={{ position:'absolute', top:12, left:0, right:0, zIndex:25, display:'flex', justifyContent:'center', gap: compact ? 16 : 28, alignItems:'center', pointerEvents:'none' }}>
       {([['YEAR', m.year], ['MILESTONE', `${String(idx+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}`], ['WORLD', '1 - 1']] as [string,string][]).map(([label, value]) => (
         <div key={label} style={{ textAlign:'center' }}>
           <div style={{ fontFamily:"'Courier New',monospace", fontSize:7, letterSpacing:'0.2em', textTransform:'uppercase', color:'rgba(255,255,255,0.4)', marginBottom:2 }}>{label}</div>
@@ -305,7 +305,7 @@ export default function MarioTimeline() {
       <style dangerouslySetInnerHTML={{ __html: KF }} />
 
       {/* ── HEADER ── */}
-      <div style={{ padding:'24px 60px 0', display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
+      <div style={{ padding: isMobile ? '20px 18px 0' : '24px 60px 0', display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:16 }}>
         <div>
           <motion.div initial={{ opacity:0, y:-10 }} animate={isInView?{opacity:1,y:0}:{}} transition={{ duration:0.5, delay:0.1 }}
             style={{ fontFamily:'var(--fm)', fontSize:10, letterSpacing:'0.22em', textTransform:'uppercase', color:PINK, display:'flex', alignItems:'center', gap:7, marginBottom:10 }}
@@ -335,7 +335,7 @@ export default function MarioTimeline() {
       <div ref={containerRef} onPointerDown={onPointerDown} onPointerUp={onPointerUp}
         style={{ position:'relative', height:WORLD_H, overflow:'hidden', background:'linear-gradient(180deg,#08063a 0%,#100c58 35%,#1e155a 65%,#14103a 100%)', cursor:'grab', marginTop:16, userSelect:'none' }}
       >
-        <ScoreHUD idx={activeIdx} total={milestones.length} />
+        <ScoreHUD idx={activeIdx} total={milestones.length} compact={isMobile} />
 
         {/* ── USER AVATAR — tracks the active block via marioX motion value ── */}
         <motion.img

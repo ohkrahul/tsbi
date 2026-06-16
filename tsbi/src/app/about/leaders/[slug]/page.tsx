@@ -150,7 +150,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
-          padding: '120px 48px 80px',
+          padding: '120px clamp(20px, 5vw, 48px) 80px',
           background: `linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%)`,
           overflow: 'hidden',
         }}
@@ -167,7 +167,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
           }}
         />
 
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: 1300, margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 80, alignItems: 'center' }}>
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: 1300, margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 'clamp(28px, 6vw, 80px)', alignItems: 'center' }}>
           {/* Left: Profile Image */}
           <div style={{ perspective: '1000px' }}>
             <div
@@ -379,7 +379,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
             </div>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 48 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', gap: 20, flexWrap: 'wrap', marginBottom: 48 }}>
             <div>
               <h2 style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(32px,4vw,48px)', fontWeight: 900, color: 'var(--ink)', marginBottom: 16 }}>
                 Brands & Clients
@@ -616,7 +616,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
             </Link>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 24 }}>
             {[
               { icon: '🎬', title: 'Content Production', service: 'production', desc: 'End-to-end production — films, reels, photography and social content' },
               { icon: '🔍', title: 'SEO & Organic Growth', service: 'seo', desc: 'Full-funnel SEO strategies and sustainable organic visibility' },
@@ -666,7 +666,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
       {/* Education & Awards Section */}
       <section style={{ background: 'var(--white)', padding: '100px 48px', borderBottom: '1px solid var(--border)' }}>
         <div style={{ maxWidth: 1300, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))', gap: 80 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 500px), 1fr))', gap: 'clamp(40px, 6vw, 80px)' }}>
             {/* Education */}
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
@@ -767,7 +767,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
             Notable milestones and measurable impact
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 24 }}>
             {leader.achievements.map((achievement, idx) => (
               <div
                 key={idx}
@@ -809,7 +809,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
             Recent campaigns and projects that showcase strategic thinking and execution
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 24 }}>
             {[
               { title: 'Influencer Marketing Ecosystem', industry: 'Entertainment', description: 'Built and scaled influencer marketing division for 300+ creators and celebrities' },
               { title: 'Digital Transformation', industry: 'Multiple', description: 'Led digital-first initiatives across broadcast, OTT, sports and film marketing' },
