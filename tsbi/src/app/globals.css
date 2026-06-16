@@ -1260,3 +1260,66 @@ body {
   letter-spacing: .18em; text-transform: uppercase; cursor: pointer; z-index: 10; transition: color .2s;
 }
 .lrs-modal-close:hover { color: #fff; }
+
+/* ── MOBILE NAV MENU ───────────────────────────────── */
+.nav-burger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  cursor: pointer;
+  padding: 0;
+}
+.nav-burger span { display: block; width: 18px; height: 2px; background: var(--ink); border-radius: 2px; transition: transform .25s, opacity .2s; }
+.nav-burger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-burger.open span:nth-child(2) { opacity: 0; }
+.nav-burger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+.nav-mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 18px 44px rgba(0,0,0,.10);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 20px 22px;
+  z-index: 600;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+.nav-mobile-menu a {
+  font-family: var(--fm); font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none; padding: 13px 0; border-bottom: 1px solid var(--border);
+}
+.nav-mobile-menu a:last-child { border-bottom: none; }
+.nav-mobile-services-label {
+  font-family: var(--fm); font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--magenta); padding: 16px 0 4px;
+}
+.nav-mobile-sub { padding-left: 14px !important; color: var(--muted) !important; font-size: 12px !important; }
+.nav-mobile-cta {
+  margin-top: 16px; background: var(--ink); color: #fff !important; text-align: center;
+  border-radius: 100px !important; border-bottom: none !important; padding: 14px !important;
+}
+@media (max-width: 860px) {
+  .nav-burger { display: flex; }
+}
+
+/* ── CAREERS HERO — mobile stack ───────────────────────
+   Placed after the base .cr-* rules so these win (media queries
+   don't add specificity; later source order decides). */
+@media (max-width: 860px) {
+  .cr-hero { grid-template-columns: 1fr !important; min-height: auto; padding: 0 !important; }
+  .cr-hero-left { padding: 88px 20px 40px 20px !important; justify-content: flex-start !important; }
+  .cr-hero-img { min-height: 300px; }
+  .cr-hero-img img { object-position: center !important; }
+}

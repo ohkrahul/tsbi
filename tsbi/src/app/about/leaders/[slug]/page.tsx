@@ -925,7 +925,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
 
           <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
-              href="mailto:hello@tsbi.in"
+              href="mailto:tech@tsbi.in"
               style={{
                 padding: '14px 32px',
                 background: 'linear-gradient(135deg, var(--magenta), rgba(224,25,125,.8))',

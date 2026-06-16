@@ -74,7 +74,7 @@ function CheckRow({ label, count, checked, onChange }: { label: string; count: n
   );
 }
 
-function JobCard({ job, expanded, onToggle }: { job: Job; expanded: boolean; onToggle: () => void }) {
+function JobCard({ job, expanded, onToggle, isMobile }: { job: Job; expanded: boolean; onToggle: () => void; isMobile: boolean }) {
   const [applying, setApplying] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -90,7 +90,7 @@ function JobCard({ job, expanded, onToggle }: { job: Job; expanded: boolean; onT
 
   return (
     <div style={{ background: '#fff', borderRadius: 12, border: `1px solid ${expanded ? 'rgba(224,25,125,0.3)' : 'rgba(0,0,0,0.1)'}`, boxShadow: expanded ? '0 4px 24px rgba(224,25,125,0.08)' : '0 2px 8px rgba(0,0,0,0.06)', transition: 'all 0.25s', overflow: 'hidden' }}>
-      <div style={{ padding: '24px 28px 20px', cursor: 'pointer' }} onClick={onToggle}>
+      <div style={{ padding: isMobile ? '20px 18px 16px' : '24px 28px 20px', cursor: 'pointer' }} onClick={onToggle}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
           <div style={{ flex: 1 }}>
             <h3 style={{ fontFamily: 'var(--fm)', fontSize: 18, fontWeight: 700, color: '#0a0a0a', margin: '0 0 8px', lineHeight: 1.25 }}>{job.role}</h3>
@@ -129,8 +129,8 @@ function JobCard({ job, expanded, onToggle }: { job: Job; expanded: boolean; onT
       <AnimatePresence>
         {expanded && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} style={{ overflow: 'hidden' }}>
-            <div style={{ padding: '0 28px 28px', borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: 24 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 40 }}>
+            <div style={{ padding: isMobile ? '0 18px 22px' : '0 28px 28px', borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: 24 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 280px', gap: isMobile ? 24 : 40 }}>
                 <div>
                   {[{ title: 'Key Responsibilities', items: job.responsibilities }, { title: 'Selection Criteria', items: job.skills }].map(({ title, items }, si) => (
                     <div key={title} style={{ marginBottom: si === 0 ? 28 : 0 }}>
@@ -200,6 +200,14 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
   const [search, setSearch] = useState('');
   const [deptFilter, setDeptFilter] = useState<string[]>([]);
   const [expFilter, setExpFilter] = useState<string[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const m = () => setIsMobile(window.innerWidth < 768);
+    m();
+    window.addEventListener('resize', m);
+    return () => window.removeEventListener('resize', m);
+  }, []);
 
   const departments = [...new Set(jobs.map(j => j.department))];
   const experiences = [...new Set(jobs.map(j => j.experience))];
@@ -280,7 +288,7 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
       </section>
 
       {/* ── JOBS MATCHED BAR ── */}
-      <div id="jobs" style={{ background: '#fff', borderBottom: '1px solid rgba(0,0,0,0.08)', padding: '16px 40px', display: 'flex', alignItems: 'center', gap: 20 }}>
+      <div id="jobs" style={{ background: '#fff', borderBottom: '1px solid rgba(0,0,0,0.08)', padding: isMobile ? '14px 16px' : '16px 40px', display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 20, flexWrap: 'wrap' }}>
         <span style={{ fontFamily: 'var(--fm)', fontSize: 15, fontWeight: 700, color: '#e0197d' }}>{filtered.length}</span>
         <span style={{ fontFamily: 'var(--fm)', fontSize: 15, color: 'rgba(0,0,0,0.6)', fontWeight: 400 }}>
           {filtered.length === 1 ? 'job' : 'jobs'} matched
@@ -292,31 +300,31 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
             Clear filters
           </button>
         )}
-        <div style={{ marginLeft: 'auto', position: 'relative', display: 'flex', alignItems: 'center' }}>
+        <div style={{ marginLeft: isMobile ? 0 : 'auto', width: isMobile ? '100%' : undefined, position: 'relative', display: 'flex', alignItems: 'center' }}>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ position: 'absolute', left: 12, color: 'rgba(0,0,0,0.35)' }}>
             <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.4"/>
             <path d="M11 11l3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
           </svg>
           <input placeholder="What do you want to do?" value={search} onChange={e => setSearch(e.target.value)}
-            style={{ paddingLeft: 36, paddingRight: 16, paddingTop: 9, paddingBottom: 9, border: '1px solid rgba(0,0,0,0.15)', borderRadius: 999, fontFamily: 'var(--fm)', fontSize: 13, color: '#0a0a0a', outline: 'none', background: '#fff', width: 260 }}
+            style={{ paddingLeft: 36, paddingRight: 16, paddingTop: 9, paddingBottom: 9, border: '1px solid rgba(0,0,0,0.15)', borderRadius: 999, fontFamily: 'var(--fm)', fontSize: 13, color: '#0a0a0a', outline: 'none', background: '#fff', width: isMobile ? '100%' : 260, boxSizing: 'border-box' }}
           />
         </div>
       </div>
 
       {/* ── MAIN LAYOUT ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', minHeight: 'calc(100vh - 360px)', background: '#f8f8f8' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '260px 1fr', minHeight: 'calc(100vh - 360px)', background: '#f8f8f8' }}>
         {/* Sidebar */}
-        <aside style={{ background: '#fff', borderRight: '1px solid rgba(0,0,0,0.07)', padding: '28px 24px', position: 'sticky', top: 80, height: 'fit-content' }}>
-          <FilterSection title="Department">
+        <aside style={{ background: '#fff', borderRight: isMobile ? 'none' : '1px solid rgba(0,0,0,0.07)', borderBottom: isMobile ? '1px solid rgba(0,0,0,0.08)' : 'none', padding: isMobile ? '18px 16px' : '28px 24px', position: isMobile ? 'static' : 'sticky', top: isMobile ? undefined : 80, height: 'fit-content' }}>
+          <FilterSection title="Department" defaultOpen={!isMobile}>
             {departments.map(d => (
               <CheckRow key={d} label={d} count={jobs.filter(j => j.department === d).length}
                 checked={deptFilter.includes(d)} onChange={() => toggle(d, deptFilter, setDeptFilter)} />
             ))}
           </FilterSection>
-          <FilterSection title="Job Types">
+          <FilterSection title="Job Types" defaultOpen={!isMobile}>
             <CheckRow label="Full-time" count={jobs.length} checked onChange={() => {}} />
           </FilterSection>
-          <FilterSection title="Experience">
+          <FilterSection title="Experience" defaultOpen={!isMobile}>
             {experiences.map(e => (
               <CheckRow key={e} label={e} count={jobs.filter(j => j.experience === e).length}
                 checked={expFilter.includes(e)} onChange={() => toggle(e, expFilter, setExpFilter)} />
@@ -325,7 +333,7 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
         </aside>
 
         {/* Job list */}
-        <main style={{ padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <main style={{ padding: isMobile ? '20px 16px' : '28px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {filtered.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: 'var(--fm)', color: 'rgba(0,0,0,0.4)', fontSize: 14 }}>
               No jobs match your filters.
@@ -337,6 +345,7 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
                 <JobCard key={job.role} job={job}
                   expanded={expandedIdx === idx}
                   onToggle={() => setExpandedIdx(expandedIdx === idx ? null : idx)}
+                  isMobile={isMobile}
                 />
               );
             })

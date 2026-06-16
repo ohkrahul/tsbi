@@ -394,8 +394,8 @@ export default function ContactPage() {
                 {[
                   {
                     label: 'Email',
-                    value: 'hello@tsbi.in',
-                    href: 'mailto:hello@tsbi.in',
+                    value: 'tech@tsbi.in',
+                    href: 'mailto:tech@tsbi.in',
                     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>,
                   },
                   {
@@ -521,7 +521,7 @@ export default function ContactPage() {
 
               {/* Email cards */}
               <a
-                href="mailto:hello@tsbi.in"
+                href="mailto:tech@tsbi.in"
                 className="ct2-direct-card"
                 style={{
                   display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none',
@@ -533,7 +533,7 @@ export default function ContactPage() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                 <span>
                   <span style={{ display: 'block', fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 2 }}>Email Us</span>
-                  <span style={{ fontFamily: 'var(--fb)', fontSize: 14, fontWeight: 700, color: 'var(--magenta)' }}>hello@tsbi.in</span>
+                  <span style={{ fontFamily: 'var(--fb)', fontSize: 14, fontWeight: 700, color: 'var(--magenta)' }}>tech@tsbi.in</span>
                 </span>
               </a>
 

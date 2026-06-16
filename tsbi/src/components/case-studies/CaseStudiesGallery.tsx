@@ -16,11 +16,10 @@ const FILTERS = [
   { label: 'Content & Social',   fn: (s: CaseStudyGalleryItem) => s.category.includes('Comedy') || s.category.includes('Festive') || s.category.includes('Awareness') },
 ];
 
-const N        = caseStudies.length;   // 13 — all used for infinite fill
-const CARD_W   = 420;                  // base card width (px)
-const CARD_H   = Math.round(CARD_W * 9 / 16);  // 236px  16:9
+const FEATURED = caseStudies.slice(0, 6); // carousel highlights only a few
+const N        = FEATURED.length;
+const CARD_W   = 420;                  // base (desktop) card width (px)
 const GAP      = 16;
-const STRIDE   = CARD_W + GAP;
 
 /* circular distance: shortest path around the ring */
 function cDist(i: number, active: number) {
@@ -32,28 +31,36 @@ function cDist(i: number, active: number) {
 const scaleOf    = (d: number) => d === 0 ? 1.32 : Math.abs(d) === 1 ? 0.87 : Math.abs(d) === 2 ? 0.76 : 0.68;
 const opacityOf  = (d: number) => d === 0 ? 1    : Math.abs(d) === 1 ? 0.72 : Math.abs(d) === 2 ? 0.48 : 0.28;
 
-/* ── Netflix grid card ── */
+/* ── Netflix grid card — clean image by default; details reveal on hover.
+   The "View Case Study" pill stays visible at all times. ── */
 function GridCard({ study }: { study: CaseStudyGalleryItem }) {
+  const [hov, setHov] = useState(false);
   return (
     <Link href={`/case-studies/${study.slug}`}
-      style={{ textDecoration:'none', display:'block', position:'relative', borderRadius:10, overflow:'hidden', aspectRatio:'16/9', cursor:'pointer', transition:'transform 0.3s cubic-bezier(0.22,1,0.36,1)' }}
-      onMouseEnter={e=>(e.currentTarget as HTMLElement).style.transform='scale(1.05)'}
-      onMouseLeave={e=>(e.currentTarget as HTMLElement).style.transform='scale(1)'}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{ textDecoration:'none', display:'block', position:'relative', borderRadius:10, overflow:'hidden', aspectRatio:'16/9', cursor:'pointer', transition:'transform 0.3s cubic-bezier(0.22,1,0.36,1)', transform: hov ? 'scale(1.04)' : 'scale(1)' }}
     >
       <img src={study.image} alt={study.title} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }} />
-      <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.05) 55%, transparent 100%)' }} />
-      <div style={{ position:'absolute', top:10, left:12 }}>
-        <span style={{ fontFamily:'var(--fm)', fontSize:8, letterSpacing:'0.14em', textTransform:'uppercase', color:'rgba(255,255,255,0.5)' }}>
+
+      {/* darkening + text — only on hover */}
+      <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%)', opacity: hov ? 1 : 0, transition:'opacity 0.3s ease', pointerEvents:'none' }} />
+
+      <div style={{ position:'absolute', top:10, left:12, opacity: hov ? 1 : 0, transition:'opacity 0.3s ease', pointerEvents:'none' }}>
+        <span style={{ fontFamily:'var(--fm)', fontSize:8, letterSpacing:'0.14em', textTransform:'uppercase', color:'rgba(255,255,255,0.7)' }}>
           {study.category.split(' · ').join(' • ')}
         </span>
       </div>
-      <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'12px 14px' }}>
-        <div style={{ fontFamily:'var(--fd)', fontSize:'clamp(13px,1.3vw,16px)', fontWeight:700, color:'#fff', lineHeight:1.2, marginBottom:2 }}>{study.title}</div>
-        <div style={{ fontFamily:'var(--fm)', fontSize:10, color:'rgba(255,255,255,0.45)', marginBottom:7 }}>{study.clientName}</div>
-        <span style={{ display:'inline-flex', alignItems:'center', gap:5, fontFamily:'var(--fm)', fontSize:9, fontWeight:600, color:'rgba(255,255,255,0.6)', letterSpacing:'0.1em', textTransform:'uppercase' }}>
-          View Case Study <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </span>
+
+      <div style={{ position:'absolute', left:14, right:14, bottom:54, opacity: hov ? 1 : 0, transform: hov ? 'translateY(0)' : 'translateY(10px)', transition:'opacity 0.3s ease, transform 0.3s ease', pointerEvents:'none' }}>
+        <div style={{ fontFamily:'var(--fd)', fontSize:'clamp(13px,1.3vw,16px)', fontWeight:700, color:'#fff', lineHeight:1.2, marginBottom:3, display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{study.title}</div>
+        <div style={{ fontFamily:'var(--fm)', fontSize:10, color:'rgba(255,255,255,0.65)' }}>{study.clientName}</div>
       </div>
+
+      {/* View Case Study — always-visible pill button */}
+      <span style={{ position:'absolute', bottom:12, left:12, display:'inline-flex', alignItems:'center', gap:6, fontFamily:'var(--fm)', fontSize:9, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:'#fff', background:'#e0197d', borderRadius:999, padding:'7px 14px', boxShadow:'0 4px 16px rgba(224,25,125,0.45)' }}>
+        View Case Study <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </span>
     </Link>
   );
 }
@@ -85,11 +92,19 @@ export default function CaseStudiesGallery() {
     timerRef.current = setInterval(() => setActive(p => (p + 1) % N), 5000);
   };
 
+  /* responsive card sizing — shrink the carousel on small screens */
+  const isMobile    = containerW < 768;
+  const cardW       = isMobile ? Math.min(containerW - 56, 300) : CARD_W;
+  const cardH       = Math.round(cardW * 9 / 16);
+  const stride      = cardW + GAP;
+  const activeScale = isMobile ? 1.06 : 1.32;
+  const sOf = (d: number) => (d === 0 ? activeScale : scaleOf(d));
+
   /* how many cards fit each side of center */
-  const visible = Math.ceil((containerW / 2) / STRIDE) + 2;
+  const visible = Math.ceil((containerW / 2) / stride) + 2;
 
   /* center x so active card sits at viewport center */
-  const centerX = containerW / 2 - CARD_W / 2;
+  const centerX = containerW / 2 - cardW / 2;
 
   const filteredGrid = caseStudies.filter(FILTERS[activeFilter].fn);
 
@@ -97,7 +112,7 @@ export default function CaseStudiesGallery() {
     <div style={{ background:'#08090d', minHeight:'100vh', paddingTop:80 }}>
 
       {/* ── HEADER ── */}
-      <div style={{ textAlign:'center', padding:'52px 48px 40px' }}>
+      <div style={{ textAlign:'center', padding: isMobile ? '32px 20px 28px' : '52px 48px 40px' }}>
         <div style={{ fontFamily:'var(--fm)', fontSize:10, letterSpacing:'0.28em', textTransform:'uppercase', color:'#e0197d', marginBottom:12 }}>
           Our Work in Action
         </div>
@@ -114,18 +129,18 @@ export default function CaseStudiesGallery() {
       <div style={{ position:'relative' }}>
         <div
           ref={containerRef}
-          style={{ position:'relative', width:'100%', height: CARD_H * scaleOf(0) + 32, overflow:'hidden' }}
+          style={{ position:'relative', width:'100%', height: cardH * activeScale + 32, overflow:'hidden' }}
         >
-          {caseStudies.map((study, i) => {
+          {FEATURED.map((study, i) => {
             const d   = cDist(i, active);
             if (Math.abs(d) > visible) return null; // don't render invisible cards
 
-            const sc  = scaleOf(d);
+            const sc  = sOf(d);
             const op  = opacityOf(d);
             const isAct = d === 0;
-            // x = center + d * STRIDE, adjusted for active card width expansion
-            const x   = centerX + d * STRIDE;
-            const y   = (CARD_H * scaleOf(0) - CARD_H) / 2 + 16; // vertical center
+            // x = center + d * stride, adjusted for active card width expansion
+            const x   = centerX + d * stride;
+            const y   = (cardH * activeScale - cardH) / 2 + 16; // vertical center
 
             return (
               <motion.div
@@ -135,7 +150,7 @@ export default function CaseStudiesGallery() {
                 onClick={() => !isAct && goTo(i)}
                 style={{
                   position:'absolute', left:0, top:0,
-                  width: CARD_W, height: CARD_H,
+                  width: cardW, height: cardH,
                   borderRadius: 13, overflow:'hidden',
                   cursor: isAct ? 'default' : 'pointer',
                   zIndex: 10 - Math.abs(d),
@@ -155,12 +170,12 @@ export default function CaseStudiesGallery() {
 
                 {/* Content overlay */}
                 <div style={{ position:'absolute', bottom:0, left:0, right:0, padding: isAct ? '20px 18px 16px' : '12px 12px 10px' }}>
-                  <div style={{ fontFamily:'var(--fm)', fontSize: isAct?10:8, letterSpacing:'0.1em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:5 }}>
+                  {/* <div style={{ fontFamily:'var(--fm)', fontSize: isAct?10:8, letterSpacing:'0.1em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:5 }}>
                     {study.category.split(' · ').join(' • ')}
-                  </div>
-                  <div style={{ fontFamily:'var(--fd)', fontSize: isAct?'clamp(18px,2vw,24px)':'clamp(11px,1.1vw,14px)', fontWeight:700, color:'#fff', lineHeight:1.1, marginBottom:3 }}>
+                  </div> */}
+                  {/* <div style={{ fontFamily:'var(--fd)', fontSize: isAct?'clamp(18px,2vw,24px)':'clamp(11px,1.1vw,14px)', fontWeight:700, color:'#fff', lineHeight:1.1, marginBottom:3 }}>
                     {study.title}
-                  </div>
+                  </div> */}
                   <div style={{ fontFamily:'var(--fm)', fontSize: isAct?11:9, color:'rgba(255,255,255,0.5)', marginBottom: isAct?12:0 }}>
                     {study.clientName}
                   </div>
@@ -198,8 +213,8 @@ export default function CaseStudiesGallery() {
         ))}
 
         {/* Dots */}
-        <div style={{ display:'flex', justifyContent:'center', gap:7, marginTop:18, paddingBottom:6 }}>
-          {caseStudies.map((_,i)=>(
+        <div style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:7, marginTop:18, padding:'0 20px 6px', maxWidth: 520, marginInline: 'auto' }}>
+          {FEATURED.map((_,i)=>(
             <button key={i} onClick={()=>goTo(i)}
               style={{ width:i===active?22:7, height:7, borderRadius:4, background:i===active?'#e0197d':'rgba(255,255,255,0.2)', border:'none', cursor:'pointer', padding:0, transition:'all 0.32s cubic-bezier(0.22,1,0.36,1)' }}
             />
@@ -208,7 +223,7 @@ export default function CaseStudiesGallery() {
       </div>
 
       {/* ── NETFLIX GRID ── */}
-      <div style={{ padding:'60px 48px 80px' }}>
+      <div style={{ padding: isMobile ? '40px 20px 60px' : '60px 48px 80px' }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:30, flexWrap:'wrap', gap:20 }}>
           <div>
             <div style={{ fontFamily:'var(--fm)', fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#e0197d', marginBottom:10 }}>All Case Studies</div>
@@ -233,7 +248,7 @@ export default function CaseStudiesGallery() {
           initial={{ opacity:0, y:10 }}
           animate={{ opacity:1, y:0 }}
           transition={{ duration:0.35, ease:[0.22,1,0.36,1] }}
-          style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:12 }}
+          style={{ display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap:12 }}
         >
           {filteredGrid.map(study=><GridCard key={study.slug} study={study}/>)}
         </motion.div>

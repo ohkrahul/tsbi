@@ -230,6 +230,14 @@ export default function ContentProductionSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const m = () => setIsMobile(window.innerWidth < 768);
+    m();
+    window.addEventListener('resize', m);
+    return () => window.removeEventListener('resize', m);
+  }, []);
+
   // Mouse parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -263,6 +271,7 @@ export default function ContentProductionSection() {
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
+        padding: isMobile ? '56px 0' : 0,
       }}
     >
       {/* ambient blobs */}
@@ -313,10 +322,10 @@ export default function ContentProductionSection() {
         ))}
       </svg>
 
-      <div style={{ display: 'flex', width: '100%', alignItems: 'center', position: 'relative', zIndex: 1 }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', width: '100%', alignItems: 'center', position: 'relative', zIndex: 1 }}>
 
         {/* ── LEFT TEXT ── */}
-        <div style={{ flex: '0 0 40%', minWidth: 340, paddingLeft: 72, paddingRight: 40 }}>
+        <div style={{ flex: isMobile ? '1 1 auto' : '0 0 40%', width: isMobile ? '100%' : undefined, minWidth: isMobile ? 0 : 340, paddingLeft: isMobile ? 20 : 72, paddingRight: isMobile ? 20 : 40, marginBottom: isMobile ? 32 : 0 }}>
 
           <motion.div
             variants={textEnter(0)}
@@ -406,13 +415,31 @@ export default function ContentProductionSection() {
         </div>
 
         {/* ── RIGHT FLOATING CARDS ── */}
-        <div  style={{ flex: '0 0 60%', position: 'relative', height: '92vh', minHeight: 680, overflow: 'hidden' }}>
-          <motion.div style={{ x: cardsX, y: cardsY, position: 'absolute', inset: 0 }}>
+        {isMobile ? (
+          <div style={{ width: '100%', padding: '0 20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             {videos.map((v, i) => (
-              <VideoCard key={i} v={v} i={i} />
+              <a key={i} href={v.url} target="_blank" rel="noopener noreferrer" style={{ position: 'relative', display: 'block', borderRadius: 12, overflow: 'hidden', aspectRatio: '16/10', textDecoration: 'none', background: '#111' }}>
+                <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${v.thumbnail})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)' }} />
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 38, height: 38, borderRadius: '50%', background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="#111" /></svg>
+                </div>
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '8px 10px' }}>
+                  <div style={{ fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', fontFamily: 'monospace' }}>{v.category}</div>
+                  <div style={{ fontSize: 10, color: '#fff', fontWeight: 600, fontFamily: 'monospace' }}>{v.brand}</div>
+                </div>
+              </a>
             ))}
-          </motion.div>
-        </div>
+          </div>
+        ) : (
+          <div style={{ flex: '0 0 60%', position: 'relative', height: '92vh', minHeight: 680, overflow: 'hidden' }}>
+            <motion.div style={{ x: cardsX, y: cardsY, position: 'absolute', inset: 0 }}>
+              {videos.map((v, i) => (
+                <VideoCard key={i} v={v} i={i} />
+              ))}
+            </motion.div>
+          </div>
+        )}
 
         
 

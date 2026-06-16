@@ -91,7 +91,15 @@ function ExploreBtn({ url }: { url: string }) {
 
 export default function ClientsSection({ initialClients: _ }: { initialClients?: ClientItem[] }) {
   const [activeIdx, setActiveIdx] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const measure = () => setIsMobile(window.innerWidth < 768);
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -116,6 +124,66 @@ export default function ClientsSection({ initialClients: _ }: { initialClients?:
     -(TOTAL - WIN) * ITEM_H,
     Math.min(0, -(activeIdx - Math.floor(WIN / 2)) * ITEM_H)
   );
+
+  /* ── MOBILE: simple stacked list (no scroll-jacking) ── */
+  if (isMobile) {
+    return (
+      <section style={{ background: SIDEBAR, padding: '64px 20px' }}>
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontFamily: 'var(--fd)', fontSize: 30, fontWeight: 900, color: 'rgba(255,255,255,0.92)', lineHeight: 1.05, letterSpacing: '-0.02em' }}>
+            Brands that <em style={{ color: '#e0197d', fontStyle: 'italic' }}>trust us.</em>
+          </div>
+          <div style={{ width: 28, height: 2, background: '#e0197d', borderRadius: 1, marginTop: 16 }} />
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
+          {BRANDS.map((b, i) => (
+            <div key={b.name} style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 5 }}>
+                <span style={{ fontFamily: 'var(--fm)', fontSize: 11, color: '#e0197d', fontWeight: 700 }}>{String(i + 1).padStart(2, '0')}</span>
+                <h3 style={{ fontFamily: 'var(--fd)', fontSize: 24, fontWeight: 700, color: '#fff', margin: 0, lineHeight: 1.1 }}>{b.name}</h3>
+              </div>
+              <div style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e0197d', marginBottom: 14 }}>{b.category}</div>
+
+              {b.brandDescription && (
+                <p style={{ fontFamily: 'var(--fm)', fontSize: 12, lineHeight: 1.7, color: 'rgba(255,255,255,0.58)', margin: '0 0 16px' }}>{b.brandDescription}</p>
+              )}
+
+              {b.films?.some((f) => f.youtube) ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
+                  {b.films.map((f, fi) => (
+                    <a key={`${f.slug}-${fi}`} href="/case-studies" style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', display: 'block', textDecoration: 'none' }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`https://img.youtube.com/vi/${f.youtube ?? ''}/hqdefault.jpg`} alt={f.title} style={{ width: '100%', display: 'block', aspectRatio: '16/9', objectFit: 'cover' }} />
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)' }} />
+                      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 36, height: 36, borderRadius: '50%', background: '#e0197d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 2l9 5-9 5V2z" fill="#fff" /></svg>
+                      </div>
+                      <div style={{ position: 'absolute', bottom: 10, left: 12, right: 12 }}>
+                        <div style={{ fontFamily: 'var(--fd)', fontSize: 13, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>{f.title}</div>
+                        <div style={{ fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#e0197d', marginTop: 2 }}>{f.category}</div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
+                  {[b.imgs.main, b.imgs.alt1].map((src, ii) => (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img key={ii} src={src} alt={b.name} style={{ width: '100%', borderRadius: 12, display: 'block', aspectRatio: '16/9', objectFit: 'cover' }} />
+                  ))}
+                </div>
+              )}
+
+              <a href={b.url} style={{ fontFamily: 'var(--fm)', fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                Explore Brand →
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section ref={sectionRef} style={{ height: `${TOTAL * 100}vh`, background: SIDEBAR, position: 'relative' }}>

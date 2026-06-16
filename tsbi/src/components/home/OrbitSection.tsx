@@ -2,11 +2,11 @@ import Link from 'next/link';
 
 export default function OrbitSection() {
   return (
-    <section className="relative overflow-hidden bg-[#f8f3ee] py-24" style={{ paddingLeft: '40px', paddingRight: '10px' }}>
-      <div className="flex w-full items-center">
+    <section className="relative overflow-hidden bg-[#f8f3ee] px-5 py-16 sm:py-24 lg:pl-10 lg:pr-2.5">
+      <div className="flex w-full flex-col items-center gap-10 lg:flex-row lg:gap-0">
 
         {/* ── LEFT TEXT ── */}
-        <div className="reveal w-[420px] shrink-0 pr-7" style={{ marginLeft: '40px' }}>
+        <div className="reveal w-full pr-0 sm:pr-7 lg:ml-10 lg:w-[420px] lg:shrink-0">
           {/* section label */}
           <div className="mb-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[.18em] text-[#9b9b9b]">
             <span className="block h-px w-4 bg-[rgba(10,10,10,.45)]" />
@@ -45,7 +45,7 @@ export default function OrbitSection() {
         </div>
 
         {/* ── RIGHT ORBIT VISUAL ── */}
-        <div className="reveal d2 relative h-[680px] flex-1 overflow-hidden">
+        <div className="reveal d2 relative h-[360px] w-full overflow-hidden sm:h-[480px] lg:h-[680px] lg:flex-1">
           <svg className="h-full w-full" viewBox="0 0 640 560" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <radialGradient id="coreBlob" cx="50%" cy="50%" r="50%">

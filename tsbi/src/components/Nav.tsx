@@ -26,6 +26,7 @@ const navLinks = [
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [svcOpen, setSvcOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const svcTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -35,6 +36,11 @@ export default function Nav() {
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Close the mobile menu on navigation.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   const openSvc = () => {
     if (svcTimer.current) clearTimeout(svcTimer.current);
@@ -98,7 +104,36 @@ export default function Nav() {
         <Link href="/contact" className="nav-talk">
           Contact
         </Link>
+        <button
+          className={`nav-burger${menuOpen ? ' open' : ''}`}
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </div>
+
+      {menuOpen && (
+        <div className="nav-mobile-menu">
+          {navLinks.map(({ href, label }) => (
+            <Link key={href} href={href} onClick={() => setMenuOpen(false)}>
+              {label}
+            </Link>
+          ))}
+          <div className="nav-mobile-services-label">Services</div>
+          {serviceLinks.map((s) => (
+            <Link key={s.href} href={s.href} className="nav-mobile-sub" onClick={() => setMenuOpen(false)}>
+              {s.label}
+            </Link>
+          ))}
+          <Link href="/contact" className="nav-mobile-cta" onClick={() => setMenuOpen(false)}>
+            Contact →
+          </Link>
+        </div>
+      )}
     </nav>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const MAGENTA = '#e0197d';
@@ -404,6 +404,19 @@ function ReelCard({ r }: { r: { type: 'reel' | 'p'; code: string; img: string } 
 
 /* ─── Page ──────────────────────────────────────────── */
 export default function InfluencerManagementPage() {
+  const [vp, setVp] = useState({ w: 1280, h: 800 });
+  useEffect(() => {
+    const m = () => setVp({ w: window.innerWidth, h: window.innerHeight });
+    m();
+    window.addEventListener('resize', m);
+    return () => window.removeEventListener('resize', m);
+  }, []);
+  const isMobile = vp.w < 768;
+  // Scale the fixed-size collage down so it fits the mobile width.
+  const COLLAGE_W = 460;
+  const collageH = Math.max(580, Math.min(740, vp.h * 0.84));
+  const collageScale = isMobile ? Math.min(1, (vp.w - 40) / COLLAGE_W) : 1;
+
   return (
     <>
       {/* ── HERO ── */}
@@ -413,16 +426,16 @@ export default function InfluencerManagementPage() {
           'radial-gradient(ellipse at 12% 42%, rgba(224,25,125,.2) 0%, transparent 48%),' +
           'radial-gradient(ellipse at 50% 95%, rgba(100,30,200,.3) 0%, transparent 50%),' +
           'linear-gradient(135deg,#030712 0%,#0b0820 55%,#180432 100%)',
-        minHeight: '100vh',
+        minHeight: isMobile ? 'auto' : '100vh',
         display: 'flex',
         alignItems: 'center',
-        padding: '130px 48px 80px',
+        padding: isMobile ? '100px 20px 56px' : '130px 48px 80px',
         overflow: 'hidden',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 40, width: '100%', flexWrap: 'wrap' }}>
 
           {/* LEFT: copy */}
-          <div style={{ flex: '1 1 400px', minWidth: 300 }}>
+          <div style={{ flex: '1 1 400px', minWidth: isMobile ? 0 : 300, width: isMobile ? '100%' : undefined }}>
 
             {/* Label pill */}
             <div style={{
@@ -532,9 +545,23 @@ export default function InfluencerManagementPage() {
             </div>
           </div>
 
-          {/* RIGHT: scattered influencer collage */}
-          <div style={{ flex: '1 1 520px', minWidth: 400, position: 'relative' }}>
-            <InfluencerCollage />
+          {/* RIGHT: scattered influencer collage — scaled to fit + stacked below copy on mobile */}
+          <div style={{
+            flex: '1 1 520px',
+            minWidth: isMobile ? 0 : 400,
+            width: isMobile ? '100%' : undefined,
+            position: 'relative',
+            overflow: isMobile ? 'hidden' : 'visible',
+            height: isMobile ? collageH * collageScale : undefined,
+            marginTop: isMobile ? 12 : 0,
+          }}>
+            {isMobile ? (
+              <div style={{ width: COLLAGE_W, height: collageH, transform: `scale(${collageScale})`, transformOrigin: 'top left' }}>
+                <InfluencerCollage />
+              </div>
+            ) : (
+              <InfluencerCollage />
+            )}
           </div>
         </div>
       </section>
@@ -582,7 +609,7 @@ export default function InfluencerManagementPage() {
         background: '#070e1e',
         borderTop: '1px solid rgba(255,255,255,.06)',
         borderBottom: '1px solid rgba(255,255,255,.06)',
-        padding: '40px 48px',
+        padding: isMobile ? '32px 14px' : '40px 48px',
         display: 'flex', gap: 0,
       }}>
         {[
@@ -593,11 +620,11 @@ export default function InfluencerManagementPage() {
           <div key={stat.label} style={{
             flex: 1, textAlign: 'center',
             borderRight: i < 2 ? '1px solid rgba(255,255,255,.08)' : 'none',
-            padding: '0 20px',
+            padding: isMobile ? '0 6px' : '0 20px',
           }}>
             <div style={{
               fontFamily: 'var(--fd)',
-              fontSize: 'clamp(32px,4vw,56px)',
+              fontSize: isMobile ? 22 : 'clamp(32px,4vw,56px)',
               fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 8,
             }}>
               {stat.val}
@@ -615,7 +642,7 @@ export default function InfluencerManagementPage() {
       {/* ── FEATURE CARDS ── */}
       <section style={{ background: 'var(--navy)', padding: '80px 48px' }}>
         <div className="sec-label" style={{ color: MAGENTA, marginBottom: 40 }}>What We Manage</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 24 }}>
           {cards.map((card) => (
             <div key={card.num} style={{
               background: 'rgba(255,255,255,.04)',
