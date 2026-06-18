@@ -75,31 +75,40 @@ export default function DigitalTransformationPage() {
   return (
     <>
       {/* ── HERO ── */}
-      <section className="bg-white overflow-hidden px-12 pt-[140px] pb-16 max-[900px]:px-8 max-[900px]:pt-[120px] max-[900px]:pb-14">
+      <section
+        className="overflow-hidden px-12 pt-[140px] pb-16 max-[900px]:px-8 max-[900px]:pt-[120px] max-[900px]:pb-14"
+        style={{
+          background:
+            'radial-gradient(circle at 78% 22%, rgba(224,25,125,.38) 0%, transparent 45%),' +
+            'radial-gradient(circle at 90% 88%, rgba(26,106,255,.34) 0%, transparent 45%),' +
+            'radial-gradient(circle at 8% 70%, rgba(224,25,125,.18) 0%, transparent 40%),' +
+            'linear-gradient(135deg,#120014,#0a0a18)',
+        }}
+      >
         <div className="mx-auto grid max-w-[1300px] items-center gap-9 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12">
           {/* left — copy */}
           <div>
             <div className="sec-label pink mb-[18px]">Technology · Strategy · Experience</div>
-            <h1 className="font-fd m-0 text-[clamp(34px,5vw,62px)] font-black leading-none tracking-[-0.03em] text-ink">
+            <h1 className="font-fm m-0 text-[clamp(34px,5vw,62px)] font-black leading-none tracking-[-0.03em] text-white">
               Tech Solutions That{' '}
-              <span className="text-[#7b1fa2]">Build</span>,{' '}
+              <span className="text-[#b96cff]">Build</span>,{' '}
               <span className="text-magenta">Launch</span> &{' '}
-              <span className="text-electric">Scale</span>{' '}
+              <span className="text-[#4d8bff]">Scale</span>{' '}
               Digital Experiences
             </h1>
-            <p className="font-fb mt-6 mb-8 max-w-[540px] text-base font-light leading-[1.8] text-muted">
+            <p className="font-fb mt-6 mb-8 max-w-[540px] text-base font-light leading-[1.8] text-white/65">
               TSBI is a digital product and technology partner that helps brands create powerful websites,
               web &amp; mobile apps, microsites, campaign tech, eCommerce experiences, dashboards and custom
               platforms that drive growth.
             </p>
             <div className="flex flex-wrap gap-3.5">
               <Link href="#offer" className="btn-fill" style={{ background: 'var(--magenta)' }}>Explore Services →</Link>
-              <Link href="/case-studies" className="btn-border">▶ View Work</Link>
+              <Link href="/case-studies" className="btn-border" style={{ color: 'rgba(255,255,255,.8)', borderColor: 'rgba(255,255,255,.3)' }}>▶ View Work</Link>
             </div>
             <div className="mt-9 flex flex-wrap items-center gap-[22px]">
-              <span className="font-fm -mb-2 w-full text-[11px] tracking-[0.04em] text-faint">Trusted by startups, enterprises &amp; global brands</span>
+              <span className="font-fm -mb-2 w-full text-[11px] tracking-[0.04em] text-white/45">Trusted by startups, enterprises &amp; global brands</span>
               {logos.map((l) => (
-                <span key={l.name} className="font-fd text-[19px] font-extrabold leading-none opacity-90" style={{ color: l.color }}>{l.name}</span>
+                <span key={l.name} className="font-fd text-[19px] font-extrabold leading-none text-white/75">{l.name}</span>
               ))}
             </div>
           </div>
@@ -114,29 +123,9 @@ export default function DigitalTransformationPage() {
             {/* laptop */}
             <div className="absolute left-[9%] top-[7%] z-[2] w-[80%]">
               <div className="rounded-t-xl border-[7px] border-[#161a2c] bg-[#11152a] p-3">
-                <div className="rounded-lg bg-white p-3.5">
-                  <div className="mb-3 flex items-center justify-between">
-                    <span className="font-fm text-[11px] font-semibold text-ink">Welcome back, Admin</span>
-                    <span className="font-fm rounded-full bg-magenta px-2 py-[3px] text-[9px] text-white">Live</span>
-                  </div>
-                  <div className="mb-3 grid grid-cols-3 gap-2">
-                    {[['12.4K', 'Reach'], ['8.7K', 'Plays'], ['5.6%', 'CTR']].map(([v, k]) => (
-                      <div key={k} className="rounded-md bg-off px-2.5 py-2">
-                        <b className="font-fd block text-[17px] font-extrabold leading-none text-ink">{v}</b>
-                        <i className="font-fm text-[8px] not-italic uppercase tracking-[0.1em] text-muted">{k}</i>
-                      </div>
-                    ))}
-                  </div>
-                  <svg className="block h-[76px] w-full" viewBox="0 0 300 76" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="dtArea" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0" stopColor="#e0197d" stopOpacity="0.35" />
-                        <stop offset="1" stopColor="#e0197d" stopOpacity="0" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M0 60 L40 50 L80 56 L120 34 L160 42 L200 22 L240 30 L300 12 L300 76 L0 76 Z" fill="url(#dtArea)" />
-                    <path d="M0 60 L40 50 L80 56 L120 34 L160 42 L200 22 L240 30 L300 12" fill="none" stroke="#e0197d" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                <div className="overflow-hidden rounded-lg bg-white">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/tech/1.png" alt="Lipton" className="block aspect-16/10 w-full object-cover" />
                 </div>
               </div>
               <div className="-ml-[8%] h-[13px] w-[116%] rounded-b-xl bg-gradient-to-b from-[#d4d8e3] to-[#a9aebd] shadow-[0_16px_30px_rgba(0,0,0,0.18)]" />

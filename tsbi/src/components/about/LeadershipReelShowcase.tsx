@@ -51,7 +51,7 @@ const DEFAULT_SLIDES: Slide[] = [
 
 const FD = 'font-[family-name:var(--fd)]';
 const FM = 'font-[family-name:var(--fm)]';
-const WINE = '#8a234c';
+const WINE = '#7c3aed';
 
 const VALUES = [
   {
@@ -145,12 +145,12 @@ function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; 
         {/* offset accent frame */}
         <span
           className={[
-            'absolute z-0 rounded-[22px] border border-[#8a234c]/30 bg-white/35',
+            'absolute z-0 rounded-[22px] border border-magenta/30 bg-white/5',
             photoLeft ? 'top-4 left-4 -right-4 -bottom-4' : 'top-4 right-4 -left-4 -bottom-4',
           ].join(' ')}
         />
         <div
-          className="relative z-[1] aspect-[4/5] overflow-hidden rounded-[20px] border border-[#8a234c]/20 bg-[#efe7df] bg-cover bg-top shadow-[0_30px_70px_rgba(75,15,40,0.16)]"
+          className="relative z-[1] aspect-[4/5] overflow-hidden rounded-[20px] border border-magenta/20 bg-navy bg-cover bg-top shadow-[0_30px_70px_rgba(75,15,40,0.16)]"
           style={{ backgroundImage: `url(${slide.cardImage})` }}
         />
       </div>
@@ -162,7 +162,7 @@ function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; 
           photoLeft ? 'lg:col-start-2' : 'lg:order-1 lg:col-start-1 lg:items-end lg:text-right',
         ].join(' ')}
       >
-        <h3 className={`${FD} m-0 text-[clamp(28px,3.4vw,40px)] font-bold leading-[1.05] tracking-[-0.01em] text-ink`}>
+        <h3 className={`${FD} m-0 text-[clamp(28px,3.4vw,40px)] font-bold leading-[1.05] tracking-[-0.01em] text-white`}>
           {slide.title}
         </h3>
 
@@ -172,14 +172,14 @@ function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; 
           </p>
         )}
 
-        <p className="mt-5 max-w-[440px] text-[15px] font-light leading-[1.85] text-[#281c20]/65">
+        <p className="mt-5 max-w-[440px] text-[15px] font-light leading-[1.85] text-white/65">
           {slide.intro}
         </p>
 
         {slide.ctaHref && (
           <Link
             href={slide.ctaHref}
-            className={`${FM} mt-7 inline-flex items-center gap-2.5 rounded border border-[#8a234c]/35 bg-transparent px-[22px] py-[13px] text-[11px] font-bold uppercase tracking-[.18em] text-ink no-underline transition-colors duration-300 hover:border-magenta hover:bg-magenta hover:text-white`}
+            className={`${FM} mt-7 inline-flex items-center gap-2.5 rounded border border-white/25 bg-transparent px-[22px] py-[13px] text-[11px] font-bold uppercase tracking-[.18em] text-white no-underline transition-colors duration-300 hover:border-magenta hover:bg-magenta hover:text-white`}
           >
             {slide.ctaLabel || 'Know More'} <span aria-hidden>→</span>
           </Link>
@@ -192,7 +192,7 @@ function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; 
           <Sprig flip={!photoLeft} />
         </span>
         <span
-          className={`${FM} grid h-[50px] w-[50px] place-items-center rounded-full border-[3px] border-[#faf5ef] text-[13px] font-semibold tracking-[.04em] text-[#f7ede9] shadow-[0_10px_26px_rgba(75,15,40,0.28)]`}
+          className={`${FM} grid h-[50px] w-[50px] place-items-center rounded-full border-[3px] border-navy text-[13px] font-semibold tracking-[.04em] text-[#f7ede9] shadow-[0_10px_26px_rgba(75,15,40,0.28)]`}
           style={{ background: WINE }}
         >
           {displayNum}
@@ -209,7 +209,7 @@ function ReelTile({ slide, onPlay }: { slide: Slide; onPlay: () => void }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      className="overflow-hidden rounded-[20px] border border-[#8a234c]/15 bg-white shadow-[0_18px_50px_rgba(75,15,40,0.08)]"
+      className="overflow-hidden rounded-[20px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] shadow-[0_18px_50px_rgba(75,15,40,0.08)]"
     >
       <button
         onClick={onPlay}
@@ -225,8 +225,8 @@ function ReelTile({ slide, onPlay }: { slide: Slide; onPlay: () => void }) {
       </button>
       <div className="p-[22px]">
         <div className={`${FM} text-[10px] font-bold uppercase tracking-[.18em] text-magenta`}>{slide.num} · Reel</div>
-        <h3 className={`${FD} my-2 text-2xl leading-tight text-ink`}>{slide.title}</h3>
-        {slide.intro && <p className="m-0 text-sm leading-[1.7] text-[#281c20]/60">{slide.intro}</p>}
+        <h3 className={`${FD} my-2 text-2xl leading-tight text-white`}>{slide.title}</h3>
+        {slide.intro && <p className="m-0 text-sm leading-[1.7] text-white/60">{slide.intro}</p>}
       </div>
     </motion.article>
   );
@@ -245,7 +245,7 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
       className="relative overflow-hidden px-[clamp(18px,5vw,72px)] py-[clamp(72px,8vw,120px)]"
       style={{
         background:
-          'radial-gradient(circle at 88% 8%, rgba(224,25,125,.10), transparent 38%), linear-gradient(180deg, #fbf6f0 0%, #f7efe8 100%)',
+          'radial-gradient(circle at 88% 8%, rgba(224,25,125,.10), transparent 38%), linear-gradient(180deg, #050b1a 0%, #070e1e 100%)',
       }}
     >
       {/* faint topographic texture, left edge */}
@@ -255,7 +255,7 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
         height="520"
         viewBox="0 0 420 520"
         fill="none"
-        stroke="rgba(138,35,76,.10)"
+        stroke="rgba(255,255,255,0.06)"
         className="pointer-events-none absolute left-[-60px] top-10 z-0"
       >
         {Array.from({ length: 7 }).map((_, i) => (
@@ -278,7 +278,7 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
             <span className="h-px w-[30px] bg-magenta/50" />
           </div>
 
-          <h2 className={`${FD} m-0 text-[clamp(34px,5.2vw,64px)] font-semibold leading-[1.08] tracking-[-0.01em] text-ink`}>
+          <h2 className={`${FD} m-0 text-[clamp(34px,5.2vw,64px)] font-semibold leading-[1.08] tracking-[-0.01em] text-white`}>
             Guided by Purpose.
             <br />
             Driven by <em className="italic text-magenta">Impact.</em>
@@ -293,7 +293,7 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
             </svg>
           </div>
 
-          <p className="mx-auto max-w-[540px] text-[15.5px] font-light leading-[1.8] text-[#281c20]/60">
+          <p className="mx-auto max-w-[540px] text-[15.5px] font-light leading-[1.8] text-white/60">
             At TSBI, our leadership blends deep expertise with a shared purpose to build businesses that create lasting value for people and communities.
           </p>
         </motion.header>
@@ -302,7 +302,7 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
         <div className="relative grid gap-y-[clamp(56px,7vw,96px)]">
           <span
             className="absolute left-1/2 top-5 bottom-5 hidden w-px -translate-x-1/2 lg:block"
-            style={{ background: 'linear-gradient(180deg, transparent, rgba(138,35,76,.35) 12%, rgba(138,35,76,.35) 88%, transparent)' }}
+            style={{ background: 'linear-gradient(180deg, transparent, rgba(224,25,125,.35) 12%, rgba(224,25,125,.35) 88%, transparent)' }}
           />
           {leaders.map((leader, index) => (
             <LeaderRow key={leader.id} slide={leader} index={index} displayNum={String(index + 1).padStart(2, '0')} />
@@ -320,18 +320,18 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
         >
           <div className="flex flex-[1_1_360px] items-start gap-[18px]">
             <span className={`${FD} text-[64px] leading-[0.7] text-magenta opacity-45`}>“</span>
-            <p className={`${FD} m-0 text-[clamp(18px,2vw,23px)] font-medium italic leading-[1.5] text-ink`}>
+            <p className={`${FD} m-0 text-[clamp(18px,2vw,23px)] font-medium italic leading-[1.5] text-white`}>
               We believe in building with integrity, partnering with purpose, and scaling impact that lasts.
             </p>
           </div>
 
-          <div className="hidden w-px self-stretch bg-[#8a234c]/20 sm:block" />
+          <div className="hidden w-px self-stretch bg-magenta/20 sm:block" />
 
           <div className="flex flex-wrap gap-[clamp(22px,3vw,40px)]">
             {VALUES.map((v) => (
               <div key={v.label} className="flex min-w-[86px] flex-col gap-2.5">
                 <span className="text-magenta">{v.icon}</span>
-                <span className={`${FM} text-[11px] font-semibold leading-[1.45] tracking-[.06em] text-[#281c20]/70`}>
+                <span className={`${FM} text-[11px] font-semibold leading-[1.45] tracking-[.06em] text-white/70`}>
                   {v.label}
                 </span>
               </div>

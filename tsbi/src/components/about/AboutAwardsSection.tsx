@@ -5,10 +5,10 @@ import { motion, useInView, useMotionValue, animate as fmAnimate } from 'framer-
 import Link from 'next/link';
 
 /* ── palette ── */
-const PINK  = '#e91e7e';
+const PINK  = '#e0197d';
 const NAVY  = '#171066';
-const GOLD  = '#b87922';
-const MUTED = '#6f6f6f';
+const GOLD  = '#d4a843';
+const MUTED = 'rgba(255,255,255,0.6)';
 
 /* ── carousel constants ── */
 const CARD_W   = 274;
@@ -271,7 +271,7 @@ export default function AboutAwardsSection() {
   return (
     <section
       ref={sectionRef}
-      style={{ background:'var(--off)', padding: isMobile ? '48px 16px 0' : '72px 48px 0', overflow:'hidden' }}
+      style={{ background:'#070e1e', padding: isMobile ? '48px 16px 0' : '72px 48px 0', overflow:'hidden' }}
     >
       {/* ════ TWO-COLUMN ════ */}
       <div style={{ display:'flex', gap: isMobile ? 28 : 56, alignItems:'center', flexWrap:'wrap' }}>
@@ -291,7 +291,7 @@ export default function AboutAwardsSection() {
               <motion.div key={line}
                 initial={{ y:'110%' }} animate={isVisible ? { y:0 } : {}}
                 transition={{ duration:0.7, delay:0.12+i*0.1, ease:[0.22,1,0.36,1] }}
-                style={{ fontFamily:'var(--fd)', fontWeight:900, fontSize:'clamp(30px,4.2vw,50px)', lineHeight:1.02, letterSpacing:'-0.02em', color:i===0?'#0a0a0a':PINK, fontStyle:i===1?'italic':'normal' }}
+                style={{ fontFamily:'var(--fd)', fontWeight:900, fontSize:'clamp(30px,4.2vw,50px)', lineHeight:1.02, letterSpacing:'-0.02em', color:i===0?'#fff':PINK, fontStyle:i===1?'italic':'normal' }}
               >{line}</motion.div>
             ))}
           </div>
@@ -317,7 +317,7 @@ export default function AboutAwardsSection() {
           initial={{ opacity:0, x:64, scale:0.96 }}
           animate={isVisible ? { opacity:1, x:0, scale:1 } : {}}
           transition={{ duration:0.8, delay:0.18, ease:[0.22,1,0.36,1] }}
-          style={{ flex:'1 1 480px', background:'#fff', borderRadius:24, border:'1px solid rgba(0,0,0,0.07)', boxShadow:'0 24px 80px rgba(23,16,102,0.08)', overflow:'hidden', position:'relative' }}
+          style={{ flex:'1 1 480px', background:'rgba(255,255,255,0.04)', borderRadius:24, border:'1px solid rgba(255,255,255,0.08)', boxShadow:'0 24px 80px rgba(0,0,0,0.5)', overflow:'hidden', position:'relative' }}
         >
           {/* glow */}
           <div style={{ position:'absolute', top:-50, right:-50, width:200, height:200, borderRadius:'50%', background:'radial-gradient(circle,rgba(233,30,126,0.07) 0%,transparent 70%)', pointerEvents:'none' }} />
@@ -327,7 +327,7 @@ export default function AboutAwardsSection() {
             <div style={{ flex:'0 0 auto', width: isMobile ? '100%' : 260, padding: isMobile ? '24px 20px 16px' : '28px 24px 24px', display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
               <div>
                 <div style={{ fontFamily:'var(--fm)', fontSize:9, letterSpacing:'0.2em', textTransform:'uppercase', color:PINK, marginBottom:12 }}>Awards &amp; Recognitions</div>
-                <div style={{ fontFamily:'var(--fd)', fontSize:'clamp(18px,2.2vw,26px)', fontWeight:800, color:'#0a0a0a', lineHeight:1.1, marginBottom:4 }}>Honours that</div>
+                <div style={{ fontFamily:'var(--fd)', fontSize:'clamp(18px,2.2vw,26px)', fontWeight:800, color:'#fff', lineHeight:1.1, marginBottom:4 }}>Honours that</div>
                 <div style={{ fontFamily:'var(--fd)', fontSize:'clamp(18px,2.2vw,26px)', fontWeight:800, color:PINK, fontStyle:'italic', lineHeight:1.1, marginBottom:16 }}>inspire us.</div>
                 <div style={{ width:26, height:2.5, background:PINK, borderRadius:2, marginBottom:14 }} />
                 <p style={{ fontFamily:'var(--fb)', fontSize:12.5, color:MUTED, fontWeight:300, lineHeight:1.7, margin:0 }}>
@@ -340,7 +340,7 @@ export default function AboutAwardsSection() {
             </div>
 
             {/* trophies */}
-            <div style={{ flex:1, minHeight: isMobile ? 170 : undefined, background:'linear-gradient(135deg,#fdf9f5 0%,#f9f4ef 60%,#f5eeea 100%)', position:'relative', display:'flex', alignItems:'flex-end', justifyContent:'center', padding:'20px 12px 0', gap:4, overflow:'hidden' }}>
+            <div style={{ flex:1, minHeight: isMobile ? 170 : undefined, background:'linear-gradient(135deg,#0d1528 0%,#0b1020 100%)', position:'relative', display:'flex', alignItems:'flex-end', justifyContent:'center', padding:'20px 12px 0', gap:4, overflow:'hidden' }}>
               <div style={{ position:'absolute', bottom:'22%', left:'50%', transform:'translateX(-50%)', width:200, height:100, borderRadius:'50%', background:'radial-gradient(circle,rgba(184,121,34,0.13) 0%,transparent 70%)', pointerEvents:'none' }} />
               {HERO_TROPHIES.map((t, i) => (
                 <motion.div key={i}
@@ -356,22 +356,22 @@ export default function AboutAwardsSection() {
                   >
                     <Trophy style={t.style} height={t.h} color={t.color} />
                   </motion.div>
-                  <div style={{ width:t.h*0.52, height:7, background:'linear-gradient(to right,rgba(0,0,0,0.05),rgba(0,0,0,0.1),rgba(0,0,0,0.05))', borderRadius:4, marginTop:3 }} />
+                  <div style={{ width:t.h*0.52, height:7, background:'linear-gradient(to right,rgba(255,255,255,0.04),rgba(255,255,255,0.08),rgba(255,255,255,0.04))', borderRadius:4, marginTop:3 }} />
                 </motion.div>
               ))}
             </div>
           </div>
 
           {/* stat strip */}
-          <div ref={statsRef} style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', borderTop:'1px solid rgba(0,0,0,0.06)' }}>
+          <div ref={statsRef} style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', borderTop:'1px solid rgba(255,255,255,0.08)' }}>
             {[
               { label:'Awards Won',           val:c1, suf:'+', pink:true  },
               { label:'Festivals & Platforms', val:c2, suf:'+', pink:false },
               { label:'Years of Recognition',  val:c3, suf:'+', pink:false },
               { label:'Drive to Go Further',   val:null, suf:'∞', pink:false },
             ].map((s, i) => (
-              <div key={s.label} style={{ padding: isMobile ? '14px 8px' : '18px 16px', borderRight:i<3?'1px solid rgba(0,0,0,0.06)':'none' }}>
-                <div style={{ fontFamily:'var(--fd)', fontSize: isMobile ? (s.suf==='∞'?22:20) : (s.suf==='∞'?30:26), fontWeight:900, lineHeight:1, color:s.pink?PINK:'#0a0a0a', letterSpacing:'-0.02em', marginBottom:5 }}>
+              <div key={s.label} style={{ padding: isMobile ? '14px 8px' : '18px 16px', borderRight:i<3?'1px solid rgba(255,255,255,0.08)':'none' }}>
+                <div style={{ fontFamily:'var(--fd)', fontSize: isMobile ? (s.suf==='∞'?22:20) : (s.suf==='∞'?30:26), fontWeight:900, lineHeight:1, color:s.pink?PINK:'#fff', letterSpacing:'-0.02em', marginBottom:5 }}>
                   {s.val !== null ? s.val : ''}{s.suf}
                 </div>
                 <div style={{ fontFamily:'var(--fm)', fontSize: isMobile ? 7.5 : 8, letterSpacing:'0.1em', textTransform:'uppercase', color:MUTED, lineHeight:1.3 }}>{s.label}</div>
@@ -397,7 +397,7 @@ export default function AboutAwardsSection() {
             <motion.div
               initial={{ opacity:0, y:14 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
               transition={{ duration:0.6, delay:0.1 }}
-              style={{ fontFamily:'var(--fd)', fontSize:'clamp(20px,2.8vw,34px)', fontWeight:700, lineHeight:1.05, letterSpacing:'-0.02em', color:'#0a0a0a' }}
+              style={{ fontFamily:'var(--fd)', fontSize:'clamp(20px,2.8vw,34px)', fontWeight:700, lineHeight:1.05, letterSpacing:'-0.02em', color:'#fff' }}
             >
               Celebrating ideas that made an{' '}
               <em style={{ color:PINK, fontStyle:'italic' }}>impact.</em>
@@ -435,7 +435,7 @@ export default function AboutAwardsSection() {
         <div style={{ display:'flex', justifyContent:'center', gap:7, marginTop:24 }}>
           {AWARD_CARDS.map((_, i) => (
             <motion.div key={i}
-              animate={{ width:i===carouselIdx?24:8, background:i===carouselIdx?PINK:'rgba(23,16,102,0.18)' }}
+              animate={{ width:i===carouselIdx?24:8, background:i===carouselIdx?PINK:'rgba(255,255,255,0.18)' }}
               transition={{ duration:0.3 }}
               onClick={() => jumpTo(i)}
               style={{ height:3, borderRadius:2, cursor:'pointer' }}
@@ -452,7 +452,7 @@ function CtaBtn({ href, children }: { href:string; children:React.ReactNode }) {
   const [hov, setHov] = useState(false);
   return (
     <Link href={href} onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
-      style={{ display:'inline-flex', alignItems:'center', gap:6, background:hov?PINK:'#0a0a0a', color:'#fff', borderRadius:999, padding:'12px 26px', fontFamily:'var(--fm)', fontSize:11, fontWeight:600, letterSpacing:'0.14em', textTransform:'uppercase', textDecoration:'none', boxShadow:hov?`0 8px 28px rgba(233,30,126,0.35)`:'0 4px 14px rgba(0,0,0,0.18)', transition:'background 0.24s, box-shadow 0.24s' }}
+      style={{ display:'inline-flex', alignItems:'center', gap:6, background:hov?PINK:'#e0197d', color:'#fff', borderRadius:999, padding:'12px 26px', fontFamily:'var(--fm)', fontSize:11, fontWeight:600, letterSpacing:'0.14em', textTransform:'uppercase', textDecoration:'none', boxShadow:hov?`0 8px 28px rgba(224,25,126,0.35)`:'0 8px 28px rgba(224,25,126,0.35)', transition:'background 0.24s, box-shadow 0.24s' }}
     >{children}</Link>
   );
 }
@@ -466,7 +466,7 @@ function ArrowBtn({ disabled, onClick, children }: { disabled:boolean; onClick:(
       disabled={disabled}
       onMouseEnter={()=>setHov(true)}
       onMouseLeave={()=>setHov(false)}
-      style={{ width:40, height:40, borderRadius:'50%', background:hov&&!disabled?'#0a0a0a':'#fff', border:'1px solid rgba(0,0,0,0.12)', boxShadow:'0 2px 12px rgba(0,0,0,0.08)', display:'flex', alignItems:'center', justifyContent:'center', cursor:disabled?'default':'pointer', opacity:disabled?0.28:1, transition:'all 0.22s', color:hov&&!disabled?'#fff':'#0a0a0a', fontFamily:'var(--fb)', fontSize:15 }}
+      style={{ width:40, height:40, borderRadius:'50%', background:hov&&!disabled?'#e0197d':'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.15)', boxShadow:'0 2px 12px rgba(0,0,0,0.08)', display:'flex', alignItems:'center', justifyContent:'center', cursor:disabled?'default':'pointer', opacity:disabled?0.28:1, transition:'all 0.22s', color:'#fff', fontFamily:'var(--fb)', fontSize:15 }}
       aria-label={String(children)}
     >{children}</button>
   );
@@ -483,10 +483,10 @@ function AwardCard({ award, index }: { award:(typeof AWARD_CARDS)[0]; index:numb
       transition={{ duration:0.55, delay:Math.min(index, 4)*0.07, ease:[0.22,1,0.36,1] }}
       onHoverStart={()=>setHov(true)}
       onHoverEnd={()=>setHov(false)}
-      style={{ flex:`0 0 ${CARD_W}px`, background:'#fff', borderRadius:16, border:`1px solid ${hov?'rgba(233,30,126,0.26)':'rgba(0,0,0,0.07)'}`, boxShadow:hov?'0 16px 48px rgba(0,0,0,0.12)':'0 5px 20px rgba(0,0,0,0.06)', padding:'18px 18px 16px', display:'flex', gap:14, alignItems:'flex-start', cursor:'pointer', transition:'border-color 0.25s, box-shadow 0.3s, transform 0.3s', transform:hov?'translateY(-5px)':'translateY(0)' }}
+      style={{ flex:`0 0 ${CARD_W}px`, background:'rgba(255,255,255,0.04)', borderRadius:16, border:`1px solid ${hov?'rgba(224,25,125,0.4)':'rgba(255,255,255,0.08)'}`, boxShadow:hov?'0 16px 48px rgba(0,0,0,0.5)':'0 5px 20px rgba(0,0,0,0.35)', padding:'18px 18px 16px', display:'flex', gap:14, alignItems:'flex-start', cursor:'pointer', transition:'border-color 0.25s, box-shadow 0.3s, transform 0.3s', transform:hov?'translateY(-5px)':'translateY(0)' }}
     >
       {/* trophy icon */}
-      <div style={{ width:60, height:72, borderRadius:10, background:'linear-gradient(135deg,#fdf9f5,#f5eeea)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+      <div style={{ width:60, height:72, borderRadius:10, background:'rgba(255,255,255,0.05)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
         {/* Replace with: <img src={award.img} alt={award.platform} style={{width:'100%',height:'100%',objectFit:'contain',padding:'6px'}}/> */}
         <Trophy style={award.style} height={52} color={award.color} />
       </div>

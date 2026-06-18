@@ -45,6 +45,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${playfair.variable} ${dmSans.variable} ${spaceGrotesk.variable}`}
+      suppressHydrationWarning
     >
       <body>
         <ScrollReveal />

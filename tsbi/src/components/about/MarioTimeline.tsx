@@ -4,10 +4,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence, useInView, useMotionValue, animate as fmAnimate } from 'framer-motion';
 
 /* ── palette ── */
-const NAVY  = '#171066';
-const PINK  = '#ec0f79';
-const MUTED = '#6d6a8d';
-const BG    = '#fbfaf7';
+const NAVY  = '#ffffff';
+const PINK  = '#e0197d';
+const MUTED = 'rgba(255,255,255,0.6)';
+const BG    = '#08063a';
 
 /* ── game world constants ── */
 const WORLD_H   = 520;

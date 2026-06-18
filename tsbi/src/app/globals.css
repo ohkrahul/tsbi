@@ -282,6 +282,29 @@ body {
 .hero-sr-title { font-family: var(--fm); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
 .hero-sr-sub { font-family: var(--fm); font-size: 9px; color: var(--muted); }
 
+/* ── ABOUT PAGE — dark cinematic theme (scoped; keeps shared .hero/.fcta light elsewhere) ── */
+.about-dark .hero {
+  background:
+    radial-gradient(ellipse at 78% 55%, rgba(120,40,230,.5) 0%, transparent 52%),
+    radial-gradient(ellipse at 12% 42%, rgba(224,25,125,.2) 0%, transparent 48%),
+    radial-gradient(ellipse at 50% 95%, rgba(100,30,200,.3) 0%, transparent 50%),
+    linear-gradient(135deg,#030712 0%,#0b0820 55%,#180432 100%);
+}
+.about-dark .hero-h1 { color: #fff; }
+.about-dark .hero-body { color: rgba(255,255,255,.6); }
+.about-dark .hero-eyebrow { color: rgba(255,255,255,.5); }
+.about-dark .hero-eyebrow::before { background: rgba(255,255,255,.4); }
+.about-dark .hero .btn-fill { background: var(--magenta); }
+.about-dark .hero .btn-border { color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.3); }
+.about-dark .hero .btn-border:hover { border-color: #fff; background: rgba(255,255,255,.08); }
+
+.about-dark .ab-strip { background: #070e1e; }
+
+.about-dark .fcta-section { background: #050b1a; }
+.about-dark .fcta-h2 { color: #fff; }
+.about-dark .fcta-orbit-1 { border-color: rgba(224,25,125,.14); }
+.about-dark .fcta-orbit-2 { border-color: rgba(224,25,125,.1); }
+
 /* ── ORBIT / INFLUENCER ─────────────────────────────── */
 @keyframes orbit1 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 

@@ -36,7 +36,7 @@ export default function HeroSection({ stats }: { stats?: HeroStat[] }) {
         <div className="hero-photo-inner">
           <div className="hero-photo-people">
             {/* Single hero image */}
-            <div className="hero-single-image" style={{ backgroundImage: "url('/newImages/image-172-scaled-1.jpeg')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
+            <div className="hero-single-image" style={{ backgroundImage: "url('/about us/IMG_2081.webp')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
 
             {/* Stats bar */}
             <div className="hero-visual-stats">

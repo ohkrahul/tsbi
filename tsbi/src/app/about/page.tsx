@@ -34,7 +34,7 @@ export default async function AboutPage() {
     : undefined;
 
   return (
-    <>
+    <div className="about-dark">
       {/* Hero Banner Slider */}
       <HeroSection />
 
@@ -118,6 +118,6 @@ export default async function AboutPage() {
           <Link href="/contact" className="btn-fill" style={{ background: 'var(--magenta)' }}>Say Hello →</Link>
         </div>
       </section>
-    </>
+    </div>
   );
 }
