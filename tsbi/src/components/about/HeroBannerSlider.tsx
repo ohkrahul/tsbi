@@ -16,6 +16,19 @@ export default function HeroBannerSlider() {
   const [prev, setPrev]       = useState<number | null>(null);
   const [dir, setDir]         = useState<1 | -1>(1);
   const [paused, setPaused]   = useState(false);
+  const [revealed, setRevealed] = useState(false);
+
+  /* Settle the hero in as the intro loader's curtain lifts (Preloader fires
+     'tsbi:intro-done'). Fallback timer covers a skipped/absent loader. */
+  useEffect(() => {
+    const reveal = () => setRevealed(true);
+    window.addEventListener('tsbi:intro-done', reveal);
+    const fallback = setTimeout(reveal, 6000);
+    return () => {
+      window.removeEventListener('tsbi:intro-done', reveal);
+      clearTimeout(fallback);
+    };
+  }, []);
 
   const goto = useCallback((idx: number, direction: 1 | -1 = 1) => {
     setPrev(current);
@@ -40,8 +53,7 @@ export default function HeroBannerSlider() {
 
   return (
     <div
-      className="hbs-root"
-      
+      className={`hbs-root ${revealed ? 'revealed' : ''}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
