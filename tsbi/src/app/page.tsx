@@ -12,11 +12,16 @@ import FooterCTA from '@/components/home/FooterCTA';
 import { getClientBrands, mediaUrl } from '@/lib/strapi';
 
 const stripItems = [
-  { label: 'Culture', img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM.jpeg', overlay: 'rgba(26,34,64,.38)' },
-  { label: 'Production', img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM%20%281%29.jpeg', overlay: 'rgba(32,10,40,.38)' },
-  { label: 'People', img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM%20%282%29.jpeg', overlay: 'rgba(20,16,60,.38)' },
-  { label: 'Strategy', img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM%20%283%29.jpeg', overlay: 'rgba(5,21,16,.38)' },
-  { label: 'Studio', img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM%20%284%29.jpeg', overlay: 'rgba(10,26,48,.38)' },
+  { label: 'ASSI', img: '/Movie%20Posters/ASSI.jpg', overlay: 'rgba(26,34,64,.28)' },
+  { label: 'Bandar', img: '/Movie%20Posters/Bandar.jpg', overlay: 'rgba(32,10,40,.28)' },
+  { label: 'CMD', img: '/Movie%20Posters/CMD.jpg', overlay: 'rgba(20,16,60,.28)' },
+  { label: 'Ek Din', img: '/Movie%20Posters/Ek%20Din.jpg', overlay: 'rgba(5,21,16,.28)' },
+  { label: 'Happy Patel', img: '/Movie%20Posters/Happy%20Patel.jpg', overlay: 'rgba(10,26,48,.28)' },
+  { label: 'MVA', img: '/Movie%20Posters/MVA.jpeg', overlay: 'rgba(26,34,64,.28)' },
+  { label: 'PPAVD', img: '/Movie%20Posters/PPAVD.jpeg', overlay: 'rgba(32,10,40,.28)' },
+  { label: 'SSKTK', img: '/Movie%20Posters/SSKTK.jpg', overlay: 'rgba(20,16,60,.28)' },
+  { label: 'TMMTMTTM', img: '/Movie%20Posters/TMMTMTTM.jpg', overlay: 'rgba(5,21,16,.28)' },
+  { label: 'TYM', img: '/Movie%20Posters/TYM.jpg', overlay: 'rgba(10,26,48,.28)' },
 ];
 
 export default async function HomePage() {
@@ -50,7 +55,7 @@ export default async function HomePage() {
               }}
             />
             <div style={{ position: 'absolute', inset: 0, background: s.overlay }} />
-            <div className="ab-strip-label">{s.label}</div>
+            {/* <div className="ab-strip-label">{s.label}</div> */}
           </div>
         ))}
       </div>
