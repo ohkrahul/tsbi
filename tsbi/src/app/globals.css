@@ -563,6 +563,19 @@ body {
 .ab-strip-item:hover { flex: 2.5; }
 .ab-strip-bg { position: absolute; inset: 0; }
 .ab-strip-label { position: absolute; bottom: 14px; left: 14px; font-family: var(--fm); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+
+/* ── HOME POSTER WHEEL (3D continuous coverflow) ────── */
+.pw-section { background: radial-gradient(125% 120% at 50% 0%, #0b1226 0%, #05060c 58%, #030308 100%); padding: 72px 0 84px; overflow: hidden; }
+.pw-stage { position: relative; width: 100%; perspective: 1800px; perspective-origin: 50% 50%; }
+.pw-card { position: absolute; top: 50%; left: 50%; border-radius: 12px; overflow: hidden; background: #0a0a0a; will-change: transform, opacity; box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06); }
+.pw-dim { position: absolute; inset: 0; background: #04060f; pointer-events: none; }
+.pw-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 42%); pointer-events: none; }
+.pw-sheen { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,.16) 46%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.16) 54%, transparent 68%); background-size: 280% 100%; animation: pwSheen 3.4s linear infinite; }
+.pw-label { position: absolute; bottom: 12px; left: 14px; z-index: 2; font-family: var(--fm); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.85); text-shadow: 0 1px 6px rgba(0,0,0,.85); pointer-events: none; }
+@keyframes pwSheen { from { background-position: 200% 0; } to { background-position: -120% 0; } }
+@media (prefers-reduced-motion: reduce) { .pw-sheen { animation: none; } }
+@media (max-width: 600px) { .pw-section { padding: 44px 0 52px; } }
+
 .ab-story { padding: 120px 48px; background: var(--off); display: flex; gap: 100px; align-items: center; }
 .ab-story-text { flex: 1; }
 .ab-story-h2 { font-family: var(--fd); font-size: clamp(36px,5vw,58px); font-weight: 700; line-height: 1.0; margin-bottom: 24px; }
@@ -1309,4 +1322,186 @@ body {
   .cr-hero-left { padding: 88px 20px 40px 20px !important; justify-content: flex-start !important; }
   .cr-hero-img { min-height: 300px; }
   .cr-hero-img img { object-position: center !important; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   HOME PAGE REDESIGN (2026) — sections below match the new mockup.
+   Prefixed classes (.hh / .bls / .bts / .csc / .cw2 / .bic) avoid
+   collisions with the existing page styles above.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── NAV — active link underline (home redesign) ──────── */
+.nav-links a { position: relative; padding-bottom: 4px; }
+.nav-links a.active { color: var(--magenta); }
+.nav-links a.active::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 2px; background: var(--magenta); border-radius: 2px;
+}
+.nav-mobile-menu a.active { color: var(--magenta); }
+
+/* ── HOME HERO ────────────────────────────────────────── */
+.hh-root {
+  position: relative; width: 100%;
+  margin-top: 94px;                       /* clear the fixed nav */
+  height: clamp(460px, 78vh, 720px);
+  overflow: hidden; background: #0a0a0a;
+}
+.hh-slide { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
+.hh-slide.active { opacity: 1; }
+.hh-overlay {
+  position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(90deg, rgba(8,10,16,.88) 0%, rgba(8,10,16,.58) 32%, rgba(8,10,16,.14) 62%, rgba(8,10,16,0) 84%);
+}
+.hh-content {
+  position: absolute; z-index: 3; left: clamp(20px, 5vw, 88px); top: 50%;
+  transform: translateY(-50%); max-width: 640px;
+}
+.hh-title {
+  font-family: var(--fd); font-weight: 900; color: #fff;
+  font-size: clamp(34px, 5vw, 72px); line-height: 1.02; letter-spacing: -.02em; margin-bottom: 22px;
+}
+.hh-title .accent { color: var(--magenta); }
+.hh-sub {
+  font-family: var(--fb); color: rgba(255,255,255,.82);
+  font-size: clamp(13px, 1.3vw, 16px); font-weight: 300; line-height: 1.7; max-width: 440px;
+}
+.hh-notch { position: absolute; z-index: 3; left: 0; bottom: 0; width: clamp(80px,12vw,150px); height: auto; }
+.hh-dots { position: absolute; z-index: 4; bottom: 22px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
+.hh-dot {
+  width: 8px; height: 8px; border-radius: 50%; padding: 0; cursor: pointer;
+  border: 1.5px solid rgba(255,255,255,.65); background: transparent; transition: all .3s;
+}
+.hh-dot.active { background: #fff; width: 26px; border-radius: 4px; border-color: #fff; }
+
+/* ── BRAND LOGOS STRIP ────────────────────────────────── */
+.bls-root { background: #fff; padding: clamp(36px,4.5vw,52px) clamp(20px,5vw,64px); }
+.bls-row { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: clamp(8px,1.8vw,24px); max-width: 1240px; margin: 0 auto; }
+.bls-divider { height: 1px; background: var(--border); margin: clamp(18px,2.6vw,30px) auto; max-width: 1240px; }
+.bls-logo {
+  position: relative; flex: 0 0 auto; width: clamp(54px, 6.2vw, 106px); height: 42px;
+  filter: grayscale(1); opacity: .5; transition: filter .3s, opacity .3s;
+}
+.bls-logo:hover { filter: grayscale(0); opacity: 1; }
+.bls-logo.color { filter: none; opacity: .92; }
+.bls-logo.color:hover { opacity: 1; }
+
+/* ── BRANDS THAT TRUST US ─────────────────────────────── */
+.bts-root { position: relative; overflow: hidden; background: var(--magenta); padding: clamp(56px,8vw,104px) clamp(20px,5vw,64px); }
+.bts-inner {
+  position: relative; z-index: 2; display: grid; grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(32px,5vw,72px); align-items: center; max-width: 1240px; margin: 0 auto;
+}
+.bts-h2 { font-family: var(--fd); font-weight: 700; color: #fff; font-size: clamp(34px,4.4vw,60px); line-height: 1.02; letter-spacing: -.01em; margin-bottom: 22px; }
+.bts-body { font-family: var(--fb); color: rgba(255,255,255,.85); font-size: 13px; font-weight: 300; line-height: 1.85; max-width: 360px; }
+.bts-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, clamp(56px,7vw,82px)); gap: clamp(10px,1.4vw,16px); }
+.bts-card { background: #fff; border-radius: 14px; box-shadow: 0 18px 40px rgba(0,0,0,.10); }
+.bts-card.c1 { grid-column: 1/2; grid-row: 1/2; }
+.bts-card.c2 { grid-column: 2/4; grid-row: 1/3; }
+.bts-card.c3 { grid-column: 1/2; grid-row: 2/4; }
+.bts-card.c4 { grid-column: 2/3; grid-row: 3/5; }
+.bts-card.c5 { grid-column: 3/4; grid-row: 3/5; }
+.bts-card.c6 { grid-column: 1/2; grid-row: 4/5; }
+.bts-arcs { position: absolute; top: -70px; left: -50px; width: 320px; height: 320px; z-index: 1; }
+.bts-dot { position: absolute; border-radius: 50%; z-index: 1; }
+.bts-dot-white { width: 11px; height: 11px; background: rgba(255,255,255,.9); top: 90px; left: 128px; }
+.bts-dot-blue { width: 26px; height: 26px; background: var(--electric); right: 48px; bottom: 42px; box-shadow: 0 8px 20px rgba(26,106,255,.45); }
+
+/* ── CASE STUDY — CONNECT ─────────────────────────────── */
+.csc-root { background: #fff; padding: clamp(56px,8vw,104px) clamp(20px,5vw,64px) clamp(40px,5vw,64px); }
+.csc-inner { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(36px,6vw,90px); align-items: center; max-width: 1200px; margin: 0 auto; }
+.csc-visual { position: relative; display: flex; align-items: center; justify-content: center; min-height: 280px; }
+.csc-orbit { position: absolute; width: 116%; height: auto; top: -10%; z-index: 1; pointer-events: none; }
+.csc-stack { position: relative; z-index: 2; width: min(440px, 100%); aspect-ratio: 16/10; }
+.csc-poster { position: absolute; inset: 0; border-radius: 12px; overflow: hidden; }
+.csc-poster-front { z-index: 3; box-shadow: 0 24px 60px rgba(0,0,0,.25); }
+.csc-poster-back-a { z-index: 1; transform: rotate(-6deg) translate(-6%, -6%); opacity: .82; }
+.csc-poster-back-b { z-index: 2; transform: rotate(5deg) translate(7%, 5%); opacity: .9; }
+.csc-kicker { font-family: var(--fd); font-style: italic; font-weight: 700; color: var(--magenta); font-size: clamp(22px,2.6vw,34px); line-height: 1; margin-bottom: 2px; }
+.csc-h2 { font-family: var(--fd); font-weight: 900; color: var(--ink); font-size: clamp(30px,3.6vw,48px); line-height: 1; margin-bottom: 20px; }
+.csc-body { font-family: var(--fb); color: var(--muted); font-size: 14px; font-weight: 300; line-height: 1.85; max-width: 420px; margin-bottom: 28px; }
+.csc-stats { display: flex; gap: clamp(20px,4vw,52px); max-width: 1200px; margin: clamp(34px,5vw,56px) auto 0; }
+.csc-stat { display: flex; flex-direction: column; padding-right: clamp(20px,4vw,52px); border-right: 1px solid var(--border); }
+.csc-stat:last-child { border-right: none; padding-right: 0; }
+.csc-stat-val { font-family: var(--fd); font-weight: 900; color: var(--magenta); font-size: clamp(26px,3vw,38px); line-height: 1; }
+.csc-stat-label { font-family: var(--fm); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+
+/* ── CONNECT WHEEL (static fanned coverflow) ──────────── */
+.cw2-root { position: relative; background: var(--off); padding: clamp(40px,6vw,72px) 0 clamp(48px,7vw,80px); overflow: hidden; }
+.cw2-circle { position: absolute; left: -34px; top: 32%; width: 92px; height: 92px; border-radius: 50%; background: var(--magenta); z-index: 5; }
+.cw2-stage { position: relative; width: 100%; max-width: 1100px; margin: 0 auto; perspective: 1600px; }
+.cw2-band { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); background: var(--navy); z-index: 0; }
+.cw2-card {
+  position: absolute; top: 50%; left: 50%; border-radius: 8px; overflow: hidden; background: #0a0a0a;
+  box-shadow: 0 20px 48px rgba(0,0,0,.42); transition: transform .4s cubic-bezier(.16,1,.3,1);
+}
+.cw2-card.is-center { box-shadow: 0 30px 72px rgba(0,0,0,.5); }
+.cw2-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.35), transparent 50%); pointer-events: none; }
+.cw2-caption { text-align: center; max-width: 640px; margin: clamp(28px,4vw,44px) auto 0; padding: 0 20px; }
+.cw2-h2 { font-family: var(--fd); font-weight: 900; color: var(--ink); font-size: clamp(28px,3.4vw,44px); margin-bottom: 14px; }
+.cw2-body { font-family: var(--fb); color: var(--magenta); font-size: 13px; font-weight: 400; line-height: 1.8; }
+
+/* ── BIG IMPACT CTA ───────────────────────────────────── */
+.bic-root { position: relative; background: #fff; padding: clamp(70px,10vw,130px) clamp(20px,5vw,64px); overflow: hidden; }
+.bic-doodles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.bic-doodle { position: absolute; color: rgba(10,10,10,.12); }
+.bic-center { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; display: flex; align-items: center; justify-content: center; min-height: clamp(260px,32vw,380px); }
+.bic-orbit { position: absolute; z-index: 1; width: min(680px, 96vw); height: auto; left: 50%; top: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+.bic-content { position: relative; z-index: 2; text-align: center; }
+.bic-h2 { font-family: var(--fd); font-weight: 900; color: var(--ink); font-size: clamp(30px,4.4vw,58px); line-height: 1.04; letter-spacing: -.02em; margin-bottom: 28px; }
+.bic-h2 .accent { color: var(--magenta); }
+
+/* ── FOOTER (home redesign — centred logo + navy bar) ──── */
+.footer-root { background: #fff; padding: 0; color: var(--ink); }
+.ft-top { display: flex; flex-direction: column; align-items: center; gap: 22px; padding: clamp(44px,6vw,72px) 24px clamp(36px,5vw,56px); }
+.ft-logo { display: inline-flex; }
+.ft-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.ft-pill {
+  font-family: var(--fm); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink);
+  text-decoration: none; border: 1px solid var(--border); border-radius: 100px; padding: 9px 20px; transition: all .25s;
+}
+.ft-pill:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+.ft-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 16px clamp(20px,5vw,48px);
+  background: linear-gradient(90deg, #101a33 0%, #241640 55%, #34195a 100%); color: rgba(255,255,255,.7);
+}
+.ft-follow { display: flex; align-items: center; gap: 14px; }
+.ft-follow-label { font-family: var(--fm); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+.ft-socials { display: flex; gap: 8px; }
+.ft-social {
+  width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.8); transition: all .2s; text-decoration: none;
+}
+.ft-social:hover { background: var(--magenta); border-color: var(--magenta); color: #fff; }
+.ft-legal { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
+.ft-legal span { font-family: var(--fm); font-size: 10px; letter-spacing: .04em; color: rgba(255,255,255,.6); }
+
+/* ── HOME REDESIGN — RESPONSIVE ───────────────────────── */
+@media (max-width: 1024px) {
+  .hh-root { margin-top: 78px; }
+}
+@media (max-width: 860px) {
+  .hh-root { margin-top: 70px; height: clamp(420px, 70vh, 560px); }
+  .hh-content { max-width: 88%; }
+  .bls-row { flex-wrap: wrap; justify-content: center; gap: 22px 30px; }
+  .bls-logo { width: clamp(70px, 20vw, 108px); height: 44px; }
+  .bts-inner { grid-template-columns: 1fr; }
+  .bts-grid { max-width: 520px; }
+  .csc-inner { grid-template-columns: 1fr; }
+  .csc-visual { order: 2; }
+  .csc-stats { flex-wrap: wrap; gap: 16px; }
+  .csc-stat { padding-right: clamp(16px,4vw,28px); }
+}
+@media (max-width: 700px) {
+  .ft-bar { flex-direction: column; align-items: center; gap: 12px; }
+  .ft-legal { align-items: center; text-align: center; }
+}
+@media (max-width: 560px) {
+  .hh-root { margin-top: 66px; height: clamp(400px, 110vw, 520px); }
+  .hh-title { font-size: clamp(28px, 8.4vw, 42px); }
+  .hh-sub { font-size: 13px; }
+  .bts-grid { grid-template-rows: repeat(4, 58px); }
+  .csc-stat-val { font-size: 24px; }
+  .ft-pills { gap: 8px; }
+  .ft-pill { padding: 8px 14px; font-size: 10px; }
 }
