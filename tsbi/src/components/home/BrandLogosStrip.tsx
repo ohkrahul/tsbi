@@ -33,8 +33,11 @@ function LogoRow({ logos }: { logos: Logo[] }) {
   return (
     <div className="bls-row">
       {logos.map((l) => (
-        <div key={l.name} className={`bls-logo${l.color ? ' color' : ''}`} title={l.name}>
-          <Image src={l.src} alt={l.name} fill sizes="140px" style={{ objectFit: 'contain' }} />
+        // Inline position+height guarantees a sized, positioned parent for the
+        // fill image even before the stylesheet applies (avoids the Turbopack
+        // dev "fill / height 0" race). Width stays in CSS so it can flex/wrap.
+        <div key={l.name} className={`bls-logo${l.color ? ' color' : ''}`} title={l.name} style={{ position: 'relative', height: 42 }}>
+          <Image src={l.src} alt={l.name} fill loading="eager" sizes="140px" style={{ objectFit: 'contain' }} />
         </div>
       ))}
     </div>
