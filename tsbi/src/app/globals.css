@@ -40,6 +40,7 @@
   --fd: var(--font-playfair), Georgia, serif;
   --fb: var(--font-dm-sans), system-ui, sans-serif;
   --fm: var(--font-space-grotesk), 'Helvetica Neue', sans-serif;
+  --fa: var(--font-abril), 'Abril Fatface', Georgia, serif;
   --mono: 'Courier New', monospace;
 }
 
@@ -110,30 +111,30 @@ body {
 }
 
 /* ── NAV ────────────────────────────────────────────── */
+/* Header: full-width white bar, ~108px tall, content centred at 1130px.
+   The outer bar stays fixed (other pages clear it with their own top padding);
+   .nav-inner is the relative positioning context for the logo, nav and the
+   decorative SVG line. */
 .nav-root {
   position: fixed; top: 0; left: 0; right: 0; z-index: 500;
-  padding: 28px 48px;
-  display: flex; align-items: center; justify-content: space-between;
-  transition: all .35s;
-  background: rgba(255,255,255,.82);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(10,10,10,.06);
+  height: 108px; background: #fff;
 }
-.nav-root.scrolled {
-  background: rgba(255,255,255,.96);
-  backdrop-filter: blur(20px);
-  padding: 18px 48px;
-  border-bottom: 1px solid var(--border);
-}
-.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
-.nav-logo-svg { width: 48px; height: auto; }
-.nav-links { display: flex; gap: 24px; list-style: none; align-items: center; }
+.nav-inner { position: relative; width: 1130px; max-width: 100%; height: 100%; margin: 0 auto; }
+.nav-svg { position: absolute; left: 0; top: 0; width: 1130px; height: 108px; z-index: 1; pointer-events: none; overflow: visible; }
+.nav-logo { position: absolute; left: 25px; top: 34px; z-index: 3; display: inline-flex; text-decoration: none; cursor: pointer; }
+.nav-logo-img { height: 52px; width: auto; display: block; }
+/* Right-anchored so it stays inside the 1130 container as the (larger) Playfair
+   labels change width. */
+.nav-links { position: absolute; right: 25px; top: 55px; display: flex; gap: clamp(22px, 2.4vw, 34px); list-style: none; align-items: center; z-index: 3; }
 .nav-links a {
-  font-family: var(--fm); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--muted); text-decoration: none; transition: color .2s; cursor: pointer;
+  font-family: var(--fm); font-style: normal; font-size: 14px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase;
+  color: #9b9b9b; text-decoration: none; cursor: pointer; position: relative; padding-bottom: 6px; white-space: nowrap;
 }
-.nav-links a:hover { color: var(--ink); }
-.nav-right { display: flex; align-items: center; gap: 20px; }
+.nav-links a.active { color: #f01891; font-weight: 800;}
+.nav-links a.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #f01891; }
+/* SplitText wraps each character in a span; keep them inline and clip nothing. */
+.nav-links a .char { display: inline-block; will-change: transform; }
+.nav-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 3; display: flex; align-items: center; }
 .nav-talk {
   font-family: var(--fm); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
   color: var(--ink); border: 1px solid var(--ink); padding: 9px 20px; border-radius: 100px;
@@ -172,9 +173,27 @@ body {
   font-family: var(--fm); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
   color: var(--ink); border: 1px solid var(--border);
   padding: 13px 26px; border-radius: 100px;
-  cursor: pointer; text-decoration: none; transition: all .25s; background: transparent;
+  cursor: pointer; text-decoration: none;
 }
-.btn-border:hover { border-color: var(--ink); }
+.btn-border:hover .arr { color: #fff; }
+
+/* ── Pink fill-on-hover (every button) ─────────────────────────────────────
+   Magenta wipes in left → right via background-position; text turns white.
+   Built into .btn-border so all outline buttons get it; .btn-pink-fill is the
+   opt-in class for Tailwind-styled buttons (hero CTA, footer pills, …). */
+.btn-border, .btn-pink-fill {
+  background-image: linear-gradient(90deg, var(--magenta) 0 50%, transparent 50% 100%);
+  background-size: 200% 100%;
+  background-position: right center;
+  background-repeat: no-repeat;
+  transition: background-position .55s cubic-bezier(.22,1,.36,1), color .3s ease, border-color .3s ease;
+}
+.btn-border:hover, .btn-pink-fill:hover {
+  background-position: left center;
+  color: #fff;
+  border-color: var(--magenta);
+}
+.btn-pink-fill:hover .arr { color: #fff; }
 
 /* ── REVEAL ANIMATION ───────────────────────────────── */
 .reveal {
@@ -1330,19 +1349,13 @@ body {
    collisions with the existing page styles above.
    ════════════════════════════════════════════════════════════════ */
 
-/* ── NAV — active link underline (home redesign) ──────── */
-.nav-links a { position: relative; padding-bottom: 4px; }
-.nav-links a.active { color: var(--magenta); }
-.nav-links a.active::after {
-  content: ''; position: absolute; left: 0; right: 0; bottom: -2px;
-  height: 2px; background: var(--magenta); border-radius: 2px;
-}
-.nav-mobile-menu a.active { color: var(--magenta); }
+/* ── NAV — mobile active link colour (desktop styles live in the header block) ── */
+.nav-mobile-menu a.active { color: #f01891; }
 
 /* ── HOME HERO ────────────────────────────────────────── */
 .hh-root {
   position: relative; width: 100%;
-  margin-top: 94px;                       /* clear the fixed nav */
+  margin-top: 108px;                      /* clear the fixed 108px header */
   height: clamp(460px, 78vh, 720px);
   overflow: hidden; background: #0a0a0a;
 }
@@ -1375,39 +1388,89 @@ body {
 
 /* ── BRAND LOGOS STRIP ────────────────────────────────── */
 .bls-root { background: #fff; padding: clamp(36px,4.5vw,52px) clamp(20px,5vw,64px); }
-.bls-row { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: clamp(8px,1.8vw,24px); max-width: 1240px; margin: 0 auto; }
+.bls-row { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: clamp(6px,1.4vw,20px); max-width: 1240px; margin: 0 auto; }
 .bls-divider { height: 1px; background: var(--border); margin: clamp(18px,2.6vw,30px) auto; max-width: 1240px; }
 .bls-logo {
-  position: relative; flex: 0 0 auto; width: clamp(54px, 6.2vw, 106px); height: 42px;
-  filter: grayscale(1); opacity: .5; transition: filter .3s, opacity .3s;
+  display: inline-flex; align-items: center; justify-content: center; flex: 0 1 auto; height: 44px;
+  filter: grayscale(1); opacity: .55; transition: filter .3s, opacity .3s;
 }
+.bls-logo img { max-height: 44px; max-width: clamp(70px, 9vw, 116px); width: auto; height: auto; object-fit: contain; display: block; }
 .bls-logo:hover { filter: grayscale(0); opacity: 1; }
 .bls-logo.color { filter: none; opacity: .92; }
 .bls-logo.color:hover { opacity: 1; }
 
-/* ── BRANDS THAT TRUST US ─────────────────────────────── */
-.bts-root { position: relative; overflow: hidden; background: var(--magenta); padding: clamp(56px,8vw,104px) clamp(20px,5vw,64px); }
-.bts-inner {
-  position: relative; z-index: 2; display: grid; grid-template-columns: 0.85fr 1.15fr;
-  gap: clamp(32px,5vw,72px); align-items: center; max-width: 1240px; margin: 0 auto;
+/* ── CLIENT LOGO MARQUEE (moving grid, grey→colour on hover) ───────────── */
+.lm-section { position: relative; background: #fff; padding: 80px 0 50px; overflow: visible; }
+
+/* magenta connector line, pulled up so it overlaps the hero bottom */
+.lm-connector {
+  position: absolute;
+  left: 0;
+  top: -70px;
+  width: 100%;
+  height: 130px;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden; /* paired with the clip-path reveal on this wrapper */
 }
-.bts-h2 { font-family: var(--fd); font-weight: 700; color: #fff; font-size: clamp(34px,4.4vw,60px); line-height: 1.02; letter-spacing: -.01em; margin-bottom: 22px; }
-.bts-body { font-family: var(--fb); color: rgba(255,255,255,.85); font-size: 13px; font-weight: 300; line-height: 1.85; max-width: 360px; }
-.bts-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, clamp(56px,7vw,82px)); gap: clamp(10px,1.4vw,16px); }
-.bts-card { background: #fff; border-radius: 14px; box-shadow: 0 18px 40px rgba(0,0,0,.10); }
-.bts-card.c1 { grid-column: 1/2; grid-row: 1/2; }
-.bts-card.c2 { grid-column: 2/4; grid-row: 1/3; }
-.bts-card.c3 { grid-column: 1/2; grid-row: 2/4; }
-.bts-card.c4 { grid-column: 2/3; grid-row: 3/5; }
-.bts-card.c5 { grid-column: 3/4; grid-row: 3/5; }
-.bts-card.c6 { grid-column: 1/2; grid-row: 4/5; }
-.bts-arcs { position: absolute; top: -70px; left: -50px; width: 320px; height: 320px; z-index: 1; }
-.bts-dot { position: absolute; border-radius: 50%; z-index: 1; }
-.bts-dot-white { width: 11px; height: 11px; background: rgba(255,255,255,.9); top: 90px; left: 128px; }
-.bts-dot-blue { width: 26px; height: 26px; background: var(--electric); right: 48px; bottom: 42px; box-shadow: 0 8px 20px rgba(26,106,255,.45); }
+
+.lm-connector-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.lm-node { position: absolute; width: 7px; height: 7px; }
+.lm-node--square { left: 6px; top: 114px; background: #f01891; }
+.lm-node--circle { right: 6px; top: 37px; border: 1px solid var(--electric); border-radius: 50%; }
+
+/* each row is its own marquee window */
+.lm-marquee { width: 100%; overflow: hidden; }
+.lm-track { display: flex; width: max-content; will-change: transform; }
+/* 3 copies per row → Row 1 (24 cells = 3840px) and row 2 (30 cells = 4800px).
+   Keyframe scrolls exactly 1 copy width = 33.333% of the total track.
+   Both rows share 32 px/s so vertical grid lines stay aligned. */
+.lm-track--1 { animation: lmRight 40s linear infinite; }
+.lm-track--2 { animation: lmRight 50s linear infinite; }
+@keyframes lmRight { from { transform: translateX(-33.333%); } to { transform: translateX(0); } }
+/* Pause on hover so the colour-reveal has time to register */
+.lm-marquee:hover .lm-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .lm-track { animation: none; } }
+
+.lm-cell {
+  position: relative; flex: 0 0 auto; width: 160px; height: 58px;
+  display: flex; align-items: center; justify-content: center; border-right: 1px solid #eee;
+}
+.lm-cell--divider { border-bottom: 1px solid #eee; }
+.lm-cell img {
+  max-height: 58px; max-width: 116px; width: auto; height: auto; object-fit: contain; display: block;
+  filter: grayscale(0) brightness(1) opacity(1);
+  transition: filter .3s ease, transform .3s ease;
+}
+.lm-cell:hover img { filter: grayscale(100%) brightness(1.2) opacity(0.45); transform: scale(1.04); }
+/* faint sparkle marks at the column ∩ divider intersections */
+.lm-cell--divider::after {
+  content: ''; position: absolute; right: -5px; bottom: -5px; width: 10px; height: 10px; opacity: .7;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 L5.8 4.2 L10 5 L5.8 5.8 L5 10 L4.2 5.8 L0 5 L4.2 4.2 Z' fill='%23d8d8d8'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+/* Logo strip — tighter cells + reduced padding on smaller screens */
+@media (max-width: 860px) {
+  .lm-section { padding: 64px 0 40px; }
+  .lm-cell { width: 124px; height: 50px; }
+  .lm-cell img { max-height: 46px; max-width: 92px; }
+}
+@media (max-width: 560px) {
+  .lm-section { padding: 52px 0 32px; }
+  .lm-cell { width: 100px; height: 46px; }
+  .lm-cell img { max-height: 40px; max-width: 76px; }
+  /* connector decoration is busy at phone widths — keep it subtle */
+  .lm-connector { top: -64px; height: 100px; opacity: .8; }
+}
+
+/* "Brands that trust us" now lives fully in page.tsx via Tailwind utilities. */
 
 /* ── CASE STUDY — CONNECT ─────────────────────────────── */
-.csc-root { background: #fff; padding: clamp(56px,8vw,104px) clamp(20px,5vw,64px) clamp(40px,5vw,64px); }
+.csc-root { background: #fff; padding: clamp(56px,8vw,104px) clamp(20px,5vw,64px) clamp(40px,5vw,64px); overflow-x: clip; }
 .csc-inner { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(36px,6vw,90px); align-items: center; max-width: 1200px; margin: 0 auto; }
 .csc-visual { position: relative; display: flex; align-items: center; justify-content: center; min-height: 280px; }
 .csc-orbit { position: absolute; width: 116%; height: auto; top: -10%; z-index: 1; pointer-events: none; }
@@ -1416,29 +1479,200 @@ body {
 .csc-poster-front { z-index: 3; box-shadow: 0 24px 60px rgba(0,0,0,.25); }
 .csc-poster-back-a { z-index: 1; transform: rotate(-6deg) translate(-6%, -6%); opacity: .82; }
 .csc-poster-back-b { z-index: 2; transform: rotate(5deg) translate(7%, 5%); opacity: .9; }
+.csc-cta {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+.csc-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--magenta);
+  transform: translateX(-100%);
+  transition: transform 0.65s cubic-bezier(.22,1,.36,1);
+  z-index: -1;
+}
+.csc-cta:hover::before { transform: translateX(0); }
+.csc-cta:hover { color: #fff; border-color: var(--magenta); }
+.csc-cta:hover .arr { color: #fff; }
 .csc-kicker { font-family: var(--fd); font-style: italic; font-weight: 700; color: var(--magenta); font-size: clamp(22px,2.6vw,34px); line-height: 1; margin-bottom: 2px; }
 .csc-h2 { font-family: var(--fd); font-weight: 900; color: var(--ink); font-size: clamp(30px,3.6vw,48px); line-height: 1; margin-bottom: 20px; }
 .csc-body { font-family: var(--fb); color: var(--muted); font-size: 14px; font-weight: 300; line-height: 1.85; max-width: 420px; margin-bottom: 28px; }
-.csc-stats { display: flex; gap: clamp(20px,4vw,52px); max-width: 1200px; margin: clamp(34px,5vw,56px) auto 0; }
+.csc-stats { display: flex; align-items: flex-end; gap: clamp(20px,4vw,52px); max-width: 1200px; margin: clamp(34px,5vw,56px) auto 0; }
 .csc-stat { display: flex; flex-direction: column; padding-right: clamp(20px,4vw,52px); border-right: 1px solid var(--border); }
 .csc-stat:last-child { border-right: none; padding-right: 0; }
 .csc-stat-val { font-family: var(--fd); font-weight: 900; color: var(--magenta); font-size: clamp(26px,3vw,38px); line-height: 1; }
 .csc-stat-label { font-family: var(--fm); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+.csc-poster-hidden { opacity: 0; pointer-events: none; z-index: 0; transform: rotate(0deg) translate(0,0) scale(0.7); }
+.csc-dots { display: flex; align-items: center; gap: 7px; margin-left: auto; }
+.csc-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); border: none; cursor: pointer; padding: 0; transition: background 0.25s ease, width 0.25s ease; }
+.csc-dot.active { width: 22px; border-radius: 4px; background: var(--magenta); }
 
-/* ── CONNECT WHEEL (static fanned coverflow) ──────────── */
-.cw2-root { position: relative; background: var(--off); padding: clamp(40px,6vw,72px) 0 clamp(48px,7vw,80px); overflow: hidden; }
-.cw2-circle { position: absolute; left: -34px; top: 32%; width: 92px; height: 92px; border-radius: 50%; background: var(--magenta); z-index: 5; }
-.cw2-stage { position: relative; width: 100%; max-width: 1100px; margin: 0 auto; perspective: 1600px; }
-.cw2-band { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); background: var(--navy); z-index: 0; }
-.cw2-card {
-  position: absolute; top: 50%; left: 50%; border-radius: 8px; overflow: hidden; background: #0a0a0a;
-  box-shadow: 0 20px 48px rgba(0,0,0,.42); transition: transform .4s cubic-bezier(.16,1,.3,1);
+/* ── MOVIE CONNECT SECTION ─────────────────────────────── */
+.movie-connect-section {
+  position: relative;
+  background: #f2f2f2;
+  overflow-x: clip; /* clips cards leaving the left/right edge without creating a stacking context */
+  padding-top: clamp(52px,5.5vw,72px);   /* headroom for center-card pop-up */
+  padding-bottom: clamp(36px,4.5vw,56px);
 }
-.cw2-card.is-center { box-shadow: 0 30px 72px rgba(0,0,0,.5); }
-.cw2-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.35), transparent 50%); pointer-events: none; }
-.cw2-caption { text-align: center; max-width: 640px; margin: clamp(28px,4vw,44px) auto 0; padding: 0 20px; }
-.cw2-h2 { font-family: var(--fd); font-weight: 900; color: var(--ink); font-size: clamp(28px,3.4vw,44px); margin-bottom: 14px; }
-.cw2-body { font-family: var(--fb); color: var(--magenta); font-size: 13px; font-weight: 400; line-height: 1.8; }
+.movie-connect-dot {
+  display: block;
+  position: absolute;
+  /* Straddle the joint between the case-study section (white, above) and this
+     section (grey) — half in each, on the left — mirroring the blue dot that sits
+     on the brands→white joint. top = −(height / 2) puts the centre on the edge.
+     (top is used, not transform: GSAP animates the dot's y on reveal.) */
+  top: -17px;
+  left: clamp(20px, 6vw, 64px);
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #f01891;
+  box-shadow: 0 6px 18px rgba(240,24,145,.5);
+  z-index: 10;
+}
+/* ── Carousel track ── */
+.mc-overflow {
+  position: relative;
+  width: 100%;
+  /* height = card natural height — vw units so it scales with viewport */
+  height: max(163px, 28vw);
+  overflow: visible; /* center card pops above/below; section clips the rest */
+}
+.mc-strip {
+  position: absolute;
+  left: 0; right: 0;
+  /* vertically centered on the card: 28% from top, 44% tall */
+  top: max(46px, 7.84vw);
+  height: max(72px, 12.32vw);
+  background: #16091f;
+  z-index: 0;
+  pointer-events: none;
+  will-change: clip-path;
+}
+@keyframes mc-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.mc-track {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  will-change: transform;
+  /* duration set at runtime via --mc-duration; starts paused until JS adds .mc-running */
+  animation: mc-scroll var(--mc-duration, 56s) linear infinite;
+  animation-play-state: paused;
+}
+.mc-track.mc-running {
+  animation-play-state: running;
+}
+.poster-card {
+  position: relative;
+  flex-shrink: 0;
+  /* 5 cards + 4×18px gaps = 100vw; min 110px so mobile cards stay readable */
+  width: max(110px, calc((100vw - 72px) / 5));
+  height: max(163px, calc((100vw - 72px) / 5 * 1.47));
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 1;
+  will-change: transform;
+  transform-origin: center center;
+  box-shadow: 0 8px 24px rgba(0,0,0,.28);
+  transition: box-shadow .3s ease;
+}
+.poster-card:hover { box-shadow: 0 16px 44px rgba(0,0,0,.52); }
+
+/* ── Floating wave — CSS translate is separate from GSAP's transform (scale/popup) ── */
+@keyframes card-float {
+  0%, 100% { translate: 0 0px; }
+  50%       { translate: 0 -15px; }
+}
+/* 5 staggered delay phases → any 5 visible cards span a full wave cycle */
+.poster-card               { animation: card-float 2.8s ease-in-out infinite 0s; }
+.poster-card:nth-child(5n+2) { animation-delay: -0.56s; }
+.poster-card:nth-child(5n+3) { animation-delay: -1.12s; }
+.poster-card:nth-child(5n+4) { animation-delay: -1.68s; }
+.poster-card:nth-child(5n+5) { animation-delay: -2.24s; }
+.poster-image { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; user-select: none; }
+.poster-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.38), transparent 55%); pointer-events: none; }
+/* ── Text below ── */
+.connect-text-block {
+  text-align: center;
+  padding: 0 clamp(16px,4vw,48px);
+  margin-top: clamp(18px,2vw,28px);
+}
+.connect-kicker {
+  display: block;
+  font-family: var(--fm);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #f01891;
+  margin-bottom: 10px;
+}
+.connect-title {
+  font-family: var(--fd);
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(24px,2.6vw,36px);
+  color: var(--ink);
+  line-height: 1.12;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.connect-sub {
+  font-family: var(--fb);
+  font-size: clamp(13px,1.1vw,15px);
+  color: #555;
+  max-width: 520px;
+  margin: 12px auto 0;
+  line-height: 1.7;
+}
+.connect-cta {
+  position: relative;
+  display: inline-block;
+  margin-top: 22px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  overflow: hidden;
+  z-index: 0;
+  transition: color 0.35s ease, border-color 0.35s ease;
+}
+.connect-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--magenta);
+  transform: translateX(-101%);
+  transition: transform 0.55s cubic-bezier(.22,1,.36,1);
+  z-index: -1;
+}
+.connect-cta:hover::before { transform: translateX(0); }
+.connect-cta:hover {
+  color: #fff;
+  border-color: var(--magenta);
+}
+.connect-cta:hover .arr { color: #fff; }
+/* kept for legacy reference — no longer used in markup */
+.connect-desc {
+  text-align: center;
+  font-family: var(--fb);
+  font-size: 9px;
+  color: #f01891;
+  max-width: 460px;
+  margin: 10px auto 0;
+  line-height: 1.75;
+}
 
 /* ── BIG IMPACT CTA ───────────────────────────────────── */
 .bic-root { position: relative; background: #fff; padding: clamp(70px,10vw,130px) clamp(20px,5vw,64px); overflow: hidden; }
@@ -1477,31 +1711,78 @@ body {
 .ft-legal span { font-family: var(--fm); font-size: 10px; letter-spacing: .04em; color: rgba(255,255,255,.6); }
 
 /* ── HOME REDESIGN — RESPONSIVE ───────────────────────── */
-@media (max-width: 1024px) {
-  .hh-root { margin-top: 78px; }
+/* Below the 1130px content width the absolute nav would clip, so collapse the
+   header to a compact bar with the burger menu. */
+@media (max-width: 1130px) {
+  .nav-root { height: 72px; padding: 0; }
+  .nav-links, .nav-svg { display: none; }
+  .nav-logo { top: 50%; transform: translateY(-50%); left: 20px; }
+  .nav-logo-img { height: 40px; }
+  .nav-burger { display: flex; }
+  .hh-root { margin-top: 72px; }
 }
+
 @media (max-width: 860px) {
-  .hh-root { margin-top: 70px; height: clamp(420px, 70vh, 560px); }
+  .hh-root { height: clamp(420px, 70vh, 560px); }
   .hh-content { max-width: 88%; }
   .bls-row { flex-wrap: wrap; justify-content: center; gap: 22px 30px; }
   .bls-logo { width: clamp(70px, 20vw, 108px); height: 44px; }
-  .bts-inner { grid-template-columns: 1fr; }
-  .bts-grid { max-width: 520px; }
   .csc-inner { grid-template-columns: 1fr; }
   .csc-visual { order: 2; }
   .csc-stats { flex-wrap: wrap; gap: 16px; }
   .csc-stat { padding-right: clamp(16px,4vw,28px); }
+  .mc-track { gap: 12px; }
+  /* Keep the stacked posters + orbit inside the viewport on small screens so the
+     rotated back cards don't spill off the right edge. */
+  .csc-stack { width: min(380px, 88%); }
+  .csc-orbit { width: 104%; }
+  .csc-poster-back-a { transform: rotate(-4deg) translate(-4%, -5%); }
+  .csc-poster-back-b { transform: rotate(4deg) translate(4%, 4%); }
 }
 @media (max-width: 700px) {
   .ft-bar { flex-direction: column; align-items: center; gap: 12px; }
   .ft-legal { align-items: center; text-align: center; }
+  .movie-connect-dot { width: 24px; height: 24px; top: -12px; left: 18px; }
 }
 @media (max-width: 560px) {
-  .hh-root { margin-top: 66px; height: clamp(400px, 110vw, 520px); }
+  .hh-root { height: clamp(400px, 110vw, 520px); }
   .hh-title { font-size: clamp(28px, 8.4vw, 42px); }
   .hh-sub { font-size: 13px; }
-  .bts-grid { grid-template-rows: repeat(4, 58px); }
   .csc-stat-val { font-size: 24px; }
   .ft-pills { gap: 8px; }
   .ft-pill { padding: 8px 14px; font-size: 10px; }
+  .mc-track { gap: 8px; }
+}
+
+/* ── GSAP ANIMATION — initial states & custom cursor ──── */
+/* Set opacity:0 before JS runs so animated elements don't flash in on first paint
+   then get hidden by GSAP. Only applied when JS is available (class set in <html>
+   by the browser — falls back gracefully if JS is disabled). */
+
+/* Nav elements: GSAP reveals them on load */
+.header-logo   { opacity: 0; }
+.header-nav-item { opacity: 0; }
+/* Blue SVG line: path starts hidden via strokeDashoffset (set by GSAP), but the
+   overall SVG must remain visible (position, size) so we only hide the circle. */
+.header-blue-end-dot   { opacity: 0; }
+.header-blue-travel-dot { opacity: 0; }
+
+/* Hero: image hidden behind clip-path, text hidden for reveal */
+.hero-subtitle { opacity: 0; }
+.hero-cta      { opacity: 0; }
+
+/* Pink connector nodes: GSAP shows them as the line draws */
+.hero-pink-start-node { opacity: 0; }
+.hero-pink-end-node   { opacity: 0; }
+
+/* Custom cursor — hidden by default; GSAP toggles opacity on first mousemove.
+   Hide completely on touch/stylus devices. */
+.cursor-dot,
+.cursor-ring {
+  will-change: transform;
+  pointer-events: none;
+}
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring { display: none; }
 }

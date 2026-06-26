@@ -72,7 +72,7 @@ export const caseStudies: CaseStudyGalleryItem[] = [
     concept: "In a social feed dominated by algorithmically perfect visuals and polished teaser drops, standing out meant doing the opposite. For Sitaare Zameen Par, we chose to disrupt the scroll by embracing imperfection with 'Imperfectly Perfect Teaser' — a handcrafted, tactile announcement unit designed to spark curiosity ahead of the trailer launch.\n\nInstead of sleek motion graphics, the campaign leaned into a pop-up cutout aesthetic. Printed images of the film's 10 Sitaare were revealed one by one, culminating in the reveal of Aamir Khan and the announcement that the trailer would drop the very next day. The deliberate roughness and handmade feel broke visual monotony and instantly caught attention.\n\nRolled out across social platforms, the imperfect design became its biggest strength — inviting intrigue, conversation, and organic pickup by fan and media pages. By rejecting visual perfection and leaning into playful honesty, Sitaare Zameen Par set the tone for what was to come: a film that's raw, emotional, and refreshingly human — long before audiences hit play on the trailer.",
     year: 2025, services: ['Film Marketing', 'Creative Strategy', 'Social Media'],
     colorTheme: '#0055cc', accent: '#0066ff', gradFrom: '#001840', gradTo: '#000f28',
-    image: '/images/banner-home3-1-400x500.jpg', order: 5,
+    image: YT('YH6k5weqwy8'), youtube: 'YH6k5weqwy8', order: 5,
   },
   {
     id: 6, slug: 'ashok-leyland-diwali', clientName: 'Ashok Leyland', title: '#KhushiyonKiSteering',

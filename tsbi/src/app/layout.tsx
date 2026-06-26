@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans, Space_Grotesk } from "next/font/google";
+import { Playfair_Display, DM_Sans, Space_Grotesk, Abril_Fatface } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -24,6 +24,14 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+// Abril Fatface — used (italic) for the nav links.
+const abrilFatface = Abril_Fatface({
+  variable: "--font-abril",
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "TSBI – The Small Big Idea",
   description:
@@ -44,7 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${dmSans.variable} ${spaceGrotesk.variable}`}
+      className={`${playfair.variable} ${dmSans.variable} ${spaceGrotesk.variable} ${abrilFatface.variable}`}
       suppressHydrationWarning
     >
       <body>

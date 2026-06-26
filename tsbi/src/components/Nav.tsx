@@ -16,18 +16,9 @@ const navLinks = [
 ];
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  // Close the mobile menu on navigation.
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
@@ -36,48 +27,99 @@ export default function Nav() {
     exact ? pathname === href : pathname.startsWith(href);
 
   return (
-    <nav className={`nav-root${scrolled ? ' scrolled' : ''}`}>
-      <Link href="/" className="nav-logo">
-        <Image src="/tsbilogo.png" alt="The Small Big Idea" width={140} height={48} style={{ height: 38, width: 'auto' }} priority />
-      </Link>
-
-      <ul className="nav-links">
-        {navLinks.map(({ href, label, exact }) => (
-          <li key={href}>
-            <Link href={href} className={isActive(href, exact) ? 'active' : undefined}>
-              {label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      <div className="nav-right">
-        <button
-          className={`nav-burger${menuOpen ? ' open' : ''}`}
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((v) => !v)}
+    <nav className="nav-root">
+      <div className="nav-inner">
+        {/* Decorative sky-blue geometric line.
+            - header-blue-svg   → GSAP draws the polyline on load via strokeDashoffset
+            - header-blue-end-dot → circle endpoint; fades in after line completes, then pulses
+            - header-blue-travel-dot → tiny dot that loops along the line post-load */}
+        <svg
+          className="nav-svg header-blue-svg"
+          width="1130"
+          height="108"
+          viewBox="0 0 1130 108"
+          fill="none"
+          aria-hidden
         >
-          <span />
-          <span />
-          <span />
-        </button>
-      </div>
+          <polyline
+            points="25,98 385,98 445,24 1110,24"
+            stroke="#8ecbf0"
+            strokeWidth="1"
+            fill="none"
+          />
+          {/* endpoint circle — fades in after the line reaches it */}
+          <circle
+            className="header-blue-end-dot"
+            cx="1110"
+            cy="24"
+            r="3.5"
+            stroke="#8ecbf0"
+            strokeWidth="1"
+            fill="none"
+          />
+          {/* pink start square */}
+          <rect x="22" y="95" width="6" height="6" fill="#ff1aa0" />
+          {/* tiny dot that travels along the line after load */}
+          <circle
+            className="header-blue-travel-dot"
+            cx="25"
+            cy="98"
+            r="2.5"
+            fill="#8ecbf0"
+          />
+        </svg>
 
-      {menuOpen && (
-        <div className="nav-mobile-menu">
+        {/* header-logo → GSAP fades in from opacity:0 scale:0.92 */}
+        <Link href="/" className="nav-logo header-logo">
+          <Image
+            src="/tsbilogo.png"
+            alt="The Small Big Idea"
+            width={150}
+            height={52}
+            className="nav-logo-img"
+            priority
+          />
+        </Link>
+
+        {/* header-nav-item on each <li> → GSAP staggers them in (y:-5→0, opacity:0→1) */}
+        <ul className="nav-links">
           {navLinks.map(({ href, label, exact }) => (
-            <Link
-              key={href}
-              href={href}
-              className={isActive(href, exact) ? 'active' : undefined}
-              onClick={() => setMenuOpen(false)}
-            >
-              {label}
-            </Link>
+            <li key={href} className="header-nav-item">
+              <Link href={href} className={isActive(href, exact) ? 'active' : undefined}>
+                {label}
+              </Link>
+            </li>
           ))}
+        </ul>
+
+        <div className="nav-right">
+          <button
+            className={`nav-burger${menuOpen ? ' open' : ''}`}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
-      )}
+
+        {menuOpen && (
+          <div className="nav-mobile-menu">
+            {navLinks.map(({ href, label, exact }) => (
+              <Link
+                key={href}
+                href={href}
+                className={isActive(href, exact) ? 'active' : undefined}
+                onClick={() => setMenuOpen(false)}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </nav>
   );
 }
