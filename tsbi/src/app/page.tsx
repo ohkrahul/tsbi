@@ -3,11 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
+import gsap from 'gsap';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import HeroAnimation from '@/components/HeroAnimation';
 import Preloader from '@/components/Preloader';
-import { caseStudies } from '@/lib/caseStudies';
+import CaseStudyCarousel from '@/components/CaseStudyCarousel';
 
 /* ──────────────────────────────────────────────────────────────────────────
    HOME PAGE — single file (kept in one component so animations can be wired
@@ -66,8 +67,17 @@ const VIDEOS: Video[] = [
 const ytThumb = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 const ytThumbFallback = (id: string) => `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
 
-// ── Featured case studies (first 6 by order) ─────────────
-const FEATURED_CS = caseStudies.filter((c) => c.order <= 6);
+// Explicit bento placement (desktop, 3×3) so the grid fills with no lone card and the
+// featured renders at its full 2-row height. [0] = featured (big, top-right).
+const BTS_CELL = [
+  'col-start-2 col-span-2 row-start-1 row-span-2',
+  'col-start-1 row-start-1',
+  'col-start-1 row-start-2',
+  'col-start-1 row-start-3',
+  'col-start-2 row-start-3',
+  'col-start-3 row-start-3',
+];
+
 
 // ── Connect poster carousel (all 10 posters) ─────────────
 const CONNECT_POSTERS = [
@@ -126,26 +136,71 @@ export default function HomePage() {
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
   const scrollTo = useCallback((i: number) => emblaApi?.scrollTo(i), [emblaApi]);
 
-  // Case study auto-cycle
-  const [activeCS, setActiveCS] = useState(0);
-  const [csFading, setCsFading] = useState(false);
-  useEffect(() => {
-    const id = setInterval(() => {
-      setCsFading(true);
-      setTimeout(() => {
-        setActiveCS(i => (i + 1) % FEATURED_CS.length);
-        setCsFading(false);
-      }, 350);
-    }, 5000);
-    return () => clearInterval(id);
-  }, []);
+  // Brands bento — broken-thumbnail fallback (YouTube thumb → mq fallback → placeholder)
+  const [failed, setFailed] = useState<Record<string, boolean>>({});
+  const onThumbError = (id: string) => (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    if (img.dataset.tried !== '1') {
+      img.dataset.tried = '1';
+      img.src = ytThumbFallback(id);
+    } else {
+      setFailed((f) => (f[id] ? f : { ...f, [id]: true }));
+    }
+  };
+  // YouTube serves a 120×90 grey "no thumbnail" image (not a 404) for some videos,
+  // so onError never fires — detect it by the loaded image's natural width.
+  const onThumbLoad = (id: string) => (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    if (img.naturalWidth > 120) return; // real thumbnail
+    if (img.dataset.tried !== '1') {
+      img.dataset.tried = '1';
+      img.src = ytThumbFallback(id);
+    } else {
+      setFailed((f) => (f[id] ? f : { ...f, [id]: true }));
+    }
+  };
+
+  // Brands bento — premium GSAP hover: the hovered card scales up + lifts; every
+  // other card recedes (shrinks, dims) and is pushed away from it, so the whole
+  // grid reacts. Animates the INNER element (transform) and only the OUTER z-index,
+  // so it never collides with the scroll-reveal that drives the outer's transform.
+  const focusCard = (e: React.MouseEvent<HTMLElement>) => {
+    const inner = e.currentTarget;
+    const grid = inner.closest('.bts-grid');
+    if (!grid) return;
+    const inners = Array.from(grid.querySelectorAll<HTMLElement>('.bts-card-inner'));
+    const hr = inner.getBoundingClientRect();
+    const hcx = hr.left + hr.width / 2;
+    const hcy = hr.top + hr.height / 2;
+    inners.forEach((el) => {
+      const outer = el.closest<HTMLElement>('.bts-card');
+      if (el === inner) {
+        if (outer) gsap.set(outer, { zIndex: 30 });
+        gsap.to(el, { scale: 1.08, opacity: 1, x: 0, y: 0, duration: 0.5, ease: 'power3.out', overwrite: 'auto' });
+      } else {
+        if (outer) gsap.set(outer, { zIndex: 1 });
+        const r = el.getBoundingClientRect();
+        const dx = r.left + r.width / 2 - hcx;
+        const dy = r.top + r.height / 2 - hcy;
+        const d = Math.hypot(dx, dy) || 1;
+        gsap.to(el, { scale: 0.9, opacity: 0.45, x: (dx / d) * 24, y: (dy / d) * 24, duration: 0.5, ease: 'power3.out', overwrite: 'auto' });
+      }
+    });
+  };
+  const resetCards = (e: React.MouseEvent<HTMLElement>) => {
+    const grid = e.currentTarget;
+    gsap.to(grid.querySelectorAll<HTMLElement>('.bts-card-inner'), {
+      scale: 1, opacity: 1, x: 0, y: 0, duration: 0.55, ease: 'power3.out', overwrite: 'auto',
+    });
+    grid.querySelectorAll<HTMLElement>('.bts-card').forEach((o) => gsap.set(o, { zIndex: 1 }));
+  };
 
 
   return (
     <>
       {/* ── HERO (full-bleed Embla slider with the text overlaid on it) ───── */}
       {/* hero-section → ScrollTrigger anchor; GSAP parallax target */}
-      <section className="hero-section group relative mt-[72px] flex w-full flex-col overflow-hidden min-[1130px]:mt-[108px] sm:block sm:h-[494px]">
+      <section className="hero-section group relative mt-[72px] flex w-full flex-col overflow-hidden min-[1130px]:mt-[108px] sm:block sm:h-160">
         {/* hero-image → clip-path wipe + scale reveal + cursor parallax.
             Mobile: full banner BELOW the copy (order-2), sized to the 1920×630 ratio so
             nothing is cropped. Desktop: full-bleed background behind the overlaid copy. */}
@@ -188,15 +243,15 @@ export default function HomePage() {
 
         {/* hero-copy → cursor parallax (moves opposite to hero-image).
             Mobile: navy panel stacked ABOVE the banner (order-1). Desktop: overlaid. */}
-        <div className="hero-copy relative z-10 order-1 flex flex-col justify-center gap-5 bg-navy px-8 py-12 text-white sm:absolute sm:inset-0 sm:order-0 sm:h-full sm:max-w-170 sm:bg-transparent sm:py-0">
+        <div className="hero-copy relative z-10 order-1 flex flex-col justify-center gap-5 bg-navy px-8 py-12 text-white sm:absolute sm:inset-0 sm:order-0 sm:h-full sm:max-w-150 sm:bg-transparent sm:py-0 sm:pl-12">
           <span className="font-fm text-[11px] uppercase tracking-[0.22em] text-white/80">
             The Small Big Idea
           </span>
           {/* hero-title → SplitText word-stagger; .pink spans get extra scale-pop */}
-          <h2 className="hero-title font-fm text-3xl font-black leading-[1.05] tracking-tight sm:text-5xl">
-            From Screens to Stadiums We Make{' '}
+          <h2 className="hero-title font-fa text-[34px] font-normal leading-[1.22] tracking-[0.01em] sm:text-6xl">
+            From Screens to Stadiums. We Make{' '}
             <span className="pink italic text-magenta">Brands</span>{' '}
-            <span className="pink italic text-magenta">Unmissable</span>
+            <span className="pink italic text-magenta">Unmissable.</span>
           </h2>
           {/* hero-subtitle → y+opacity fade in */}
           <p className="hero-subtitle max-w-[460px] font-light text-white/85">
@@ -303,79 +358,114 @@ export default function HomePage() {
           {/* large blue dot, partly overlapping the section */}
           <span className="absolute -bottom-6 right-9 z-[6] h-[52px] w-[52px] rounded-full bg-[#209bd8] max-[1280px]:-bottom-[22px] max-[1280px]:right-6" aria-hidden />
 
-          {/* left text — matches the hero headline */}
-          <div className="bts-text relative z-[4] max-w-[380px] flex-[0_1_380px] max-[1280px]:max-w-full max-[1280px]:flex-none ml-8">
-            <h2 className="font-fm text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl uppercase">
-              Brands that
-              <br />
-              <span className="italic">trust us</span>
-            </h2>
-            <p className="mt-3 max-w-[300px] text-sm font-light leading-relaxed text-white/85">
-              Great things happen when the right brands meet the right people. We&apos;re a digital marketing agency that believes the perfect collaboration is waiting to happen.
-            </p>
-            <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3">
-              {[
-                { value: '150+', label: 'Storytellers & Strategists' },
-                { value: '100+', label: 'Brands in Our Orbit' },
-                { value: '500+', label: 'Creators in Our Universe' },
-                { value: '1000+', label: 'Stories & Campaigns Set in Motion' },
-              ].map(s => (
-                <div key={s.label}>
-                  <span className="block font-fm text-2xl font-black text-white sm:text-3xl">{s.value}</span>
-                  <span className="block text-xs font-light leading-snug text-white/75">{s.label}</span>
-                </div>
-              ))}
+          {/* left text — centered in the available left space (sits toward the middle,
+              filling the gap) on desktop; full-width left-aligned on mobile. */}
+          <div className="bts-text relative z-[4] flex flex-1 justify-center max-[1280px]:block max-[1280px]:flex-none">
+            <div className="max-w-95 max-[1280px]:max-w-full">
+          <h2 className="hero-title font-fa text-[34px] font-normal text-white leading-[1.22] tracking-[0.01em] sm:text-6xl">
+                Brands that
+                <br />
+                <span className="italic">trust us</span>
+              </h2>
+              <p className="mt-3 max-w-75 text-sm font-light leading-relaxed text-white/85">
+                Great things happen when the right brands meet the right people. We&apos;re a digital marketing agency that believes the perfect collaboration is waiting to happen.
+              </p>
+              <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3">
+                {[
+                  { value: '150+', label: 'Storytellers & Strategists' },
+                  { value: '100+', label: 'Brands in Our Orbit' },
+                  { value: '500+', label: 'Creators in Our Universe' },
+                  { value: '1000+', label: 'Stories & Campaigns Set in Motion' },
+                ].map(s => (
+                  <div key={s.label}>
+                    <span className="block font-fm text-2xl font-black text-white sm:text-3xl">{s.value}</span>
+                    <span className="block text-xs font-light leading-snug text-white/75">{s.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* bento grid: big featured card (2×2) top-left, 2 stacked right, 3 across bottom */}
-          <div className="bts-grid grid w-240 flex-[0_0_960px] grid-cols-3 gap-3 max-[1280px]:w-full max-[1280px]:flex-none max-[680px]:grid-cols-2">
+          {/* premium bento — outer cell handles grid placement + scroll reveal;
+              inner handles the GSAP hover (scale/shift). overflow-visible so the
+              enlarged card is never clipped. onMouseLeave on the grid resets all. */}
+          <div
+            className="bts-grid grid w-240 flex-[0_0_960px] grid-cols-3 gap-4 max-[1280px]:w-full max-[1280px]:flex-none max-[680px]:grid-cols-2"
+            onMouseLeave={resetCards}
+          >
             {VIDEOS.map((v, i) => {
               const isFeatured = i === 0;
-              // Featured: spans 2 cols + 2 rows, height filled by the two right cards — no aspect-video
-              // Mobile: collapse to col-span-2 + aspect-video (full-width single row)
+              // Explicit 3×3 placement so the grid fills (no lone card); resets to a
+              // simple flow on mobile (full-width featured, then 2-col grid).
               const spanClass = isFeatured
-                ? 'col-span-2 row-span-2 max-[680px]:row-span-1 max-[680px]:aspect-video'
-                : 'aspect-video';
-              const baseClass = `bts-card relative overflow-hidden rounded-[12px] bg-black ${spanClass}`;
+                ? `${BTS_CELL[0]} max-[680px]:col-start-1 max-[680px]:row-start-auto max-[680px]:row-span-1 max-[680px]:aspect-video`
+                : `aspect-video ${BTS_CELL[i]} max-[680px]:col-auto max-[680px]:row-auto`;
+              const innerClass = 'bts-card-inner relative h-full w-full overflow-hidden rounded-2xl bg-black shadow-[0_10px_30px_rgba(0,0,0,0.28)] will-change-transform';
 
-              return playingVideo === v.id ? (
-                <div key={v.id} className={baseClass}>
-                  <iframe
-                    src={`https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`}
-                    title={v.title}
-                    className="absolute inset-0 h-full w-full"
-                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                    allowFullScreen
-                  />
+              return (
+                <div key={v.id} className={`bts-card relative ${spanClass}`}>
+                  {playingVideo === v.id ? (
+                    <div className={innerClass}>
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0&playsinline=1`}
+                        title={v.title}
+                        className="absolute inset-0 h-full w-full"
+                        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                        allowFullScreen
+                      />
+                      {/* escape hatch — some videos have embedding disabled by the
+                          owner and show "unavailable"; this opens it on YouTube. */}
+                      <a
+                        href={`https://www.youtube.com/watch?v=${v.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute right-2.5 top-2.5 z-10 rounded-full bg-black/70 px-3 py-1.5 font-fm text-[10px] font-semibold uppercase tracking-[0.08em] text-white backdrop-blur-sm transition hover:bg-magenta"
+                      >
+                        Watch on YouTube ↗
+                      </a>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setPlayingVideo(v.id)}
+                      onMouseEnter={focusCard}
+                      aria-label={`Play ${v.title}`}
+                      className={`group cursor-pointer ${innerClass}`}
+                    >
+                      {failed[v.id] ? (
+                        // styled fallback when the YouTube thumbnail can't load
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-linear-to-br from-[#2a1640] to-navy px-4 text-center">
+                          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-magenta">
+                            <span className="ml-0.75 border-y-[7px] border-l-11 border-y-transparent border-l-white" />
+                          </span>
+                          <span className="font-fd text-sm font-bold leading-tight text-white">{v.title}</span>
+                        </div>
+                      ) : (
+                        <>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={ytThumb(v.id)}
+                            onError={onThumbError(v.id)}
+                            onLoad={onThumbLoad(v.id)}
+                            alt={v.title}
+                            loading="lazy"
+                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-600 ease-out group-hover:scale-110"
+                          />
+                          <span className="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent opacity-0 transition-opacity duration-400 ease-out group-hover:opacity-100" />
+                        </>
+                      )}
+                      {/* play button — larger for featured card */}
+                      <span className={`pointer-events-none absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 ring-1 ring-white/60 backdrop-blur-sm transition group-hover:bg-magenta group-hover:ring-magenta ${isFeatured ? 'h-16 w-16' : 'h-12 w-12'}`}>
+                        <span className={`ml-0.75 border-y-transparent border-l-white ${isFeatured ? 'border-y-[9px] border-l-14' : 'border-y-[7px] border-l-11'}`} />
+                      </span>
+                      {/* title on hover */}
+                      <span className={`pointer-events-none absolute inset-x-0 bottom-0 z-2 flex translate-y-2.5 flex-col gap-px text-left opacity-0 transition-[opacity,transform] duration-400 ease-out group-hover:translate-y-0 group-hover:opacity-100 ${isFeatured ? 'px-5 py-4' : 'px-3.5 py-3'}`}>
+                        <span className={`font-fm uppercase tracking-[0.14em] text-white/75 ${isFeatured ? 'text-[10px]' : 'text-[8px]'}`}>{v.client}</span>
+                        <span className={`font-fd font-bold leading-[1.15] text-white ${isFeatured ? 'text-[18px]' : 'text-[13px]'}`}>{v.title}</span>
+                      </span>
+                    </button>
+                  )}
                 </div>
-              ) : (
-                <button
-                  key={v.id}
-                  type="button"
-                  onClick={() => setPlayingVideo(v.id)}
-                  aria-label={`Play ${v.title}`}
-                  className={`group ${baseClass}`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={ytThumb(v.id)}
-                    onError={(e) => { e.currentTarget.src = ytThumbFallback(v.id); }}
-                    alt={v.title}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-105"
-                  />
-                  <span className="absolute inset-0 bg-linear-to-t from-black/80 via-black/25 to-transparent opacity-0 transition-opacity duration-[350ms] ease-out group-hover:opacity-100" />
-                  {/* play button — larger for featured card */}
-                  <span className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full bg-black/45 ring-1 ring-white/60 backdrop-blur-sm transition group-hover:bg-magenta group-hover:ring-magenta ${isFeatured ? 'h-16 w-16' : 'h-11 w-11'}`}>
-                    <span className={`ml-0.75 border-y-transparent border-l-white ${isFeatured ? 'border-y-[9px] border-l-14' : 'border-y-[7px] border-l-11'}`} />
-                  </span>
-                  {/* title on hover */}
-                  <span className={`absolute inset-x-0 bottom-0 z-2 flex translate-y-2.5 flex-col gap-px text-left opacity-0 transition-[opacity,transform] duration-350 ease-out group-hover:translate-y-0 group-hover:opacity-100 ${isFeatured ? 'px-5 py-4' : 'px-3.5 py-2.5'}`}>
-                    <span className={`font-fm uppercase tracking-[0.14em] text-white/75 ${isFeatured ? 'text-[10px]' : 'text-[8px]'}`}>{v.client}</span>
-                    <span className={`font-fd font-bold leading-[1.15] text-white ${isFeatured ? 'text-[18px]' : 'text-[13px]'}`}>{v.title}</span>
-                  </span>
-                </button>
               );
             })}
           </div>
@@ -383,68 +473,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CASE STUDY — CONNECT ─────────────────────────── */}
-      <section className="csc-root" aria-label="Featured case studies">
-        <div className="csc-inner">
-          <div className="csc-visual">
-            <svg className="csc-orbit" viewBox="0 0 320 220" fill="none" aria-hidden>
-              <ellipse cx="170" cy="110" rx="150" ry="96" stroke="var(--magenta)" strokeOpacity="0.4" strokeWidth="1" />
-              <circle cx="320" cy="110" r="5" fill="var(--magenta)" />
-              <circle cx="186" cy="14" r="4" fill="var(--electric)" />
-            </svg>
-            <div className="csc-stack">
-              {FEATURED_CS.map((cs, i) => {
-                const offset = (i - activeCS + FEATURED_CS.length) % FEATURED_CS.length;
-                const cls =
-                  offset === 0 ? 'csc-poster csc-poster-front' :
-                  offset === 1 ? 'csc-poster csc-poster-back-a' :
-                  offset === 2 ? 'csc-poster csc-poster-back-b' : 'csc-poster csc-poster-hidden';
-                return (
-                  <div key={cs.slug} className={cls} style={{ transition: 'opacity 0.4s ease, transform 0.4s ease' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={cs.image} alt={cs.title} className="absolute inset-0 h-full w-full object-cover" />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="csc-text" style={{ opacity: csFading ? 0 : 1, transition: 'opacity 0.35s ease' }}>
-            <p className="csc-kicker">{FEATURED_CS[activeCS].clientName}</p>
-            <h2 className="csc-h2">{FEATURED_CS[activeCS].title}</h2>
-            <p className="csc-body">{FEATURED_CS[activeCS].shortDescription}</p>
-            <Link href={`/case-studies/${FEATURED_CS[activeCS].slug}`} className="btn-border csc-cta">
-              View Case Study <span className="arr">→</span>
-            </Link>
-          </div>
-        </div>
-
-        <div className="csc-stats">
-          <div className="csc-stat">
-            <span className="csc-stat-val">{FEATURED_CS[activeCS].year}</span>
-            <span className="csc-stat-label">Year</span>
-          </div>
-          <div className="csc-stat">
-            <span className="csc-stat-val">{FEATURED_CS[activeCS].services.length}+</span>
-            <span className="csc-stat-label">Services Delivered</span>
-          </div>
-          <div className="csc-stat" style={{ borderRight: 'none' }}>
-            <span className="csc-stat-val" style={{ fontSize: 'clamp(14px,1.4vw,20px)', lineHeight: '1.2' }}>
-              {FEATURED_CS[activeCS].category.split(' · ')[0]}
-            </span>
-            <span className="csc-stat-label">Category</span>
-          </div>
-          <div className="csc-dots">
-            {FEATURED_CS.map((_, i) => (
-              <button
-                key={i}
-                aria-label={`Go to case study ${i + 1}`}
-                onClick={() => { setCsFading(true); setTimeout(() => { setActiveCS(i); setCsFading(false); }, 350); }}
-                className={`csc-dot${i === activeCS ? ' active' : ''}`}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      <CaseStudyCarousel />
 
       {/* ── MOVIE CONNECT ────────────────────────────────── */}
       <section className="movie-connect-section" aria-label="Connect — featured productions">
@@ -495,11 +524,17 @@ export default function HomePage() {
 
         <div className="bic-center">
           <svg className="bic-orbit" viewBox="0 0 640 420" fill="none" aria-hidden preserveAspectRatio="xMidYMid meet">
-            <ellipse cx="320" cy="210" rx="300" ry="190" transform="rotate(-6 320 210)" stroke="var(--magenta)" strokeOpacity="0.6" strokeWidth="1.5" />
-            <ellipse cx="320" cy="210" rx="288" ry="178" transform="rotate(5 320 210)" stroke="var(--electric)" strokeOpacity="0.5" strokeWidth="1.5" />
-            <circle cx="34" cy="232" r="7" fill="var(--electric)" />
-            <circle cx="612" cy="250" r="9" fill="var(--magenta)" />
-            <circle cx="330" cy="402" r="6" fill="var(--magenta)" />
+            {/* magenta ring — rotates clockwise */}
+            <g className="bic-ring-1">
+              <ellipse cx="320" cy="210" rx="300" ry="190" stroke="var(--magenta)" strokeOpacity="0.6" strokeWidth="1.5" />
+              <circle cx="612" cy="250" r="9" fill="var(--magenta)" />
+              <circle cx="330" cy="402" r="6" fill="var(--magenta)" />
+            </g>
+            {/* electric blue ring — rotates counter-clockwise */}
+            <g className="bic-ring-2">
+              <ellipse cx="320" cy="210" rx="288" ry="178" stroke="var(--electric)" strokeOpacity="0.5" strokeWidth="1.5" />
+              <circle cx="34" cy="232" r="7" fill="var(--electric)" />
+            </g>
           </svg>
 
           <div className="bic-content">
@@ -518,40 +553,7 @@ export default function HomePage() {
       </section>
 
       {/* ── GREAT PLACE TO WORK ──────────────────────────── */}
-      <section className="relative w-full overflow-hidden bg-white px-6 py-20 sm:py-28" aria-label="Great Place to Work certified">
-        {/* subtle dot texture */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-70"
-          style={{
-            backgroundImage: 'radial-gradient(rgba(10,10,10,0.06) 1px, transparent 1px)',
-            backgroundSize: '18px 18px',
-          }}
-          aria-hidden
-        />
-        <div className="relative mx-auto grid max-w-[1100px] items-center gap-12 md:grid-cols-2">
-          <div className="gptw-text">
-            <h2 className="font-fm text-3xl font-black uppercase tracking-tight text-ink sm:text-[40px]">
-              #GotGreatCertified
-            </h2>
-            <p className="mt-5 max-w-[460px] font-fb text-[15px] leading-7 text-[#555]">
-              We are proud to be a certified Great Place To Work by none other than,{' '}
-              <strong className="font-semibold text-ink">Great Place to Work®</strong> Institute India. It
-              holds great prestige in Workplace Culture assessment and no jury or individual can influence the
-              results of the assessment. Our genuine concern towards our employees and their honest efforts
-              have made this possible.
-            </p>
-          </div>
-          <div className="gptw-badge flex justify-center md:justify-end">
-            <Image
-              src="/Great-Place-to-work-certificate-500x500.png"
-              alt="Great Place to Work Certified — Oct 2022 to Oct 2023, India"
-              width={500}
-              height={500}
-              className="h-auto w-full max-w-[360px] rounded-xl shadow-[0_18px_50px_rgba(0,0,0,0.1)]"
-            />
-          </div>
-        </div>
-      </section>
+   
 
       {/* Preloader — overlays the page with a ~4s intro sequence */}
       <Preloader />

@@ -97,10 +97,9 @@ export default function HeroAnimation() {
     gsap.set('.lm-marquee', { opacity: 0, y: 30 });
     gsap.set('.bts-text',   { opacity: 0, x: -40 });
     gsap.set('.bts-card',   { opacity: 0, y: 32, scale: 0.96 });
-    // Movie connect section — hidden before scroll
+    // Movie connect section — strip + track are shown immediately (no entrance
+    // reveal); only the small dot accent animates in. The carousel already runs.
     gsap.set('.movie-connect-dot', { y: -30, opacity: 0, scale: 0.7 });
-    gsap.set('.mc-strip',          { clipPath: 'inset(0 50% 0 50%)' });
-    gsap.set('.mc-track',          { opacity: 0 });
     gsap.set('.connect-text-block', { opacity: 0 });
     gsap.set('.connect-cta',       { opacity: 0, y: 12 });
     // Case study section — hidden before scroll (GSAP-driven, replays on re-entry)
@@ -369,15 +368,13 @@ export default function HeroAnimation() {
               mcTrack.style.setProperty('--mc-duration', `${dur.toFixed(1)}s`);
             }
 
-            // Entrance reveal
+            // Only the dot accent animates in — no strip wipe / track fade.
             gsap.to('.movie-connect-dot', { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)' });
-            gsap.to('.mc-strip',   { clipPath: 'inset(0 0% 0 0%)', duration: 0.8, ease: 'power3.out', delay: 0.15 });
-            gsap.to('.mc-track',   { opacity: 1, duration: 0.7, ease: 'power2.out', delay: 0.25 });
 
             measure();                                            // cache geometry once
             window.addEventListener('resize', onResize, { passive: true });
-            // Start CSS scroll animation after the track fades in (~300 ms)
-            setTimeout(() => mcTrack.classList.add('mc-running'), 300);
+            // Cards run straight away (carousel)
+            mcTrack.classList.add('mc-running');
             // Start per-card scaling
             gsap.ticker.add(scaleTick);
           },

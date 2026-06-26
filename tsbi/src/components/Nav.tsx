@@ -72,10 +72,10 @@ export default function Nav() {
         {/* header-logo → GSAP fades in from opacity:0 scale:0.92 */}
         <Link href="/" className="nav-logo header-logo">
           <Image
-            src="/tsbilogo.png"
+            src="/TSBIInOBG.png"
             alt="The Small Big Idea"
-            width={150}
-            height={52}
+            width={350}
+            height={72}
             className="nav-logo-img"
             priority
           />
