@@ -125,7 +125,7 @@ export default function Footer() {
           The Small Big Idea
         </p>
 
-        <h2 className="mt-3 font-fd text-[44px] font-black leading-[1.02] tracking-tight text-ink sm:text-[64px]">
+        <h2 className="mt-3 font-fm text-[44px] font-black leading-[1.02] tracking-tight text-ink sm:text-[64px] uppercase italic">
           Small Ideas.
           <br />
           <span className="italic text-magenta">Big Impact.</span>

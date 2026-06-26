@@ -1583,7 +1583,9 @@ body {
   overflow: hidden;
   cursor: pointer;
   z-index: 1;
-  will-change: transform;
+  /* GSAP drives `transform` (scale/popup); the card-float wave drives `translate`.
+     Hint both so each card stays on its own compositor layer (smoother scroll). */
+  will-change: transform, translate;
   transform-origin: center center;
   box-shadow: 0 8px 24px rgba(0,0,0,.28);
   transition: box-shadow .3s ease;
@@ -1620,7 +1622,7 @@ body {
   margin-bottom: 10px;
 }
 .connect-title {
-  font-family: var(--fd);
+  font-family: var(--fm);
   font-style: italic;
   font-weight: 900;
   font-size: clamp(24px,2.6vw,36px);
@@ -1630,7 +1632,7 @@ body {
   margin: 0 auto;
 }
 .connect-sub {
-  font-family: var(--fb);
+  font-family: var(--fm);
   font-size: clamp(13px,1.1vw,15px);
   color: #555;
   max-width: 520px;
@@ -1666,7 +1668,7 @@ body {
 /* kept for legacy reference — no longer used in markup */
 .connect-desc {
   text-align: center;
-  font-family: var(--fb);
+  font-family: var(--fm);
   font-size: 9px;
   color: #f01891;
   max-width: 460px;
@@ -1681,7 +1683,7 @@ body {
 .bic-center { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; display: flex; align-items: center; justify-content: center; min-height: clamp(260px,32vw,380px); }
 .bic-orbit { position: absolute; z-index: 1; width: min(680px, 96vw); height: auto; left: 50%; top: 50%; transform: translate(-50%,-50%); pointer-events: none; }
 .bic-content { position: relative; z-index: 2; text-align: center; }
-.bic-h2 { font-family: var(--fd); font-weight: 900; color: var(--ink); font-size: clamp(30px,4.4vw,58px); line-height: 1.04; letter-spacing: -.02em; margin-bottom: 28px; }
+.bic-h2 { font-family: var(--fm); font-weight: 900; color: var(--ink); font-size: clamp(30px,4.4vw,58px); line-height: 1.04; letter-spacing: -.02em; margin-bottom: 28px;  }
 .bic-h2 .accent { color: var(--magenta); }
 
 /* ── FOOTER (home redesign — centred logo + navy bar) ──── */

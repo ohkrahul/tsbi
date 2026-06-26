@@ -517,6 +517,42 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── GREAT PLACE TO WORK ──────────────────────────── */}
+      <section className="relative w-full overflow-hidden bg-white px-6 py-20 sm:py-28" aria-label="Great Place to Work certified">
+        {/* subtle dot texture */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-70"
+          style={{
+            backgroundImage: 'radial-gradient(rgba(10,10,10,0.06) 1px, transparent 1px)',
+            backgroundSize: '18px 18px',
+          }}
+          aria-hidden
+        />
+        <div className="relative mx-auto grid max-w-[1100px] items-center gap-12 md:grid-cols-2">
+          <div className="gptw-text">
+            <h2 className="font-fm text-3xl font-black uppercase tracking-tight text-ink sm:text-[40px]">
+              #GotGreatCertified
+            </h2>
+            <p className="mt-5 max-w-[460px] font-fb text-[15px] leading-7 text-[#555]">
+              We are proud to be a certified Great Place To Work by none other than,{' '}
+              <strong className="font-semibold text-ink">Great Place to Work®</strong> Institute India. It
+              holds great prestige in Workplace Culture assessment and no jury or individual can influence the
+              results of the assessment. Our genuine concern towards our employees and their honest efforts
+              have made this possible.
+            </p>
+          </div>
+          <div className="gptw-badge flex justify-center md:justify-end">
+            <Image
+              src="/Great-Place-to-work-certificate-500x500.png"
+              alt="Great Place to Work Certified — Oct 2022 to Oct 2023, India"
+              width={500}
+              height={500}
+              className="h-auto w-full max-w-[360px] rounded-xl shadow-[0_18px_50px_rgba(0,0,0,0.1)]"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Preloader — overlays the page with a ~4s intro sequence */}
       <Preloader />
 

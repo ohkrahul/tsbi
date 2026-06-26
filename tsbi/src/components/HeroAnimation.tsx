@@ -300,6 +300,16 @@ export default function HeroAnimation() {
         { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
         '.csc-stats', 'top 88%');
 
+      // Great Place to Work — text slides in from left, badge fades + scales up
+      mkReveal('.gptw-text',
+        { opacity: 0, x: -40 },
+        { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out' },
+        '.gptw-text', 'top 85%');
+      mkReveal('.gptw-badge',
+        { opacity: 0, scale: 0.9 },
+        { opacity: 1, scale: 1, duration: 0.7, ease: 'power3.out' },
+        '.gptw-badge', 'top 85%');
+
       // Movie connect — ticker-based infinite carousel with center-scale highlight
       const mcSection = q<HTMLElement>('.movie-connect-section');
       const mcTrack   = q<HTMLElement>('.mc-track');
@@ -309,24 +319,38 @@ export default function HeroAnimation() {
         const yQ     = cards.map(c => gsap.quickSetter(c, 'y', 'px'));
         const zQ     = cards.map(c => gsap.quickSetter(c, 'zIndex'));
 
-        // CSS animation handles track movement (compositor — no GSAP conflict).
-        // CSS `translate` animation (card-float keyframe) handles the wave bob — it is a
-        // SEPARATE CSS property from `transform`, so GSAP's scale/popup never overwrites it.
-        // This ticker only drives scale + popup (no wave math needed here).
-        const scaleTick = () => {
-          const sRect  = mcSection.getBoundingClientRect();
-          const cx     = sRect.left + sRect.width / 2;
-          const zone   = sRect.width * 0.12;
+        // PERFORMANCE: the old tick called getBoundingClientRect() on the section +
+        // every card EACH frame (21 forced layout reflows/frame) while CSS animations
+        // ran — that caused the stutter. Cards only move horizontally WITH the track,
+        // so we measure each card's centre once (relative to the track, on enter +
+        // resize) and per frame read only the track's left edge — a single reflow.
+        let sectionCenterX = 0;
+        let zone = 1;
+        const cardOffset: number[] = [];
+        const measure = () => {
+          const sRect = mcSection.getBoundingClientRect();
+          sectionCenterX = sRect.left + sRect.width / 2;
+          zone = sRect.width * 0.12;
+          const tLeft = mcTrack.getBoundingClientRect().left;
           cards.forEach((card, i) => {
-            const r      = card.getBoundingClientRect();
-            const cardCx = r.left + r.width / 2;
-            const dist   = Math.abs(cardCx - cx);
-            const t      = Math.max(0, 1 - dist / zone);
+            const r = card.getBoundingClientRect();
+            cardOffset[i] = r.left + r.width / 2 - tLeft; // centre relative to track
+          });
+        };
+
+        // Reads the track once, then only writes — no read/write thrashing.
+        const scaleTick = () => {
+          const tLeft = mcTrack.getBoundingClientRect().left;
+          for (let i = 0; i < cards.length; i++) {
+            const dist = Math.abs(tLeft + cardOffset[i] - sectionCenterX);
+            const t = dist < zone ? 1 - dist / zone : 0;
             scaleQ[i](0.72 + t * 0.43);   // scale: 0.72 → 1.15
             yQ[i](-t * 28);               // popup: rises 28 px at center
             zQ[i](Math.round(t * 10) + 1);
-          });
+          }
         };
+
+        const onResize = () => measure();
 
         let tickerStarted = false;
         ScrollTrigger.create({
@@ -350,6 +374,8 @@ export default function HeroAnimation() {
             gsap.to('.mc-strip',   { clipPath: 'inset(0 0% 0 0%)', duration: 0.8, ease: 'power3.out', delay: 0.15 });
             gsap.to('.mc-track',   { opacity: 1, duration: 0.7, ease: 'power2.out', delay: 0.25 });
 
+            measure();                                            // cache geometry once
+            window.addEventListener('resize', onResize, { passive: true });
             // Start CSS scroll animation after the track fades in (~300 ms)
             setTimeout(() => mcTrack.classList.add('mc-running'), 300);
             // Start per-card scaling
@@ -359,6 +385,7 @@ export default function HeroAnimation() {
 
         cleanups.push(() => {
           gsap.ticker.remove(scaleTick);
+          window.removeEventListener('resize', onResize);
           mcTrack.classList.remove('mc-running');
         });
 
