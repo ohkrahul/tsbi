@@ -1474,7 +1474,7 @@ body {
 .csc-root { background: #fff; padding: clamp(56px,8vw,104px) clamp(20px,5vw,64px) clamp(40px,5vw,64px); overflow-x: clip; }
 .csc-inner { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(36px,6vw,90px); align-items: center; max-width: 1200px; margin: 0 auto; }
 .csc-visual { position: relative; display: flex; align-items: center; justify-content: center; min-height: 280px; overflow: visible; }
-.csc-orbit { position: absolute; width: min(280px, 52%); height: auto; right: -14%; top: -22%; z-index: 1; pointer-events: none; overflow: visible; }
+.csc-orbit { position: absolute; width: min(300px, 54%); height: auto; right: -2%; top: -20%; z-index: 1; pointer-events: none; overflow: visible; }
 .csc-stack { position: relative; z-index: 2; width: min(440px, 100%); aspect-ratio: 16/10; }
 .csc-poster { position: absolute; inset: 0; border-radius: 12px; overflow: hidden; will-change: transform, opacity; transition: opacity 0.4s ease, transform 0.4s ease; }
 .csc-poster-front { z-index: 3; box-shadow: 0 24px 60px rgba(0,0,0,.25); }

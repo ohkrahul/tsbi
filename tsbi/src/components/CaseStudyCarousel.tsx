@@ -64,20 +64,16 @@ export default function CaseStudyCarousel() {
       <div className="csc-inner">
         {/* ── poster stack ── */}
         <div className="csc-visual">
-          {/* two small overlapping orbit rings — decorative, upper area */}
+          {/* two static overlapping orbit rings — matches design reference */}
           <svg className="csc-orbit" viewBox="0 0 260 200" fill="none" aria-hidden>
-            {/* magenta ring, tilted slightly clockwise */}
             <ellipse cx="130" cy="100" rx="118" ry="84"
-              transform="rotate(-7 130 100)"
               stroke="var(--magenta)" strokeOpacity="0.45" strokeWidth="1.3" />
-            {/* electric blue ring, tilted slightly counter-clockwise */}
             <ellipse cx="130" cy="100" rx="108" ry="76"
-              transform="rotate(6 130 100)"
               stroke="var(--electric)" strokeOpacity="0.35" strokeWidth="1.3" />
-            {/* blue dot — lower-left of the ring pair */}
-            <circle cx="18" cy="118" r="6" fill="var(--electric)" />
-            {/* magenta dot — upper-right of the ring pair */}
-            <circle cx="200" cy="22" r="5" fill="var(--magenta)" />
+            {/* magenta dot — top-right arc, exactly on outer ellipse */}
+            <circle cx="160" cy="17" r="5.5" fill="var(--magenta)" />
+            {/* blue dot — top-center arc, exactly on inner ellipse */}
+            <circle cx="120" cy="24" r="5" fill="var(--electric)" />
           </svg>
           <div className="csc-stack">
             {FEATURED.map((item, i) => {
