@@ -81,16 +81,16 @@ const BTS_CELL = [
 
 // ── Connect poster carousel (all 10 posters) ─────────────
 const CONNECT_POSTERS = [
-  { label: 'Happy Patel',                    img: '/Movie%20Posters/Happy%20Patel.jpg' },
-  { label: 'ASSI',                           img: '/Movie%20Posters/ASSI.jpg' },
-  { label: 'Main Vaapas Aaunga',             img: '/Movie%20Posters/MVA.jpeg' },
-  { label: 'Ek Din',                         img: '/Movie%20Posters/Ek%20Din.jpg' },
-  { label: 'Sunny Sanskari Ki Tulsi Kumari', img: '/Movie%20Posters/SSKTK.jpg' },
-  { label: 'TMMTMTTM',                       img: '/Movie%20Posters/TMMTMTTM.jpg' },
-  { label: 'TYM',                            img: '/Movie%20Posters/TYM.jpg' },
-  { label: 'PPAVD',                          img: '/Movie%20Posters/PPAVD.jpeg' },
-  { label: 'CMD',                            img: '/Movie%20Posters/CMD.jpg' },
-  { label: 'Bandar',                         img: '/Movie%20Posters/Bandar.jpg' },
+  { label: 'Happy Patel',                    img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472929/Happy_Patel_iui6b8.jpg' },
+  { label: 'ASSI',                           img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472931/ASSI_rs8qco.jpg' },
+  { label: 'Main Vaapas Aaunga',             img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472930/MVA_oo9fhp.jpg' },
+  { label: 'Ek Din',                         img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472930/Ek_Din_mnm39t.jpg' },
+  { label: 'Sunny Sanskari Ki Tulsi Kumari', img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782473329/SSKTK_1_rvl6th.jpg' },
+  { label: 'TMMTMTTM',                       img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782473858/TMMTMTTM_ece2hf.jpg' },
+  { label: 'TYM',                            img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472933/TYM_qwmyhx.jpg' },
+  { label: 'PPAVD',                          img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782473328/PPAVD_a5ojll.jpg' },
+  { label: 'CMD',                            img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782473351/CMD_l5t9wi.jpg' },
+  { label: 'Bandar',                         img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472931/Bandar_hxgsic.jpg' },
 ];
 
 // ── CTA doodle icons (faint inline line-art) ─────────────

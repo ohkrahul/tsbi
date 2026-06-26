@@ -75,13 +75,15 @@ body {
 .loader-imgs {
   width: 150%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   display: flex; gap: 50px;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  will-change: transform;
 }
 /* Equal-width cells. Fixed height keeps the row even (TSBI's visuals have
    mixed aspect ratios; beeyond's source webps are uniform). */
 .img {
   position: relative; flex: 1; height: 70vh;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  will-change: transform, clip-path;
+  transform: translateZ(0);
 }
 .img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 /* Centre cell is the TSBI logo (the image left standing). No clip/crop so the

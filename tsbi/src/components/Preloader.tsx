@@ -18,12 +18,12 @@ import gsap from 'gsap';
 // is the one image left standing when the others wipe away. `pos` keeps the
 // subject in frame when a cell crops (object-fit: cover).
 const REEL: { src: string; pos?: string }[] = [
-  { src: '/about us/webbanner 2 msd.jpg.jpeg', pos: 'right center' },   // MS Dhoni — sport
-  { src: '/about us/webbanner 1 Ashish Vidyarthi.jpg.jpeg' },           // film / celebrity
-  { src: '/about us/webbanner 3 mi.jpg.jpeg' },                         // cricket — sport
-  { src: '/newImages/image-172-scaled-1.jpeg' },                        // team / brand energy
-  { src: 'https://img.youtube.com/vi/37CCZAHaYx8/hqdefault.jpg' },      // brand film — production
-  { src: 'https://img.youtube.com/vi/4D4H43PBEEo/hqdefault.jpg' },      // campaign film — digital
+  { src: '/about%20us/webbanner%202%20msd.jpg.jpeg', pos: 'right center' },
+  { src: '/about%20us/webbanner%201%20Ashish%20Vidyarthi.jpg.jpeg' },
+  { src: '/about%20us/webbanner%203%20mi.jpg.jpeg' },
+  { src: '/newImages/image-172-scaled-1.jpeg' },
+  { src: '/about%20us/webbanner%201%20Ashish%20Vidyarthi.jpg.jpeg' },
+  { src: '/about%20us/webbanner%203%20mi.jpg.jpeg' },
 ];
 
 export default function Preloader() {
@@ -47,21 +47,17 @@ export default function Preloader() {
       const wipeUp = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)'; // collapse to top edge
 
       gsap
-        .timeline({ onComplete: finish })
-        // 1. images (and the centre logo) rise into place, one after another
-        .to('.img', { y: 0, duration: 1.1, stagger: 0.04, ease: 'power3.inOut' })
-        // 2. the 150%-wide row glides left into centre (overlaps step 1)
-        .to('.loader-imgs', { x: 0, duration: 1.9, ease: 'power3.inOut' }, '-=1.6')
-        // 3. every image wipes away top-to-bottom around the logo, staggered
-        .to('.img:not(#loader-logo)', { clipPath: wipeUp, duration: 0.7, stagger: 0.07, ease: 'power3.inOut' }, '-=0.7')
-        // 4. ONE white panel sweeps up through the screen — covers the logo, then
-        //    continues off the top, revealing the homepage in a single pass.
-        .addLabel('sweep', '+=0.05')
-        .to('.loader-out', { yPercent: -100, duration: 0.85, ease: 'power2.inOut' }, 'sweep')
-        // at mid-sweep the panel fully covers the screen: drop the black reel layer
-        // and cue the hero so the trailing edge uncovers the page, not black.
-        .set('.loader', { autoAlpha: 0 }, 'sweep+=0.42')
-        .call(() => window.dispatchEvent(new Event('tsbi:intro-done')), undefined, 'sweep+=0.42');
+        .timeline({ onComplete: finish, defaults: { force3D: true } })
+        // 1. images fly up — expo.out lands crisply with no slow crawl at the top
+        .to('.img', { y: 0, duration: 0.95, stagger: 0.055, ease: 'expo.out' })
+        // 2. row glides left into centre, starts immediately with the rise
+        .to('.loader-imgs', { x: 0, duration: 1.7, ease: 'expo.out' }, 0)
+        // 3. wipe images away — starts as soon as the last image lands
+        .to('.img:not(#loader-logo)', { clipPath: wipeUp, duration: 0.55, stagger: 0.06, ease: 'expo.in' }, '-=0.1')
+        // 4. white panel sweeps up immediately after wipe — no gap
+        .to('.loader-out', { yPercent: -100, duration: 0.75, ease: 'power3.inOut' }, '-=0.05')
+        .set('.loader', { autoAlpha: 0 }, '-=0.38')
+        .call(() => window.dispatchEvent(new Event('tsbi:intro-done')), undefined, '-=0.38');
     }, rootRef);
 
     return () => {
@@ -101,8 +97,7 @@ export default function Preloader() {
           {REEL.slice(3).map(cell)}
         </div>
       </div>
-      {/* light panel that sweeps up to close out the intro (beeyond-style) */}
-      {/* <div className="loader-out" /> */}
+      <div className="loader-out" />
     </div>
   );
 }
