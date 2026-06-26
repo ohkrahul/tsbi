@@ -1,47 +1,17 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { SplitText } from 'gsap/SplitText';
 
-// ── Particle types and helpers ─────────────────────────────────────────────
-interface Particle {
-  x: number; y: number;
-  vx: number; vy: number;
-  size: number;
-  color: string;
-  alpha: number;
-  decay: number;
-  sparkle: boolean; // true → 4-pointed star; false → circle
-}
-
-const PARTICLE_COLORS = ['#e0197d', '#ff1aa0', '#f01891', '#1a6aff', '#8ecbf0', '#ffffff'];
-
-// Draws a 4-pointed star/diamond at (x, y) with outer radius r.
-function drawSparkle(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
-  const p = r * 0.32; // inner notch radius
-  ctx.beginPath();
-  ctx.moveTo(x,     y - r);
-  ctx.lineTo(x + p, y - p);
-  ctx.lineTo(x + r, y    );
-  ctx.lineTo(x + p, y + p);
-  ctx.lineTo(x,     y + r);
-  ctx.lineTo(x - p, y + p);
-  ctx.lineTo(x - r, y    );
-  ctx.lineTo(x - p, y - p);
-  ctx.closePath();
-}
-
 export default function HeroAnimation() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, SplitText);
+    gsap.registerPlugin(ScrollTrigger, SplitText);
 
     const cleanups: Array<() => void> = [];
     let splitRef: InstanceType<typeof SplitText> | null = null;
@@ -50,21 +20,6 @@ export default function HeroAnimation() {
 
     // Only activate pointer-specific features (cursor, particles) on true pointer devices.
     const isPointerDevice = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-
-    // ── SVG line setup ─────────────────────────────────────────────────────
-    // The blue nav line is authored as a <polyline>. MotionPathPlugin can only
-    // follow a <path>, so convert it to one up-front and use the converted
-    // element for both the draw animation and the travelling-dot motion path.
-    const bluePolyRaw = q<SVGPolylineElement>('.header-blue-svg polyline');
-    let blueLine: SVGPathElement | null = null;
-    if (bluePolyRaw) {
-      const converted = MotionPathPlugin.convertToPath('.header-blue-svg polyline');
-      blueLine = converted[0] ?? null;
-      if (blueLine) {
-        const len = blueLine.getTotalLength();
-        gsap.set(blueLine, { strokeDasharray: len, strokeDashoffset: len });
-      }
-    }
 
     // The pink connector reveals LEFT→RIGHT *spatially* via a clip-path on the
     // .lm-connector wrapper — NOT via stroke-dash. stroke-dash reveals by path
@@ -81,10 +36,6 @@ export default function HeroAnimation() {
     }
 
     // ── Initial states ─────────────────────────────────────────────────────
-    gsap.set('.header-logo',            { opacity: 0, scale: 0.92, transformOrigin: 'left center' });
-    gsap.set('.header-blue-end-dot',    { opacity: 0, scale: 0,    transformOrigin: 'center center' });
-    gsap.set('.header-blue-travel-dot', { opacity: 0 });
-    gsap.set('.header-nav-item',        { opacity: 0, y: -5 });
     gsap.set('.hero-image',             { clipPath: 'inset(0 0 100% 0)', scale: 1.06 });
     gsap.set('.hero-subtitle',          { opacity: 0, y: 12 });
     gsap.set('.hero-cta',               { opacity: 0, y: 8 });
@@ -125,18 +76,6 @@ export default function HeroAnimation() {
 
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      // Logo
-      tl.to('.header-logo', { opacity: 1, scale: 1, duration: 0.45 }, 0);
-
-      // Blue nav line draws
-      if (blueLine) {
-        tl.to(blueLine, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0.2);
-        tl.to('.header-blue-end-dot', { opacity: 1, scale: 1, duration: 0.22, ease: 'back.out(2)' }, 1.15);
-      }
-
-      // Nav items stagger
-      tl.to('.header-nav-item', { opacity: 1, y: 0, duration: 0.45, stagger: 0.08 }, 0.8);
-
       // Hero image clip-path wipe + zoom out
       tl.to('.hero-image', { clipPath: 'inset(0 0 0% 0)', scale: 1, duration: 1.0 }, 0.9);
 
@@ -176,25 +115,6 @@ export default function HeroAnimation() {
             });
           });
         }, 2.6);
-      }
-
-      // Post-load: blue endpoint pulses
-      tl.add(() => {
-        gsap.to('.header-blue-end-dot', {
-          scale: 1.75, opacity: 0.38, duration: 1.35,
-          ease: 'sine.inOut', repeat: -1, yoyo: true, transformOrigin: 'center center',
-        });
-      }, 1.5);
-
-      // Post-load: tiny dot loops along blue nav line
-      const travelDot = q<SVGCircleElement>('.header-blue-travel-dot');
-      if (travelDot && blueLine) {
-        tl.add(() => {
-          gsap.to(travelDot, {
-            motionPath: { path: blueLine, autoRotate: false, align: blueLine },
-            opacity: 0.5, duration: 6, ease: 'none', repeat: -1, delay: 0.4,
-          });
-        }, 2.0);
       }
 
       cleanups.push(() => tl.kill());
@@ -503,142 +423,13 @@ export default function HeroAnimation() {
       clearTimeout(fallback);
     });
 
-    // ── Canvas particle trail (pointer devices only) ───────────────────────
+    // ── Hero text magnetic hover (pointer devices only) ───────────────────
+    // GlobalCursor handles movement, particles, nav hover globally.
+    // HeroAnimation only adds the hero-headline pull effect.
     if (isPointerDevice) {
-      const canvas = canvasRef.current;
-      if (canvas) {
-        const setSize = () => {
-          canvas.width  = window.innerWidth;
-          canvas.height = window.innerHeight;
-        };
-        setSize();
-        window.addEventListener('resize', setSize, { passive: true });
-        cleanups.push(() => window.removeEventListener('resize', setSize));
-
-        const ctx    = canvas.getContext('2d')!;
-        const pts: Particle[] = [];
-        let   rafId  = 0;
-        let   lastX  = -999, lastY = -999;
-
-        const spawn = (x: number, y: number) => {
-          for (let i = 0; i < 5; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 1.6 + 0.4;
-            pts.push({
-              x: x + (Math.random() - 0.5) * 6,
-              y: y + (Math.random() - 0.5) * 6,
-              vx: Math.cos(angle) * speed,
-              vy: Math.sin(angle) * speed - 0.9, // slight upward bias
-              size:    Math.random() * 3 + 1.2,
-              color:   PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
-              alpha:   Math.random() * 0.3 + 0.7, // 0.7–1.0
-              decay:   Math.random() * 0.03 + 0.028,
-              sparkle: Math.random() > 0.42,
-            });
-          }
-          // Cap at 90 live particles
-          if (pts.length > 90) pts.splice(0, pts.length - 90);
-        };
-
-        const drawLoop = () => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          for (let i = pts.length - 1; i >= 0; i--) {
-            const p = pts[i];
-            p.x    += p.vx;
-            p.y    += p.vy;
-            p.vy   += 0.065; // gravity
-            p.alpha -= p.decay;
-            if (p.alpha <= 0) { pts.splice(i, 1); continue; }
-
-            ctx.save();
-            ctx.globalAlpha = Math.max(0, p.alpha);
-            ctx.fillStyle   = p.color;
-            if (p.sparkle) {
-              ctx.shadowBlur  = 7;
-              ctx.shadowColor = p.color;
-              drawSparkle(ctx, p.x, p.y, p.size);
-            } else {
-              ctx.shadowBlur  = 4;
-              ctx.shadowColor = p.color;
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            }
-            ctx.fill();
-            ctx.restore();
-          }
-          rafId = requestAnimationFrame(drawLoop);
-        };
-        rafId = requestAnimationFrame(drawLoop);
-
-        const onTrailMove = (e: MouseEvent) => {
-          const dx = e.clientX - lastX, dy = e.clientY - lastY;
-          // Spawn only when moved at least 3px to avoid jitter-bursts
-          if (dx * dx + dy * dy > 9) {
-            spawn(e.clientX, e.clientY);
-            lastX = e.clientX; lastY = e.clientY;
-          }
-        };
-        document.addEventListener('mousemove', onTrailMove, { passive: true });
-        cleanups.push(() => {
-          document.removeEventListener('mousemove', onTrailMove);
-          cancelAnimationFrame(rafId);
-        });
-      }
-    }
-
-    // ── Custom cursor (pointer devices only) ──────────────────────────────
-    const dotEl  = q<HTMLElement>('.cursor-dot');
-    const ringEl = q<HTMLElement>('.cursor-ring');
-
-    if (isPointerDevice && dotEl && ringEl) {
-      // Centre the cursors at 0,0 — GSAP x/y will move them.
-      gsap.set([dotEl, ringEl], { xPercent: -50, yPercent: -50 });
-
-      const moveDotX  = gsap.quickTo(dotEl,  'x', { duration: 0.10, ease: 'power3.out' });
-      const moveDotY  = gsap.quickTo(dotEl,  'y', { duration: 0.10, ease: 'power3.out' });
-      const moveRingX = gsap.quickTo(ringEl, 'x', { duration: 0.38, ease: 'power3.out' });
-      const moveRingY = gsap.quickTo(ringEl, 'y', { duration: 0.38, ease: 'power3.out' });
-
-      let shown = false;
-      const showCursor = () => {
-        if (shown) return;
-        shown = true;
-        gsap.to([dotEl, ringEl], { opacity: 1, duration: 0.28 });
-        document.documentElement.style.cursor = 'none';
-      };
-      const hideCursor = () => {
-        shown = false;
-        gsap.to([dotEl, ringEl], { opacity: 0, duration: 0.4 });
-        document.documentElement.style.cursor = '';
-      };
-
-      const onMove = (e: MouseEvent) => {
-        showCursor(); // re-shows if hidden
-        moveDotX(e.clientX); moveDotY(e.clientY);
-        moveRingX(e.clientX); moveRingY(e.clientY);
-      };
-
-      // Listen on both document and window.document so re-entry after
-      // leaving the browser window is caught correctly.
-      document.addEventListener('mousemove',  onMove,      { passive: true });
-      document.addEventListener('mouseenter', showCursor);
-      document.addEventListener('mouseleave', hideCursor);
-
-      // Nav hover: ring shrinks + turns pink
-      qa<HTMLElement>('.header-nav-item').forEach(item => {
-        const enter = () => gsap.to(ringEl, { width: 24, height: 24, borderColor: '#e0197d', duration: 0.2 });
-        const leave = () => gsap.to(ringEl, { width: 34, height: 34, borderColor: '#8ecbf0', duration: 0.3 });
-        item.addEventListener('mouseenter', enter);
-        item.addEventListener('mouseleave', leave);
-        cleanups.push(() => {
-          item.removeEventListener('mouseenter', enter);
-          item.removeEventListener('mouseleave', leave);
-        });
-      });
-
-      // Hero text magnetic hover — headline words pull subtly toward the cursor
+      const ringEl = q<HTMLElement>('.cursor-ring');
       const heroEl = q<HTMLElement>('.hero-section');
-      if (heroEl) {
+      if (heroEl && ringEl) {
         const onHeroMove = (e: MouseEvent) => {
           if (splitRef) {
             splitRef.words.forEach((word) => {
@@ -679,41 +470,10 @@ export default function HeroAnimation() {
           heroEl.removeEventListener('mouseleave', onHeroLeave);
         });
       }
-
-      cleanups.push(() => {
-        document.removeEventListener('mousemove',  onMove);
-        document.removeEventListener('mouseenter', showCursor);
-        document.removeEventListener('mouseleave', hideCursor);
-        document.documentElement.style.cursor = '';
-      });
     }
 
     return () => cleanups.forEach(fn => fn());
   }, []);
 
-  return (
-    <>
-      {/* Particle trail canvas — fixed, full-viewport, pointer-events: none */}
-      <canvas
-        ref={canvasRef}
-        className="pointer-events-none fixed inset-0 z-9997"
-        style={{ width: '100vw', height: '100vh' }}
-        aria-hidden
-      />
-
-      {/* Cursor ring — 34px blue outline circle, follows with slight lag */}
-      <div
-        className="cursor-ring pointer-events-none fixed left-0 top-0 z-[9998] h-[34px] w-[34px] rounded-full border border-[#8ecbf0] opacity-0"
-        style={{ willChange: 'transform' }}
-        aria-hidden
-      />
-
-      {/* Cursor dot — 8px magenta dot, follows immediately */}
-      <div
-        className="cursor-dot pointer-events-none fixed left-0 top-0 z-[9999] h-2 w-2 rounded-full bg-magenta opacity-0"
-        style={{ willChange: 'transform' }}
-        aria-hidden
-      />
-    </>
-  );
+  return null;
 }

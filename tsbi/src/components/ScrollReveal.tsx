@@ -31,10 +31,12 @@ export default function ScrollReveal() {
       if (started) return;
       started = true;
       clearTimeout(fallback);
-      setTimeout(init, 80); // small settle delay
+      setTimeout(init, 80);
     };
     window.addEventListener('tsbi:intro-done', startOnce, { once: true });
-    const fallback = setTimeout(startOnce, 5000);
+    // Home page waits for the preloader to fire intro-done; all other pages reveal immediately.
+    const isHome = pathname === '/';
+    const fallback = setTimeout(startOnce, isHome ? 5000 : 300);
 
     return () => {
       window.removeEventListener('tsbi:intro-done', startOnce);

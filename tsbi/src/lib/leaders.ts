@@ -60,7 +60,7 @@ export const leaders: Record<LeaderSlug, LeaderProfile> = {
     role: 'Founder & CEO',
     shortBio: 'Harikrishnan Pillai is the Founder and CEO of TheSmallBigIdea (TSBI), a prominent Mumbai-based digital and social media marketing agency founded in 2014. With over 15 years of industry experience, he specialises in building brand strategies and integrating creative, content, and technology for various major brands.',
     fullBio: `Harikrishnan Pillai comes with more than 18 years of experience in marketing and advertising. He founded TheSmallBigIdea, a full-service, independent digital agency, in 2014, along with Manish Solanki. Before TSBI Hari has worked with brands like Zee network & Reliance broadcast. His role at TSBI includes driving organizational growth and creative strategy. Over the last decade, the agency has managed to create a substantial presence in the broadcast, OTT, sports and film marketing space. In the last 5 years, the agency has landed this understanding to categories beyond entertainment, like banking, FMCG, fashion, and e-commerce, among others. In recent years, the agency has also made a serious foray into ad films and influencer marketing. Ads for brands like DHL, GreatWhite Electricals, Zydus Lifesciences and Ashok Leyland are shaping TSBI's full-service ad agency avatar. Managing the digital interests of celebrities like Ajay Devgn, Aaman Devgn has also shaped the celebrities and creator services at TSBI. Hari wears multiple hats, including that of an early-stage investor and that of a speaker on youth issues, innovation, and leadership. He's served as a jury member for reputed events and has been invited as a speaker to various events and awards, where he shares insights and knowledge with eager audiences. Hari comes with an MBA and a diploma degree in innovation and design from Sweden. He has been on the academic boards for media studies at leading schools and does occasional lectures and workshops at various B-schools in Mumbai. He has been associated actively with Rotary International for about two decades and has held critical positions in the state, national and international councils of Rotaract.`,
-    profileImage: '/Hari/Hari.png',
+    profileImage: '/Hari/harii.jpeg',
     bgImage: '/main%20ppl/backgound%20ceo.jpg',
     email: 'hari@tsbi.in',
     location: 'Mumbai, Maharashtra, India',
@@ -174,7 +174,7 @@ export const leaders: Record<LeaderSlug, LeaderProfile> = {
         description: 'Influencer marketing and AI-led experiences at TSBI',
       },
     ],
-    serviceSpecialties: ['Influencer Management', 'Content Production', 'Digital Transformation', 'Social Media', 'SEO & Organic Growth'],
+    serviceSpecialties: ['Influencer Management', 'Content Production', 'Digital Transformation', 'Social Media'],
   },
   'manish-solanki': {
     slug: 'manish-solanki',
@@ -311,7 +311,7 @@ export const leaders: Record<LeaderSlug, LeaderProfile> = {
         description: 'Oversees operations of the production division',
       },
     ],
-    serviceSpecialties: ['Content Production', 'SEO & Organic Growth', 'Digital Transformation', 'Influencer Management', 'Social Media'],
+    serviceSpecialties: ['Content Production', 'Digital Transformation', 'Influencer Management', 'Social Media'],
   },
 };
 

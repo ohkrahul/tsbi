@@ -2,8 +2,10 @@ import Link from 'next/link';
 import LeadershipReelShowcase from '@/components/about/LeadershipReelShowcase';
 import MarioTimeline from '@/components/about/MarioTimeline';
 import AboutAwardsSection from '@/components/about/AboutAwardsSection';
+import AboutGallery from '@/components/about/AboutGallery';
 import HeroSection from '@/components/home/HeroSection';
 import { getLeadershipSlides, mediaUrl } from '@/lib/strapi';
+import { getGalleryImages } from '@/lib/gallery';
 
 const stripItems = [
   { label: 'Culture',    img: '/about%20us/WhatsApp%20Image%202026-06-04%20at%206.19.02%20PM.jpeg',      overlay: 'rgba(26,34,64,.38)' },
@@ -17,6 +19,8 @@ export default async function AboutPage() {
   const [cmsSlides] = await Promise.all([
     getLeadershipSlides(),
   ]);
+
+  const galleryImages = getGalleryImages();
 
   const leadershipSlides = cmsSlides.length
     ? cmsSlides.map((s) => ({
@@ -36,7 +40,12 @@ export default async function AboutPage() {
   return (
     <div className="about-dark">
       {/* Hero Banner Slider */}
-      <HeroSection />
+      <HeroSection content={{
+        h1: <>Ideas. <span style={{ color: 'var(--magenta)' }}>People.</span> Momentum.</>,
+        body: 'A decade of building TSBI powered by digital marketing experts, strategists, and storytellers who help brands grow.',
+        cta1: { label: 'Explore Our Work', href: '/case-studies' },
+        cta2: { label: 'Avail Our Services', href: '/services' },
+      }} />
 
       {/* Expanding strip */}
       <div className="ab-strip">
@@ -111,13 +120,10 @@ export default async function AboutPage() {
       {/* Leadership & Reel Showcase */}
       <LeadershipReelShowcase initialSlides={leadershipSlides} />
 
-      {/* CTA */}
-      <section className="fcta-section" style={{ padding: '100px 48px' }}>
-        <h2 className="fcta-h2" style={{ fontSize: 'clamp(32px,5vw,56px)' }}>Come Build With Us.</h2>
-        <div className="fcta-actions" style={{ marginTop: 28 }}>
-          <Link href="/contact" className="btn-fill" style={{ background: 'var(--magenta)' }}>Say Hello →</Link>
-        </div>
-      </section>
+      {/* TSBI Gallery */}
+      <AboutGallery images={galleryImages} />
+
+    
     </div>
   );
 }

@@ -164,11 +164,16 @@ body {
 .btn-fill {
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--fm); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
-  background: var(--ink); color: #fff; border: none;
+  color: #fff; border: none;
   padding: 14px 28px; border-radius: 100px;
-  cursor: pointer; text-decoration: none; transition: all .25s;
+  cursor: pointer; text-decoration: none;
+  background-image: linear-gradient(90deg, var(--magenta) 0 50%, var(--ink) 50% 100%);
+  background-size: 200% 100%;
+  background-position: right center;
+  background-repeat: no-repeat;
+  transition: background-position .55s cubic-bezier(.22,1,.36,1), transform .2s ease;
 }
-.btn-fill:hover { background: var(--magenta); transform: translateY(-2px); }
+.btn-fill:hover { background-position: left center; transform: translateY(-2px); }
 .btn-fill .arr { transition: transform .2s; }
 .btn-fill:hover .arr { transform: translateX(4px); }
 .btn-border {
@@ -238,7 +243,7 @@ body {
 }
 .hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--muted); }
 .eyebrow-dot { color: var(--magenta); }
-.hero-h1 { font-family: var(--fd); font-size: clamp(58px,8vw,110px); font-weight: 900; line-height: .92; letter-spacing: -.03em; color: var(--ink); margin-bottom: 32px; }
+.hero-h1 { font-family: var(--fa); font-size: clamp(58px,8vw,90px); font-weight: 400; line-height: .96; letter-spacing: 0.01em; color: var(--ink); margin-bottom: 32px; }
 .hero-h1 .story { color: var(--magenta); font-style: italic; display: block; }
 .hero-h1 .systems { display: block; }
 .hero-body { font-size: 15px; color: var(--muted); font-weight: 300; line-height: 1.8; max-width: 400px; margin-bottom: 44px; }
@@ -273,9 +278,12 @@ body {
 .about-dark .hero-body { color: rgba(255,255,255,.6); }
 .about-dark .hero-eyebrow { color: rgba(255,255,255,.5); }
 .about-dark .hero-eyebrow::before { background: rgba(255,255,255,.4); }
-.about-dark .hero .btn-fill { background: var(--magenta); }
+/* about-dark: btn-fill starts from a subtle glass so it's visible on navy */
+.about-dark .hero .btn-fill {
+  background-image: linear-gradient(90deg, var(--magenta) 0 50%, rgba(255,255,255,0.12) 50% 100%);
+}
+/* about-dark: btn-border — adjust text/border for dark bg; wipe animation inherited unchanged */
 .about-dark .hero .btn-border { color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.3); }
-.about-dark .hero .btn-border:hover { border-color: #fff; background: rgba(255,255,255,.08); }
 
 .about-dark .ab-strip { background: #070e1e; }
 
@@ -1778,13 +1786,66 @@ body {
    then get hidden by GSAP. Only applied when JS is available (class set in <html>
    by the browser — falls back gracefully if JS is disabled). */
 
-/* Nav elements: GSAP reveals them on load */
-.header-logo   { opacity: 0; }
-.header-nav-item { opacity: 0; }
-/* Blue SVG line: path starts hidden via strokeDashoffset (set by GSAP), but the
-   overall SVG must remain visible (position, size) so we only hide the circle. */
+/* Nav elements — hidden until NavAnimation.tsx reveals them on every page.
+   CSS hides them to prevent SSR flash; GSAP animates them in after ~300ms. */
+.header-logo           { opacity: 0; }
+.header-nav-item       { opacity: 0; }
 .header-blue-end-dot   { opacity: 0; }
 .header-blue-travel-dot { opacity: 0; }
+
+/* Awards gallery image hover zoom */
+.gallery-img-hover:hover { transform: scale(1.06); }
+
+/* ── Awards card sparkles & torch ── */
+@keyframes card-sparkle-pop {
+  0%,100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  35%      { opacity: 1; transform: scale(1.1) rotate(0deg); }
+  55%      { opacity: 0.9; transform: scale(0.85) rotate(45deg); }
+  70%      { opacity: 0; transform: scale(0) rotate(72deg); }
+}
+
+@keyframes card-torch-sweep {
+  0%   { transform: translateX(-160%) skewX(-12deg); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateX(340%) skewX(-12deg); opacity: 0; }
+}
+
+.card-sparkle {
+  animation: card-sparkle-pop var(--spark-dur, 2.8s) var(--spark-delay, 0s) ease-in-out infinite;
+}
+
+.card-torch-beam {
+  position: absolute;
+  top: -20%;
+  left: -35%;
+  width: 28%;
+  height: 140%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.012) 25%,
+    rgba(212, 168, 67, 0.055) 48%,
+    rgba(255, 255, 255, 0.018) 72%,
+    transparent 100%
+  );
+  animation: card-torch-sweep 7s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(8px);
+}
+
+/* Award marquee rows */
+@keyframes award-marquee         { from { transform: translateX(0);    } to { transform: translateX(-50%); } }
+@keyframes award-marquee-reverse { from { transform: translateX(-50%); } to { transform: translateX(0);    } }
+
+/* CSS-driven animation so hover pause can override inline styles */
+.aw-track-fwd  { display: flex; width: max-content; animation: award-marquee         70s linear infinite; }
+.aw-track-rev  { display: flex; width: max-content; animation: award-marquee-reverse 90s linear infinite; }
+
+/* pause on hover — works because animation is in CSS, not inline */
+.aw-marquee-row:hover .aw-track-fwd,
+.aw-marquee-row:hover .aw-track-rev { animation-play-state: paused; }
 
 /* Hero: image hidden behind clip-path, text hidden for reveal */
 .hero-subtitle { opacity: 0; }

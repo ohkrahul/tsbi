@@ -370,7 +370,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
       </section>
 
       {/* Clients & Brands Section */}
-      <section style={{ background: 'var(--white)', padding: '100px 48px', borderBottom: '1px solid var(--border)' }}>
+      {/* <section style={{ background: 'var(--white)', padding: '100px 48px', borderBottom: '1px solid var(--border)' }}>
         <div style={{ maxWidth: 1300, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 48 }}>
             <div style={{ width: 40, height: 4, background: 'linear-gradient(90deg, var(--magenta), transparent)', borderRadius: 2 }} />
@@ -425,7 +425,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
                   minHeight: '120px',
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+               
                 <img
                   src={client.logo}
                   alt={client.name}
@@ -439,10 +439,10 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Skills Section */}
-      <section style={{ background: 'var(--white)', padding: '100px 48px', borderBottom: '1px solid var(--border)' }}>
+      {/* <section style={{ background: 'var(--white)', padding: '100px 48px', borderBottom: '1px solid var(--border)' }}>
         <div style={{ maxWidth: 1300, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 48 }}>
             <div style={{ width: 40, height: 4, background: 'linear-gradient(90deg, var(--magenta), transparent)', borderRadius: 2 }} />
@@ -496,7 +496,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Experience Section */}
       <section style={{ background: 'linear-gradient(135deg, #f5f3ef 0%, #faf9f7 100%)', padding: '100px 48px' }}>
@@ -619,7 +619,6 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 24 }}>
             {[
               { icon: '🎬', title: 'Content Production', service: 'production', desc: 'End-to-end production — films, reels, photography and social content' },
-              { icon: '🔍', title: 'SEO & Organic Growth', service: 'seo', desc: 'Full-funnel SEO strategies and sustainable organic visibility' },
               { icon: '⚙️', title: 'Digital Transformation', service: 'digital', desc: 'Web platforms, dashboards and data systems for smarter operations' },
               { icon: '⭐', title: 'Influencer Management', service: 'influencer', desc: 'Full-service talent management and influencer marketing' },
               { icon: '💬', title: 'Social Media', service: 'social', desc: 'Always-on social strategies and community management' },
@@ -792,7 +791,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
       </section>
 
       {/* Case Studies Section */}
-      <section style={{ background: 'var(--white)', padding: '100px 48px', borderBottom: '1px solid var(--border)' }}>
+      {/* <section style={{ background: 'var(--white)', padding: '100px 48px', borderBottom: '1px solid var(--border)' }}>
         <div style={{ maxWidth: 1300, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 48 }}>
             <div style={{ width: 40, height: 4, background: 'linear-gradient(90deg, var(--magenta), transparent)', borderRadius: 2 }} />
@@ -840,7 +839,7 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Biography Section */}
       <section style={{ background: 'linear-gradient(135deg, #f5f3ef 0%, #faf9f7 100%)', padding: '100px 48px' }}>

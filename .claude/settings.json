@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/c/main/tsbi/tsbi/public/**)",
+      "Bash(grep -iE \"banner-home|home.*\\\\.\\(jpg|jpeg|webp|png\\)$|portfolio\")",
+      "WebFetch(domain:beeyond.agency)"
+    ]
+  }
+}

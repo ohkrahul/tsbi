@@ -30,7 +30,7 @@ const DEFAULT_SLIDES: Slide[] = [
     intro:
       'A visionary entrepreneur and business builder, Harikrishnan Pillai brings over 18 years of experience in strategy, marketing and scaling brands. His clarity of thought and long-term perspective continue to shape TSBI’s journey of meaningful impact.',
     bgImage: '/main%20ppl/backgound%20ceo.jpg',
-    cardImage: '/Hari/Hari.png',
+    cardImage: '/Hari/harii.jpeg',
     ctaLabel: 'Know More',
     ctaHref: '/about/leaders/harikrishnan-pillai',
   },
@@ -51,6 +51,7 @@ const DEFAULT_SLIDES: Slide[] = [
 
 const FD = 'font-[family-name:var(--fd)]';
 const FM = 'font-[family-name:var(--fm)]';
+const FA = 'font-[family-name:var(--fa)]';
 const WINE = '#7c3aed';
 
 const VALUES = [
@@ -158,11 +159,11 @@ function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; 
       {/* Text */}
       <div
         className={[
-          'flex flex-col items-center pt-1.5 lg:items-start',
-          photoLeft ? 'lg:col-start-2' : 'lg:order-1 lg:col-start-1 lg:items-end lg:text-right',
+          'flex flex-col items-center pt-1.5 lg:items-start lg:text-left',
+          photoLeft ? 'lg:col-start-2' : 'lg:order-1 lg:col-start-1',
         ].join(' ')}
       >
-        <h3 className={`${FD} m-0 text-[clamp(28px,3.4vw,40px)] font-bold leading-[1.05] tracking-[-0.01em] text-white`}>
+        <h3 className={`${FM} m-0 text-[34px] font-normal leading-[1.22] tracking-[0.01em] sm:text-5xl text-white  `}>
           {slide.title}
         </h3>
 
@@ -172,7 +173,7 @@ function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; 
           </p>
         )}
 
-        <p className="mt-5 max-w-[440px] text-[15px] font-light leading-[1.85] text-white/65">
+        <p className="mt-5 max-w-[440px] text-[15px] font-light leading-[1.22] tracking-[0.01em] text-white/65">
           {slide.intro}
         </p>
 
@@ -278,7 +279,7 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
             <span className="h-px w-[30px] bg-magenta/50" />
           </div>
 
-          <h2 className={`${FD} m-0 text-[clamp(34px,5.2vw,64px)] font-semibold leading-[1.08] tracking-[-0.01em] text-white`}>
+          <h2 className={`${FA} m-0 text-[clamp(34px,5.2vw,64px)] font-semibold leading-[1.08] tracking-[0.06em] text-white`}>
             Guided by Purpose.
             <br />
             Driven by <em className="italic text-magenta">Impact.</em>
@@ -339,19 +340,7 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
           </div>
         </motion.div>
 
-        {/* ── Reels (only if CMS provides) ── */}
-        {reels.length > 0 && (
-          <div className="mt-[72px]">
-            <div className={`${FM} mb-[22px] text-[11px] font-bold uppercase tracking-[.2em] text-magenta`}>
-              Reels &amp; Stories
-            </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {reels.map((reel) => (
-                <ReelTile key={reel.id} slide={reel} onPlay={() => setReelOpen(reel.id)} />
-              ))}
-            </div>
-          </div>
-        )}
+        
       </div>
 
       <AnimatePresence>
