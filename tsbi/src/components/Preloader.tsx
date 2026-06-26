@@ -97,7 +97,7 @@ export default function Preloader() {
           {REEL.slice(3).map(cell)}
         </div>
       </div>
-      <div className="loader-out" />
+      {/* <div className="loader-out" /> */}
     </div>
   );
 }
