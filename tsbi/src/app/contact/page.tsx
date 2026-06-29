@@ -4,12 +4,12 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const MAPS_URL = 'https://maps.google.com/?q=401+Satyam+Tower,+Deonar,+Govandi+East,+Mumbai+400088';
+const MAPS_URL = 'https://maps.google.com/?q=Neelkamal+Building+Satyam+Tower+Deonar+Govandi+East+Mumbai+400088';
 
 const socials = [
   {
     platform: 'Instagram',
-    href: 'https://instagram.com/tsbi.official',
+    href: 'https://www.instagram.com/thesmallbigidea/',
     icon: (
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="2" width="20" height="20" rx="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
@@ -17,8 +17,26 @@ const socials = [
     ),
   },
   {
+    platform: 'Facebook',
+    href: 'https://www.facebook.com/TheSmallBigIdea/?fref=ts',
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14 8.5h2.2V5.4c-.4-.05-1.7-.17-3-.17-3 0-5 1.8-5 5.2v2.3H5.3v3.4h2.9V24h3.5v-7.9h2.8l.5-3.4h-3.3v-2c0-1 .3-1.7 1.8-1.7z" />
+      </svg>
+    ),
+  },
+  {
+    platform: 'X',
+    href: 'https://twitter.com/thesmallbigidea',
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M13.6 10.6 20.9 2h-1.7l-6.3 7.4L7.8 2H2l7.7 11.2L2 22h1.7l6.7-7.9 5.4 7.9H22l-8-11.4zm-2.4 2.8-.8-1.1L4.3 3.3h2.6l5 7.2.8 1.1 6.5 9.3h-2.6l-5.2-7.5z" />
+      </svg>
+    ),
+  },
+  {
     platform: 'LinkedIn',
-    href: 'https://linkedin.com/company/thesmallbigidea',
+    href: 'https://www.linkedin.com/company/thesmallbigidea/',
     icon: (
       <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
@@ -27,19 +45,10 @@ const socials = [
   },
   {
     platform: 'YouTube',
-    href: 'https://youtube.com/@tsbifilms',
+    href: 'https://www.youtube.com/channel/UCjZKp_9V6SVAKnr9KpQC6OA',
     icon: (
       <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
         <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z" />
-      </svg>
-    ),
-  },
-  {
-    platform: 'Behance',
-    href: 'https://behance.net/tsbi',
-    icon: (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M8.84 10.84c.74-.37 1.3-1.13 1.3-2.18 0-2.17-1.62-2.7-3.49-2.7H1v11.93h5.84c2.04 0 3.96-.98 3.96-3.26 0-1.41-.67-2.45-1.96-2.79zM3.62 7.93h2.48c.95 0 1.81.27 1.81 1.38 0 1.02-.67 1.43-1.61 1.43H3.62V7.93zm2.83 8h-2.83v-3.32h2.89c1.16 0 1.9.49 1.9 1.72 0 1.21-.88 1.6-1.96 1.6zM21.44 8.06h-4.9V6.87h4.9v1.19zM23 13.05c0-2.55-1.49-4.68-4.19-4.68-2.62 0-4.4 1.97-4.4 4.55 0 2.68 1.69 4.52 4.4 4.52 2.05 0 3.38-.92 4.02-2.89h-2.06c-.22.73-.95 1.11-1.89 1.11-1.4 0-2.13-.82-2.13-2.21h6.22c.02-.13.03-.27.03-.4zm-6.25-1.07c.08-1.14.84-1.85 1.99-1.85 1.21 0 1.81.71 1.92 1.85h-3.91z" />
       </svg>
     ),
   },
@@ -78,18 +87,30 @@ function FieldLabel({ children, required }: { children: React.ReactNode; require
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [err, setErr] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
+    setErr('');
     const fd = new FormData(e.currentTarget);
-    await fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.fromEntries(fd.entries())),
-    });
-    setSubmitting(false);
-    setSubmitted(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(fd.entries())),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        setErr(data.error || 'Something went wrong. Please try again or email us directly.');
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setErr('Network error. Please try again or email us at communication@tsbi.in.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -373,6 +394,12 @@ export default function ContactPage() {
                     {submitting ? 'Sending…' : 'Send Inquiry'}
                   </button>
 
+                  {err && (
+                    <div style={{ marginTop: 16, fontFamily: 'var(--fb)', fontSize: 13, fontWeight: 500, color: '#c4161c' }}>
+                      {err}
+                    </div>
+                  )}
+
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 18 }}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                     <span style={{ fontFamily: 'var(--fb)', fontSize: 12, color: 'var(--muted)' }}>
@@ -394,19 +421,19 @@ export default function ContactPage() {
                 {[
                   {
                     label: 'Email',
-                    value: 'tech@tsbi.in',
-                    href: 'mailto:tech@tsbi.in',
+                    value: 'communication@tsbi.in',
+                    href: 'mailto:communication@tsbi.in',
                     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>,
                   },
                   {
-                    label: 'Email (Business)',
-                    value: 'communication@tsbi.in',
-                    href: 'mailto:communication@tsbi.in',
+                    label: 'Phone',
+                    value: '+022 2551 3339',
+                    href: 'tel:+912225513339',
                     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>,
                   },
                   {
                     label: 'Location',
-                    value: '401 Satyam Tower, Deonar,\nGovandi East, Mumbai 400088',
+                    value: 'Neelkamal Building, next to Satyam Tower,\nDeonar, Govandi East, Mumbai,\nMaharashtra 400088',
                     href: MAPS_URL,
                     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>,
                   },
@@ -521,7 +548,7 @@ export default function ContactPage() {
 
               {/* Email cards */}
               <a
-                href="mailto:tech@tsbi.in"
+                href="mailto:communication@tsbi.in"
                 className="ct2-direct-card"
                 style={{
                   display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none',
@@ -533,12 +560,12 @@ export default function ContactPage() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                 <span>
                   <span style={{ display: 'block', fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 2 }}>Email Us</span>
-                  <span style={{ fontFamily: 'var(--fb)', fontSize: 14, fontWeight: 700, color: 'var(--magenta)' }}>tech@tsbi.in</span>
+                  <span style={{ fontFamily: 'var(--fb)', fontSize: 14, fontWeight: 700, color: 'var(--magenta)' }}>communication@tsbi.in</span>
                 </span>
               </a>
 
               <a
-                href="mailto:communication@tsbi.in"
+                href="mailto:enquiries@tsbiglobal.com"
                 className="ct2-direct-card"
                 style={{
                   display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none',
@@ -549,8 +576,8 @@ export default function ContactPage() {
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
                 <span>
-                  <span style={{ display: 'block', fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 2 }}>Business Enquiries</span>
-                  <span style={{ fontFamily: 'var(--fb)', fontSize: 14, fontWeight: 700, color: 'var(--magenta)' }}>communication@tsbi.in</span>
+                  <span style={{ display: 'block', fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 2 }}>Global / MENA Enquiries</span>
+                  <span style={{ fontFamily: 'var(--fb)', fontSize: 14, fontWeight: 700, color: 'var(--magenta)' }}>enquiries@tsbiglobal.com</span>
                 </span>
               </a>
 

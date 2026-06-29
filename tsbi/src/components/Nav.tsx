@@ -120,6 +120,13 @@ export default function Nav() {
               ))}
             </div>
           </li>
+
+          {/* Contact — plain link, kept last */}
+          <li className="header-nav-item">
+            <Link href="/contact" className={isActive('/contact') ? 'active' : undefined}>
+              Contact
+            </Link>
+          </li>
         </ul>
 
         <div className="nav-right">
@@ -160,6 +167,14 @@ export default function Nav() {
                 {s.label}
               </Link>
             ))}
+
+            <Link
+              href="/contact"
+              className={isActive('/contact') ? 'active' : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              Contact
+            </Link>
           </div>
         )}
       </div>

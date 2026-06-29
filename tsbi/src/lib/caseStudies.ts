@@ -14,6 +14,8 @@ export type CaseStudyGalleryItem = {
   gradTo: string;
   image: string;
   youtube?: string;
+  /** Direct MP4 URLs (e.g. Cloudinary) — played inline on the detail page; takes precedence over `youtube`. */
+  videos?: string[];
   order: number;
   /** 'tech' studies use the rich section fields below + a /tech image. */
   track?: 'film' | 'tech';
@@ -93,13 +95,58 @@ export const caseStudies: CaseStudyGalleryItem[] = [
     image: YT('v2c1uigYjLk'), youtube: 'v2c1uigYjLk', order: 7,
   },
   {
+    id: 33, slug: 'ashok-leyland-zidd-wahi-manzil-nayi', clientName: 'Ashok Leyland', title: 'Zidd Wahi Manzil Nayi',
+    category: 'Commercial Vehicles · WPL Campaign',
+    shortDescription: "An Ashok Leyland × Mumbai Indians WPL film — success raises the stage, but never changes the discipline it takes to get there. Kuch Nahi Badla.",
+    concept: "Success changes how the world sees you. It doesn't change what it takes to keep moving forward.\n\nWomen's cricket has reached new heights — earning recognition, applause, and packed stadiums. But behind every boundary, wicket, and victory lies the same relentless discipline, sacrifice, and hard work that existed before the spotlight arrived.\n\nOur film celebrates this mindset through the thought 'Kuch Nahi Badla.' The expectations are higher, the stage is bigger, but the commitment remains unchanged. Every training session, every early morning, every challenge still demands the same determination.\n\nDrawing a parallel between elite athletes and Ashok Leyland, the film highlights a shared belief: success isn't built on one great moment — it's built on showing up and performing consistently, every single day.\n\nBecause no matter how far you've come, the journey continues. And for those who never stop pushing forward, Koi Manzil Door Nahin.",
+    year: 2026, services: ['Brand Film', 'Sports Marketing', 'Social Media', 'Campaign Strategy'],
+    colorTheme: '#004ba0', accent: '#1a6aff', gradFrom: '#001a40', gradTo: '#00091f',
+    image: YT('pW8Z44YLtKA'), youtube: 'pW8Z44YLtKA', order: 33,
+  },
+  {
+    id: 34, slug: 'ashok-leyland-whistle-podu-please', clientName: 'Ashok Leyland', title: 'Whistle Podu Please',
+    category: 'Commercial Vehicles · IPL Campaign',
+    shortDescription: "An Ashok Leyland × Chennai Super Kings film connecting two cultures that keep India moving — from 'Horn OK Please' on the highway to 'Whistle Podu' in the stands.",
+    concept: "Some signals don't need an introduction. They're understood instantly — on the road and on the cricket field.\n\nWhistle Podu Please brings together Ashok Leyland and Chennai Super Kings through a shared language of action. From the familiar 'Horn OK Please' seen on highways to the iconic 'Whistle Podu' chant that echoes through stadiums, the film celebrates two cultures that keep India moving. Through a series of energetic, whistle-led moments, the film draws parallels between truck drivers and cricketing champions — both driven by precision, teamwork, and the spirit to keep going.\n\nBecause whether you're navigating roads or chasing victories, one signal says it all. When it's time to move, it's time to Whistle Podu Please.",
+    year: 2026, services: ['Brand Film', 'Sports Marketing', 'Social Media', 'Campaign Strategy'],
+    colorTheme: '#c4a000', accent: '#f0c000', gradFrom: '#2a2100', gradTo: '#141000',
+    image: YT('o2h-9sNPAo4'), youtube: 'o2h-9sNPAo4', order: 34,
+  },
+  {
+    id: 35, slug: 'ashok-leyland-she-drives-it', clientName: 'Ashok Leyland', title: 'She Drives It',
+    category: "Commercial Vehicles · Women's Day",
+    shortDescription: "A Women's Day film with Ashok Leyland and the Mumbai Indians Women's Team — celebrating women who don't wait for change, they drive it. #SheDrivesIt.",
+    concept: "Progress doesn't happen by chance. It is driven by people who refuse to stay within the boundaries set for them.\n\n#SheDrivesIt celebrates the women who continue to move India forward — on the field, on the road, and in every sphere where determination creates change. Bringing together Ashok Leyland and the Mumbai Indians Women's Team, the film draws a powerful parallel between athletes and trailblazers who succeed through resilience, discipline, and an unwavering belief in their abilities.\n\nEvery run scored, every challenge overcome, and every barrier broken is proof that progress is powered by those willing to keep pushing ahead. This Women's Day, Ashok Leyland celebrates the spirit of women who don't wait for change — they drive it.\n\nBecause when ambition takes the wheel, no destination is too far.",
+    year: 2026, services: ['Brand Film', 'Sports Marketing', 'Social Media', 'Campaign Strategy'],
+    colorTheme: '#c42b6e', accent: '#e0197d', gradFrom: '#2a0a1c', gradTo: '#14040e',
+    image: YT('Hx7l9Uoj7CQ'), youtube: 'Hx7l9Uoj7CQ', order: 35,
+  },
+  {
+    id: 36, slug: 'ashok-leyland-mothers-day', clientName: 'Ashok Leyland', title: "Mother's Day",
+    category: "Commercial Vehicles · Mother's Day",
+    shortDescription: "A Mother's Day film rooted in the Indian ritual of seeking a mother's blessing before a journey — positioning Ashok Leyland as the second layer of protection on every road.",
+    concept: "The film is built on a simple yet deeply rooted Indian insight: before setting out on an important journey, many people seek their mother's blessings. This emotional ritual transcends regions, languages, and cultures, making it a universally relatable moment.\n\nAshok Leyland connects this insight to its brand promise, 'Koi Manzil Door Nahin', by portraying how every journey begins with a mother's care and is safeguarded on the road through Ashok Leyland's reliable vehicles. Through a series of fast-paced, emotionally rich vignettes featuring drivers and transport professionals from different walks of life, the film showcases mothers blessing their children before they embark on their journeys.\n\nThe narrative subtly positions Ashok Leyland as an extension of that protective care — ensuring safety, reliability, and confidence on every road. Rather than focusing on product features, the film humanizes the trucking ecosystem and celebrates the emotional bond between mothers and those who keep India moving.\n\nThe core message: a mother's blessing is the first layer of protection; Ashok Leyland is the second — helping every driver reach their destination safely, because no destination is too far when you're protected by care and trust.",
+    year: 2026, services: ['Brand Film', 'Social Media', 'Campaign Strategy'],
+    colorTheme: '#a8324a', accent: '#e0395a', gradFrom: '#2a0a12', gradTo: '#150509',
+    image: YT('tMP_euOcGx4'), youtube: 'tMP_euOcGx4', order: 36,
+  },
+  {
+    id: 37, slug: 'ashok-leyland-built-like-santa', clientName: 'Ashok Leyland', title: 'Built Like Santa',
+    category: 'Commercial Vehicles · Festive Campaign',
+    shortDescription: "A Christmas film drawing a parallel between Santa's never-miss-a-destination journey and the reliability of Ashok Leyland trucks — celebrating those Built Like Santa.",
+    concept: "Christmas is a season of giving — where joy, warmth, and togetherness travel across cities, towns, and remote corners of the country to reach every home.\n\nWhile the world celebrates Santa as the bearer of Christmas magic, there are countless real-life heroes working behind the scenes to make those celebrations possible. Through long nights, challenging roads, and distant destinations, they ensure that gifts, essentials, and festive cheer arrive exactly where they are needed.\n\nOur film draws a heartwarming parallel between Santa's legendary journey and the unwavering reliability of Ashok Leyland trucks. Just as Santa never misses a destination, Ashok Leyland powers the journeys that connect people, deliver happiness, and keep the spirit of Christmas moving.\n\nBecause Christmas magic isn't just about the gifts that arrive — it's about the people and journeys that make them possible. This Christmas, Ashok Leyland celebrates those who are Built Like Santa: always on the move, delivering joy, no matter how far the destination.",
+    year: 2025, services: ['Brand Film', 'Social Media', 'Campaign Strategy'],
+    colorTheme: '#9c1f1f', accent: '#e03434', gradFrom: '#2a0808', gradTo: '#140404',
+    image: YT('Mr8fSjgj-qI'), youtube: 'Mr8fSjgj-qI', order: 37,
+  },
+  {
     id: 8, slug: 'zydus-easiest-exam', clientName: 'Zydus Lifesciences', title: 'Easiest Exam',
     category: 'Healthcare · Public Awareness',
     shortDescription: "A podcast series hosted by breast cancer survivor Hina Khan reframing breast self-examination as the simplest, most powerful tool women already possess.",
     concept: "Breast cancer awareness in India is widespread, yet early detection through breast self-examination remains low due to fear, stigma, and lack of relatable communication. With Easiest Exam, Zydus set out to bridge this gap by shifting the conversation from awareness to understanding — and from instruction to empathy.\n\nAt the heart of the campaign was a podcast series that treated breast health not as a medical lecture, but as a human conversation. Hosted by Hina Khan, a breast cancer survivor herself, Easiest Exam created a safe, credible, and mobile-first space where oncologists and survivors came together to simplify complex medical information, bust myths, and reduce fear around early detection.\n\nThe podcast reframed breast self-examination as the simplest, most powerful tool women already possess — their own hands. By blending medical credibility with lived experience, each episode gently guided listeners from hesitation to confidence, making early detection feel personal, approachable, and achievable rather than intimidating.\n\nThe campaign was supported by a larger content ecosystem including print, digital, and social touchpoints that directed audiences to deeper engagement through the podcast. Together, these elements transformed symbolic awareness into meaningful action, encouraging women to listen, learn, and take agency over their health.",
     year: 2024, services: ['Podcast Production', 'Content Strategy', 'Digital', 'Influencer'],
     colorTheme: '#9b35cc', accent: '#c060e0', gradFrom: '#1a0028', gradTo: '#0d0015',
-    image: '/images/portfolio-popup-10-400x500.jpg', order: 8,
+    image: YT('EQvD2DvnE0M'), youtube: 'EQvD2DvnE0M', order: 8,
   },
   {
     id: 9, slug: 'zydus-flu-vaccine', clientName: 'Zydus Lifesciences', title: 'Flu Vaccine Liya Kya?',
@@ -108,7 +155,7 @@ export const caseStudies: CaseStudyGalleryItem[] = [
     concept: "Despite high awareness around seasonal flu, vaccination uptake in India remains low — largely due to complacency and the familiar 'ho jayega' mindset. With the launch of Vaxiflu-4, India's first quadrivalent flu vaccine, Zydus set out to normalise flu vaccination as a yearly health habit, not a crisis-driven decision.\n\nInstead of fear-based medical messaging, the campaign introduced a culturally intuitive nudge: 'Flu Vaccine Liya Kya?' — a line that sounds like everyday small talk, yet carries real preventive intent. By reframing vaccination as a simple social check-in — much like asking about food, travel, or health — the campaign transformed a medical action into a conversational habit.\n\nRadio became the lead medium for this behavioural shift. Through slice-of-life storytelling, routine daily questions were replaced with one that truly mattered, cutting through clutter with warmth, familiarity, and repetition. Partnering with Radio Mirchi, multilingual, high-frequency spots were rolled out across prime cities and time bands to drive recall at scale.\n\nThe conversation was extended beyond airwaves through RJ-led social content, where trusted radio voices carried the message into digital spaces with credibility and relatability. By making prevention sound human, familiar, and timely, the campaign successfully turned flu vaccination into an everyday conversation.",
     year: 2024, services: ['Radio Campaign', 'Social Media', 'Brand Strategy', 'Influencer'],
     colorTheme: '#005580', accent: '#0088cc', gradFrom: '#001828', gradTo: '#000c14',
-    image: '/images/bg-about-company-400x500.jpg', order: 9,
+    image: YT('uy64MMydnJ0'), youtube: 'uy64MMydnJ0', order: 9,
   },
   {
     id: 10, slug: 'zydus-life-ka-filter', clientName: 'Zydus Lifesciences', title: '#LifeKaFilter',
@@ -217,6 +264,20 @@ export const caseStudies: CaseStudyGalleryItem[] = [
     year: 2024, services: ['FMCG Marketing', 'Brand Strategy', 'Social Media'],
     colorTheme: '#ffd700', accent: '#ffec21', gradFrom: '#1a1a00', gradTo: '#0d0d00',
     image: YT('m-ekod_mEzk'), youtube: 'm-ekod_mEzk', order: 21,
+  },
+  {
+    id: 32, slug: 'gsk-yeh-science-hai', clientName: 'GSK', title: 'Yeh Science Hai',
+    category: 'Pharma · Health Awareness',
+    shortDescription: "Turning the surprising science of shingles into relatable, everyday conversations — because the most surprising health facts aren't myths, they're simply science.",
+    concept: "Many people believe shingles is a rare condition or simply a skin problem. The reality is that it is caused by the reactivation of the chickenpox virus that already exists in the body.\n\nYeh Science Hai simplifies this scientific fact through relatable conversations and everyday observations. By turning complex medical information into easy-to-understand moments, the campaign helps people understand their risk, recognize the importance of prevention, and take informed action.\n\nBecause sometimes the most surprising health facts aren't myths or coincidences. They're simply science. Yeh Science Hai.",
+    year: 2026, services: ['Brand Film', 'Health Awareness', 'Content Production', 'Social Media'],
+    colorTheme: '#f36f21', accent: '#f36f21', gradFrom: '#3a1c05', gradTo: '#190b02',
+    image: 'https://res.cloudinary.com/dna8mp2n7/video/upload/so_2/v1782721426/CP_45SEC_1920x1080_WA_o3syft.jpg',
+    videos: [
+      'https://res.cloudinary.com/dna8mp2n7/video/upload/v1782721426/CP_45SEC_1920x1080_WA_o3syft.mp4',
+      'https://res.cloudinary.com/dna8mp2n7/video/upload/v1782721425/DB_40SEC_1920x1080_WA_vbcigp.mp4',
+    ],
+    order: 22,
   },
 
   /* ─────────────────────────── TECH / DIGITAL TRANSFORMATION ─────────────────────────── */

@@ -21,6 +21,7 @@ const CASE_STUDY_MAP: Record<string, string> = {
   'Dharma Productions':       '/case-studies/dharma-production',
   'Devgn Films':              '/case-studies/son-of-sardaar-2',
   'Disney India':             '/case-studies/disney-india',
+  'GSK':                      '/case-studies/gsk-yeh-science-hai',
   'Mumbai Indians':           '/case-studies/mumbai-indians',
   'DHL':                      '/case-studies/mumbai-indians',
   'Ashok Leyland':            '/case-studies/ashok-leyland-diwali',

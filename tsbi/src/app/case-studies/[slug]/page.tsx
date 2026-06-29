@@ -18,6 +18,11 @@ function Para({ children }: { children: string }) {
   );
 }
 
+/** Derive a still-frame poster (JPEG at ~2s) from a Cloudinary video URL. */
+function cloudinaryPoster(mp4: string) {
+  return mp4.replace('/upload/', '/upload/so_2/').replace(/\.mp4$/, '.jpg');
+}
+
 export function generateStaticParams() {
   return caseStudies.map((s) => ({ slug: s.slug }));
 }
@@ -93,31 +98,49 @@ export default async function CaseStudyDetailPage({
 
       {/* ── VIDEO / THUMBNAIL ── */}
       <div style={{ padding: '0 clamp(20px,5vw,64px)', maxWidth: 1200, margin: '0 auto' }}>
-        <div className="cs-video-wrap">
-          {study.youtube ? (
-            // Thumbnail that opens the video on YouTube (avoids blocked/embeddable-off iframes)
-            <a
-              href={`https://www.youtube.com/watch?v=${study.youtube}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Watch “${study.title}” on YouTube`}
-              style={{ position: 'absolute', inset: 0, display: 'block' }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`https://img.youtube.com/vi/${study.youtube}/maxresdefault.jpg`} alt={study.title} />
-              <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0.22) 100%)' }} />
-              <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 78, height: 78, borderRadius: '50%', background: 'rgba(224,25,125,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 44px rgba(0,0,0,0.45)' }}>
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff" style={{ marginLeft: 3 }}><path d="M8 5v14l11-7z" /></svg>
-              </span>
-              <span style={{ position: 'absolute', bottom: 16, left: 18, fontFamily: 'var(--fm)', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: 6, textShadow: '0 1px 10px rgba(0,0,0,0.7)' }}>
-                Watch on YouTube ↗
-              </span>
-            </a>
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={study.image} alt={study.title} />
-          )}
-        </div>
+        {study.videos && study.videos.length > 0 ? (
+          // Direct MP4s (Cloudinary) — playable inline. Side-by-side on desktop, stacked on mobile.
+          <div style={{ display: 'grid', gridTemplateColumns: study.videos.length > 1 ? 'repeat(auto-fit, minmax(320px, 1fr))' : '1fr', gap: 16, margin: '44px 0' }}>
+            {study.videos.map((src, i) => (
+              <video
+                key={i}
+                controls
+                playsInline
+                preload="metadata"
+                poster={cloudinaryPoster(src)}
+                style={{ width: '100%', aspectRatio: '16 / 9', display: 'block', borderRadius: 14, background: '#000', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}
+              >
+                <source src={src} type="video/mp4" />
+              </video>
+            ))}
+          </div>
+        ) : (
+          <div className="cs-video-wrap">
+            {study.youtube ? (
+              // Thumbnail that opens the video on YouTube (avoids blocked/embeddable-off iframes)
+              <a
+                href={`https://www.youtube.com/watch?v=${study.youtube}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Watch “${study.title}” on YouTube`}
+                style={{ position: 'absolute', inset: 0, display: 'block' }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`https://img.youtube.com/vi/${study.youtube}/maxresdefault.jpg`} alt={study.title} />
+                <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0.22) 100%)' }} />
+                <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 78, height: 78, borderRadius: '50%', background: 'rgba(224,25,125,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 44px rgba(0,0,0,0.45)' }}>
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff" style={{ marginLeft: 3 }}><path d="M8 5v14l11-7z" /></svg>
+                </span>
+                <span style={{ position: 'absolute', bottom: 16, left: 18, fontFamily: 'var(--fm)', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: 6, textShadow: '0 1px 10px rgba(0,0,0,0.7)' }}>
+                  Watch on YouTube ↗
+                </span>
+              </a>
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={study.image} alt={study.title} />
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── INFO ROW ── */}
