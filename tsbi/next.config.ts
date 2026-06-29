@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Bare hostnames only — NOT full URLs (no protocol/port), or they won't match.
+  allowedDevOrigins: ['192.168.1.2', 'localhost'],
 };
 
 export default nextConfig;

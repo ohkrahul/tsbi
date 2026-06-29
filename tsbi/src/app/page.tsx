@@ -4,11 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import HeroAnimation from '@/components/HeroAnimation';
 import Preloader from '@/components/Preloader';
 import CaseStudyCarousel from '@/components/CaseStudyCarousel';
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 /* ──────────────────────────────────────────────────────────────────────────
    HOME PAGE — single file (kept in one component so animations can be wired
@@ -81,16 +85,16 @@ const BTS_CELL = [
 
 // ── Connect poster carousel (all 10 posters) ─────────────
 const CONNECT_POSTERS = [
-  { label: 'Happy Patel',                    img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472929/Happy_Patel_iui6b8.jpg' },
-  { label: 'ASSI',                           img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472931/ASSI_rs8qco.jpg' },
-  { label: 'Main Vaapas Aaunga',             img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472930/MVA_oo9fhp.jpg' },
-  { label: 'Ek Din',                         img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472930/Ek_Din_mnm39t.jpg' },
-  { label: 'Sunny Sanskari Ki Tulsi Kumari', img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782473329/SSKTK_1_rvl6th.jpg' },
-  { label: 'TMMTMTTM',                       img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782473858/TMMTMTTM_ece2hf.jpg' },
-  { label: 'TYM',                            img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472933/TYM_qwmyhx.jpg' },
-  { label: 'PPAVD',                          img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782473328/PPAVD_a5ojll.jpg' },
-  { label: 'CMD',                            img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782473351/CMD_l5t9wi.jpg' },
-  { label: 'Bandar',                         img: 'https://res.cloudinary.com/dna8mp2n7/image/upload/v1782472931/Bandar_hxgsic.jpg' },
+  { label: 'Happy Patel',                    img: '/Movie%20Posters/Happy%20Patel.jpg' },
+  { label: 'ASSI',                           img: '/Movie%20Posters/ASSI.jpg' },
+  { label: 'Main Vaapas Aaunga',             img: '/Movie%20Posters/MVA.jpeg' },
+  { label: 'Ek Din',                         img: '/Movie%20Posters/Ek%20Din.jpg' },
+  { label: 'Sunny Sanskari Ki Tulsi Kumari', img: '/Movie%20Posters/SSKTK.jpg' },
+  { label: 'TMMTMTTM',                       img: '/Movie%20Posters/TMMTMTTM.jpg' },
+  { label: 'TYM',                            img: '/Movie%20Posters/TYM.jpg' },
+  { label: 'PPAVD',                          img: '/Movie%20Posters/PPAVD.jpeg' },
+  { label: 'CMD',                            img: '/Movie%20Posters/CMD.jpg' },
+  { label: 'Bandar',                         img: '/Movie%20Posters/Bandar.jpg' },
 ];
 
 // ── CTA doodle icons (faint inline line-art) ─────────────
@@ -129,6 +133,55 @@ export default function HomePage() {
       emblaApi.off('select', onSelect).off('reInit', onSelect);
     };
   }, [emblaApi]);
+
+  // Movie-Connect heading — its words "stand up" with an X-axis flip in a left-to-right
+  // wave; the kicker, sub and CTA fade up — once the block scrolls into view.
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let split: ReturnType<typeof SplitText.create> | null = null;
+    const ctx = gsap.context(() => {
+      const title = document.querySelector<HTMLElement>('.connect-title');
+      if (!title || reduce) return;
+
+      // SplitText (not raw innerHTML) so its revert() restores the DOM React owns —
+      // mutating innerHTML directly triggered a removeChild error on page unmount.
+      split = SplitText.create(title, { type: 'words' });
+      const words = split.words as HTMLElement[];
+      const support = ['.connect-kicker', '.connect-sub', '.connect-cta'];
+
+      // Each word starts lying flat (flipped back on the X axis) and stands up into place.
+      words.forEach((el) => {
+        gsap.set(el, {
+          transformPerspective: 600,
+          transformOrigin: '50% 100%',
+          rotateX: -95,
+          y: 14,
+          opacity: 0,
+          willChange: 'transform, opacity',
+        });
+      });
+      gsap.set(support, { y: 26, opacity: 0 });
+
+      ScrollTrigger.create({
+        trigger: '.connect-text-block',
+        start: 'top 78%',
+        once: true,
+        onEnter: () => {
+          gsap.to(words, {
+            rotateX: 0, y: 0, opacity: 1,
+            duration: 0.8, ease: 'back.out(1.4)', stagger: 0.06,
+          });
+          gsap.to(support, {
+            y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', stagger: 0.12, delay: 0.3,
+          });
+        },
+      });
+    });
+    return () => {
+      ctx.revert();
+      split?.revert();
+    };
+  }, []);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -198,7 +251,7 @@ export default function HomePage() {
     <>
       {/* ── HERO (full-bleed Embla slider with the text overlaid on it) ───── */}
       {/* hero-section → ScrollTrigger anchor; GSAP parallax target */}
-      <section className="hero-section group relative mt-[72px] flex w-full flex-col overflow-hidden min-[1130px]:mt-[108px] sm:block sm:h-160">
+      <section className="hero-section group relative  flex w-full flex-col overflow-hidden min-[1130px]:mt-[108px] sm:block sm:h-160">
         {/* hero-image → clip-path wipe + scale reveal + cursor parallax.
             Mobile: full banner BELOW the copy (order-2), sized to the 1920×630 ratio so
             nothing is cropped. Desktop: full-bleed background behind the overlaid copy. */}
@@ -241,7 +294,7 @@ export default function HomePage() {
 
         {/* hero-copy → cursor parallax (moves opposite to hero-image).
             Mobile: navy panel stacked ABOVE the banner (order-1). Desktop: overlaid. */}
-        <div className="hero-copy relative z-10 order-1 flex flex-col justify-center gap-5 bg-navy px-8 py-12 text-white sm:absolute sm:inset-0 sm:order-0 sm:h-full sm:max-w-150 sm:bg-transparent sm:py-0 sm:pl-12">
+        <div className="hero-copy relative z-10 order-1 flex flex-col justify-center gap-5 bg-navy px-8 py-6 text-white sm:absolute sm:inset-0 sm:order-0 sm:h-full sm:max-w-150 sm:bg-transparent sm:py-0 sm:pl-12">
           <span className="font-fm text-[11px] uppercase tracking-[0.22em] text-white/80">
             The Small Big Idea
           </span>

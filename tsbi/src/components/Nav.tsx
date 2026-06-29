@@ -61,6 +61,7 @@ export default function Nav() {
           width="1130"
           height="108"
           viewBox="0 0 1130 108"
+          preserveAspectRatio="none"
           fill="none"
           aria-hidden
         >
@@ -75,8 +76,8 @@ export default function Nav() {
           <Image
             src="/TSBIInOBG.png"
             alt="The Small Big Idea"
-            width={350}
-            height={72}
+            width={250}
+            height={52}
             className="nav-logo-img"
             priority
           />
@@ -167,14 +168,6 @@ export default function Nav() {
                 {s.label}
               </Link>
             ))}
-
-            <Link
-              href="/contact"
-              className={isActive('/contact') ? 'active' : undefined}
-              onClick={() => setMenuOpen(false)}
-            >
-              Contact
-            </Link>
           </div>
         )}
       </div>

@@ -41,7 +41,7 @@ export default async function AboutPage() {
     <div className="about-dark">
       {/* Hero Banner Slider */}
       <HeroSection content={{
-        h1: <>Ideas. <span style={{ color: 'var(--magenta)' }}>People.</span> Momentum.</>,
+        h1: <>Ideas.<span style={{ display: 'block', color: 'var(--magenta)' }}>People.</span><span style={{ display: 'block' }}>Momentum.</span></>,
         body: 'A decade of building TSBI powered by digital marketing experts, strategists, and storytellers who help brands grow.',
         cta1: { label: 'Explore Our Work', href: '/case-studies' },
         cta2: { label: 'Avail Our Services', href: '/services' },

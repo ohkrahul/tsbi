@@ -265,7 +265,7 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
       {/* ── HERO (matches home-hero dimensions) ── */}
       <section
         ref={heroRef}
-        className="relative mt-[72px] grid w-full grid-cols-1 overflow-hidden bg-[#faf1e9] lg:mt-[108px] lg:h-[clamp(460px,78vh,720px)] lg:grid-cols-[1fr_46%]"
+        className="relative mt-[var(--nav-h)] grid w-full grid-cols-1 overflow-hidden bg-[#faf1e9] lg:h-[clamp(460px,78vh,720px)] lg:grid-cols-[1fr_46%]"
       >
         {/* LEFT — text */}
         <div className="flex flex-col justify-center px-6 pb-10 pt-10 sm:px-10 lg:py-0 lg:pl-16 lg:pr-10">
