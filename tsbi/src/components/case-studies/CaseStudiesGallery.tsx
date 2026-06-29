@@ -109,14 +109,14 @@ export default function CaseStudiesGallery() {
   const filteredGrid = caseStudies.filter(FILTERS[activeFilter].fn);
 
   return (
-    <div style={{ background:'#08090d', minHeight:'100vh', paddingTop:80 }}>
+    <div style={{ background:'linear-gradient(to right, #101a33 0%, #241640 50%, #34195a 100%)', minHeight:'100vh', paddingTop:80 }}>
 
       {/* ── HEADER ── */}
       <div style={{ textAlign:'center', padding: isMobile ? '32px 20px 28px' : '52px 48px 40px' }}>
         <div style={{ fontFamily:'var(--fm)', fontSize:10, letterSpacing:'0.28em', textTransform:'uppercase', color:'#e0197d', marginBottom:12 }}>
           Our Work in Action
         </div>
-        <h1 style={{ fontFamily:'var(--fd)', fontSize:'clamp(44px,7vw,88px)', fontWeight:900, color:'#fff', lineHeight:0.95, letterSpacing:'-0.03em', margin:'0 0 16px' }}>
+        <h1 style={{ fontFamily:'var(--fa)', fontSize:'clamp(44px,7vw,88px)', fontWeight:400, color:'#fff', lineHeight:1.0, letterSpacing:'0.01em', margin:'0 0 16px' }}>
           Case Studies
         </h1>
         <p style={{ fontFamily:'var(--fm)', fontSize:15, color:'rgba(255,255,255,0.4)', fontWeight:300, maxWidth:480, margin:'0 auto', lineHeight:1.7 }}>
@@ -227,7 +227,7 @@ export default function CaseStudiesGallery() {
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:30, flexWrap:'wrap', gap:20 }}>
           <div>
             <div style={{ fontFamily:'var(--fm)', fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#e0197d', marginBottom:10 }}>All Case Studies</div>
-            <h2 style={{ fontFamily:'var(--fd)', fontSize:'clamp(26px,3.4vw,44px)', fontWeight:900, color:'#fff', lineHeight:1.0, letterSpacing:'-0.02em', margin:0 }}>
+            <h2 style={{ fontFamily:'var(--fa)', fontSize:'clamp(26px,3.4vw,44px)', fontWeight:400, color:'#fff', lineHeight:1.05, letterSpacing:'0.01em', margin:0 }}>
               More Work.<br/>More Impact.
             </h2>
           </div>

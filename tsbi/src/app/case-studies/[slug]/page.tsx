@@ -48,11 +48,12 @@ export default async function CaseStudyDetailPage({
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-end',
-          padding: '120px 64px 56px',
+          padding: 'clamp(92px,15vw,120px) clamp(20px,5vw,64px) clamp(40px,6vw,56px)',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
+        
         {/* Background image with overlay */}
         <div style={{
           position: 'absolute', inset: 0,
@@ -63,7 +64,8 @@ export default async function CaseStudyDetailPage({
         <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to top, ${study.gradFrom}f0 0%, ${study.gradFrom}80 50%, transparent 100%)` }} />
 
         {/* Breadcrumb */}
-        <div style={{ position: 'absolute', top: 104, left: 64, display: 'flex', alignItems: 'center', gap: 16, zIndex: 2 }}>
+        <div style={{ position: 'absolute', top: 'clamp(84px,12vw,128px)', left: 'clamp(20px,5vw,64px)', display: 'flex', alignItems: 'center', gap: 16, zIndex: 2 }}>
+          
           <Link href="/case-studies" style={{ fontFamily: 'var(--fm)', fontSize: 11, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', letterSpacing: '0.12em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
             Case Studies
@@ -90,15 +92,27 @@ export default async function CaseStudyDetailPage({
       </section>
 
       {/* ── VIDEO / THUMBNAIL ── */}
-      <div style={{ padding: '0 64px', maxWidth: 1200, margin: '0 auto' }}>
+      <div style={{ padding: '0 clamp(20px,5vw,64px)', maxWidth: 1200, margin: '0 auto' }}>
         <div className="cs-video-wrap">
           {study.youtube ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${study.youtube}?rel=0&modestbranding=1`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title={study.title}
-            />
+            // Thumbnail that opens the video on YouTube (avoids blocked/embeddable-off iframes)
+            <a
+              href={`https://www.youtube.com/watch?v=${study.youtube}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Watch “${study.title}” on YouTube`}
+              style={{ position: 'absolute', inset: 0, display: 'block' }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`https://img.youtube.com/vi/${study.youtube}/maxresdefault.jpg`} alt={study.title} />
+              <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0.22) 100%)' }} />
+              <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 78, height: 78, borderRadius: '50%', background: 'rgba(224,25,125,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 44px rgba(0,0,0,0.45)' }}>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff" style={{ marginLeft: 3 }}><path d="M8 5v14l11-7z" /></svg>
+              </span>
+              <span style={{ position: 'absolute', bottom: 16, left: 18, fontFamily: 'var(--fm)', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff', display: 'inline-flex', alignItems: 'center', gap: 6, textShadow: '0 1px 10px rgba(0,0,0,0.7)' }}>
+                Watch on YouTube ↗
+              </span>
+            </a>
           ) : (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={study.image} alt={study.title} />
@@ -107,7 +121,7 @@ export default async function CaseStudyDetailPage({
       </div>
 
       {/* ── INFO ROW ── */}
-      <div className="cs-info-row" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 64px' }}>
+      <div className="cs-info-row" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 clamp(20px,5vw,64px)' }}>
         <div className="cs-ic">
           <div className="cs-ic-label">Client</div>
           <div className="cs-ic-val">{study.clientName}</div>
@@ -127,7 +141,7 @@ export default async function CaseStudyDetailPage({
       </div>
 
       {/* ── PROJECT / CAMPAIGN CONTENT ── */}
-      <section style={{ padding: '72px 64px', maxWidth: 1200, margin: '0 auto' }}>
+      <section style={{ padding: 'clamp(44px,9vw,72px) clamp(20px,5vw,64px)', maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--magenta)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 28, height: 2, background: 'var(--magenta)', display: 'inline-block', borderRadius: 1 }} />
           {study.overview ? 'The Project' : 'The Campaign'}
@@ -145,7 +159,7 @@ export default async function CaseStudyDetailPage({
               <>
                 <Heading>The Experience</Heading>
                 {study.experienceIntro && <Para>{study.experienceIntro}</Para>}
-                <ul style={{ listStyle: 'none', padding: 0, margin: '8px 0 0', display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '10px 28px' }}>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '8px 0 0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '10px 28px' }}>
                   {study.experienceItems.map((item) => (
                     <li key={item} style={{ position: 'relative', paddingLeft: 20, fontFamily: 'var(--fm)', fontSize: 14, lineHeight: 1.6, color: 'rgba(10,10,10,0.72)', fontWeight: 300 }}>
                       <span style={{ position: 'absolute', left: 0, top: 8, width: 7, height: 7, borderRadius: '50%', background: study.accent }} />
@@ -204,7 +218,7 @@ export default async function CaseStudyDetailPage({
       {/* ── PREV / NEXT NAVIGATION ── */}
       <div style={{
         borderTop: '1px solid rgba(0,0,0,0.07)',
-        padding: '36px 64px',
+        padding: '32px clamp(20px,5vw,64px)',
         display: 'grid',
         gridTemplateColumns: '1fr auto 1fr',
         gap: 20,
@@ -246,7 +260,7 @@ export default async function CaseStudyDetailPage({
       </div>
 
       {/* ── CTA ── */}
-      <section className="fcta-section" style={{ padding: '80px 64px' }}>
+      <section className="fcta-section" style={{ padding: 'clamp(56px,11vw,80px) clamp(20px,5vw,64px)' }}>
         <h2 className="fcta-h2" style={{ fontSize: 'clamp(26px,3.6vw,42px)' }}>
           Want Results Like These?
         </h2>

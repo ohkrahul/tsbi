@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import gsap from 'gsap';
 
 /* ── Cycling headline: "Big Thinkers." ↔ job titles ── */
 const CYCLE = ['Big Thinkers.', 'Copy Supervisor', 'Copywriter'];
@@ -78,14 +79,22 @@ function JobCard({ job, expanded, onToggle, isMobile }: { job: Job; expanded: bo
   const [applying, setApplying] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [err, setErr] = useState('');
 
   const handleApply = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
-    const fd = new FormData(e.currentTarget);
-    await fetch('/api/careers/apply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(fd.entries())) });
-    setSubmitting(false);
-    setSubmitted(true);
+    setErr('');
+    try {
+      // send as multipart so the CV file is actually transmitted (and emailed as an attachment)
+      const res = await fetch('/api/careers/apply', { method: 'POST', body: new FormData(e.currentTarget) });
+      if (!res.ok) throw new Error('send failed');
+      setSubmitted(true);
+    } catch {
+      setErr('Couldn’t send — please email careers@tsbi.in directly.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -166,6 +175,7 @@ function JobCard({ job, expanded, onToggle, isMobile }: { job: Job; expanded: bo
                         style={{ background: '#e0197d', color: '#fff', border: 'none', borderRadius: 999, padding: '13px', fontFamily: 'var(--fm)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
                       >{submitting ? 'Submitting...' : 'Submit Application'}</button>
                       <button type="button" onClick={() => setApplying(false)} style={{ background: 'none', border: 'none', fontSize: 11, color: 'rgba(0,0,0,0.4)', cursor: 'pointer', fontFamily: 'var(--fm)' }}>Cancel</button>
+                      {err && <div style={{ fontSize: 12, color: '#c0392b', fontFamily: 'var(--fm)', textAlign: 'center', lineHeight: 1.5 }}>{err}</div>}
                     </form>
                   )}
                   <div style={{ borderRadius: 14, border: '1px solid rgba(0,0,0,0.08)', padding: '18px 16px', display: 'flex', gap: 12 }}>
@@ -201,12 +211,40 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
   const [deptFilter, setDeptFilter] = useState<string[]>([]);
   const [expFilter, setExpFilter] = useState<string[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const m = () => setIsMobile(window.innerWidth < 768);
     m();
     window.addEventListener('resize', m);
     return () => window.removeEventListener('resize', m);
+  }, []);
+
+  /* hero entrance — line-mask reveal + staggered fade-up + image slide-in (GSAP) */
+  useEffect(() => {
+    const root = heroRef.current;
+    if (!root) return;
+    const img = imgRef.current;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const ctx = gsap.context(() => {
+      if (reduce) {
+        gsap.set('.cr-line, .cr-anim', { opacity: 1, yPercent: 0, y: 0, filter: 'none' });
+        if (img) gsap.set(img, { opacity: 1, x: 0, scale: 1 });
+        return;
+      }
+      gsap.set('.cr-line', { yPercent: 115, filter: 'blur(10px)' });
+      gsap.set('.cr-anim', { y: 22 });
+      if (img) gsap.set(img, { x: 48, scale: 1.06 });
+
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.to('.cr-line', { opacity: 1, yPercent: 0, filter: 'blur(0px)', duration: 0.9, stagger: 0.13 }, 0.1)
+        .to('.cr-anim', { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }, 0.42);
+      if (img) tl.to(img, { opacity: 1, x: 0, scale: 1, duration: 0.95 }, 0.12);
+    }, root);
+
+    return () => ctx.revert();
   }, []);
 
   const departments = [...new Set(jobs.map(j => j.department))];
@@ -224,67 +262,42 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
 
   return (
     <>
-      {/* ── HERO ── */}
-      <section className="cr-hero">
-        {/* LEFT: stagger-animated text */}
-        <motion.div className="cr-hero-left"
-          initial="hidden" animate="visible"
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.14, delayChildren: 0.08 } } }}
-        >
-          <motion.div className="sec-label"
-            variants={{ hidden: { opacity: 0, y: -14 }, visible: { opacity: 1, y: 0, transition: { duration: 0.45 } } }}
-          >
-            Join Our Team
-          </motion.div>
+      {/* ── HERO (matches home-hero dimensions) ── */}
+      <section
+        ref={heroRef}
+        className="relative mt-[72px] grid w-full grid-cols-1 overflow-hidden bg-[#faf1e9] lg:mt-[108px] lg:h-[clamp(460px,78vh,720px)] lg:grid-cols-[1fr_46%]"
+      >
+        {/* LEFT — text */}
+        <div className="flex flex-col justify-center px-6 pb-10 pt-10 sm:px-10 lg:py-0 lg:pl-16 lg:pr-10">
+          <div className="cr-anim mb-5 flex items-center gap-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-black/45 opacity-0 [font-family:var(--fm)]">
+            <span className="h-px w-5 bg-black/35" /> Join Our Team
+          </div>
 
-          <h1 className="cr-h1">
-            <motion.span style={{ display: 'block' }}
-              variants={{ hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } } }}
-            >
-              We&apos;re
-            </motion.span>
-            <motion.span style={{ display: 'block' }}
-              variants={{ hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } } }}
-            >
-              Hiring
-            </motion.span>
-            {/* Cycling line: Big Thinkers. / Copy Supervisor / Copywriter */}
-            <motion.span style={{ display: 'block' }}
-              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }}
-            >
-              <CyclingText />
-            </motion.span>
+          <h1 className="text-[clamp(44px,8vw,80px)] font-normal leading-[1.08] tracking-[0.01em] text-[#0a0a0a] [font-family:var(--fa)]">
+            <span className="block overflow-hidden"><span className="cr-line block pb-[0.12em] opacity-0 [will-change:transform,opacity,filter]">We&apos;re</span></span>
+            <span className="block overflow-hidden"><span className="cr-line block pb-[0.12em] opacity-0 [will-change:transform,opacity,filter]">Hiring</span></span>
+            <span className="cr-anim block opacity-0"><CyclingText /></span>
           </h1>
 
-          <motion.p
-            variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-            style={{ color: 'var(--muted)', fontFamily: 'var(--fm)', fontSize: 15, fontWeight: 300, maxWidth: 440, lineHeight: 1.85, marginTop: 22 }}
-          >
+          <p className="cr-anim mt-5 max-w-[440px] text-sm font-light leading-[1.85] text-black/55 opacity-0 [font-family:var(--fm)]">
             TSBI is a place where ambitious people do their best work. If you live for big ideas and love the craft, there&apos;s a seat at the table for you.
-          </motion.p>
+          </p>
 
-          <motion.div
-            variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-            style={{ display: 'flex', gap: 14, marginTop: 36, flexWrap: 'wrap' }}
-          >
-            <a href="#jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#e0197d', color: '#fff', borderRadius: 999, padding: '13px 28px', fontFamily: 'var(--fm)', fontSize: 13, fontWeight: 600, textDecoration: 'none', letterSpacing: '0.04em', boxShadow: '0 8px 28px rgba(224,25,125,0.32)' }}>
+          <div className="cr-anim mt-8 flex flex-wrap gap-3.5 opacity-0">
+            <a href="#jobs" className="inline-flex items-center gap-2 rounded-full bg-magenta px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.04em] text-white no-underline shadow-[0_8px_28px_rgba(224,25,125,0.32)] transition-transform hover:-translate-y-0.5 [font-family:var(--fm)]">
               View Open Roles
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
-            <a href="mailto:careers@tsbi.in" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'transparent', color: '#0a0a0a', borderRadius: 999, padding: '13px 28px', fontFamily: 'var(--fm)', fontSize: 13, fontWeight: 500, textDecoration: 'none', border: '1px solid rgba(0,0,0,0.18)', letterSpacing: '0.04em' }}>
+            <a href="mailto:careers@tsbi.in" className="btn-pink-fill inline-flex items-center rounded-full border border-black/20 px-7 py-3.5 text-[13px] font-medium uppercase tracking-[0.04em] text-[#0a0a0a] no-underline [font-family:var(--fm)]">
               careers@tsbi.in
             </a>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
-        {/* RIGHT: image with gradient background */}
-        <motion.div className="cr-hero-img"
-          initial={{ opacity: 0, x: 56, scale: 0.94 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{ duration: 0.75, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <Image src="/Careers/cc1.png" alt="Careers at TSBI" fill sizes="46vw" style={{ objectFit: 'cover', objectPosition: 'left center' }} priority />
-        </motion.div>
+        {/* RIGHT — image */}
+        <div ref={imgRef} className="relative min-h-[300px] opacity-0 lg:min-h-0">
+          <Image src="/Careers/cc1.png" alt="Careers at TSBI" fill sizes="(max-width:1024px) 100vw, 46vw" style={{ objectFit: 'cover', objectPosition: 'left center' }} priority />
+        </div>
       </section>
 
       {/* ── JOBS MATCHED BAR ── */}

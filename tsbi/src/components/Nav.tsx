@@ -18,7 +18,6 @@ const navLinks = [
    "Services" label is a trigger, not a link). */
 const serviceLinks = [
   { href: '/services/content-production',    label: 'Content Production' },
-  { href: '/services/performance',           label: 'Performance Management' },
   { href: '/services/digital-transformation', label: 'Digital Transformation' },
   { href: '/services/influencer-management', label: 'Influencer Management' },
   { href: '/services/social-media',          label: 'Social Media' },

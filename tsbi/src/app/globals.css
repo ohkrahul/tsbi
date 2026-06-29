@@ -712,7 +712,7 @@ body {
 .cs-hero-visual { position: absolute; inset: 0; background: linear-gradient(135deg,#1a2f50 0%,#0d1528 100%); }
 .cs-tags { display: flex; gap: 8px; margin-bottom: 22px; position: relative; z-index: 2; }
 .cs-tag { font-family: var(--fm); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6); }
-.cs-title { font-family: var(--fd); font-size: clamp(52px,9vw,110px); font-weight: 900; line-height: .9; letter-spacing: -.02em; color: #fff; margin-bottom: 10px; position: relative; z-index: 2; }
+.cs-title { font-family: var(--fa); font-size: clamp(32px,7vw,90px); font-weight: 400; line-height: 1.06; letter-spacing: .01em; color: #fff; margin-bottom: 10px; position: relative; z-index: 2; overflow-wrap: anywhere; word-break: break-word; padding-bottom: .06em; }
 .cs-client { font-family: var(--fm); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--magenta); position: relative; z-index: 2; }
 .cs-info-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 0; border: 1px solid var(--border); overflow: hidden; margin: 0 48px; }
 .cs-ic { padding: 24px; border-right: 1px solid var(--border); }
@@ -889,8 +889,12 @@ body {
     .hbs-eyebrow { font-size: 8px; letter-spacing: .14em; }
     .hbs-arrow { display: none; }
     .hbs-dots { bottom: 36px; }
-    .ab-strip { grid-template-columns: 1fr; }
-    .ab-strip-item { height: 150px; }
+    /* mobile: swipeable horizontal carousel instead of a tall stacked column */
+    .ab-strip { display: flex; grid-template-columns: none; gap: 12px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-padding-left: 16px; padding: 0 16px 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .ab-strip::-webkit-scrollbar { display: none; }
+    .ab-strip-item { flex: 0 0 80%; height: 260px; border-radius: 16px; scroll-snap-align: start; }
+    .ab-strip-item:hover { flex: 0 0 80%; }
+    .ab-strip-label { font-size: 11px; bottom: 16px; left: 16px; }
     .media-hero { padding: 32px 16px 24px; }
     .media-hero-img-wrap { width: 220px; }
     .media-main { padding: 0 16px 40px; }

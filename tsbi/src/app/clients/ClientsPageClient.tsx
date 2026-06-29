@@ -1,7 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export interface ClientEntry {
   name: string;
@@ -26,10 +30,13 @@ const CASE_STUDY_MAP: Record<string, string> = {
 
 type Tab = 'all' | 'entertainment' | 'non-entertainment';
 
+/* fonts — same as the home page */
+const FA = 'font-fa'; // Abril Fatface — display headings
+const FM = 'font-fm'; // Space Grotesk — labels & body
+
 /* ── Single logo card ── */
 function LogoCard({ client }: { client: ClientEntry }) {
   const [imgErr, setImgErr] = useState(false);
-  const [hov, setHov]       = useState(false);
   const caseUrl = CASE_STUDY_MAP[client.name];
 
   const initials = client.name
@@ -39,53 +46,97 @@ function LogoCard({ client }: { client: ClientEntry }) {
     .join('');
 
   const card = (
-    <div
-      style={{
-        background: '#fff', borderRadius: 16,
-        border: `1px solid ${hov && caseUrl ? 'rgba(224,25,125,0.3)' : 'rgba(0,0,0,0.07)'}`,
-        boxShadow: hov ? '0 12px 40px rgba(0,0,0,0.1)' : '0 4px 20px rgba(0,0,0,0.05)',
-        padding: '28px 20px 22px', display: 'flex', flexDirection: 'column',
-        alignItems: 'center', gap: 14,
-        cursor: caseUrl ? 'pointer' : 'default',
-        transition: 'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
-        transform: hov ? 'translateY(-4px)' : 'translateY(0)',
-        position: 'relative', overflow: 'hidden',
-      }}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-    >
-      {caseUrl && hov && (
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(224,25,125,0.92) 0%, transparent 100%)', padding: '20px 0 10px', textAlign: 'center', pointerEvents: 'none' }}>
-          <span style={{ fontFamily: 'var(--fm)', fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.12em', textTransform: 'uppercase' }}>View Case Study →</span>
+    <div className={`group relative flex h-full flex-col items-center gap-3.5 overflow-hidden rounded-2xl border border-black/[0.07] bg-white px-5 pb-[22px] pt-7 text-center shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.1)] ${caseUrl ? 'cursor-pointer hover:border-magenta/30' : ''}`}>
+      {caseUrl && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-magenta/90 to-transparent pb-2.5 pt-5 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <span className={`text-[10px] font-bold uppercase tracking-[0.12em] text-white ${FM}`}>View Case Study →</span>
         </div>
       )}
 
-      <div style={{ width: '100%', height: 96, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 8px' }}>
+      <div className="flex h-24 w-full items-center justify-center px-2">
         {client.logo && !imgErr ? (
-          <img src={client.logo} alt={`${client.name} logo`} onError={() => setImgErr(true)}
-            style={{ maxWidth: '100%', maxHeight: 90, width: 'auto', height: 'auto', objectFit: 'contain', display: 'block' }} />
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={client.logo}
+            alt={`${client.name} logo`}
+            onError={() => setImgErr(true)}
+            className="block h-auto max-h-[90px] w-auto max-w-full object-contain"
+          />
         ) : (
-          <div style={{ width: 72, height: 72, borderRadius: 12, background: `${client.accent}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--fd)', fontSize: 22, fontWeight: 900, color: client.accent, letterSpacing: '-0.02em' }}>
+          <div
+            className={`flex h-[72px] w-[72px] items-center justify-center rounded-xl text-[22px] font-normal tracking-[0.01em] ${FA}`}
+            style={{ background: `${client.accent}18`, color: client.accent }}
+          >
             {initials}
           </div>
         )}
       </div>
 
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(13px,1.4vw,16px)', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.2, marginBottom: 5 }}>{client.name}</div>
-        <div style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.13em', textTransform: 'uppercase', color: 'var(--magenta)' }}>{client.type}</div>
+      <div>
+        <div className={`mb-[5px] text-[clamp(13px,1.4vw,16px)] font-bold leading-tight text-[var(--ink)] ${FM}`}>{client.name}</div>
+        <div className={`text-[9px] uppercase tracking-[0.13em] text-magenta ${FM}`}>{client.type}</div>
       </div>
     </div>
   );
 
   return caseUrl
-    ? <Link href={caseUrl} style={{ textDecoration: 'none', display: 'block' }}>{card}</Link>
+    ? <Link href={caseUrl} className="block no-underline">{card}</Link>
     : card;
 }
 
 /* ── Page component ── */
 export default function ClientsPageClient({ clients }: { clients: ClientEntry[] }) {
   const [tab, setTab] = useState<Tab>('all');
+  const heroRef = useRef<HTMLHeadingElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  /* hero headline — line-by-line mask reveal with a blur-fade (matches the home/about treatment) */
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const lines = el.querySelectorAll<HTMLElement>('.cl-hero-line');
+    if (!lines.length) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const ctx = gsap.context(() => {
+      if (reduce) {
+        gsap.set(lines, { opacity: 1, yPercent: 0, filter: 'none' });
+        return;
+      }
+      gsap.set(lines, { yPercent: 115, filter: 'blur(12px)' });
+      gsap.to(lines, {
+        opacity: 1,
+        yPercent: 0,
+        filter: 'blur(0px)',
+        duration: 0.95,
+        stagger: 0.12,
+        ease: 'power3.out',
+        delay: 0.2,
+      });
+    }, el);
+
+    return () => ctx.revert();
+  }, []);
+
+  /* logo grid — staggered fade-up; re-runs on tab change, reveals on scroll-in */
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const cards = grid.querySelectorAll('.cl-card-anim');
+    if (!cards.length) return;
+    const ctx = gsap.context(() => {
+      gsap.from(cards, {
+        opacity: 0,
+        y: 24,
+        duration: 0.5,
+        ease: 'power3.out',
+        stagger: { amount: 0.6, from: 'start' },
+        scrollTrigger: { trigger: grid, start: 'top 85%', once: true },
+      });
+    }, grid);
+    return () => ctx.revert();
+  }, [tab]);
 
   const tabs: { key: Tab; label: string }[] = [
     { key: 'all',               label: 'All Clients'              },
@@ -104,24 +155,28 @@ export default function ClientsPageClient({ clients }: { clients: ClientEntry[] 
   return (
     <>
       {/* Hero */}
-      <section className="cl-hero" style={{ background: 'var(--navy)' }}>
-        <div className="sec-label" style={{ color: 'rgba(255,255,255,.4)' }}>Our Clients</div>
-        <h1 className="cl-h1">
-          Brands That<br />Trust<br /><em>TSBI.</em>
+      <section className="flex min-h-[50vh] flex-col items-center justify-center bg-[var(--navy)] px-5 pb-16 pt-[120px] text-center sm:px-10 sm:pb-20 sm:pt-32 lg:px-12">
+        <div className={`mb-2 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.18em] text-white/40 ${FM}`}>
+          <span className="h-px w-6 bg-white/30" /> Our Clients
+        </div>
+        <h1 ref={heroRef} className={`mt-3 text-[clamp(40px,10vw,96px)] font-normal leading-[1.05] tracking-[0.01em] text-white ${FA}`}>
+          <span className="block overflow-hidden"><span className="cl-hero-line block opacity-0 [will-change:transform,opacity,filter]">Brands That</span></span>
+          <span className="block overflow-hidden"><span className="cl-hero-line block opacity-0 [will-change:transform,opacity,filter]">Trust</span></span>
+          <span className="block overflow-hidden"><span className="cl-hero-line block opacity-0 [will-change:transform,opacity,filter]"><em className="italic text-magenta">TSBI.</em></span></span>
         </h1>
-        <p style={{ color: 'rgba(255,255,255,.5)', fontSize: 16, fontWeight: 300, maxWidth: 480, lineHeight: 1.8, marginTop: 18 }}>
+        <p className="mx-auto mt-5 max-w-[480px] text-sm font-light leading-[1.8] text-white/50 sm:text-base">
           From multinationals to independents — across entertainment, beauty, tech and luxury —
           they all chose TSBI.
         </p>
       </section>
 
       {/* Tab nav */}
-      <div className="cl-tabs">
+      <div className="sticky top-14 z-[100] flex gap-0 overflow-x-auto border-b border-[var(--border)] bg-white px-5 sm:px-10 lg:px-12 [&::-webkit-scrollbar]:hidden">
         {tabs.map((t) => (
           <button
             key={t.key}
-            className={`cl-tab${tab === t.key ? ' active' : ''}`}
             onClick={() => setTab(t.key)}
+            className={`shrink-0 whitespace-nowrap border-b-2 px-4 py-4 text-[10px] uppercase tracking-[0.1em] transition-colors sm:px-5 ${FM} ${tab === t.key ? 'border-magenta text-magenta' : 'border-transparent text-black/45 hover:text-[var(--ink)]'}`}
           >
             {t.label}
           </button>
@@ -129,17 +184,19 @@ export default function ClientsPageClient({ clients }: { clients: ClientEntry[] 
       </div>
 
       {/* Logo grid */}
-      <section className="cl-section" style={{ background: 'var(--off)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 14 }}>
+      <section className="bg-[var(--off)] px-5 py-12 sm:px-10 sm:py-16 lg:px-12 lg:py-20">
+        <div ref={gridRef} className="grid grid-cols-2 gap-3 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] sm:gap-3.5">
           {current.map((client) => (
-            <LogoCard key={client.name} client={client} />
+            <div key={client.name} className="cl-card-anim h-full">
+              <LogoCard client={client} />
+            </div>
           ))}
         </div>
       </section>
 
       {/* CTA */}
-      <section className="cl-cta" style={{ background: 'var(--navy)' }}>
-        <p className="cl-cta-h2">Want to work with us?</p>
+      <section className="bg-[var(--navy)] px-5 py-16 text-center sm:px-10 sm:py-20">
+        <p className={`mb-7 text-[clamp(26px,5vw,48px)] font-normal italic text-white ${FA}`}>Want to work with us?</p>
         <Link href="/contact" className="btn-fill" style={{ background: 'var(--magenta)' }}>
           Start a Conversation →
         </Link>

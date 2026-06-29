@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import OtherServices from '@/components/services/OtherServices';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
@@ -732,10 +733,7 @@ export default function InfluencerManagementPage() {
                 style={{ background: '#fff', color: 'var(--magenta)' }}>
             Start a Campaign →
           </Link>
-          <Link href="/services" className="btn-border"
-                style={{ color: 'rgba(255,255,255,.7)', borderColor: 'rgba(255,255,255,.3)' }}>
-            All Services
-          </Link>
+          <OtherServices current="influencer-management" />
         </div>
       </section>
     </>

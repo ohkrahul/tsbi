@@ -1,7 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { techCaseStudies } from '@/lib/caseStudies';
+
+gsap.registerPlugin(ScrollTrigger);
 
 /* ── compact line-icon set ── */
 function Icon({ type, color = '#e0197d', size = 26 }: { type: string; color?: string; size?: number }) {
@@ -72,6 +77,39 @@ const phoneRows = [
 ];
 
 export default function DigitalTransformationPage() {
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ctx = gsap.context(() => {
+      if (reduce) {
+        gsap.set('.dt-hero-anim, .dt-hero-art, .dt-reveal, .dt-card', { opacity: 1, y: 0, scale: 1 });
+        return;
+      }
+      // Hero entrance — staggered fade-up on load.
+      gsap.set('.dt-hero-anim', { y: 24 });
+      gsap.set('.dt-hero-art', { y: 30, scale: 0.97 });
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.to('.dt-hero-anim', { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 }, 0.1)
+        .to('.dt-hero-art', { opacity: 1, y: 0, scale: 1, duration: 0.9 }, 0.3);
+
+      // Headings / CTA — fade-up as they scroll in (no hover transform, safe to move).
+      gsap.set('.dt-reveal', { y: 28 });
+      ScrollTrigger.batch('.dt-reveal', {
+        start: 'top 88%',
+        once: true,
+        onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' }),
+      });
+
+      // Cards — opacity-only stagger so GSAP never writes a transform that would
+      // override the Tailwind hover:-translate-y lift.
+      ScrollTrigger.batch('.dt-card', {
+        start: 'top 90%',
+        once: true,
+        onEnter: (els) => gsap.to(els, { opacity: 1, duration: 0.55, stagger: 0.07, ease: 'power2.out' }),
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
   return (
     <>
       {/* ── HERO ── */}
@@ -88,24 +126,24 @@ export default function DigitalTransformationPage() {
         <div className="mx-auto grid max-w-[1300px] items-center gap-9 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12">
           {/* left — copy */}
           <div>
-            <div className="sec-label pink mb-[18px]">Technology · Strategy · Experience</div>
-            <h1 className="font-fm m-0 text-[clamp(34px,5vw,62px)] font-black leading-none tracking-[-0.03em] text-white">
+            <div className="sec-label pink mb-[18px] dt-hero-anim opacity-0">Technology · Strategy · Experience</div>
+            <h1 className="dt-hero-anim opacity-0 font-fa m-0 text-[clamp(30px,4.4vw,56px)] font-normal leading-[1.06] tracking-[0.01em] text-white">
               Tech Solutions That{' '}
               <span className="text-[#b96cff]">Build</span>,{' '}
               <span className="text-magenta">Launch</span> &{' '}
               <span className="text-[#4d8bff]">Scale</span>{' '}
               Digital Experiences
             </h1>
-            <p className="font-fb mt-6 mb-8 max-w-[540px] text-base font-light leading-[1.8] text-white/65">
+            <p className="dt-hero-anim opacity-0 font-fb mt-6 mb-8 max-w-[540px] text-base font-light leading-[1.8] text-white/65">
               TSBI is a digital product and technology partner that helps brands create powerful websites,
               web &amp; mobile apps, microsites, campaign tech, eCommerce experiences, dashboards and custom
               platforms that drive growth.
             </p>
-            <div className="flex flex-wrap gap-3.5">
+            <div className="dt-hero-anim opacity-0 flex flex-wrap gap-3.5">
               <Link href="#offer" className="btn-fill" style={{ background: 'var(--magenta)' }}>Explore Services →</Link>
               <Link href="/case-studies" className="btn-border" style={{ color: 'rgba(255,255,255,.8)', borderColor: 'rgba(255,255,255,.3)' }}>▶ View Work</Link>
             </div>
-            <div className="mt-9 flex flex-wrap items-center gap-[22px]">
+            <div className="dt-hero-anim opacity-0 mt-9 flex flex-wrap items-center gap-[22px]">
               <span className="font-fm -mb-2 w-full text-[11px] tracking-[0.04em] text-white/45">Trusted by startups, enterprises &amp; global brands</span>
               {logos.map((l) => (
                 <span key={l.name} className="font-fd text-[19px] font-extrabold leading-none text-white/75">{l.name}</span>
@@ -114,7 +152,7 @@ export default function DigitalTransformationPage() {
           </div>
 
           {/* right — device banner */}
-          <div className="relative min-h-[460px] max-[900px]:min-h-[380px]">
+          <div className="dt-hero-art opacity-0 relative min-h-[460px] max-[900px]:min-h-[380px]">
             {/* decorative */}
             <div className="absolute right-[-6%] top-[2%] z-0 aspect-square w-[86%] rounded-full bg-[radial-gradient(circle_at_55%_42%,rgba(123,31,162,0.16),rgba(224,25,125,0.10)_46%,transparent_70%)]" />
             <div className="absolute left-0 top-[4%] z-[1] h-[60px] w-24 bg-[radial-gradient(currentColor_1.5px,transparent_1.6px)] bg-[length:13px_13px] text-[#b9a7ff] opacity-55" />
@@ -162,11 +200,11 @@ export default function DigitalTransformationPage() {
       {/* ── SERVICES WE OFFER ── */}
       <section id="offer" className="bg-off px-12 py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
-          <h2 className="font-fd m-0 text-center text-[clamp(28px,3.4vw,44px)] font-extrabold tracking-[-0.02em]">Services We Offer</h2>
+          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-normal leading-[1.1] tracking-[0.01em]">Services We Offer</h2>
           <div className="mx-auto mb-12 mt-2 h-[3px] w-[46px] rounded-sm bg-magenta" />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             {offerings.map((o) => (
-              <div key={o.title} className="rounded-xl border border-border-c bg-white p-6 transition-all duration-200 hover:-translate-y-1.5 hover:border-magenta hover:shadow-[0_22px_50px_rgba(0,0,0,0.10)]">
+              <div key={o.title} className="dt-card opacity-0 rounded-xl border border-border-c bg-white p-6 transition-all duration-200 hover:-translate-y-1.5 hover:border-magenta hover:shadow-[0_22px_50px_rgba(0,0,0,0.10)]">
                 <div className="mb-4 flex h-[46px] w-[46px] items-center justify-center rounded-[10px] bg-magenta/10"><Icon type={o.icon} /></div>
                 <div className="font-fd mb-2 text-lg font-bold leading-tight">{o.title}</div>
                 <p className="font-fb m-0 text-[13px] font-light leading-[1.65] text-muted">{o.desc}</p>
@@ -179,11 +217,11 @@ export default function DigitalTransformationPage() {
       {/* ── WHAT WE BUILD ── */}
       <section className="bg-white px-12 py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
-          <h2 className="font-fd m-0 text-center text-[clamp(28px,3.4vw,44px)] font-extrabold tracking-[-0.02em]">What We Build</h2>
+          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-normal leading-[1.1] tracking-[0.01em]">What We Build</h2>
           <div className="mx-auto mb-12 mt-2 h-[3px] w-[46px] rounded-sm bg-magenta" />
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {whatWeBuild.map((b) => (
-              <div key={b.title} className="rounded-xl border border-border-c bg-white p-7">
+              <div key={b.title} className="dt-card opacity-0 rounded-xl border border-border-c bg-white p-7">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: `${b.tint}14` }}><Icon type={b.icon} color={b.tint} size={24} /></div>
                 <div className="font-fd mb-2 text-[19px] font-bold">{b.title}</div>
                 <p className="font-fb m-0 text-[13px] font-light leading-[1.65] text-muted">{b.desc}</p>
@@ -197,12 +235,12 @@ export default function DigitalTransformationPage() {
       <section className="bg-off  py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
-            <h2 className="font-fd m-0 text-[clamp(28px,3.4vw,44px)] font-extrabold tracking-[-0.02em]">Selected Work</h2>
+            <h2 className="dt-reveal opacity-0 font-fa m-0 text-[clamp(28px,3.4vw,44px)] font-normal leading-[1.1] tracking-[0.01em]">Selected Work</h2>
             <Link href="/case-studies" className="font-fm text-xs tracking-[0.06em] text-magenta no-underline">View all projects →</Link>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {techCaseStudies.map((s) => (
-              <Link key={s.slug} href={`/case-studies/${s.slug}`} className="group block overflow-hidden rounded-xl border border-border-c bg-white no-underline transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_50px_rgba(0,0,0,0.12)]">
+              <Link key={s.slug} href={`/case-studies/${s.slug}`} className="dt-card opacity-0 group block overflow-hidden rounded-xl border border-border-c bg-white no-underline transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_50px_rgba(0,0,0,0.12)]">
                 <div className="relative aspect-video overflow-hidden" style={{ background: `linear-gradient(135deg, ${s.gradFrom}, ${s.gradTo})` }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={s.image} alt={s.title} className="absolute inset-0 h-full w-full object-cover transition-transform duration-[400ms] group-hover:scale-105" />
@@ -223,11 +261,11 @@ export default function DigitalTransformationPage() {
       {/* ── HOW WE WORK ── */}
       <section className="bg-white px-12 py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
-          <h2 className="font-fd m-0 text-center text-[clamp(28px,3.4vw,44px)] font-extrabold tracking-[-0.02em]">How We Work</h2>
+          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-normal leading-[1.1] tracking-[0.01em]">How We Work</h2>
           <div className="mx-auto mb-12 mt-2 h-[3px] w-[46px] rounded-sm bg-magenta" />
           <div className="relative grid grid-cols-2 gap-7 md:grid-cols-4 md:before:absolute md:before:left-[6%] md:before:right-[6%] md:before:top-4 md:before:z-0 md:before:border-t-2 md:before:border-dashed md:before:border-black/10 md:before:content-['']">
             {steps.map((st) => (
-              <div key={st.n} className="relative z-[1] text-center">
+              <div key={st.n} className="dt-card opacity-0 relative z-[1] text-center">
                 <div className="font-fd mx-auto mb-[18px] flex h-[34px] w-[34px] items-center justify-center rounded-full text-[15px] font-extrabold text-white" style={{ background: st.color }}>{st.n}</div>
                 <div className="mx-auto mb-3.5 flex h-11 w-11 items-center justify-center rounded-xl bg-off"><Icon type={st.icon} color={st.color} size={22} /></div>
                 <div className="font-fd mb-2 text-lg font-bold">{st.title}</div>
@@ -242,7 +280,7 @@ export default function DigitalTransformationPage() {
       <section className="px-12 pb-20 pt-6 max-sm:px-6">
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-8 rounded-[22px] bg-[linear-gradient(110deg,#7b1fa2_0%,#e0197d_70%,#ff4fa3_100%)] p-[clamp(36px,5vw,64px)] text-white">
           <div>
-            <h2 className="font-fd m-0 mb-2 text-[clamp(24px,3vw,40px)] font-black leading-[1.1] tracking-[-0.02em]">Need a tech partner for<br />your next digital product?</h2>
+            <h2 className="dt-reveal opacity-0 font-fa m-0 mb-2 text-[clamp(24px,3vw,40px)] font-normal leading-[1.12] tracking-[0.01em]">Need a tech partner for<br />your next digital product?</h2>
             <p className="font-fb m-0 text-sm font-light opacity-90">Let&apos;s build something impactful together.</p>
           </div>
           <div className="flex flex-wrap gap-3">

@@ -1,8 +1,13 @@
 ﻿'use client';
 
 import Link from 'next/link';
+import OtherServices from '@/components/services/OtherServices';
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 type Campaign = {
   client: string;
@@ -500,6 +505,31 @@ function CampaignCard({ c }: { c: Campaign }) {
 }
 
 export default function ContentProductionPage() {
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ctx = gsap.context(() => {
+      if (reduce) {
+        gsap.set('.cp-hero-line, .cp-hero-anim, .cp-reveal', { opacity: 1, yPercent: 0, y: 0, filter: 'none' });
+        return;
+      }
+      // hero entrance (on load) — line-mask reveal + staggered fade-up
+      gsap.set('.cp-hero-line', { yPercent: 115, filter: 'blur(10px)' });
+      gsap.set('.cp-hero-anim', { y: 22 });
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.to('.cp-hero-line', { opacity: 1, yPercent: 0, filter: 'blur(0px)', duration: 0.9, stagger: 0.13 }, 0.1)
+        .to('.cp-hero-anim', { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }, 0.42);
+
+      // sections below — fade-up as they scroll into view
+      gsap.set('.cp-reveal', { y: 30 });
+      ScrollTrigger.batch('.cp-reveal', {
+        start: 'top 88%',
+        once: true,
+        onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: 'power3.out' }),
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
   return (
     <>
       {/* ── HERO: TSBI brand-color cinematic ── */}
@@ -530,28 +560,32 @@ export default function ContentProductionPage() {
           {/* ── LEFT: copy ── */}
           <div style={{ flex: '1 1 440px', minWidth: 300 }}>
             <span
-              className="sec-label"
-              style={{ color: 'rgba(255,255,255,.45)', marginBottom: 40, display: 'block' }}
+              className="sec-label cp-hero-anim"
+              style={{ color: 'rgba(255,255,255,.45)', marginBottom: 40, display: 'block', opacity: 0 }}
             >
-              <span style={{ color: 'rgba(255,255,255,.25)' }}>01</span> — Production
+              <span style={{ color: 'rgba(255,255,255,.25)' }}></span> — Production
             </span>
 
             <h1
               style={{
-                fontFamily: 'var(--fd)',
-                fontSize: 'clamp(56px,8vw,120px)',
-                fontWeight: 900,
-                lineHeight: 0.92,
-                letterSpacing: '-0.04em',
+                fontFamily: 'var(--fa)',
+                fontSize: 'clamp(48px,8vw,108px)',
+                fontWeight: 400,
+                lineHeight: 1.0,
+                letterSpacing: '0.01em',
                 color: '#fff',
                 marginBottom: 40,
-                whiteSpace: 'pre-line',
               }}
             >
-              {'Frame.\nStory.\nResonance.'}
+              {['Frame.', 'Story.', 'Resonance.'].map((w) => (
+                <span key={w} style={{ display: 'block', overflow: 'hidden' }}>
+                  <span className="cp-hero-line" style={{ display: 'block', opacity: 0, paddingBottom: '0.06em', willChange: 'transform, opacity, filter' }}>{w}</span>
+                </span>
+              ))}
             </h1>
 
             <p
+              className="cp-hero-anim"
               style={{
                 fontSize: 'clamp(15px,1.4vw,18px)',
                 color: 'rgba(255,255,255,.65)',
@@ -559,12 +593,13 @@ export default function ContentProductionPage() {
                 lineHeight: 1.7,
                 maxWidth: 480,
                 marginBottom: 40,
+                opacity: 0,
               }}
             >
               End-to-end content production. Films, reels, photography — in-house, no compromise.
             </p>
 
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <div className="cp-hero-anim" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', opacity: 0 }}>
               {['Film', 'Photography', 'Reels', 'OOH', 'Audio'].map((tag) => (
                 <span
                   key={tag}
@@ -623,15 +658,17 @@ export default function ContentProductionPage() {
           Selected Work
         </div>
         <h2
+          className="cp-reveal"
           style={{
-            fontFamily: 'var(--fd)',
-            fontSize: 'clamp(32px,4vw,56px)',
-            fontWeight: 900,
-            letterSpacing: '-0.02em',
+            fontFamily: 'var(--fa)',
+            fontSize: 'clamp(30px,4vw,54px)',
+            fontWeight: 400,
+            letterSpacing: '0.01em',
             color: 'var(--ink)',
-            lineHeight: 1,
+            lineHeight: 1.08,
             marginBottom: 48,
-            maxWidth: 720,
+            maxWidth: 760,
+            opacity: 0,
           }}
         >
           Campaigns we&apos;ve framed, told and made resonate.
@@ -652,9 +689,11 @@ export default function ContentProductionPage() {
 
       {/* ── STAT BAR ── */}
       <div
+        className="cp-reveal"
         style={{
           background: 'var(--ink)',
           display: 'flex',
+          opacity: 0,
         }}
       >
         {stats.map((stat, i) => (
@@ -669,9 +708,9 @@ export default function ContentProductionPage() {
           >
             <div
               style={{
-                fontFamily: 'var(--fd)',
+                fontFamily: 'var(--fa)',
                 fontSize: 'clamp(40px,6vw,72px)',
-                fontWeight: 900,
+                fontWeight: 400,
                 color: '#fff',
                 lineHeight: 1,
               }}
@@ -707,14 +746,16 @@ export default function ContentProductionPage() {
         }}
       >
         <p
+          className="cp-reveal"
           style={{
-            fontFamily: 'var(--fd)',
-            fontSize: 'clamp(32px,5vw,60px)',
+            fontFamily: 'var(--fa)',
+            fontSize: 'clamp(30px,5vw,58px)',
             fontStyle: 'italic',
-            fontWeight: 300,
+            fontWeight: 400,
             color: '#fff',
-            lineHeight: 1.1,
+            lineHeight: 1.15,
             whiteSpace: 'pre-line',
+            opacity: 0,
           }}
         >
           {'Have a project\nin mind?'}
@@ -727,16 +768,7 @@ export default function ContentProductionPage() {
           >
             Start a Project →
           </Link>
-          <Link
-            href="/services"
-            className="btn-border"
-            style={{
-              color: 'rgba(255,255,255,.7)',
-              borderColor: 'rgba(255,255,255,.3)',
-            }}
-          >
-            All Services
-          </Link>
+          <OtherServices current="content-production" />
         </div>
       </section>
     </>

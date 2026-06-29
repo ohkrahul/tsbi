@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import OtherServices from '@/components/services/OtherServices';
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
-// Shared brand orange (matches the home Social Media section).
-const ORANGE_GRAD = 'linear-gradient(135deg, #ff5c0d 0%, #ff3d12 55%, #e63200 100%)';
+// TSBI brand pink/magenta gradient.
+const BRAND_GRAD = 'linear-gradient(135deg, #ff3da6 0%, #e0197d 52%, #a80f5d 100%)';
 
 /* ── YouTube social media campaign work ── */
 type YTWork = {
@@ -174,9 +175,9 @@ function PhoneReelSlider() {
                 width: PHONE_W, height: PHONE_H,
                 borderRadius: 34, overflow: 'hidden',
                 background: '#0a0a0a',
-                border: isAct ? '2px solid rgba(255,92,13,0.9)' : '1.5px solid rgba(255,255,255,0.15)',
+                border: isAct ? '2px solid rgba(224,25,125,0.9)' : '1.5px solid rgba(255,255,255,0.15)',
                 boxShadow: isAct
-                  ? '0 0 0 1px rgba(255,92,13,0.35), 0 0 48px rgba(255,92,13,0.28), 0 22px 60px rgba(0,0,0,0.65)'
+                  ? '0 0 0 1px rgba(224,25,125,0.35), 0 0 48px rgba(224,25,125,0.28), 0 22px 60px rgba(0,0,0,0.65)'
                   : '0 10px 40px rgba(0,0,0,0.55)',
                 zIndex: 10 - absDist,
                 cursor: isAct ? 'default' : 'pointer',
@@ -195,7 +196,7 @@ function PhoneReelSlider() {
 
               {/* Category badge */}
               {isAct && (
-                <div style={{ position: 'absolute', top: 32, right: 12, fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#fff', background: 'rgba(255,92,13,0.82)', borderRadius: 4, padding: '3px 9px', zIndex: 5 }}>
+                <div style={{ position: 'absolute', top: 32, right: 12, fontFamily: 'var(--fm)', fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#fff', background: 'rgba(224,25,125,0.88)', borderRadius: 4, padding: '3px 9px', zIndex: 5 }}>
                   {reel.categories[0]}
                 </div>
               )}
@@ -236,7 +237,7 @@ function PhoneReelSlider() {
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {/* <span style={{ fontFamily: 'var(--fm)', fontSize: 16, fontWeight: 700, color: '#ff5c0d', letterSpacing: '-0.01em', minWidth: 26, textAlign: 'right' }}>
+          {/* <span style={{ fontFamily: 'var(--fm)', fontSize: 16, fontWeight: 700, color: '#fff', letterSpacing: '-0.01em', minWidth: 26, textAlign: 'right' }}>
             {String(active + 1).padStart(2, '0')}
           </span> */}
           {/* <span style={{ fontFamily: 'var(--fm)', fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>/ {String(N).padStart(2, '0')}</span> */}
@@ -244,12 +245,12 @@ function PhoneReelSlider() {
             <motion.div
               animate={{ width: `${((active + 1) / N) * 100}%` }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              style={{ position: 'absolute', left: 0, top: 0, height: '100%', background: '#ff5c0d', borderRadius: 3 }}
+              style={{ position: 'absolute', left: 0, top: 0, height: '100%', background: '#fff', borderRadius: 3 }}
             />
             <motion.div
               animate={{ left: `${((active + 1) / N) * 100}%` }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              style={{ position: 'absolute', top: '50%', translateY: '-50%', width: 11, height: 11, borderRadius: '50%', background: '#ff5c0d', marginLeft: -5, marginTop: -4 }}
+              style={{ position: 'absolute', top: '50%', translateY: '-50%', width: 11, height: 11, borderRadius: '50%', background: '#fff', marginLeft: -5, marginTop: -4 }}
             />
           </div>
         </div>
@@ -573,15 +574,15 @@ export default function SocialMediaPage() {
   const bgColor = useTransform(
     smooth,
     [0,        0.15,      0.16,      0.28,      0.75,      0.88,     1   ],
-    ['#ff5c0d','#ff5c0d','#c93600','#0f0806','#0f0806','#cc3600','#ff5c0d']
+    ['#fff','#fff','#c93600','#0f0806','#0f0806','#cc3600','#fff']
   );
 
   return (
     <motion.main style={{ background: bgColor }}>
-      {/* ── HERO: brand orange feed ── */}
+      {/* ── HERO: brand pink feed ── */}
       <section
         style={{
-          background: ORANGE_GRAD,
+          background: BRAND_GRAD,
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
@@ -636,7 +637,7 @@ export default function SocialMediaPage() {
                 </svg>
               </div>
               <span style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#fff' }}>
-                06 — Social Media
+                 Social Media
               </span>
             </div>
 
@@ -802,10 +803,10 @@ export default function SocialMediaPage() {
         </div>
       </section>
 
-      {/* ── CTA: brand orange ── */}
+      {/* ── CTA: brand pink ── */}
       <section
         style={{
-          background: ORANGE_GRAD,
+          background: BRAND_GRAD,
           padding: '80px 48px',
           display: 'flex',
           alignItems: 'center',
@@ -828,16 +829,10 @@ export default function SocialMediaPage() {
           {"Let's build your\nsocial presence."}
         </h2>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          <Link href="/contact" className="btn-fill" style={{ background: '#fff', color: '#ff4c0c' }}>
+          <Link href="/contact" className="btn-fill" style={{ background: '#fff', color: '#e0197d' }}>
             Start a Project →
           </Link>
-          <Link
-            href="/services"
-            className="btn-border"
-            style={{ color: 'rgba(255,255,255,.85)', borderColor: 'rgba(255,255,255,.45)' }}
-          >
-            All Services
-          </Link>
+          <OtherServices current="social-media" />
         </div>
       </section>
     </motion.main>

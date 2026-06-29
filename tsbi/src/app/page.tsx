@@ -54,7 +54,7 @@ const ROW_TWO: Logo[] = [
   { name: 'Colors', src: '/entertainment/colors.webp' },
 ];
 
-// ── Brands that trust us — 6 featured trailers, played inline (no routing) ──
+// ── Brands that trust us — 6 featured trailers; each opens on YouTube (no inline embed) ──
 type Video = { id: string; client: string; title: string };
 const VIDEOS: Video[] = [
   { id: '9FUd-D4FWjw', client: 'Dharma Productions', title: 'Sunny Sanskari Ki Tulsi Kumari' },
@@ -118,8 +118,6 @@ export default function HomePage() {
   const [selected, setSelected] = useState(0);
   const [snaps, setSnaps] = useState<number[]>([]);
 
-  // Which "Brands that trust us" trailer is currently playing inline (one at a time).
-  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -404,34 +402,14 @@ export default function HomePage() {
 
               return (
                 <div key={v.id} className={`bts-card relative ${spanClass}`}>
-                  {playingVideo === v.id ? (
-                    <div className={innerClass}>
-                      <iframe
-                        src={`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0&playsinline=1`}
-                        title={v.title}
-                        className="absolute inset-0 h-full w-full"
-                        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                        allowFullScreen
-                      />
-                      {/* escape hatch — some videos have embedding disabled by the
-                          owner and show "unavailable"; this opens it on YouTube. */}
-                      <a
-                        href={`https://www.youtube.com/watch?v=${v.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="absolute right-2.5 top-2.5 z-10 rounded-full bg-black/70 px-3 py-1.5 font-fm text-[10px] font-semibold uppercase tracking-[0.08em] text-white backdrop-blur-sm transition hover:bg-magenta"
-                      >
-                        Watch on YouTube ↗
-                      </a>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setPlayingVideo(v.id)}
-                      onMouseEnter={focusCard}
-                      aria-label={`Play ${v.title}`}
-                      className={`group cursor-pointer ${innerClass}`}
-                    >
+                  <a
+                    href={`https://www.youtube.com/watch?v=${v.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onMouseEnter={focusCard}
+                    aria-label={`Watch ${v.title} on YouTube`}
+                    className={`group block cursor-pointer ${innerClass}`}
+                  >
                       {failed[v.id] ? (
                         // styled fallback when the YouTube thumbnail can't load
                         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-linear-to-br from-[#2a1640] to-navy px-4 text-center">
@@ -463,8 +441,7 @@ export default function HomePage() {
                         <span className={`font-fm uppercase tracking-[0.14em] text-white/75 ${isFeatured ? 'text-[10px]' : 'text-[8px]'}`}>{v.client}</span>
                         <span className={`font-fd font-bold leading-[1.15] text-white ${isFeatured ? 'text-[18px]' : 'text-[13px]'}`}>{v.title}</span>
                       </span>
-                    </button>
-                  )}
+                  </a>
                 </div>
               );
             })}
