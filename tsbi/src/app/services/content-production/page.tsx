@@ -16,6 +16,7 @@ type Campaign = {
   title: string;
   desc: string;
   videos: string[]; // YouTube video IDs
+  poster?: string;  // thumbnail override (e.g. Cloudinary still) when there's no YouTube video
   caseStudySlug?: string; // Link to full case study
 };
 
@@ -129,6 +130,55 @@ We set out to evoke our audience's wanderlust — recasting Thailand as a destin
 The outcome: healthy oil leads to a healthy you. A healthy you gives you the opportunity to do more — it allows you to say 'CAN' to everything.`,
     videos: ['m-ekod_mEzk'],
     caseStudySlug: 'canapure-canola-oil',
+  },
+  {
+    client: 'GSK',
+    category: 'Pharma / Health Awareness',
+    title: 'Yeh Science Hai',
+    desc: "Many people believe shingles is rare or just a skin problem — in reality it's the reactivation of the chickenpox virus already in the body. Yeh Science Hai simplifies this through relatable, everyday conversations, helping people understand their risk and the importance of prevention. Because the most surprising health facts aren't myths — they're simply science.",
+    videos: [],
+    poster: 'https://res.cloudinary.com/dna8mp2n7/video/upload/so_2/v1782721426/CP_45SEC_1920x1080_WA_o3syft.jpg',
+    caseStudySlug: 'gsk-yeh-science-hai',
+  },
+  {
+    client: 'Ashok Leyland',
+    category: 'Commercial Vehicles / WPL',
+    title: 'Zidd Wahi Manzil Nayi',
+    desc: "An Ashok Leyland × Mumbai Indians WPL film. Women's cricket has reached new heights, but behind every boundary lies the same discipline and hard work — success raises the stage, it never changes what it takes. Kuch Nahi Badla.",
+    videos: ['pW8Z44YLtKA'],
+    caseStudySlug: 'ashok-leyland-zidd-wahi-manzil-nayi',
+  },
+  {
+    client: 'Ashok Leyland',
+    category: 'Commercial Vehicles / IPL',
+    title: 'Whistle Podu Please',
+    desc: "An Ashok Leyland × Chennai Super Kings film connecting two cultures that keep India moving — from 'Horn OK Please' on the highway to 'Whistle Podu' in the stands. Built on precision, teamwork and the spirit to keep going.",
+    videos: ['o2h-9sNPAo4'],
+    caseStudySlug: 'ashok-leyland-whistle-podu-please',
+  },
+  {
+    client: 'Ashok Leyland',
+    category: "Commercial Vehicles / Women's Day",
+    title: 'She Drives It',
+    desc: "A Women's Day film with Ashok Leyland and the Mumbai Indians Women's Team — celebrating women who don't wait for change, they drive it. Because when ambition takes the wheel, no destination is too far. #SheDrivesIt.",
+    videos: ['Hx7l9Uoj7CQ'],
+    caseStudySlug: 'ashok-leyland-she-drives-it',
+  },
+  {
+    client: 'Ashok Leyland',
+    category: "Commercial Vehicles / Mother's Day",
+    title: "Mother's Day",
+    desc: "A Mother's Day film rooted in the Indian ritual of seeking a mother's blessing before a journey. A mother's blessing is the first layer of protection; Ashok Leyland is the second — helping every driver reach their destination safely.",
+    videos: ['tMP_euOcGx4'],
+    caseStudySlug: 'ashok-leyland-mothers-day',
+  },
+  {
+    client: 'Ashok Leyland',
+    category: 'Commercial Vehicles / Festive',
+    title: 'Built Like Santa',
+    desc: "A Christmas film drawing a parallel between Santa's never-miss-a-destination journey and the reliability of Ashok Leyland trucks — celebrating those Built Like Santa, always on the move, delivering joy no matter how far the destination.",
+    videos: ['Mr8fSjgj-qI'],
+    caseStudySlug: 'ashok-leyland-built-like-santa',
   },
 ];
 
@@ -276,12 +326,12 @@ function CampaignCard({ c }: { c: Campaign }) {
   const [expanded, setExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
   const hasVideo = c.videos.length > 0;
-  const thumb = hasVideo
-    ? `https://img.youtube.com/vi/${c.videos[0]}/hqdefault.jpg`
-    : null;
-  const watchUrl = hasVideo
-    ? `https://www.youtube.com/watch?v=${c.videos[0]}`
-    : null;
+  const watchUrl = hasVideo ? `https://www.youtube.com/watch?v=${c.videos[0]}` : null;
+  const caseUrl = c.caseStudySlug ? `/case-studies/${c.caseStudySlug}` : null;
+  // poster overrides the YouTube thumb (e.g. GSK, whose film lives on Cloudinary).
+  const thumb = c.poster ?? (hasVideo ? `https://img.youtube.com/vi/${c.videos[0]}/hqdefault.jpg` : null);
+  const hasMedia = hasVideo || !!c.poster;
+  const mediaHref = watchUrl ?? caseUrl; // play → YouTube if present, else the case study
 
   return (
     <div
@@ -301,18 +351,18 @@ function CampaignCard({ c }: { c: Campaign }) {
     >
       {/* ── Visual ── */}
       <a
-        href={watchUrl ?? undefined}
+        href={mediaHref ?? undefined}
         target={hasVideo ? '_blank' : undefined}
         rel="noopener noreferrer"
         style={{
           display: 'block',
           position: 'relative',
           aspectRatio: '16/9',
-          background: hasVideo
+          background: hasMedia
             ? '#111'
             : 'linear-gradient(135deg,#161616,#2a2a2a)',
-          cursor: hasVideo ? 'pointer' : 'default',
-          pointerEvents: hasVideo ? 'auto' : 'none',
+          cursor: mediaHref ? 'pointer' : 'default',
+          pointerEvents: mediaHref ? 'auto' : 'none',
         }}
       >
         {thumb && (
@@ -332,13 +382,13 @@ function CampaignCard({ c }: { c: Campaign }) {
           style={{
             position: 'absolute',
             inset: 0,
-            background: hasVideo
+            background: hasMedia
               ? 'linear-gradient(to top, rgba(0,0,0,.7) 0%, rgba(0,0,0,.05) 55%, transparent 100%)'
               : 'none',
           }}
         />
 
-        {hasVideo ? (
+        {hasMedia ? (
           <div
             style={{
               position: 'absolute',
@@ -681,9 +731,11 @@ export default function ContentProductionPage() {
             gap: 28,
           }}
         >
-          {campaigns.map((c, i) => (
-            <CampaignCard key={`${c.client}-${i}`} c={c} />
-          ))}
+          {[...campaigns]
+            .sort((a, b) => a.client.localeCompare(b.client))
+            .map((c, i) => (
+              <CampaignCard key={`${c.client}-${i}`} c={c} />
+            ))}
         </div>
       </section>
 

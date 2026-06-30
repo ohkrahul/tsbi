@@ -4,7 +4,18 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { caseStudies, CaseStudyGalleryItem } from '@/lib/caseStudies';
 
-const FEATURED = caseStudies.filter((c) => c.order <= 6);
+// Home carousel — explicit running order (She Drives It replaces Sunny Sanskari in slot 1).
+const FEATURED_SLUGS = [
+  'ashok-leyland-she-drives-it',
+  'kesari-chapter-2',
+  'maa-devgn',
+  'son-of-sardaar-2',
+  'sitaare-zameen-par',
+  'ashok-leyland-diwali',
+];
+const FEATURED = FEATURED_SLUGS
+  .map((slug) => caseStudies.find((c) => c.slug === slug))
+  .filter((c): c is CaseStudyGalleryItem => Boolean(c));
 const INTERVAL = 5000;
 const FADE_MS = 350;
 

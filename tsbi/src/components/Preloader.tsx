@@ -92,7 +92,7 @@ export default function Preloader() {
         <div className="loader-imgs">
           {REEL.slice(0, 3).map(cell)}
           <div className="img" id="loader-logo">
-            <img src="/TSBI%20%20Logo-01.png" alt="TSBI" draggable={false} onError={hideCell} />
+            <img src="/TSBIInOBG.png" alt="TSBI" draggable={false} onError={hideCell} />
           </div>
           {REEL.slice(3).map(cell)}
         </div>

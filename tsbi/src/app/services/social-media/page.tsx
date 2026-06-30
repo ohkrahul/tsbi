@@ -799,7 +799,9 @@ export default function SocialMediaPage() {
           Social-first campaigns. Crafted for YouTube.
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 28 }}>
-          {youtubeWork.map((w, i) => <YouTubeCard key={w.videoId} w={w} index={i} />)}
+          {[...youtubeWork]
+            .sort((a, b) => a.client.localeCompare(b.client))
+            .map((w, i) => <YouTubeCard key={w.videoId} w={w} index={i} />)}
         </div>
       </section>
 

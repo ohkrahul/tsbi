@@ -18,18 +18,30 @@ const cards = [
   { num: '06', title: 'Performance Measurement',          desc: 'Real-time tracking and post-campaign reporting with full performance transparency.' },
 ];
 
-const spotlight = ['/influncer/1.png', '/influncer/2.png', '/influncer/3.png'];
+const spotlight = [
+  '/influncer/1.png',
+  '/influncer/2.png',
+  '/influncer/3.png',
+  '/influncer/batiste.png',
+  '/influncer/policy.png',
+  '/influncer/tbz.png',
+  '/influncer/thumbayt.png',
+  '/influncer/weleda.png',
+  '/influncer/zydus.png',
+  '/influncer/zydus1.png',
+  '/influncer/zudus2.png',
+];
 
 /* ─── Reels grid data ───────────────────────────────── */
 const reels: { type: 'reel' | 'p'; code: string; img: string }[] = [
-  { type: 'reel', code: 'DLIJ0Ufy0j5',  img: '/media/thumb/1.png'  },
+  // { type: 'reel', code: 'DLIJ0Ufy0j5',  img: '/media/thumb/1.png'  },
   { type: 'reel', code: 'DLmLLoKyd-i',  img: '/media/thumb/2.png'  },
   { type: 'reel', code: 'DLzCNCDy9_K',  img: '/media/thumb/3.png'  },
   { type: 'reel', code: 'DMu1BIrT57o',  img: '/media/thumb/4.png'  },
   { type: 'reel', code: 'DNkRlYjTyMp',  img: '/media/thumb/5.png'  },
   { type: 'reel', code: 'DOdk5ywEm9r',  img: '/media/thumb/6.png'  },
-  { type: 'reel', code: 'DPgTkkZiMFe',  img: '/media/thumb/7.png'  },
-  { type: 'reel', code: 'DPqtG4dksvk',  img: '/media/thumb/8.png'  },
+  // { type: 'reel', code: 'DPgTkkZiMFe',  img: '/media/thumb/7.png'  },
+  // { type: 'reel', code: 'DPqtG4dksvk',  img: '/media/thumb/8.png'  },
   { type: 'reel', code: 'DP23UgXiKoU',  img: '/media/thumb/9.png'  },
   { type: 'reel', code: 'DQ3zO8xDODq',  img: '/media/thumb/10.png' },
   { type: 'reel', code: 'DRCJoCzilk-',  img: '/media/thumb/11.png' },
@@ -111,7 +123,7 @@ const heroCards: HeroCard[] = [
   },
 ];
 
-const heroPills = ['Talent Discovery', 'Campaigns', 'Creator Strategy', 'Reporting', 'Celebrity', 'UGC'];
+const heroPills = ['Talent Discovery', 'Campaigns', 'Creator Strategy', 'Reporting', 'Celebrity', 'UGC', 'Strategy', 'Discovery', 'Outreach', 'Collaborations', 'Partnerships'];
 const trustedBy = ['Pepe jeans', 'Zydus', 'TBZ'];
 
 /* ─── Single influencer card ────────────────────────── */
@@ -677,7 +689,7 @@ export default function InfluencerManagementPage() {
         </h2>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 460px), 1fr))',
           gap: 24, alignItems: 'start',
         }}>
           {spotlight.map((src, i) => (

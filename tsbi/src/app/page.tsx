@@ -134,46 +134,89 @@ export default function HomePage() {
     };
   }, [emblaApi]);
 
-  // Movie-Connect heading — its words "stand up" with an X-axis flip in a left-to-right
-  // wave; the kicker, sub and CTA fade up — once the block scrolls into view.
+  // Movie-Connect — "magnetic pull": heading + sub are split into characters that fly in
+  // from random positions/rotations and assemble; kicker + CTA fade up. Fires on scroll-in.
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let split: ReturnType<typeof SplitText.create> | null = null;
+    // SplitText (not raw innerHTML) so revert() restores the DOM React owns.
+    let titleSplit: ReturnType<typeof SplitText.create> | null = null;
+    let subSplit: ReturnType<typeof SplitText.create> | null = null;
     const ctx = gsap.context(() => {
       const title = document.querySelector<HTMLElement>('.connect-title');
+      const sub = document.querySelector<HTMLElement>('.connect-sub');
       if (!title || reduce) return;
 
-      // SplitText (not raw innerHTML) so its revert() restores the DOM React owns —
-      // mutating innerHTML directly triggered a removeChild error on page unmount.
-      split = SplitText.create(title, { type: 'words' });
-      const words = split.words as HTMLElement[];
-      const support = ['.connect-kicker', '.connect-sub', '.connect-cta'];
+      titleSplit = SplitText.create(title, { type: 'chars' });
+      if (sub) subSplit = SplitText.create(sub, { type: 'chars' });
+      const titleChars = titleSplit.chars as HTMLElement[];
+      const subChars = (subSplit?.chars ?? []) as HTMLElement[];
 
-      // Each word starts lying flat (flipped back on the X axis) and stands up into place.
-      words.forEach((el) => {
-        gsap.set(el, {
-          transformPerspective: 600,
-          transformOrigin: '50% 100%',
-          rotateX: -95,
-          y: 14,
-          opacity: 0,
-          willChange: 'transform, opacity',
-        });
-      });
-      gsap.set(support, { y: 26, opacity: 0 });
+      // Scattered + rotated start state — the "pull" springs each char back to 0.
+      const scattered = {
+        x: () => gsap.utils.random(-200, 200),
+        y: () => gsap.utils.random(-200, 200),
+        rotation: () => gsap.utils.random(-90, 90),
+        opacity: 0,
+      };
+      gsap.set([...titleChars, ...subChars], scattered);
+      gsap.set(['.connect-kicker', '.connect-cta'], { y: 20, opacity: 0 });
 
       ScrollTrigger.create({
         trigger: '.connect-text-block',
         start: 'top 78%',
         once: true,
         onEnter: () => {
-          gsap.to(words, {
-            rotateX: 0, y: 0, opacity: 1,
-            duration: 0.8, ease: 'back.out(1.4)', stagger: 0.06,
+          gsap.to(titleChars, {
+            x: 0, y: 0, rotation: 0, opacity: 1,
+            duration: 1, ease: 'power3.out', stagger: 0.02,
           });
-          gsap.to(support, {
-            y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', stagger: 0.12, delay: 0.3,
+          // The sub has many more chars — cap the stagger so it doesn't drag on.
+          gsap.to(subChars, {
+            x: 0, y: 0, rotation: 0, opacity: 1,
+            duration: 0.9, ease: 'power3.out', stagger: { amount: 0.7, from: 'random' }, delay: 0.5,
           });
+          gsap.to(['.connect-kicker', '.connect-cta'], {
+            y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', stagger: 0.12, delay: 1,
+          });
+        },
+      });
+    });
+    return () => {
+      ctx.revert();
+      titleSplit?.revert();
+      subSplit?.revert();
+    };
+  }, []);
+
+  // Big-Impact CTA heading — same "magnetic pull": characters fly in from random
+  // positions/rotations and assemble; the CTA fades up. Fires on scroll-in.
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let split: ReturnType<typeof SplitText.create> | null = null;
+    const ctx = gsap.context(() => {
+      const h2 = document.querySelector<HTMLElement>('.bic-h2');
+      if (!h2 || reduce) return;
+
+      split = SplitText.create(h2, { type: 'chars' });
+      const chars = split.chars as HTMLElement[];
+      gsap.set(chars, {
+        x: () => gsap.utils.random(-200, 200),
+        y: () => gsap.utils.random(-200, 200),
+        rotation: () => gsap.utils.random(-90, 90),
+        opacity: 0,
+      });
+      gsap.set('.bic-cta', { y: 20, opacity: 0 });
+
+      ScrollTrigger.create({
+        trigger: '.bic-content',
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          gsap.to(chars, {
+            x: 0, y: 0, rotation: 0, opacity: 1,
+            duration: 1, ease: 'power3.out', stagger: 0.02,
+          });
+          gsap.to('.bic-cta', { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: 0.6 });
         },
       });
     });
@@ -423,8 +466,8 @@ export default function HomePage() {
               </p>
               <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3">
                 {[
-                  { value: '150+', label: 'Storytellers & Strategists' },
-                  { value: '100+', label: 'Brands in Our Orbit' },
+                  { value: '350+', label: 'Storytellers & Strategists' },
+                  { value: '100+', label: 'Brands in Our Universe' },
                   { value: '500+', label: 'Creators in Our Universe' },
                   { value: '1000+', label: 'Stories & Campaigns Set in Motion' },
                 ].map(s => (
@@ -524,7 +567,7 @@ export default function HomePage() {
           <span className="connect-kicker">TSBI Studios</span>
           <h2 className="connect-title">Stories crafted for screens, shares and second looks.</h2>
           <p className="connect-sub">Lights, lenses, locations and everything in between to bring stories to life frame by frame, shot by shot.</p>
-          <Link href="/case-studies" className="btn-border connect-cta">
+          <Link href="/services/content-production" className="btn-border connect-cta">
             Watch Our Work <span className="arr">→</span>
           </Link>
         </div>

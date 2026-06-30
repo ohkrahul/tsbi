@@ -6,14 +6,19 @@ import { motion } from 'framer-motion';
 import { caseStudies } from '@/lib/caseStudies';
 import type { CaseStudyGalleryItem } from '@/lib/caseStudies';
 
-/* ── Category filters ── */
-const FILTERS = [
-  { label: 'All',                fn: (_: CaseStudyGalleryItem) => true },
-  { label: 'Digital & Tech',     fn: (s: CaseStudyGalleryItem) => s.track === 'tech' },
-  { label: 'Film Marketing',     fn: (s: CaseStudyGalleryItem) => s.category.includes('Film Marketing') },
-  { label: 'Digital Campaigns',  fn: (s: CaseStudyGalleryItem) => s.category.includes('Healthcare') || s.category.includes('Commercial') || s.category.includes('Preventive') },
-  { label: 'Brand Partnerships', fn: (s: CaseStudyGalleryItem) => s.category.includes('Logistics') || s.category.includes('Defence') || s.category.includes('Food') },
-  { label: 'Content & Social',   fn: (s: CaseStudyGalleryItem) => s.category.includes('Comedy') || s.category.includes('Festive') || s.category.includes('Awareness') },
+/* ── Brand filters — one chip per brand, A→Z, plus "All". ── */
+/* Collapse same-brand variants into one chip (e.g. Zydus Lifesciences / Zydus India /
+   Zydus Vaxiflu → "Zydus"). */
+const brandOf = (clientName: string) =>
+  clientName.startsWith('Zydus') ? 'Zydus' : clientName;
+const BRANDS = Array.from(new Set(caseStudies.map((c) => brandOf(c.clientName))))
+  .sort((a, b) => a.localeCompare(b));
+const FILTERS: { label: string; fn: (s: CaseStudyGalleryItem) => boolean }[] = [
+  { label: 'All', fn: () => true },
+  ...BRANDS.map((brand) => ({
+    label: brand,
+    fn: (s: CaseStudyGalleryItem) => brandOf(s.clientName) === brand,
+  })),
 ];
 
 const FEATURED = caseStudies.slice(0, 6); // carousel highlights only a few
@@ -68,6 +73,7 @@ function GridCard({ study }: { study: CaseStudyGalleryItem }) {
 export default function CaseStudiesGallery() {
   const [active, setActive]           = useState(0);
   const [activeFilter, setActiveFilter] = useState(0);
+  const [query, setQuery]             = useState('');
   const [containerW, setContainerW]   = useState(1280);
   const containerRef = useRef<HTMLDivElement>(null);
   const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -106,7 +112,16 @@ export default function CaseStudiesGallery() {
   /* center x so active card sits at viewport center */
   const centerX = containerW / 2 - cardW / 2;
 
-  const filteredGrid = caseStudies.filter(FILTERS[activeFilter].fn);
+  const q = query.trim().toLowerCase();
+  const filteredGrid = caseStudies
+    .filter(FILTERS[activeFilter].fn)
+    .filter((s) =>
+      !q ||
+      s.title.toLowerCase().includes(q) ||
+      s.clientName.toLowerCase().includes(q) ||
+      s.category.toLowerCase().includes(q),
+    )
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return (
     <div style={{ background:'linear-gradient(to right, #101a33 0%, #241640 50%, #34195a 100%)', minHeight:'100vh', paddingTop:80 }}>
@@ -224,23 +239,39 @@ export default function CaseStudiesGallery() {
 
       {/* ── NETFLIX GRID ── */}
       <div style={{ padding: isMobile ? '40px 20px 60px' : '60px 48px 80px' }}>
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:30, flexWrap:'wrap', gap:20 }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:18, flexWrap:'wrap', gap:20 }}>
           <div>
             <div style={{ fontFamily:'var(--fm)', fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#e0197d', marginBottom:10 }}>All Case Studies</div>
             <h2 style={{ fontFamily:'var(--fa)', fontSize:'clamp(26px,3.4vw,44px)', fontWeight:400, color:'#fff', lineHeight:1.05, letterSpacing:'0.01em', margin:0 }}>
               More Work.<br/>More Impact.
             </h2>
           </div>
-          <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
-            {FILTERS.map((f,i)=>(
-              <button key={f.label} onClick={()=>setActiveFilter(i)}
-                style={{ fontFamily:'var(--fm)', fontSize:11, fontWeight:i===activeFilter?600:400, color:i===activeFilter?'#fff':'rgba(255,255,255,0.42)', background:i===activeFilter?'rgba(255,255,255,0.1)':'transparent', border:`1px solid ${i===activeFilter?'rgba(255,255,255,0.22)':'rgba(255,255,255,0.08)'}`, borderRadius:999, padding:'6px 16px', cursor:'pointer', transition:'all 0.2s' }}
-              >
-                {i===activeFilter && <span style={{ color:'#e0197d', marginRight:4 }}>—</span>}
-                {f.label}
-              </button>
-            ))}
+          {/* search bar */}
+          <div style={{ position:'relative', flex:'0 1 320px', minWidth:200 }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position:'absolute', left:15, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }}>
+              <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
+            </svg>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search case studies…"
+              aria-label="Search case studies"
+              style={{ width:'100%', fontFamily:'var(--fm)', fontSize:12, color:'#fff', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.16)', borderRadius:999, padding:'11px 16px 11px 40px', outline:'none' }}
+            />
           </div>
+        </div>
+
+        {/* brand filter chips (A→Z) */}
+        <div style={{ display:'flex', gap:6, flexWrap:'wrap', marginBottom:30 }}>
+          {FILTERS.map((f,i)=>(
+            <button key={f.label} onClick={()=>setActiveFilter(i)}
+              style={{ fontFamily:'var(--fm)', fontSize:11, fontWeight:i===activeFilter?600:400, color:i===activeFilter?'#fff':'rgba(255,255,255,0.42)', background:i===activeFilter?'rgba(255,255,255,0.1)':'transparent', border:`1px solid ${i===activeFilter?'rgba(255,255,255,0.22)':'rgba(255,255,255,0.08)'}`, borderRadius:999, padding:'6px 16px', cursor:'pointer', transition:'all 0.2s' }}
+            >
+              {i===activeFilter && <span style={{ color:'#e0197d', marginRight:4 }}>—</span>}
+              {f.label}
+            </button>
+          ))}
         </div>
 
         <motion.div
@@ -255,7 +286,7 @@ export default function CaseStudiesGallery() {
 
         {filteredGrid.length===0 && (
           <div style={{ textAlign:'center', padding:'60px 0', fontFamily:'var(--fm)', color:'rgba(255,255,255,0.25)', fontSize:14 }}>
-            No case studies in this category yet.
+            No case studies match your search.
           </div>
         )}
       </div>

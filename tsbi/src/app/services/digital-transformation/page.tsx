@@ -238,8 +238,10 @@ export default function DigitalTransformationPage() {
             <h2 className="dt-reveal opacity-0 font-fa m-0 text-[clamp(28px,3.4vw,44px)] font-normal leading-[1.1] tracking-[0.01em]">Selected Work</h2>
             <Link href="/case-studies" className="font-fm text-xs tracking-[0.06em] text-magenta no-underline">View all projects →</Link>
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {techCaseStudies.map((s) => (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[...techCaseStudies]
+              .sort((a, b) => a.clientName.localeCompare(b.clientName))
+              .map((s) => (
               <Link key={s.slug} href={`/case-studies/${s.slug}`} className="dt-card opacity-0 group block overflow-hidden rounded-xl border border-border-c bg-white no-underline transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_50px_rgba(0,0,0,0.12)]">
                 <div className="relative aspect-video overflow-hidden" style={{ background: `linear-gradient(135deg, ${s.gradFrom}, ${s.gradTo})` }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
