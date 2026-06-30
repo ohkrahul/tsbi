@@ -292,6 +292,7 @@ export default function AboutAwardsSection() {
               <p style={{ fontFamily: 'var(--fb)', fontSize: 13, color: MUTED, fontWeight: 300, lineHeight: 1.7, margin: '0 auto 20px', maxWidth: 320 }}>
                 A reflection of our ideas, our people and the impact we create.
               </p>
+              
               {/* <Link href="/awards" style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: PINK, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                 Explore All Awards <span style={{ fontSize: 12 }}>→</span>
               </Link> */}

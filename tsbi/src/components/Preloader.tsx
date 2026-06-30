@@ -19,10 +19,10 @@ import gsap from 'gsap';
 // subject in frame when a cell crops (object-fit: cover).
 const REEL: { src: string; pos?: string }[] = [
   { src: '/about%20us/webbanner%202%20msd.jpg.jpeg', pos: 'right center' },
-  { src: '/loader/1.jpg' },
-  { src: '/loader/2.jpg' },
-  { src: '/loader/3.jpg' },
-  { src: '/loader/4.jpg' },
+  { src: '/loader/tsbi.png' },
+  { src: '/loader/tsbi4.png' },
+  { src: '/loader/tsbi3.png' },
+  { src: '/loader/tsbi1.png ' },
   { src: '/about%20us/webbanner%203%20mi.jpg.jpeg' },
 ];
 
