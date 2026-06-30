@@ -53,7 +53,7 @@ export default async function AboutPage() {
           <div key={s.label} className="ab-strip-item">
             <div className="ab-strip-bg" style={{ backgroundImage: `url(${s.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
             <div style={{ position: 'absolute', inset: 0, background: s.overlay }} />
-            <div className="ab-strip-label">{s.label}</div>
+            {/* <div className="ab-strip-label">{s.label}</div> */}
           </div>
         ))}
       </div>
