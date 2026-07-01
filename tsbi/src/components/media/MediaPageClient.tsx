@@ -56,7 +56,7 @@ function getCategory(title: string): string {
   return 'Industry Insights';
 }
 
-const PER_PAGE = 9;
+const PER_PAGE = 30;
 
 /* shared font helpers (matches the home page) */
 const FA = 'font-fa'; // Abril Fatface — display headings (same as home hero)

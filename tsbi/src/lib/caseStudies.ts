@@ -441,6 +441,24 @@ export const caseStudies: CaseStudyGalleryItem[] = [
     colorTheme: '#d4006a', accent: '#e8197d', gradFrom: '#2a0a1c', gradTo: '#14040e',
     image: '/tech/10.png', order: 31,
   },
+  {
+    id: 38, slug: 'happy-patel-khatarnak-jasoos', clientName: 'Happy Patel', title: 'Khatarnak Jasoos',
+    category: 'Film Marketing · Spy Comedy',
+    shortDescription: "A meme-zone social blitz matching the film's erratic spy-comedy tone — powered by Imran Khan's comeback, viral song reels, moment marketing and AI-led creative.",
+    concept: "The social strategy for Happy Patel: Khatarnak Jasoos mirrored the film's fun, erratic, chaotic spy-comedy tone — leaning into meme-style content, self-deprecating humour, quick relatable clips and organic, shareable integrations. The goal was to make the promotion entertaining in itself, turning social feeds into an extension of the movie's absurd, laugh-out-loud vibe.\n\nImran Khan's surprise comeback — his return after nearly a decade — was amplified across platforms, playing on nostalgia and curiosity with shareable content that framed his big-screen return. The feed stayed firmly in the 'meme zone': punchy dialogues, character memes, reaction clips and clumsy, self-roasting 'Happy Patel moments' built for easy sharing.\n\nMusic kept the energy viral — cool, street-styled lyrical videos and song promos for tracks like Aaj Banda Tere Liye Naachega, Phukt Apan and Chaanta Tera were cut as high-energy, meme-friendly reels perfect for user-generated content. Moment marketing rode timely trends, including the Dhurandhar craze, aligning the spy narrative with the culture of the moment, while AI-generated visuals added a surreal, tech-savvy edge true to the film's absurd humour.\n\nThe result: strong virality driven by humour and timeliness, positioning the film as a refreshing laugh riot and boosting awareness — especially among younger, digital-native audiences — without relying solely on traditional star power.",
+    year: 2025, services: ['Social Media Strategy', 'Meme Content', 'Song & Lyrical Reels', 'Moment Marketing', 'AI-Led Creative'],
+    colorTheme: '#e0641a', accent: '#f0841a', gradFrom: '#2a1400', gradTo: '#140a02',
+    image: YT('YEv0zokK140'), youtube: 'YEv0zokK140', order: 38,
+  },
+  {
+    id: 39, slug: 'ek-din', clientName: 'Ek Din', title: 'The Magic of One Day',
+    category: 'Film Marketing · Romance',
+    shortDescription: "A hopeless-romantic social world built on soulful lyrical videos, AI trend edits and dialogue moments — making the promotion an extension of the film's emotional core.",
+    concept: "For Ek Din, we immersed audiences in the film's hopeless-romantic tone through emotional, lyrical and trend-driven content — building a dreamy, relatable world around its themes of fleeting yet life-changing romance, transient connections and the magic of 'one day'. The focus stayed on emotion over gloss, pulling viewers straight into the film's feeling.\n\nBeautiful lyrical videos anchored the campaign — the Arijit Singh-led title track, 'Khwaab Dekhoon' and other Ram Sampath & Irshad Kamil compositions were set to soft visuals, poetic overlays and romantic montages that evoked love, longing and nostalgia.\n\nAI-led trends kept it fresh and shareable — Animal Crossing-style cozy animated interpretations and dreamy anime-inspired edits heightened the fantastical, emotional side of the love story for trend-driven younger audiences. Romance edits, dialogue snippets and slow-motion moments spotlighting Sai Pallavi and Junaid Khan's chemistry were designed to be saved, shared and personally tagged.\n\nThe approach made the promotion feel like an extension of the movie's emotional core — poetic, immersive and deeply romantic — standing out in a crowded Bollywood marketing landscape through creativity, trends and audience participation.",
+    year: 2025, services: ['Social Media Strategy', 'Lyrical Videos & Song Promos', 'AI Trend Content', 'Romance & Dialogue Edits'],
+    colorTheme: '#c4416e', accent: '#e0197d', gradFrom: '#2a0a1c', gradTo: '#150410',
+    image: YT('RCmyr_d3Hi0'), youtube: 'RCmyr_d3Hi0', order: 39,
+  },
 ];
 
 /** Tech / Digital Transformation case studies (subset of the full list). */

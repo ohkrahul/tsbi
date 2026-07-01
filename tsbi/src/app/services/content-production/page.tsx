@@ -180,6 +180,22 @@ The outcome: healthy oil leads to a healthy you. A healthy you gives you the opp
     videos: ['Mr8fSjgj-qI'],
     caseStudySlug: 'ashok-leyland-built-like-santa',
   },
+  {
+    client: 'Happy Patel',
+    category: 'Film Marketing / Spy Comedy',
+    title: 'Khatarnak Jasoos',
+    desc: "A meme-zone social strategy that mirrored the film's erratic spy-comedy tone — self-deprecating humour, punchy character memes and reaction clips built for sharing. Imran Khan's comeback was amplified for nostalgia and buzz, cool street-styled song reels kept it viral, moment marketing rode the Dhurandhar craze, and AI-generated visuals added a surreal, tech-savvy edge — a refreshing laugh riot that drove awareness among younger, digital-native audiences.",
+    videos: ['YEv0zokK140'],
+    caseStudySlug: 'happy-patel-khatarnak-jasoos',
+  },
+  {
+    client: 'Ek Din',
+    category: 'Film Marketing / Romance',
+    title: 'The Magic of One Day',
+    desc: "A hopeless-romantic social world built around the film's themes of fleeting, life-changing love. Soulful lyrical videos — the Arijit Singh title track, 'Khwaab Dekhoon' and other Ram Sampath & Irshad Kamil songs — set the emotional tone, while AI trend edits (Animal Crossing-style and dreamy anime looks) and slow-motion dialogue moments spotlighting Sai Pallavi and Junaid Khan made the promotion feel like an extension of the movie's emotional core.",
+    videos: ['RCmyr_d3Hi0'],
+    caseStudySlug: 'ek-din',
+  },
 ];
 
 const ticker =

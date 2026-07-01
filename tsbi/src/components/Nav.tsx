@@ -55,7 +55,7 @@ export default function Nav() {
       ` }} />
 
       <div className="nav-inner">
-        {/* Decorative sky-blue geometric line. */}
+        {/* Decorative sky-blue geometric line — commented out for now.
         <svg
           className="nav-svg header-blue-svg"
           width="1130"
@@ -70,6 +70,7 @@ export default function Nav() {
           <rect x="22" y="95" width="6" height="6" fill="#ff1aa0" />
           <circle className="header-blue-travel-dot" cx="25" cy="98" r="2.5" fill="#8ecbf0" />
         </svg>
+        */}
 
         {/* header-logo → GSAP fades in from opacity:0 scale:0.92 */}
         <Link href="/" className="nav-logo header-logo">
