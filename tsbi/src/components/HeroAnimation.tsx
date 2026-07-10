@@ -64,42 +64,39 @@ export default function HeroAnimation() {
     // ── Main timeline (runs after fonts are ready) ─────────────────────────
     const fonts = (document as Document & { fonts?: FontFaceSet }).fonts;
     const run = () => {
-      // SplitText word-stagger on the hero headline
+      // Split the headline for the pink scale-pop, but DON'T hide the words —
+      // the headline is the LCP element and is server-rendered, so keeping it
+      // visible from first paint makes LCP == FCP (big mobile perf win).
       const titleEl = q<HTMLElement>('.hero-title');
       let split: InstanceType<typeof SplitText> | null = null;
       if (titleEl) {
         split = SplitText.create(titleEl, { type: 'words' });
         splitRef = split;
-        gsap.set(split.words, { y: 32, opacity: 0 });
         cleanups.push(() => split?.revert());
       }
 
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      // Hero image clip-path wipe + zoom out
-      tl.to('.hero-image', { clipPath: 'inset(0 0 0% 0)', scale: 1, duration: 1.0 }, 0.9);
-
-      // Headline word stagger
-      if (split) {
-        tl.to(split.words, { y: 0, opacity: 1, duration: 0.65, stagger: 0.055 }, 1.45);
-      }
-      // Pink italic words extra scale-pop
+      // NOTE: the hero image (also LCP-adjacent) is revealed immediately in
+      // startOnce so the largest paint never waits on fonts.ready. The headline
+      // stays visible; we only add a subtle scale-pop on the pink accent (no
+      // opacity hide → no LCP penalty) plus the subtitle/CTA fades.
       tl.fromTo('.hero-title .pink',
-        { scale: 0.88, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.45, stagger: 0.14, ease: 'back.out(1.5)' },
-        1.82,
+        { scale: 0.92 },
+        { scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.4)' },
+        0.15,
       );
 
       // Subtitle + CTA
-      tl.to('.hero-subtitle', { opacity: 1, y: 0, duration: 0.5 }, 1.95);
-      tl.to('.hero-cta',      { opacity: 1, y: 0, duration: 0.4 }, 2.1);
+      tl.to('.hero-subtitle', { opacity: 1, y: 0, duration: 0.5 }, 0.35);
+      tl.to('.hero-cta',      { opacity: 1, y: 0, duration: 0.4 }, 0.5);
 
       // NOTE: the pink connector line is drawn on SCROLL (scroll-scrubbed timeline set
       // up further below) so it progressively connects to its end node as the user
       // scrolls from the hero into the logo section — it is no longer drawn on load.
 
       // Slider dots
-      tl.to('.hero-slider-dot', { opacity: 1, scale: 1, duration: 0.3, stagger: 0.08 }, 2.2);
+      tl.to('.hero-slider-dot', { opacity: 1, scale: 1, duration: 0.3, stagger: 0.08 }, 0.75);
 
       // Pink word glow on hover — activates after words have all appeared (~t=2.6)
       if (isPointerDevice) {
@@ -414,6 +411,9 @@ export default function HeroAnimation() {
     const startOnce = () => {
       if (started) return;
       started = true;
+      // Reveal the hero image right away — it's the LCP and needs no fonts, so
+      // don't let the largest paint wait on fonts.ready (big LCP win on mobile).
+      gsap.to('.hero-image', { clipPath: 'inset(0 0 0% 0)', scale: 1, duration: 0.7, ease: 'power3.out' });
       (fonts?.ready ?? Promise.resolve()).then(run);
     };
     window.addEventListener('tsbi:intro-done', startOnce, { once: true });

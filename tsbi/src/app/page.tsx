@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -12,7 +13,9 @@ import HeroAnimation from '@/components/HeroAnimation';
 // import Preloader from '@/components/Preloader'; // preloader disabled for now
 import CaseStudyCarousel from '@/components/CaseStudyCarousel';
 import MarioTimeline from '@/components/about/MarioTimeline';
-import TechWorkTube from '@/components/home/TechWorkTube';
+import LazyMount from '@/components/LazyMount';
+// Heavy R3F/three.js widget — loaded on demand (kept out of the initial bundle).
+const TechWorkTube = dynamic(() => import('@/components/home/TechWorkTube'), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -282,7 +285,9 @@ export default function HomePage() {
       if (!title || reduce) return;
 
       titleSplit = SplitText.create(title, { type: 'chars' });
-      if (sub) subSplit = SplitText.create(sub, { type: 'chars' });
+      // aria:'none' — the sub is a <p>, and SplitText's default aria-label is
+      // prohibited on paragraphs (a11y). The text stays in the DOM for readers.
+      if (sub) subSplit = SplitText.create(sub, { type: 'chars', aria: 'none' });
       const titleChars = titleSplit.chars as HTMLElement[];
       const subChars = (subSplit?.chars ?? []) as HTMLElement[];
 
@@ -523,8 +528,10 @@ export default function HomePage() {
               type="button"
               onClick={() => scrollTo(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className={`hero-slider-dot h-2 rounded-full transition-all ${i === selected ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'}`}
-            />
+              className="hero-slider-dot flex h-6 w-6 items-center justify-center"
+            >
+              <span className={`block h-2 rounded-full transition-all ${i === selected ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'}`} />
+            </button>
           ))}
         </div>
       </section>
@@ -782,8 +789,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── DT WORK · scroll-driven 3D image tube ── */}
-      <TechWorkTube />
+      {/* ── DT WORK · scroll-driven 3D image tube (lazy: three.js loads on approach) ── */}
+      <LazyMount rootMargin="600px" minHeight="220vh">
+        <TechWorkTube />
+      </LazyMount>
 
       {/* ── BIG IMPACT CTA ───────────────────────────────── */}
       {/* <section className="bic-root" aria-label="Get in touch">
@@ -859,7 +868,7 @@ export default function HomePage() {
             {[...ROW_ONE, ...ROW_ONE, ...ROW_ONE].map((l, i) => (
               <span key={`r1-${i}-${l.name}`} className="lm-cell lm-cell--divider" title={l.name}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={l.src} alt={l.name} loading="eager" />
+                <img src={l.src} alt={l.name} loading="lazy" decoding="async" />
               </span>
             ))}
           </div>
@@ -871,7 +880,7 @@ export default function HomePage() {
             {[...ROW_TWO, ...ROW_TWO, ...ROW_TWO].map((l, i) => (
               <span key={`r2-${i}-${l.name}`} className="lm-cell" title={l.name}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={l.src} alt={l.name} loading="eager" />
+                <img src={l.src} alt={l.name} loading="lazy" decoding="async" />
               </span>
             ))}
           </div>

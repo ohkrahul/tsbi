@@ -11,6 +11,9 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   display: "swap",
+  // Only used for italic accents (mostly below the fold) — don't preload it so
+  // it doesn't compete with the LCP headline's font (Space Grotesk) on load.
+  preload: false,
 });
 
 const dmSans = DM_Sans({
@@ -54,7 +57,7 @@ export default function RootLayout({
         <NavAnimation />
         <ScrollReveal />
         <Nav />
-        {children}
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

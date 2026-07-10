@@ -10,7 +10,7 @@ import { useEffect, useRef } from 'react';
  * the copy too, while the canvas stays pointer-events-none (links keep working).
  */
 
-const SRC = '/about%20us/IMG_2081.PNG';
+const SRC = '/about%20us/IMG_2081.webp';
 const BRUSH = 184; // brush diameter (px) — small, scratch-card feel
 
 export default function FooterPhotoSection({ children }: { children: React.ReactNode }) {

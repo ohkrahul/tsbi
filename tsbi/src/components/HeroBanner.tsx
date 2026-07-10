@@ -133,7 +133,9 @@ export default function HeroBanner({ slides, eyebrow, title, subtitle, cta }: Pr
       {multi && (
         <div className="absolute bottom-16 left-1/2 z-20 flex -translate-x-1/2 gap-2">
           {snaps.map((_, i) => (
-            <button key={i} type="button" onClick={() => scrollTo(i)} aria-label={`Go to slide ${i + 1}`} className={`hero-slider-dot h-2 rounded-full transition-all ${i === selected ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'}`} />
+            <button key={i} type="button" onClick={() => scrollTo(i)} aria-label={`Go to slide ${i + 1}`} className="hero-slider-dot flex h-6 w-6 items-center justify-center">
+              <span className={`block h-2 rounded-full transition-all ${i === selected ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'}`} />
+            </button>
           ))}
         </div>
       )}

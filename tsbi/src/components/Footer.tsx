@@ -170,7 +170,7 @@ export default function Footer() {
                   {pinIcon}
                 </span>
                 <div>
-                  <h4 className="font-fm text-sm font-bold uppercase tracking-[0.12em] text-magenta">{o.name}</h4>
+                  <h3 className="font-fm text-sm font-bold uppercase tracking-[0.12em] text-magenta">{o.name}</h3>
                   <span className="mt-1.5 block h-[3px] w-6 rounded-full bg-magenta" />
                   <p className="mt-2.5 font-fb text-[14px] leading-6 text-[#333]">
                     {o.address.map((line, i) => (
