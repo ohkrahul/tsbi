@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import GlobalCursor from "@/components/GlobalCursor";
 import NavAnimation from "@/components/NavAnimation";
+import FloatingContactCTA from "@/components/FloatingContactCTA";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -59,6 +60,7 @@ export default function RootLayout({
         <Nav />
         <main>{children}</main>
         <Footer />
+        <FloatingContactCTA />
       </body>
     </html>
   );
