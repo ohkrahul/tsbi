@@ -1565,7 +1565,7 @@ body {
   position: relative;
   background: #f2f2f2;
   overflow-x: clip; /* clips cards leaving the left/right edge without creating a stacking context */
-  padding-top: clamp(52px,5.5vw,72px);   /* headroom for center-card pop-up */
+  padding-top: clamp(52px,5.5vw,72px);  
   padding-bottom: clamp(36px,4.5vw,56px);
 }
 .movie-connect-dot {

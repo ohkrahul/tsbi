@@ -48,7 +48,8 @@ export default function HeroAnimation() {
     gsap.set('.hero-pink-end-node',     { opacity: 0 });
 
     // ── Below-hero section initial states (revealed on scroll after preloader) ─
-    gsap.set('.lm-marquee', { opacity: 0, y: 30 });
+    // (.lm-marquee is intentionally NOT hidden — the logo strip auto-scrolls, so
+    // it stays visible with no scroll-reveal.)
     gsap.set('.bts-text',   { opacity: 0, x: -40 });
     gsap.set('.bts-card',   { opacity: 0, y: 32, scale: 0.96 });
     // Movie connect section — strip + track are shown immediately (no entrance
@@ -190,11 +191,8 @@ export default function HeroAnimation() {
         cleanups.push(() => tween.kill());
       };
 
-      // Logo strip — both rows slide up, staggered
-      mkReveal('.lm-marquee',
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.7, stagger: 0.18, ease: 'power3.out' },
-        '.lm-section', 'top 88%');
+      // Logo strip — no scroll reveal: the marquee already auto-scrolls, so it's
+      // left visible from the start (removing the redundant fade-in-on-scroll).
 
       // Brands section. The heading reveals on its own visibility; the cards reveal
       // on the GRID's own visibility. This matters on mobile, where the layout stacks

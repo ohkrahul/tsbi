@@ -33,7 +33,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 // on the empty left side of the banner — mobile only (see hero markup). Edit freely.
 type Slide = { src: string; alt: string; tag?: string; caption?: string };
 const SLIDES: Slide[] = [
-  { src: '/herobanner/dfdfdfdfz.webp', alt: 'Default Slide', tag: 'Default', caption: 'Default Slide' },
+  { src: '/herobanner/dfdfdfdfz.webp', alt: 'Tsbi Family', tag: 'Family', caption: 'Tsbi Family' },
   { src: '/herobanner/yeh-science-hai-shingles-and-diabetes.webp', alt: 'Yeh Science Hai Shingles and Diabetes', tag: 'Featured', caption: 'Yeh Science Hai Shingles and Diabetes' },
  
   { src: '/herobanner/11.jpeg', alt: 'Ashish Vidyarthi', tag: 'Featured', caption: 'Ashish Vidyarthi' },
@@ -286,18 +286,20 @@ export default function HomePage() {
       const sub = document.querySelector<HTMLElement>('.connect-sub');
       if (!title || reduce) return;
 
-      titleSplit = SplitText.create(title, { type: 'chars' });
+      // 'words,chars' keeps whole words together (no mid-word wrap like "SC REENS")
+      // while still animating per character.
+      titleSplit = SplitText.create(title, { type: 'words,chars' });
       // aria:'none' — the sub is a <p>, and SplitText's default aria-label is
       // prohibited on paragraphs (a11y). The text stays in the DOM for readers.
-      if (sub) subSplit = SplitText.create(sub, { type: 'chars', aria: 'none' });
+      if (sub) subSplit = SplitText.create(sub, { type: 'words,chars', aria: 'none' });
       const titleChars = titleSplit.chars as HTMLElement[];
       const subChars = (subSplit?.chars ?? []) as HTMLElement[];
 
       // Scattered + rotated start state — the "pull" springs each char back to 0.
       const scattered = {
-        x: () => gsap.utils.random(-200, 200),
-        y: () => gsap.utils.random(-200, 200),
-        rotation: () => gsap.utils.random(-90, 90),
+        x: () => gsap.utils.random(-140, 140),
+        y: () => gsap.utils.random(-140, 140),
+        rotation: () => gsap.utils.random(-60, 60),
         opacity: 0,
       };
       gsap.set([...titleChars, ...subChars], scattered);
@@ -305,20 +307,21 @@ export default function HomePage() {
 
       ScrollTrigger.create({
         trigger: '.connect-text-block',
-        start: 'top 78%',
+        start: 'top 82%',
         once: true,
         onEnter: () => {
+          // Fast assemble — short duration + tight stagger so it snaps in quickly.
           gsap.to(titleChars, {
             x: 0, y: 0, rotation: 0, opacity: 1,
-            duration: 1, ease: 'power3.out', stagger: 0.02,
+            duration: 0.5, ease: 'power3.out', stagger: 0.008,
           });
-          // The sub has many more chars — cap the stagger so it doesn't drag on.
+          // The sub has many more chars — cap the total stagger so it doesn't drag on.
           gsap.to(subChars, {
             x: 0, y: 0, rotation: 0, opacity: 1,
-            duration: 0.9, ease: 'power3.out', stagger: { amount: 0.7, from: 'random' }, delay: 0.5,
+            duration: 0.45, ease: 'power3.out', stagger: { amount: 0.3, from: 'random' }, delay: 0.15,
           });
           gsap.to(['.connect-kicker', '.connect-cta'], {
-            y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', stagger: 0.12, delay: 1,
+            y: 0, opacity: 1, duration: 0.45, ease: 'power3.out', stagger: 0.1, delay: 0.4,
           });
         },
       });

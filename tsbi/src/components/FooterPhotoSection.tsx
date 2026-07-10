@@ -62,8 +62,8 @@ export default function FooterPhotoSection({ children }: { children: React.React
     img.src = SRC;
     paintVeil();
 
-    // ── auto-heal: re-cover the scratches 5s after the last stroke ──
-    const HEAL_DELAY = 5000; // idle time before the veil grows back
+    // ── auto-heal: re-cover the scratches 2s after the last stroke ──
+    const HEAL_DELAY = 2000; // idle time before the veil grows back
     const HEAL_MS = 650;     // covering-animation duration
     let idleTimer = 0;
     let healRaf = 0;
@@ -122,7 +122,7 @@ export default function FooterPhotoSection({ children }: { children: React.React
       ctx.fill();
       ctx.globalCompositeOperation = 'source-over';
       last = { x, y };
-      scheduleHeal(); // 5s after the cursor stops → veil grows back
+      scheduleHeal(); // 2s after the cursor stops → veil grows back
     };
 
     // Reveal as the cursor MOVES — no click/drag needed (so it never selects text).
@@ -144,8 +144,9 @@ export default function FooterPhotoSection({ children }: { children: React.React
 
   return (
     <div ref={wrapRef} className="relative cursor-crosshair overflow-hidden">
-      {/* clear photo underneath */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${SRC}')` }} />
+      {/* revealed photo underneath — kept behind a ~50% white tint so the dark
+          heading / tagline / pill text stays readable once the veil is scratched */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), url('${SRC}')` }} />
       {/* scratch surface (blurred photo + white veil) — brushed away to reveal the clear photo */}
       <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute inset-0 h-full w-full" />
       {/* content above */}
