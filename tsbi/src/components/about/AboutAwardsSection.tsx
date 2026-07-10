@@ -15,8 +15,8 @@ const PINK  = '#e0197d';
 const GOLD  = '#d4a843';
 const MUTED = 'rgba(255,255,255,0.6)';
 
-/* ── award-receiving photos from /public/award/honours/ (converted + optimized) ── */
-const GALLERY_IMGS = Array.from({ length: 18 }, (_, i) => `/award/honours/${i + 1}.jpg`);
+/* ── award-receiving photos from /public/award/honours/ — used for the cursor-tracking image trail ── */
+const HONOURS_IMGS = Array.from({ length: 18 }, (_, i) => `/award/honours/${i + 1}.jpg`);
 
 /* ── award data ── */
 const AWARD_CARDS = [
@@ -136,6 +136,7 @@ export default function AboutAwardsSection() {
   const sectionRef  = useRef<HTMLElement>(null);
   const statsRef    = useRef<HTMLDivElement>(null);
   const galleryRef  = useRef<HTMLElement>(null);
+  const trailRef    = useRef<HTMLDivElement>(null);
   const statsVisible= useInView(statsRef,    { once: true, amount: 0.5  });
   const galleryVisible = useInView(galleryRef, { once: true, amount: 0.1 });
 
@@ -184,6 +185,62 @@ export default function AboutAwardsSection() {
     return () => { tl.kill(); };
   }, []);
 
+  /* ── Cursor-tracking image trail (pink section): honours photos spawn along the pointer path ── */
+  useEffect(() => {
+    const section = galleryRef.current;
+    const trail   = trailRef.current;
+    if (!section || !trail) return;
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // pointer-based devices only (no touch — there's no hover there)
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    const imgs = Array.from(trail.querySelectorAll<HTMLElement>('.aw-trail-img'));
+    if (!imgs.length) return;
+
+    gsap.set(imgs, { xPercent: -50, yPercent: -50, opacity: 0, scale: 0.6, rotate: 0 });
+
+    let idx = 0;
+    let z = 1;
+    let lastX = 0, lastY = 0;
+    let primed = false;
+    const THRESHOLD = 90; // px of pointer travel between spawns
+
+    const spawn = (x: number, y: number) => {
+      const img = imgs[idx];
+      idx = (idx + 1) % imgs.length;
+      z += 1;
+      const tilt = (idx % 2 === 0 ? 1 : -1) * (4 + (idx % 4));
+      gsap.killTweensOf(img);
+      gsap.timeline()
+        .set(img, { x, y, zIndex: z, rotate: tilt })
+        .fromTo(img,
+          { opacity: 0, scale: 0.5 },
+          { opacity: 1, scale: 1, duration: 0.42, ease: 'power3.out' })
+        .to(img, { opacity: 0, scale: 0.86, duration: 0.6, ease: 'power2.in' }, '+=0.32');
+    };
+
+    const onMove = (e: MouseEvent) => {
+      const rect = section.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      if (!primed) { lastX = e.clientX; lastY = e.clientY; primed = true; spawn(x, y); return; }
+      if (Math.hypot(e.clientX - lastX, e.clientY - lastY) > THRESHOLD) {
+        lastX = e.clientX; lastY = e.clientY;
+        spawn(x, y);
+      }
+    };
+    const onLeave = () => { primed = false; };
+
+    section.addEventListener('mousemove', onMove, { passive: true });
+    section.addEventListener('mouseleave', onLeave);
+    return () => {
+      section.removeEventListener('mousemove', onMove);
+      section.removeEventListener('mouseleave', onLeave);
+      gsap.killTweensOf(imgs);
+    };
+  }, []);
+
   /* carousel state removed — replaced with full-width CSS marquee */
 
   return (
@@ -205,13 +262,13 @@ export default function AboutAwardsSection() {
             </div>
 
             {/* headline — each line clipped so GSAP can slide up from below */}
-            <div style={{ marginBottom: 20 }}>
+            <div style={{ marginBottom: 20, }}>
               {[
                 { text: 'One Small Idea.',       color: '#0a0a0a', italic: false },
                 { text: 'Countless Big Outcomes.', color: PINK,    italic: true  },
               ].map(({ text, color, italic }) => (
                 <div key={text} style={{ overflow: 'hidden', lineHeight: 1 }}>
-                  <div className="orig-line-wrap" style={{ fontFamily: 'var(--fa)', fontWeight: 400, fontSize: 'clamp(30px,4vw,52px)', lineHeight: 1.05, letterSpacing: '0.01em', color, fontStyle: italic ? 'italic' : 'normal', paddingBottom: 4 }}>
+                  <div className="orig-line-wrap" style={{ fontFamily: 'var(--fm)', fontWeight: 800, fontSize: 'clamp(30px,4vw,52px)', lineHeight: 1.05, letterSpacing: '0.01em', color, fontStyle: italic ? 'italic' : 'normal', paddingBottom: 4 }}>
                     {text}
                   </div>
                 </div>
@@ -282,10 +339,10 @@ export default function AboutAwardsSection() {
               <div style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: PINK, marginBottom: 14 }}>
                 Awards &amp; Recognitions
               </div>
-              <div style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(20px,2.4vw,30px)', fontWeight: 800, color: '#fff', lineHeight: 1.1, marginBottom: 2 }}>
+              <div style={{ fontFamily: 'var(--fm)', fontSize: 'clamp(20px,2.4vw,30px)', fontWeight: 800, color: '#fff', lineHeight: 1.1, marginBottom: 2 }}>
                 Honours that
               </div>
-              <div style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(20px,2.4vw,30px)', fontWeight: 800, color: PINK, fontStyle: 'italic', lineHeight: 1.15, marginBottom: 14 }}>
+              <div className='uppercase' style={{ fontFamily: 'var(--fm)', fontSize: 'clamp(20px,2.4vw,30px)', fontWeight: 800, color: PINK, fontStyle: 'italic', lineHeight: 1.15, marginBottom: 14 }}>
                 inspire us.
               </div>
               <div style={{ width: 28, height: 2.5, background: PINK, borderRadius: 2, margin: '0 auto 14px' }} />
@@ -326,7 +383,7 @@ export default function AboutAwardsSection() {
       ════════════════════════════════════════════ */}
       <section
         ref={galleryRef}
-        style={{ background: PINK, padding: isMobile ? '52px 20px 56px' : '80px 56px 88px', overflow: 'hidden', position: 'relative' }}
+        style={{ background: PINK, padding: isMobile ? '52px 16px 56px' : '80px 28px 88px', overflow: 'hidden', position: 'relative' }}
       >
         {/* Decorative gold rings */}
         <div style={{ position: 'absolute', top: 24, left: 32, opacity: 0.15, pointerEvents: 'none' }}>
@@ -355,7 +412,7 @@ export default function AboutAwardsSection() {
           <div style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)', marginBottom: 14 }}>
             Awards &amp; Recognitions
           </div>
-          <h2 style={{ fontFamily: 'var(--fa)', fontWeight: 900, fontSize: 'clamp(28px,3.8vw,50px)', lineHeight: 1.05, letterSpacing: '0.09em', color: '#fff', margin: '0 auto 16px', maxWidth: 940 }}>
+          <h2 className='uppercase' style={{ fontFamily: 'var(--fm)', fontWeight: 900, fontSize: 'clamp(28px,3.8vw,50px)',  color: '#fff', margin: '0 auto 16px', maxWidth: 940 }}>
             A decade of real work,<em style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.88)' }}>real people, and real impact.</em>
           </h2>
           {/* <p style={{ fontFamily: 'var(--fb)', fontSize: 15, fontWeight: 300, lineHeight: 1.75, color: 'rgba(255,255,255,0.8)', margin: '0 auto', maxWidth: 520 }}>
@@ -363,33 +420,45 @@ export default function AboutAwardsSection() {
           </p> */}
         </motion.div>
 
-        {/* Gallery grid — full-width responsive */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(250px, 1fr))',
-          gap: isMobile ? 10 : 16,
-          width: '100%',
-        }}>
-          {GALLERY_IMGS.map((src, i) => (
-            <motion.div
+        {/* Awards graphic — single, centered, large */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92, y: 30 }}
+          animate={galleryVisible ? { opacity: 1, scale: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}
+        >
+          <div
+            style={{
+              width: 'min(100%, 1700px)',
+              aspectRatio: '16 / 9',
+              backgroundImage: "url('/about%20us/Awards_3-Ai-03-1.png')",
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              filter: 'drop-shadow(0 30px 70px rgba(0,0,0,0.4))',
+            }}
+          />
+        </motion.div>
+
+        {/* Cursor-tracking image trail — honours photos spawn along the pointer path (GSAP) */}
+        <div ref={trailRef} aria-hidden style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'none' }}>
+          {HONOURS_IMGS.map((src) => (
+            <div
               key={src}
-              initial={{ opacity: 0, scale: 0.9, y: 28 }}
-              animate={galleryVisible ? { opacity: 1, scale: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: Math.min(i * 0.05, 0.85), ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -8, boxShadow: '0 26px 60px rgba(0,0,0,0.45), 0 0 0 2px rgba(212,168,67,0.9)' }}
-              style={{ position: 'relative', borderRadius: 14, overflow: 'hidden', aspectRatio: '3/4', boxShadow: '0 12px 40px rgba(0,0,0,0.25)', cursor: 'pointer' }}
+              className="aw-trail-img"
+              style={{
+                position: 'absolute', top: 0, left: 0,
+                width: 'clamp(150px, 15vw, 240px)',
+                aspectRatio: '3 / 4',
+                borderRadius: 14,
+                overflow: 'hidden',
+                boxShadow: '0 24px 60px rgba(0,0,0,0.42)',
+                opacity: 0,
+                willChange: 'transform, opacity',
+              }}
             >
-              <Image
-                src={src}
-                alt={`Award moment ${i + 1}`}
-                fill
-                sizes="(max-width: 640px) 50vw, (max-width: 1200px) 33vw, 18vw"
-                style={{ objectFit: 'cover', transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)' }}
-                className="gallery-img-hover"
-              />
-              {/* subtle gold overlay on hover via inline gradient — static overlay for now */}
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.28) 0%, transparent 50%)', pointerEvents: 'none' }} />
-            </motion.div>
+              <Image src={src} alt="" fill sizes="240px" style={{ objectFit: 'cover' }} />
+            </div>
           ))}
         </div>
       </section>

@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import NewsletterForm from '@/components/NewsletterForm';
+import FooterPhotoSection from '@/components/FooterPhotoSection';
 
 const pills = [
   { href: '/about', label: 'About Us' },
@@ -115,8 +117,9 @@ export default function Footer() {
 
   return (
     <footer className="bg-white">
-      {/* ── White content area ── */}
-      <div className="mx-auto max-w-[1180px] px-6 pb-12 pt-16 text-center">
+      {/* ── White content area (photo backdrop + cursor spotlight) ── */}
+      <FooterPhotoSection>
+        <div className="mx-auto max-w-[1180px] px-6 pb-12 pt-16 text-center">
         <Link href="/" className="inline-flex" aria-label="The Small Big Idea — home">
           <Image src="/TSBIInOBG.png" alt="The Small Big Idea" width={517} height={483} style={{ width: 'auto', height: 100 }} />
         </Link>
@@ -201,7 +204,17 @@ export default function Footer() {
             </div>
           ))}
         </div>
-      </div>
+
+        {/* ── Subscribe Newsletter ── */}
+        <div className="mx-auto mt-12 max-w-[520px]">
+          <h3 className="font-fm text-lg font-bold uppercase tracking-[0.08em] text-ink">Subscribe Newsletter</h3>
+          <p className="mx-auto mt-2 mb-5 max-w-[420px] font-fb text-[14px] leading-6 text-[#666]">
+            Subscribe to receive our latest news &amp; ideas straight to your inbox.
+          </p>
+          <NewsletterForm />
+        </div>
+        </div>
+      </FooterPhotoSection>
 
       {/* ── Dark bottom bar ── */}
       <div className="relative bg-linear-to-r from-[#101a33] via-[#241640] to-[#34195a]">

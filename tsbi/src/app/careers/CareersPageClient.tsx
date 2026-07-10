@@ -269,11 +269,11 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
       >
         {/* LEFT — text */}
         <div className="flex flex-col justify-center px-6 pb-10 pt-10 sm:px-10 lg:py-0 lg:pl-16 lg:pr-10">
-          <div className="cr-anim mb-5 flex items-center gap-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-black/45 opacity-0 [font-family:var(--fm)]">
+          <div className="cr-anim mb-5 flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-black/45 opacity-0 [font-family:var(--fm)]">
             <span className="h-px w-5 bg-black/35" /> Join Our Team
           </div>
 
-          <h1 className="text-[clamp(44px,8vw,80px)] font-normal leading-[1.08] tracking-[0.01em] text-[#0a0a0a] [font-family:var(--fa)]">
+          <h1 className="font-fm text-[clamp(44px,8vw,80px)] font-semibold uppercase leading-[1.08] tracking-[0.01em] text-[#0a0a0a]">
             <span className="block overflow-hidden"><span className="cr-line block pb-[0.12em] opacity-0 [will-change:transform,opacity,filter]">We&apos;re</span></span>
             <span className="block overflow-hidden"><span className="cr-line block pb-[0.12em] opacity-0 [will-change:transform,opacity,filter]">Hiring</span></span>
             <span className="cr-anim block opacity-0"><CyclingText /></span>

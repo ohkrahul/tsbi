@@ -131,7 +131,7 @@ export default function CaseStudiesGallery() {
         <div style={{ fontFamily:'var(--fm)', fontSize:10, letterSpacing:'0.28em', textTransform:'uppercase', color:'#e0197d', marginBottom:12 }}>
           Our Work in Action
         </div>
-        <h1 style={{ fontFamily:'var(--fa)', fontSize:'clamp(44px,7vw,88px)', fontWeight:400, color:'#fff', lineHeight:1.0, letterSpacing:'0.01em', margin:'0 0 16px' }}>
+        <h1 style={{ fontFamily:'var(--fa)', fontSize:'clamp(44px,7vw,88px)', fontWeight:600, textTransform:'uppercase', color:'#fff', lineHeight:1.0, letterSpacing:'0.01em', margin:'0 0 16px' }}>
           Case Studies
         </h1>
         <p style={{ fontFamily:'var(--fm)', fontSize:15, color:'rgba(255,255,255,0.4)', fontWeight:300, maxWidth:480, margin:'0 auto', lineHeight:1.7 }}>
@@ -242,7 +242,7 @@ export default function CaseStudiesGallery() {
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:18, flexWrap:'wrap', gap:20 }}>
           <div>
             <div style={{ fontFamily:'var(--fm)', fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#e0197d', marginBottom:10 }}>All Case Studies</div>
-            <h2 style={{ fontFamily:'var(--fa)', fontSize:'clamp(26px,3.4vw,44px)', fontWeight:400, color:'#fff', lineHeight:1.05, letterSpacing:'0.01em', margin:0 }}>
+            <h2 style={{ fontFamily:'var(--fa)', fontSize:'clamp(26px,3.4vw,44px)', fontWeight:600, color:'#fff', lineHeight:1.05, letterSpacing:'0.01em', margin:0 }}>
               More Work.<br/>More Impact.
             </h2>
           </div>

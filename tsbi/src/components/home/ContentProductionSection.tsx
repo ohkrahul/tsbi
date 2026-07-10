@@ -201,11 +201,11 @@ function VideoCard({ v, i }: { v: typeof videos[0]; i: number }) {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <div>
-                <div style={{ fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', fontFamily: 'monospace', marginBottom: 3 }}>{v.category}</div>
-                <div style={{ fontSize: 11, color: '#fff', fontWeight: 600, fontFamily: 'monospace', lineHeight: 1.3 }}>{v.brand}</div>
+                <div style={{ fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', fontFamily: 'var(--fm)', marginBottom: 3 }}>{v.category}</div>
+                <div style={{ fontSize: 11, color: '#fff', fontWeight: 600, fontFamily: 'var(--fm)', lineHeight: 1.3 }}>{v.brand}</div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.82)', fontStyle: 'italic', lineHeight: 1.3 }}>{v.title}</div>
               </div>
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', fontFamily: 'monospace' }}>{v.duration}</div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', fontFamily: 'var(--fm)' }}>{v.duration}</div>
             </div>
           </div>
 
@@ -331,7 +331,7 @@ export default function ContentProductionSection() {
             variants={textEnter(0)}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
-            style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24, fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#c4517a' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24, fontFamily: 'var(--fm)', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#c4517a' }}
           >
             <span style={{ display: 'block', height: 1, width: 16, background: '#c4517a' }} />
             <span style={{ color: '#9b9b9b' }}>04</span>
@@ -345,7 +345,7 @@ export default function ContentProductionSection() {
                 initial={{ y: '110%', opacity: 0 }}
                 animate={isInView ? { y: 0, opacity: 1 } : {}}
                 transition={{ duration: 0.7, delay: 0.15 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-                style={{ lineHeight: 0.92, fontFamily: 'Georgia, serif', fontWeight: 900, fontSize: 'clamp(40px,4.5vw,68px)', color: '#1a1a1a', letterSpacing: '-0.02em' }}
+                style={{ lineHeight: 0.92, fontFamily: 'var(--fm)', fontWeight: 900, fontSize: 'clamp(40px,4.5vw,68px)', color: '#1a1a1a', letterSpacing: '-0.02em' }}
               >
                 {line}
               </motion.div>
@@ -356,7 +356,7 @@ export default function ContentProductionSection() {
             variants={textEnter(0.45)}
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
-            style={{ fontSize: 20, fontFamily: 'Georgia, serif', fontStyle: 'italic', lineHeight: 1.45, color: '#1a1a1a', marginBottom: 16 }}
+            style={{ fontSize: 20, fontFamily: 'var(--fi)', fontStyle: 'italic', lineHeight: 1.45, color: '#1a1a1a', marginBottom: 16 }}
           >
             Stories crafted for{' '}
             <em style={{ color: '#c4517a', fontStyle: 'italic' }}>screens</em>,{' '}
@@ -388,7 +388,7 @@ export default function ContentProductionSection() {
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: 'transparent', color: '#1a1a1a',
                 border: '1.5px solid #1a1a1a', borderRadius: 999,
-                padding: '13px 26px', fontFamily: 'monospace', fontSize: 11,
+                padding: '13px 26px', fontFamily: 'var(--fm)', fontSize: 11,
                 letterSpacing: '0.14em', textTransform: 'uppercase',
                 textDecoration: 'none',
               }}
@@ -406,7 +406,7 @@ export default function ContentProductionSection() {
             {['End-to-end production', 'Cinematic quality', 'Built for every platform'].map(tag => (
               <span key={tag} style={{
                 fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase',
-                fontFamily: 'monospace', color: '#9b9b9b',
+                fontFamily: 'var(--fm)', color: '#9b9b9b',
                 border: '1px solid rgba(10,10,10,0.12)', borderRadius: 999,
                 padding: '5px 12px',
               }}>{tag}</span>
@@ -425,8 +425,8 @@ export default function ContentProductionSection() {
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="#111" /></svg>
                 </div>
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '8px 10px' }}>
-                  <div style={{ fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', fontFamily: 'monospace' }}>{v.category}</div>
-                  <div style={{ fontSize: 10, color: '#fff', fontWeight: 600, fontFamily: 'monospace' }}>{v.brand}</div>
+                  <div style={{ fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', fontFamily: 'var(--fm)' }}>{v.category}</div>
+                  <div style={{ fontSize: 10, color: '#fff', fontWeight: 600, fontFamily: 'var(--fm)' }}>{v.brand}</div>
                 </div>
               </a>
             ))}

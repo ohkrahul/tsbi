@@ -346,18 +346,18 @@ export default function AboutGallery({ images }: { images: GalleryImage[] }) {
         .ig-cap { position:absolute; left:0; bottom:0; width:100%; padding:10px 12px; z-index:2; pointer-events:none;
           background:linear-gradient(to top, rgba(0,0,0,.72) 0%, transparent 100%); }
         .ig-name { font-family:var(--fm); color:#fff; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
-        .ig-num { font-family:'Courier New',monospace; color:#9a9a9a; font-size:10px; margin-top:1px; }
+        .ig-num { font-family:var(--fm); color:#9a9a9a; font-size:10px; margin-top:1px; }
         .ig-overlay { position:fixed; inset:0; background:#000; opacity:0; pointer-events:none; z-index:9999; }
         .ig-overlay.active { pointer-events:auto; }
         .ig-expanded { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#000; overflow:hidden; cursor:pointer; z-index:10000; border-radius:var(--ig-radius); }
         .ig-expanded img { width:100%; height:100%; object-fit:cover; pointer-events:none; display:block; }
         .ig-title { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:100%; text-align:center; pointer-events:none; z-index:10002; }
         .ig-title p { position:relative; height:48px; overflow:hidden; margin:0; display:inline-block; }
-        .ig-title span { display:inline-block; font-family:var(--fa); font-weight:400; font-size:clamp(26px,4vw,42px); letter-spacing:.01em; text-transform:uppercase; color:#fff; will-change:transform; }
+        .ig-title span { display:inline-block; font-family:var(--fa); font-weight:600; font-size:clamp(26px,4vw,42px); letter-spacing:.01em; text-transform:uppercase; color:#fff; will-change:transform; }
         .ig-vignette { position:absolute; inset:0; pointer-events:none; z-index:50; box-shadow: inset 0 0 220px rgba(0,0,0,.8); }
         .ig-header { text-align:center; padding:64px 24px 30px; }
         .ig-eyebrow { font-family:var(--fm); font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:#e0197d; }
-        .ig-heading { font-family:var(--fa); font-weight:400; font-size:clamp(30px,4vw,56px); letter-spacing:.01em; color:#fff; margin:8px 0 0; line-height:1.05; }
+        .ig-heading { font-family:var(--fm); font-weight:800; font-size:clamp(30px,4vw,56px); letter-spacing:.01em; color:#fff; margin:8px 0 0; line-height:1.05; }
         .ig-heading em { color:#e0197d; font-style:italic; }
       ` }} />
 
@@ -368,7 +368,7 @@ export default function AboutGallery({ images }: { images: GalleryImage[] }) {
         <div className="ig-eyebrow mt-1 font-fm font-normal">drag to explore or zoom to view details</div>
       </div>
 
-      <div ref={containerRef} className="ig-container" style={{ height: 'clamp(520px, 80vh, 900px)' }}>
+      <div ref={containerRef} className="ig-container" style={{ height: 'clamp(520px, 96vh, 900px)' }}>
         <div ref={canvasRef} className="ig-canvas" />
 
         {/* immersive vignette */}

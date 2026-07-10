@@ -127,7 +127,7 @@ export default function DigitalTransformationPage() {
           {/* left — copy */}
           <div>
             <div className="sec-label pink mb-[18px] dt-hero-anim opacity-0">Technology · Strategy · Experience</div>
-            <h1 className="dt-hero-anim opacity-0 font-fa m-0 text-[clamp(30px,4.4vw,56px)] font-normal leading-[1.06] tracking-[0.01em] text-white">
+            <h1 className="dt-hero-anim opacity-0 font-fa m-0 text-[clamp(30px,4.4vw,56px)] font-semibold uppercase leading-[1.06] tracking-[0.01em] text-white">
               Tech Solutions That{' '}
               <span className="text-[#b96cff]">Build</span>,{' '}
               <span className="text-magenta">Launch</span> &{' '}
@@ -200,7 +200,7 @@ export default function DigitalTransformationPage() {
       {/* ── SERVICES WE OFFER ── */}
       <section id="offer" className="bg-off px-12 py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
-          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-normal leading-[1.1] tracking-[0.01em]">Services We Offer</h2>
+          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">Services We Offer</h2>
           <div className="mx-auto mb-12 mt-2 h-[3px] w-[46px] rounded-sm bg-magenta" />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             {offerings.map((o) => (
@@ -217,7 +217,7 @@ export default function DigitalTransformationPage() {
       {/* ── WHAT WE BUILD ── */}
       <section className="bg-white px-12 py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
-          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-normal leading-[1.1] tracking-[0.01em]">What We Build</h2>
+          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">What We Build</h2>
           <div className="mx-auto mb-12 mt-2 h-[3px] w-[46px] rounded-sm bg-magenta" />
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {whatWeBuild.map((b) => (
@@ -235,7 +235,7 @@ export default function DigitalTransformationPage() {
       <section className="bg-off  py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
-            <h2 className="dt-reveal opacity-0 font-fa m-0 text-[clamp(28px,3.4vw,44px)] font-normal leading-[1.1] tracking-[0.01em]">Selected Work</h2>
+            <h2 className="dt-reveal opacity-0 font-fa m-0 text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">Selected Work</h2>
             <Link href="/case-studies" className="font-fm text-xs tracking-[0.06em] text-magenta no-underline">View all projects →</Link>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -263,7 +263,7 @@ export default function DigitalTransformationPage() {
       {/* ── HOW WE WORK ── */}
       <section className="bg-white px-12 py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
-          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-normal leading-[1.1] tracking-[0.01em]">How We Work</h2>
+          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">How We Work</h2>
           <div className="mx-auto mb-12 mt-2 h-[3px] w-[46px] rounded-sm bg-magenta" />
           <div className="relative grid grid-cols-2 gap-7 md:grid-cols-4 md:before:absolute md:before:left-[6%] md:before:right-[6%] md:before:top-4 md:before:z-0 md:before:border-t-2 md:before:border-dashed md:before:border-black/10 md:before:content-['']">
             {steps.map((st) => (
@@ -282,7 +282,7 @@ export default function DigitalTransformationPage() {
       <section className="px-12 pb-20 pt-6 max-sm:px-6">
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-8 rounded-[22px] bg-[linear-gradient(110deg,#7b1fa2_0%,#e0197d_70%,#ff4fa3_100%)] p-[clamp(36px,5vw,64px)] text-white">
           <div>
-            <h2 className="dt-reveal opacity-0 font-fa m-0 mb-2 text-[clamp(24px,3vw,40px)] font-normal leading-[1.12] tracking-[0.01em]">Need a tech partner for<br />your next digital product?</h2>
+            <h2 className="dt-reveal opacity-0 font-fa m-0 mb-2 text-[clamp(24px,3vw,40px)] font-semibold leading-[1.12] tracking-[0.01em]">Need a tech partner for<br />your next digital product?</h2>
             <p className="font-fb m-0 text-sm font-light opacity-90">Let&apos;s build something impactful together.</p>
           </div>
           <div className="flex flex-wrap gap-3">

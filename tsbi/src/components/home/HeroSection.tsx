@@ -148,8 +148,8 @@ export default function HeroSection({ stats, content }: { stats?: HeroStat[]; co
             <div className="hero-visual-stats">
               {heroStats.map((s) => (
                 <div key={s.label} className="hvs-item">
-                  <span className="hvs-num">{s.val}</span>
-                  <span className="hvs-label">{s.label}</span>
+                  {/* <span className="hvs-num">{s.val}</span> */}
+                  {/* <span className="hvs-label">{s.label}</span> */}
                 </div>
               ))}
             </div>

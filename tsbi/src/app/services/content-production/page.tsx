@@ -488,7 +488,7 @@ function CampaignCard({ c }: { c: Campaign }) {
           )}
         </div>
 
-        <span style={{ fontFamily: 'var(--fd)', fontStyle: 'italic', fontSize: 17, color: 'var(--ink2)', lineHeight: 1.3 }}>
+        <span style={{ fontFamily: 'var(--fi)', fontStyle: 'italic', fontSize: 17, color: 'var(--ink2)', lineHeight: 1.3 }}>
           {c.title}
         </span>
 
@@ -636,7 +636,8 @@ export default function ContentProductionPage() {
               style={{
                 fontFamily: 'var(--fa)',
                 fontSize: 'clamp(48px,8vw,108px)',
-                fontWeight: 400,
+                fontWeight: 600,
+                textTransform: 'uppercase',
                 lineHeight: 1.0,
                 letterSpacing: '0.01em',
                 color: '#fff',
@@ -728,7 +729,7 @@ export default function ContentProductionPage() {
           style={{
             fontFamily: 'var(--fa)',
             fontSize: 'clamp(30px,4vw,54px)',
-            fontWeight: 400,
+            fontWeight: 600,
             letterSpacing: '0.01em',
             color: 'var(--ink)',
             lineHeight: 1.08,
@@ -778,7 +779,7 @@ export default function ContentProductionPage() {
               style={{
                 fontFamily: 'var(--fa)',
                 fontSize: 'clamp(40px,6vw,72px)',
-                fontWeight: 400,
+                fontWeight: 700,
                 color: '#fff',
                 lineHeight: 1,
               }}
@@ -816,7 +817,7 @@ export default function ContentProductionPage() {
         <p
           className="cp-reveal"
           style={{
-            fontFamily: 'var(--fa)',
+            fontFamily: 'var(--fi)',
             fontSize: 'clamp(30px,5vw,58px)',
             fontStyle: 'italic',
             fontWeight: 400,

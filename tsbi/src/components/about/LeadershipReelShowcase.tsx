@@ -279,10 +279,10 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
             <span className="h-px w-[30px] bg-magenta/50" />
           </div>
 
-          <h2 className={`${FA} m-0 text-[clamp(34px,5.2vw,64px)] font-semibold leading-[1.08] tracking-[0.06em] text-white`}>
+          <h2 className={`${FM} m-0 text-[clamp(34px,5.2vw,64px)] font-semibold leading-[1.08] tracking-[0.06em] text-white uppercase`}>
             Guided by Purpose.
             <br />
-            Driven by <em className="italic text-magenta">Impact.</em>
+            Driven by <em className="italic text-magenta ">Impact.</em>
           </h2>
 
           {/* lotus flourish */}
@@ -321,7 +321,7 @@ export default function LeadershipReelShowcase({ initialSlides }: { initialSlide
         >
           <div className="flex flex-[1_1_360px] items-start gap-[18px]">
             <span className={`${FD} text-[64px] leading-[0.7] text-magenta opacity-45`}>“</span>
-            <p className={`${FD} m-0 text-[clamp(18px,2vw,23px)] font-medium italic leading-[1.5] text-white`}>
+            <p className={`${FM} m-0 text-[clamp(18px,2vw,23px)] font-medium italic leading-[1.5] text-white`}>
               We believe in building with integrity, partnering with purpose, and scaling impact that lasts.
             </p>
           </div>

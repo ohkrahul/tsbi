@@ -51,7 +51,7 @@ function YouTubeCard({ w, index }: { w: YTWork; index: number }) {
           <span style={{ fontFamily: 'var(--fb)', fontSize: 17, fontWeight: 700, color: 'var(--ink)' }}>{w.client}</span>
           {w.house && <span style={{ fontFamily: 'var(--fm)', fontSize: 10, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--muted)' }}>{w.house}</span>}
         </div>
-        <span style={{ fontFamily: 'var(--fd)', fontStyle: 'italic', fontSize: 15, color: 'var(--ink2)', lineHeight: 1.3 }}>{w.title}</span>
+        <span style={{ fontFamily: 'var(--fi)', fontStyle: 'italic', fontSize: 15, color: 'var(--ink2)', lineHeight: 1.3 }}>{w.title}</span>
         <p style={{ fontFamily: 'var(--fb)', fontSize: 13, fontWeight: 300, lineHeight: 1.7, color: 'var(--muted)', margin: '2px 0 0' }}>{w.desc}</p>
         <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginTop: 'auto', paddingTop: 12 }}>
           <a href={`https://www.youtube.com/watch?v=${w.videoId}`} target="_blank" rel="noopener noreferrer"

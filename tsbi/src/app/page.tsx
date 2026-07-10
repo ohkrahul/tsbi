@@ -11,6 +11,8 @@ import Autoplay from 'embla-carousel-autoplay';
 import HeroAnimation from '@/components/HeroAnimation';
 import Preloader from '@/components/Preloader';
 import CaseStudyCarousel from '@/components/CaseStudyCarousel';
+import MarioTimeline from '@/components/about/MarioTimeline';
+import TechWorkTube from '@/components/home/TechWorkTube';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -26,37 +28,112 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 // on the empty left side of the banner — mobile only (see hero markup). Edit freely.
 type Slide = { src: string; alt: string; tag?: string; caption?: string };
 const SLIDES: Slide[] = [
-  { src: '/about%20us/webbanner%201%20Ashish%20Vidyarthi.jpg.jpeg', alt: 'Ashish Vidyarthi', tag: 'Featured', caption: 'Ashish Vidyarthi' },
-  { src: '/about%20us/webbanner%202%20msd.jpg.jpeg', alt: 'MS Dhoni', tag: 'Featured', caption: 'MS Dhoni' },
-  { src: '/about%20us/webbanner%203%20mi.jpg.jpeg', alt: 'Mumbai Indians', tag: 'Official Partner', caption: 'Mumbai Indians' },
+  { src: '/herobanner/dfdfdfdfz.webp', alt: 'Default Slide', tag: 'Default', caption: 'Default Slide' },
+  { src: '/herobanner/yeh-science-hai-shingles-and-diabetes.webp', alt: 'Yeh Science Hai Shingles and Diabetes', tag: 'Featured', caption: 'Yeh Science Hai Shingles and Diabetes' },
+ 
+  { src: '/herobanner/11.jpeg', alt: 'Ashish Vidyarthi', tag: 'Featured', caption: 'Ashish Vidyarthi' },
+  { src: '/herobanner/12.jpeg', alt: 'MS Dhoni', tag: 'Featured', caption: 'MS Dhoni' },
+  { src: '/herobanner/13.jpeg', alt: 'Mumbai Indians', tag: 'Official Partner', caption: 'Mumbai Indians' },
+  // { src: '/herobanner/yeh-science-hai-shingles-and-diabetes.webp', alt: 'Yeh Science Hai Shingles and Diabetes', tag: 'Featured', caption: 'Yeh Science Hai Shingles and Diabetes' }
+  
 ];
 
 // ── Brand logos (two greyscale rows) ─────────────────────
 type Logo = { name: string; src: string; color?: boolean };
+const FALLBACK_CLIENTS = [
+  // ─────────── Entertainment & Media ──────────────────────────────────
+  { name: 'Dharma Productions',   type: 'Film · Entertainment',    accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/dharma%20production.png',               slug: 'dharma-production'   },
+  { name: 'Devgn Films',          type: 'Film · Entertainment',    accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/devgan.png',                            slug: 'son-of-sardaar-2'    },
+  { name: 'Disney India',         type: 'Entertainment',           accent: '#0051a5', isEntertainment: true,  logo: '/entertainment/disney%20india.png',                    slug: 'disney-india'        },
+  { name: 'Warner Bros',          type: 'Film · Studio',           accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/warner%20bros.png'                     },
+  { name: 'Warner Music India',   type: 'Music Label',             accent: '#f05100', isEntertainment: true,  logo: '/entertainment/warner%20msuic.png'                    },
+  { name: 'North Records',        type: 'Music Label',             accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/north%20recorods.webp'                 },
+  // { name: 'Star Studios',         type: 'Film · Studio',           accent: '#f05100', isEntertainment: true,  logo: '/entertainment/Star_Studios_Logo.jpg'                 },
+  { name: 'ZEE TV',               type: 'Media · Broadcasting',    accent: '#1a6aff', isEntertainment: true,  logo: '/entertainment/zee%20tv.png'                          },
+  { name: 'Z5',                   type: 'OTT · Streaming',         accent: '#1a6aff', isEntertainment: true,  logo: '/entertainment/z5.png'                                },
+  { name: 'Z5 Marathi',           type: 'Regional OTT',            accent: '#1a6aff', isEntertainment: true,  logo: '/entertainment/marathi%20z5.jpg'                      },
+  { name: 'Colors TV',            type: 'Media · Broadcasting',    accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/colors.webp'                           },
+  { name: 'Big Magic',            type: 'Media · Broadcasting',    accent: '#f07a1a', isEntertainment: true,  logo: '/entertainment/big%20magic.png'                       },
+  { name: '&TV',                  type: 'Media · Broadcasting',    accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/%26tv.webp'                            },
+  { name: 'JioHotstar',           type: 'OTT · Streaming',         accent: '#0051a5', isEntertainment: true,  logo: '/entertainment/jiohotstart.png'                       },
+  { name: 'Sony LIV',             type: 'OTT · Streaming',         accent: '#1a6aff', isEntertainment: true,  logo: '/entertainment/sony%20liv.png'                        },
+  // { name: 'Star Utsav',           type: 'Media · Broadcasting',    accent: '#f05100', isEntertainment: true,  logo: '/entertainment/star%20utsav.jpg'                      },
+  { name: 'National Geographic',  type: 'Media · Documentary',     accent: '#f0c000', isEntertainment: true,  logo: '/entertainment/national%20geographic.png'             },
+  { name: 'Filmfare',             type: 'Media · Awards',          accent: '#c89b3c', isEntertainment: true,  logo: '/entertainment/filmfare.webp'                         },
+  { name: 'Cineplex',             type: 'Film · Exhibition',        accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/cineplex.png'                          },
+  { name: 'Bigg Boss',            type: 'Reality TV',              accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/big%20boss.jpg'                        },
+  { name: 'Shark Tank India',     type: 'Reality TV',              accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/shark%20tank.png'                      },
+  { name: 'Dhaan Dhoom',          type: 'Entertainment',           accent: '#f07a1a', isEntertainment: true,  logo: '/entertainment/dhaan%20dhoom.png'                     },
+  // Sports
+  { name: 'Mumbai Indians',       type: 'Sports · IPL',            accent: '#004ba0', isEntertainment: true,  logo: '/entertainment/MI.jpg',                                slug: 'mumbai-indians'      },
+  { name: 'Jaipur Pink Panthers', type: 'Sports · Pro Kabaddi',    accent: '#e040a0', isEntertainment: true,  logo: '/entertainment/Jaipur_Pink_panthers_logo.jpg'         },
+  { name: 'KKR',                  type: 'Sports · IPL',            accent: '#3a0ca3', isEntertainment: true,  logo: '/entertainment/kkr.jpg'                               },
+  { name: 'Gujarat Giants',       type: 'Sports · Pro Kabaddi',    accent: '#1a9080', isEntertainment: true,  logo: '/entertainment/gujrat%20giants.png'                   },
+  { name: 'Gulf Giants',          type: 'Sports · ILT20',          accent: '#c89b3c', isEntertainment: true,  logo: '/entertainment/gulf%20giants.png'                     },
+  { name: 'Desert Vipers',        type: 'Sports · ILT20',          accent: '#00a080', isEntertainment: true,  logo: '/entertainment/Desert_Vipers.png'                     },
+  { name: 'Australia Champions',  type: 'Sports · Cricket',        accent: '#f0c000', isEntertainment: true,  logo: '/entertainment/australia%20champions.jpg'             },
+  { name: 'ILT20',                type: 'Sports · League',         accent: '#1a6aff', isEntertainment: true,  logo: '/entertainment/International_League_T20_logo.svg.png' },
+  { name: 'Adani',                type: 'Sports · Conglomerate',   accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/adani.png'                             },
 
-const ROW_ONE: Logo[] = [
-  { name: "Dabur Herb'l", src: '/non-entertainment/dabur.png' },
-  { name: 'Into It', src: '/non-entertainment/final_logo_INTOIT-02_89b8d92c-0882-4d89-8215-fc7bbe82fb29.webp' },
-  { name: 'AGL', src: '/non-entertainment/agl.png' },
-  { name: 'GSK', src: '/non-entertainment/GSK_Logo_PNG5.png' },
-  { name: 'Devgn Films', src: '/entertainment/devgan.png', color: true },
-  { name: 'Lodha', src: '/non-entertainment/lodha.png' },
-  { name: 'Pret', src: '/non-entertainment/pret.png' },
-  { name: 'GreatWhite', src: '/non-entertainment/GreatWhite-logo-696x364.png' },
+  // ─────────── Non-Entertainment / Consumer Brands ────────────────────
+  // Finance & Banking
+  // { name: 'ICICI Direct',         type: 'Finance · BFSI',          accent: '#ff6b00', isEntertainment: false, logo: '/non-entertainment/icici%20diect.jpg'                 },
+  { name: 'HSBC',                 type: 'Banking',                  accent: '#db0011', isEntertainment: false, logo: '/non-entertainment/hsbc.png'                          },
+  { name: 'IDFC First Bank',      type: 'Banking · Finance',        accent: '#e0197d', isEntertainment: false, logo: '/non-entertainment/Logo_of_IDFC_First_Bank.svg.png'   },
+  { name: 'SBI General',          type: 'Insurance',                accent: '#003087', isEntertainment: false, logo: '/non-entertainment/sbi%20general.png'                 },
+  { name: 'PolicyBazaar',         type: 'Insurance · Fintech',      accent: '#f07a1a', isEntertainment: false, logo: '/non-entertainment/policy%20bazaar.png'               },
+  { name: 'ZebPay',               type: 'Crypto · Fintech',         accent: '#1a6aff', isEntertainment: false, logo: '/non-entertainment/ZebPay_Logo-s1280.png'             },
+  { name: 'Mahindra Finance',     type: 'Finance · NBFC',           accent: '#e0197d', isEntertainment: false, logo: '/non-entertainment/mahidra%20finance.png'             },
+  { name: 'Mahindra Manulife',    type: 'Mutual Funds',             accent: '#e0197d', isEntertainment: false, logo: '/non-entertainment/mahindra%20manulife.png'           },
+  // Real Estate
+  // { name: 'Lodha',                type: 'Real Estate',              accent: '#c89b3c', isEntertainment: false, logo: '/non-entertainment/lodha.png'                         },
+  { name: 'Sobha Realty',         type: 'Real Estate',              accent: '#1a3070', isEntertainment: false, logo: '/non-entertainment/sobha-logo-png_seeklogo-632813.png'},
+  { name: 'K Raheja Corp',        type: 'Real Estate',              accent: '#c42b6e', isEntertainment: false, logo: '/non-entertainment/kraheja.png'                       },
+  { name: 'Samana Developers',    type: 'Real Estate · UAE',        accent: '#1a9080', isEntertainment: false, logo: '/non-entertainment/samana%20dev.png'                  },
+  { name: 'Sterling Resorts',     type: 'Hospitality · Travel',     accent: '#1a5060', isEntertainment: false, logo: '/non-entertainment/sterling.jpg'                      },
+  // Tourism
+  { name: 'Dubai Tourism',        type: 'Tourism',                  accent: '#c89b3c', isEntertainment: false, logo: '/non-entertainment/dubai.png'                         },
+  { name: 'Thailand Tourism',     type: 'Tourism',                  accent: '#1a6aff', isEntertainment: false, logo: '/non-entertainment/thailand.jpg'                      },
+  { name: 'Visit Czechia',        type: 'Tourism',                  accent: '#003087', isEntertainment: false, logo: '/non-entertainment/visit%20czechia.png'               },
+  { name: 'Passion Made Possible',type: 'Tourism · Singapore',      accent: '#e0197d', isEntertainment: false, logo: '/non-entertainment/PassionMadePossible.png'           },
+  { name: 'Jumeirah',             type: 'Luxury Hospitality',        accent: '#c89b3c', isEntertainment: false, logo: '/non-entertainment/jumeriah.png'                      },
+  { name: 'Veena World',          type: 'Travel · Tours',           accent: '#f07a1a', isEntertainment: false, logo: '/non-entertainment/veena%20wirld.jpg'                 },
+  // FMCG & Health
+  { name: 'Dabur',                type: 'FMCG · Health',            accent: '#1a9080', isEntertainment: false, logo: '/non-entertainment/dabur.png'                         },
+  { name: 'GSK',                  type: 'Pharma',                   accent: '#f36f21', isEntertainment: false, logo: '/non-entertainment/GSK_Logo_PNG5.png'                 },
+  { name: 'Protinex',             type: 'Health · Nutrition',       accent: '#f05100', isEntertainment: false, logo: '/non-entertainment/protinex.png'                      },
+  { name: 'Dexolac',              type: 'Baby Nutrition',           accent: '#1a6aff', isEntertainment: false, logo: '/non-entertainment/dexolac.jpg'                       },
+  { name: 'Sandu',                type: 'Pharma · Wellness',        accent: '#00c090', isEntertainment: false, logo: '/non-entertainment/sandu.png'                         },
+  { name: 'Zydus',                type: 'Pharma',                   accent: '#003087', isEntertainment: false, logo: '/non-entertainment/zydus.png'                         },
+  { name: 'Diet Coke',            type: 'Beverage',                 accent: '#c42b6e', isEntertainment: false, logo: '/non-entertainment/Diet-Coke-Logo.png'                },
+  // Automotive
+  { name: 'Ashok Leyland',        type: 'Automobile',               accent: '#1a3070', isEntertainment: false, logo: '/non-entertainment/ashok%20leyland.png'               },
+  { name: 'Fiat',                 type: 'Automobile',               accent: '#003087', isEntertainment: false, logo: '/non-entertainment/fiat_pe_revised_logo_white1.png'   },
+  // Retail & Lifestyle
+  { name: 'Pepe Jeans',           type: 'Fashion · Retail',         accent: '#1a3070', isEntertainment: false, logo: '/non-entertainment/pepe%20jeans.jpg'                  },
+  { name: 'LuLu',                 type: 'Retail · Hypermarket',     accent: '#e0197d', isEntertainment: false, logo: '/non-entertainment/lulu.png'                          },
+  { name: 'Mi Shop',              type: 'Consumer Tech · Retail',   accent: '#f05100', isEntertainment: false, logo: '/non-entertainment/mi%20shop.png'                     },
+  // { name: 'Pret A Manger',        type: 'Food & Beverage',          accent: '#8B1A1A', isEntertainment: false, logo: '/non-entertainment/pret.png'                          },
+  { name: 'KidZania',             type: 'Family Entertainment',     accent: '#f0c000', isEntertainment: false, logo: '/non-entertainment/kidsznia.png'                      },
+  { name: 'TBZ',                  type: 'Jewellery · Luxury',       accent: '#c89b3c', isEntertainment: false, logo: '/non-entertainment/Tbz_logo.jpg'                      },
+  // Logistics & B2B
+  { name: 'DHL',                  type: 'Logistics',                accent: '#ffcc00', isEntertainment: false, logo: '/non-entertainment/dhl.png',                            slug: 'mumbai-indians'      },
+  { name: 'Great White',          type: 'Electricals',              accent: '#1a3070', isEntertainment: false, logo: '/non-entertainment/GreatWhite-logo-696x364.png'        },
+  { name: 'AGL',                  type: 'Industry',                 accent: '#003087', isEntertainment: false, logo: '/non-entertainment/agl.png'                           },
+  // { name: 'INTOIT',               type: 'Technology',               accent: '#1a6aff', isEntertainment: false, logo: '/non-entertainment/final_logo_INTOIT-02_89b8d92c-0882-4d89-8215-fc7bbe82fb29.webp' },
+  { name: 'Quick',                type: 'Services',                 accent: '#f07a1a', isEntertainment: false, logo: '/non-entertainment/quick.png'                         },
+  { name: 'Play n Learn',         type: 'Education · EdTech',       accent: '#1a9080', isEntertainment: false, logo: '/non-entertainment/1738318092_Play%20n%20Learn.png'   },
 ];
-
-const ROW_TWO: Logo[] = [
-  { name: 'Mumbai Indians', src: '/entertainment/MI.jpg' },
-  { name: 'Zee TV', src: '/entertainment/zee%20tv.png' },
-  { name: 'JioHotstar', src: '/entertainment/jiohotstart.png' },
-  { name: 'National Geographic', src: '/entertainment/national%20geographic.png' },
-  { name: 'KidZania', src: '/non-entertainment/kidsznia.png' },
-  { name: 'Dharma Productions', src: '/entertainment/dharma%20production.png' },
-  { name: 'Disney India', src: '/entertainment/disney%20india.png' },
-  { name: 'Filmfare', src: '/entertainment/filmfare.webp' },
-  { name: 'Cinepolis', src: '/entertainment/cineplex.png' },
-  { name: 'Colors', src: '/entertainment/colors.webp' },
-];
+// Home marquee logos — derived from the full FALLBACK_CLIENTS roster above (map logo → src),
+// then split into two equal-length rows so both tracks scroll in sync.
+const MARQUEE_LOGOS: Logo[] = FALLBACK_CLIENTS.map((c) => ({
+  name: c.name,
+  src: c.logo,
+  ...(c.name === 'Devgn Films' ? { color: true } : {}),
+}));
+const MARQUEE_HALF = Math.ceil(MARQUEE_LOGOS.length / 2);
+const ROW_ONE: Logo[] = MARQUEE_LOGOS.slice(0, MARQUEE_HALF);
+const ROW_TWO: Logo[] = MARQUEE_LOGOS.slice(MARQUEE_HALF);
 
 // ── Brands that trust us — 6 featured trailers; each opens on YouTube (no inline embed) ──
 type Video = { id: string; client: string; title: string };
@@ -133,6 +210,46 @@ export default function HomePage() {
       emblaApi.off('select', onSelect).off('reInit', onSelect);
     };
   }, [emblaApi]);
+
+  // Stats count-up — animate 0 → target when the row scrolls into view (after the intro).
+  useEffect(() => {
+    const nums = gsap.utils.toArray<HTMLElement>('.stat-num');
+    if (!nums.length) return;
+    const setFinal = () => nums.forEach((el) => { el.textContent = (el.dataset.to ?? '0') + (el.dataset.suffix ?? ''); });
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setFinal(); return; }
+
+    let started = false;
+    let trigger: ScrollTrigger | undefined;
+    const start = () => {
+      if (started) return;
+      started = true;
+      trigger = ScrollTrigger.create({
+        trigger: '.stats-row',
+        start: 'top 88%',
+        once: true,
+        onEnter: () =>
+          nums.forEach((el) => {
+            const to = parseFloat(el.dataset.to ?? '0');
+            const suffix = el.dataset.suffix ?? '';
+            const obj = { v: 0 };
+            gsap.to(obj, {
+              v: to,
+              duration: 1.6,
+              ease: 'power2.out',
+              onUpdate: () => { el.textContent = Math.round(obj.v) + suffix; },
+            });
+          }),
+      });
+    };
+    // Fire after the preloader intro so the count is actually seen; fallback if the event never comes.
+    window.addEventListener('tsbi:intro-done', start, { once: true });
+    const fallback = window.setTimeout(start, 5000);
+    return () => {
+      window.removeEventListener('tsbi:intro-done', start);
+      clearTimeout(fallback);
+      trigger?.kill();
+    };
+  }, []);
 
   // Movie-Connect — "magnetic pull": heading + sub are split into characters that fly in
   // from random positions/rotations and assemble; kicker + CTA fade up. Fires on scroll-in.
@@ -294,7 +411,7 @@ export default function HomePage() {
     <>
       {/* ── HERO (full-bleed Embla slider with the text overlaid on it) ───── */}
       {/* hero-section → ScrollTrigger anchor; GSAP parallax target */}
-      <section className="hero-section group relative  flex w-full flex-col overflow-hidden min-[1130px]:mt-[108px] sm:block sm:h-160">
+      <section className="hero-section group relative  flex w-full flex-col overflow-hidden min-[1130px]:mt-[108px] sm:block sm:h-190">
         {/* hero-image → clip-path wipe + scale reveal + cursor parallax.
             Mobile: full banner BELOW the copy (order-2), sized to the 1920×630 ratio so
             nothing is cropped. Desktop: full-bleed background behind the overlaid copy. */}
@@ -309,7 +426,7 @@ export default function HomePage() {
                     fill
                     priority={i === 0}
                     sizes="100vw"
-                    className="object-cover object-center sm:object-right"
+                    className="object-cover object-center "
                   />
                   {/* caption on the empty left side of the banner — mobile only
                       (on desktop the banner is the backdrop for the main headline) */}
@@ -342,7 +459,7 @@ export default function HomePage() {
             The Small Big Idea
           </span>
           {/* hero-title → SplitText word-stagger; .pink spans get extra scale-pop */}
-          <h2 className="hero-title font-fa text-[34px] font-normal leading-[1.22] tracking-[0.01em] sm:text-6xl">
+          <h2 className="hero-title font-fm text-[34px] font-normal leading-[1.22] tracking-[0.01em] sm:text-5xl uppercase font-semibold">
             From Screens to Stadiums. We Make{' '}
             <span className="pink italic text-magenta">Brands</span>{' '}
             <span className="pink italic text-magenta">Unmissable.</span>
@@ -381,7 +498,7 @@ export default function HomePage() {
         </div>
 
         {/* pagination dots — hero-slider-dot → stagger opacity in */}
-        <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+        <div className="absolute bottom-16 left-1/2 z-20 flex -translate-x-1/2 gap-2">
           {snaps.map((_, i) => (
             <button
               key={i}
@@ -394,48 +511,33 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CLIENT LOGO MARQUEE ──────────────────────────── */}
-      <section className="lm-section" aria-label="Brands we work with">
-        {/* magenta connector line — overlaps the hero bottom, runs into the white area.
-            hero-pink-svg / hero-pink-start-node / hero-pink-end-node → GSAP draws this
-            after the hero headline appears, then pulses the end-node. */}
-        <div className="lm-connector" aria-hidden>
-          <svg className="lm-connector-svg hero-pink-svg" viewBox="0 0 1000 130" fill="none" preserveAspectRatio="none">
-            <polyline points="6,118 300,118 360,40 1000,40" pathLength={1} stroke="#f01891" strokeWidth="1" fill="none" vectorEffect="non-scaling-stroke" />
-            {/* mid-point dot at the geometric centre of the line */}
-            {/* <circle className="hero-pink-mid-node" cx="490" cy="40" r="5" fill="#f01891" /> */}
-          </svg>
-          <span className="lm-node lm-node--square hero-pink-start-node" />
-          <span className="lm-node lm-node--circle hero-pink-end-node" />
-        </div>
+      
 
-        {/* Row 1 — moving left→right; cells carry the moving grid lines */}
-        <div className="lm-marquee">
-          <div className="lm-track lm-track--1" aria-hidden>
-            {[...ROW_ONE, ...ROW_ONE, ...ROW_ONE].map((l, i) => (
-              <span key={`r1-${i}-${l.name}`} className="lm-cell lm-cell--divider" title={l.name}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={l.src} alt={l.name} loading="eager" />
+      {/* ── STATS — numbers only (no card), centered in the band; count up on reveal ── */}
+      <section className="stats-row relative z-30 mx-auto w-full max-w-5xl px-5 py-11 sm:py-14">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-4">
+          {[
+            { to: 15, suffix: 'K+', label: 'Campaigns' },
+            { to: 500, suffix: '+', label: 'Brands' },
+            { to: 300, suffix: '+', label: 'Employees strong' },
+            { to: 30, suffix: '+', label: 'Languages' },
+          ].map((s) => (
+            <div key={s.label} className="flex flex-col items-center text-center">
+              <span
+                className="stat-num font-fm text-[clamp(36px,5vw,60px)] font-black leading-none text-magenta"
+                data-to={s.to}
+                data-suffix={s.suffix}
+              >
+                0{s.suffix}
               </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Row 2 — same speed so the vertical grid lines stay aligned with row 1 */}
-        <div className="lm-marquee">
-          <div className="lm-track lm-track--2" aria-hidden>
-            {[...ROW_TWO, ...ROW_TWO, ...ROW_TWO].map((l, i) => (
-              <span key={`r2-${i}-${l.name}`} className="lm-cell" title={l.name}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={l.src} alt={l.name} loading="eager" />
-              </span>
-            ))}
-          </div>
+              <span className="mt-2 text-xs font-light uppercase tracking-[0.1em] text-black/55 sm:text-sm">{s.label}</span>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ── BRANDS THAT TRUST US (top 6 case studies) — Tailwind ─────── */}
-      <section className="relative mt-[55px] w-full overflow-visible bg-[#f01891]" aria-label="Brands that trust us">
+      <section className="relative  w-full overflow-visible bg-[#f01891]" aria-label="Brands that trust us">
         <div className="relative flex w-full items-center justify-between gap-12 px-14 py-14 max-[1280px]:flex-col max-[1280px]:items-stretch max-[1280px]:gap-6 max-[1280px]:px-6 max-[1280px]:pb-15 max-[1280px]:pt-12">
           {/* decorative arcs + dots (top-left) */}
           <svg className="pointer-events-none absolute left-0 top-0 z-[1] h-[300px] w-[320px] max-[1280px]:hidden" viewBox="0 0 320 300" fill="none" aria-hidden>
@@ -456,7 +558,7 @@ export default function HomePage() {
               filling the gap) on desktop; full-width left-aligned on mobile. */}
           <div className="bts-text relative z-[4] flex flex-1 justify-center max-[1280px]:block max-[1280px]:flex-none">
             <div className="max-w-95 max-[1280px]:max-w-full">
-          <h2 className="hero-title font-fa text-[34px] font-normal text-white leading-[1.22] tracking-[0.01em] sm:text-6xl">
+          <h2 className="hero-title font-fm text-[34px] font-normal text-white leading-[1.22] tracking-[0.01em] sm:text-5xl uppercase">
                 Brands that
                 <br />
                 <span className="italic">trust us</span>
@@ -464,19 +566,7 @@ export default function HomePage() {
               <p className="mt-3 max-w-75 text-sm font-light leading-relaxed text-white/85">
                 Great things happen when the right brands meet the right people. We&apos;re a digital marketing agency that believes the perfect collaboration is waiting to happen.
               </p>
-              <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3">
-                {[
-                  { value: '350+', label: 'Storytellers & Strategists' },
-                  { value: '100+', label: 'Brands in Our Universe' },
-                  { value: '500+', label: 'Creators in Our Universe' },
-                  { value: '1000+', label: 'Stories & Campaigns Set in Motion' },
-                ].map(s => (
-                  <div key={s.label}>
-                    <span className="block font-fm text-2xl font-black text-white sm:text-3xl">{s.value}</span>
-                    <span className="block text-xs font-light leading-snug text-white/75">{s.label}</span>
-                  </div>
-                ))}
-              </div>
+              {/* stats moved to the centered white card above (Sterling-style) */}
             </div>
           </div>
 
@@ -545,13 +635,78 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── SPORTS WORK — posts + reels from /public/sports (masonry; videos play on hover) ── */}
+      <section className="bg-white px-6 py-16 sm:px-10 sm:py-24 lg:px-14" aria-label="Sports work">
+        <div className="mx-auto max-w-[1300px]">
+          <div className="reveal mb-10 text-center sm:mb-14">
+            <span className="mb-5 inline-block rounded-full bg-magenta px-4 py-1.5 font-fm text-[11px] font-bold uppercase tracking-[0.18em] text-white">TSBI sports</span>
+            <h2 className="font-fm text-[clamp(30px,5vw,58px)] font-bold leading-[1.08] tracking-[-0.01em] text-ink uppercase">
+              Where Brands Meet <span className="italic text-magenta">the Game</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-[520px] text-sm font-light leading-[1.8] text-muted sm:text-base">
+              From matchday hype to always-on fan engagement — content and campaigns built for
+              India&apos;s biggest teams, leagues and sporting moments.
+            </p>
+          </div>
+
+          <div className="columns-2 gap-3 sm:columns-3 sm:gap-4 lg:columns-4">
+            {[
+              { type: 'image', src: '/sports/SaveInta.com_548320255_17877968577403289_8131991900820163843_n.jpg' },
+              { type: 'video', src: '/sports/SaveInta.com_AQMrc9YHuB_l4_zZQyKoXM7SaOJhHeLOzLi-VVq2gvqCXle8yAts11z8r6y90d1CTJjwPxR9Rcflau20987IXLCMfIVZXWtJFFHn_Gs.mp4' },
+              { type: 'image', src: '/sports/SaveInta.com_548514489_17877968592403289_7510407476921162021_n.jpg' },
+              { type: 'video', src: '/sports/SaveInta.com_AQNZw53QTW9_M1zR_EwzNoTKu86y3SLFGf-VLys5ApXwxslD6haxY4WTkiFoAPq0t48crg9t1s7vwavOAvDJwt9arg5dBajGf1SXFZw.mp4' },
+              { type: 'image', src: '/sports/SaveInta.com_613589273_18401810815126115_6536866526273168917_n.jpg' },
+              { type: 'video', src: '/sports/SaveInta.com_AQNpTaK3i7hMHcTTFrAS67W_XDVZcmZmk9321yxqeq9bv8CwuisAOrA1TSTUGljLJs1C0c8-pnXpEVqykvM40fg1eC4CDfmhPQwLGO_eNA.mp4' },
+              { type: 'image', src: '/sports/SaveInta.com_615792909_18401810812126115_7441326536203395668_n.jpg' },
+              { type: 'video', src: '/sports/SaveInta.com_AQO5i5s9VzuWUIAwbtnbByOCTELgXlqSRmFmsHA6Xruct4SgKvCrSMH4WmihDzxK-jh_ybE5U4RI8SdColRZXisONpN7_y35Zhp6zrU.mp4' },
+              { type: 'image', src: '/sports/SaveInta.com_658967794_18400598950195478_251385632267113290_n.jpg' },
+              { type: 'video', src: '/sports/SaveInta.com_AQOX9GN47iZIDqG9WtTGpovw5RkgEhRC7HIpMy0PPPZLt4X8IyRS1otu739wmX3ObeuBrU50Dy442fUDGAmIfPQE5tvdn_PyqzDJ2K4.mp4' },
+              { type: 'image', src: '/sports/SaveInta.com_660839403_18143048989441988_1537628296392152860_n.jpg' },
+              { type: 'video', src: '/sports/SaveInta.com_AQPcjNFTv_hQVy73r5eJ246Qrbi62NvNs4K7Jqh39-myV5ivpsWm36wZR0tia5b6_Zvzg3CEcfhv3S8cvKJwdvL9.mp4' },
+            ].map((m) => (
+              <div key={m.src} className="reveal group mb-3 break-inside-avoid overflow-hidden rounded-xl sm:mb-4">
+                {m.type === 'video' ? (
+                  <div className="relative">
+                    <video
+                      src={`${m.src}#t=0.1`}
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      onMouseEnter={(e) => { void e.currentTarget.play().catch(() => {}); }}
+                      onMouseLeave={(e) => { e.currentTarget.pause(); }}
+                      className="block w-full transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span className="pointer-events-none absolute bottom-3 left-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-0">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                    </span>
+                  </div>
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={m.src} alt="TSBI sports work" loading="lazy" className="block w-full transition-transform duration-500 group-hover:scale-105" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── CASE STUDY — CONNECT ─────────────────────────── */}
-      <CaseStudyCarousel />
+      {/* <CaseStudyCarousel /> */}
+      <MarioTimeline />
 
       {/* ── MOVIE CONNECT ────────────────────────────────── */}
-      <section className="movie-connect-section" aria-label="Connect — featured productions">
+      <section className="movie-connect-section" aria-label="Connect — featured productions ">
         <span className="movie-connect-dot" aria-hidden />
-        <div className="mc-overflow">
+        <div className="connect-text-block">
+          <span className="connect-kicker uppercase">TSBI Studios</span>
+          <h2 className="connect-title ">Stories crafted for screens, shares and second looks.</h2>
+          <p className="connect-sub">Lights, lenses, locations and everything in between to bring stories to life frame by frame, shot by shot.</p>
+          <Link href="/services/content-production" className="btn-border connect-cta">
+            Watch Our Work <span className="arr">→</span>
+          </Link>
+        </div>
+        <div className="mc-overflow" style={{ marginTop: 'clamp(28px,3.5vw,48px)' }}>
           <div className="mc-strip" aria-hidden />
           <div className="mc-track">
             {[...CONNECT_POSTERS, ...CONNECT_POSTERS].map((p, i) => (
@@ -563,18 +718,57 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-        <div className="connect-text-block">
-          <span className="connect-kicker">TSBI Studios</span>
-          <h2 className="connect-title">Stories crafted for screens, shares and second looks.</h2>
-          <p className="connect-sub">Lights, lenses, locations and everything in between to bring stories to life frame by frame, shot by shot.</p>
-          <Link href="/services/content-production" className="btn-border connect-cta">
-            Watch Our Work <span className="arr">→</span>
-          </Link>
+      </section>
+
+      {/* ── DIGITAL TRANSFORMATION (tech) — data mirrored from the service page ── */}
+      <section
+        className="relative overflow-hidden px-6 py-20 text-white sm:px-10 sm:py-28 lg:px-14"
+        style={{ background: 'radial-gradient(circle at 85% 12%, rgba(224,25,125,.20), transparent 46%), radial-gradient(circle at 10% 92%, rgba(26,106,255,.16), transparent 46%), #0a0e1a' }}
+        aria-label="Digital Transformation"
+      >
+        <div className="mx-auto max-w-[1680px]">
+          <div className="reveal mb-12 text-center sm:mb-16">
+            <span className="mb-5 inline-block rounded-full bg-magenta px-4 py-1.5 font-fm text-[11px] font-bold uppercase tracking-[0.18em] text-white">Digital Transformation</span>
+            <h2 className="font-fm text-[clamp(30px,5vw,58px)] font-bold leading-[1.08] tracking-[-0.01em] uppercase text-white">
+              We&apos;re not another agency.<br />We&apos;re <span className="text-magenta italic">problem solvers.</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-[560px] text-sm font-light leading-[1.8] text-white/60 sm:text-base">
+              Websites, apps, campaign tech, commerce and platforms — engineered to solve real
+              business problems and built to scale.
+            </p>
+          </div>
+
+          {/* what we build — 4 categories */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { tint: '#b96cff', title: 'Brand Websites', desc: 'Modern, high-performance websites that strengthen brand presence.' },
+              { tint: '#e0197d', title: 'Campaign Tech', desc: 'Interactive campaigns & microsites that engage and convert audiences.' },
+              { tint: '#4d8bff', title: 'Business Platforms', desc: 'Custom platforms & portals that streamline operations and boost efficiency.' },
+              { tint: '#22c55e', title: 'Commerce & Growth', desc: 'Ecommerce & digital products designed to acquire, engage and scale revenue.' },
+            ].map((b) => (
+              <div key={b.title} className="reveal rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors duration-200 hover:border-white/25">
+                <span className="mb-4 block h-2.5 w-2.5 rounded-full" style={{ background: b.tint }} />
+                <div className="font-fm mb-2 text-[19px] font-bold text-white uppercase">{b.title}</div>
+                <p className="text-[13px] font-light leading-[1.65] text-white/55">{b.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* tech-work showcase moved below into two designs: TechWorkCarousel + TechWorkTube */}
+
+          <div className="reveal mt-12 text-center">
+            <Link href="/services/digital-transformation" className="btn-border" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.4)' }}>
+              Explore Digital Transformation <span className="arr">→</span>
+            </Link>
+          </div>
         </div>
       </section>
 
+      {/* ── DT WORK · scroll-driven 3D image tube ── */}
+      <TechWorkTube />
+
       {/* ── BIG IMPACT CTA ───────────────────────────────── */}
-      <section className="bic-root" aria-label="Get in touch">
+      {/* <section className="bic-root" aria-label="Get in touch">
         <div className="bic-doodles" aria-hidden>
           {DOODLES.map((d, i) => (
             <svg
@@ -597,13 +791,13 @@ export default function HomePage() {
 
         <div className="bic-center">
           <svg className="bic-orbit" viewBox="0 0 640 420" fill="none" aria-hidden preserveAspectRatio="xMidYMid meet">
-            {/* magenta ring — rotates clockwise */}
+         
             <g className="bic-ring-1">
               <ellipse cx="320" cy="210" rx="300" ry="190" stroke="var(--magenta)" strokeOpacity="0.6" strokeWidth="1.5" />
               <circle cx="612" cy="250" r="9" fill="var(--magenta)" />
               <circle cx="330" cy="402" r="6" fill="var(--magenta)" />
             </g>
-            {/* electric blue ring — rotates counter-clockwise */}
+          
             <g className="bic-ring-2">
               <ellipse cx="320" cy="210" rx="288" ry="178" stroke="var(--electric)" strokeOpacity="0.5" strokeWidth="1.5" />
               <circle cx="34" cy="232" r="7" fill="var(--electric)" />
@@ -623,10 +817,92 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ── GREAT PLACE TO WORK ──────────────────────────── */}
-   
+   {/* ── CLIENT LOGO MARQUEE ──────────────────────────── */}
+      <section className="lm-section" aria-label="Brands we work with">
+        {/* magenta connector line — overlaps the hero bottom, runs into the white area.
+            hero-pink-svg / hero-pink-start-node / hero-pink-end-node → GSAP draws this
+            after the hero headline appears, then pulses the end-node. */}
+        <div className="lm-connector" aria-hidden>
+          <svg className="lm-connector-svg hero-pink-svg" viewBox="0 0 1000 130" fill="none" preserveAspectRatio="none">
+            <polyline points="6,118 300,118 360,40 1000,40" pathLength={1} stroke="#f01891" strokeWidth="1" fill="none" vectorEffect="non-scaling-stroke" />
+            {/* mid-point dot at the geometric centre of the line */}
+            {/* <circle className="hero-pink-mid-node" cx="490" cy="40" r="5" fill="#f01891" /> */}
+          </svg>
+          <span className="lm-node lm-node--square hero-pink-start-node" />
+          <span className="lm-node lm-node--circle hero-pink-end-node" />
+        </div>
+
+        {/* Row 1 — moving left→right; cells carry the moving grid lines */}
+        <div className="lm-marquee">
+          <div className="lm-track lm-track--1" aria-hidden>
+            {[...ROW_ONE, ...ROW_ONE, ...ROW_ONE].map((l, i) => (
+              <span key={`r1-${i}-${l.name}`} className="lm-cell lm-cell--divider" title={l.name}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={l.src} alt={l.name} loading="eager" />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2 — same speed so the vertical grid lines stay aligned with row 1 */}
+        <div className="lm-marquee">
+          <div className="lm-track lm-track--2" aria-hidden>
+            {[...ROW_TWO, ...ROW_TWO, ...ROW_TWO].map((l, i) => (
+              <span key={`r2-${i}-${l.name}`} className="lm-cell" title={l.name}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={l.src} alt={l.name} loading="eager" />
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── OUR SERVICES (display only — no links) ─────────── */}
+      <section className="bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-14" aria-label="Our Services">
+        <div className="mx-auto max-w-[1300px]">
+          <div className="reveal mb-14 text-center sm:mb-16">
+            <div className="mb-3 font-fm text-[11px] font-semibold uppercase tracking-[0.24em] text-magenta">Our Services</div>
+            <h2 className="font-fm text-[clamp(28px,4.4vw,46px)] font-bold leading-[1.12] tracking-[-0.01em] text-ink uppercase">
+              Conceptualising <span className="text-magenta">|</span> Produce <span className="text-magenta">|</span> Perform
+            </h2>
+            <p className="mx-auto mt-4 max-w-[720px] text-sm font-light leading-[1.8] text-muted sm:text-[15px]">
+              We focus on reaching your last-mile customer with the right treatment. Content is crafted
+              to maximize ROAS, ensuring it connects with the right audience and delivers your message
+              where it matters most.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              { title: 'Social Media Marketing', desc: "We turn scrolls into stops. From moment marketing to platform-native storytelling, we create thumb-stopping content that builds engagement and drives conversations. Our social media strategies blend trends, reels, carousels, and analytics to keep your brand top of mind—and always in feed.",
+                icon: (<><rect x="6" y="2.5" width="12" height="19" rx="2.5" /><path d="M10 5h4" /><circle cx="12" cy="12.5" r="3.2" /><path d="M11.3 11.3l2.2 1.2-2.2 1.2z" fill="currentColor" stroke="none" /></>) },
+              { title: 'Performance Media Marketing', desc: "Performance is in our DNA. With funnel-based targeting, real-time optimization, and ROAS-focused campaigns, we deliver digital media strategies that convert. Whether it's Google, Meta, or Programmatic—our media plans reduce spend leakage and increase results.",
+                icon: (<><path d="M3 3v18h18" /><path d="M7 14l3.5-4.5 3 2L20 6" /><path d="M16 6h4v4" /></>) },
+              { title: 'Content Production (TVC & DVC)', desc: "From storyboard to screen, we produce high-impact content that connects. Be it big-screen TVCs or mobile-first DVCs, our in-house team crafts cinematic, branded content designed for attention and built for scale—across YouTube, OTT, and social platforms.",
+                icon: (<><rect x="2.5" y="7" width="13" height="10" rx="2" /><path d="M15.5 10.5l5-2.5v8l-5-2.5z" /></>) },
+              { title: 'Influencer & Meme Marketing', desc: "We help brands go viral (for the right reasons). From micro-influencers to celebrity creators, we build influencer collaborations and meme-led campaigns that bring in reach, relevance, and results. Think collabs, reels, reaction trends—done right.",
+                icon: (<><circle cx="10" cy="8" r="3.4" /><path d="M4 20a6 6 0 0112 0" /><path d="M18.5 3.5l.8 1.9 2 .2-1.5 1.4.5 2-1.8-1.1-1.8 1.1.5-2-1.5-1.4 2-.2z" /></>) },
+              { title: 'Search Engine Optimisation', desc: "We make your brand discoverable, naturally. With keyword-rich content, on-page and off-page SEO, and deep tech audits, we boost rankings and drive high-intent traffic. More clicks, better visibility, zero fluff.",
+                icon: (<><circle cx="10.5" cy="10.5" r="6.5" /><path d="M4 10.5h13M10.5 4c-2.6 3-2.6 10 0 13M10.5 4c2.6 3 2.6 10 0 13" /><path d="M15.5 15.5L21 21" /></>) },
+              { title: 'Digital Transformation Services', desc: "We build digital-first brands. From identity design to Shopify builds, we enable D2C brands to go live, scale fast, and sell smarter. Whether it's marketplace listings, UI/UX, or quick commerce setup—we help brands go from idea to impact, digitally.",
+                icon: (<><rect x="2.5" y="4" width="19" height="12.5" rx="1.5" /><path d="M2.5 20h19" /><path d="M9 8.5l-2 2 2 2M13 8.5l2 2-2 2" /></>) },
+            ].map((s) => (
+              <div key={s.title} className="reveal flex gap-5">
+                <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0 text-magenta">
+                  {s.icon}
+                </svg>
+                <div className="border-l border-black/10 pl-5">
+                  <h3 className="font-fm mb-2 text-[18px] font-bold leading-tight text-ink uppercase italic">{s.title}</h3>
+                  <p className="text-justify text-[13px] font-light leading-[1.7] text-navy/75">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Preloader — overlays the page with a ~4s intro sequence */}
       <Preloader />

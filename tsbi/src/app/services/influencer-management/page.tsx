@@ -709,7 +709,7 @@ export default function InfluencerManagementPage() {
       {/* ── QUOTE ── */}
       <section style={{ background: '#050b1a', padding: '80px 48px' }}>
         <blockquote style={{
-          fontFamily: 'var(--fd)',
+          fontFamily: 'var(--fi)',
           fontSize: 'clamp(24px,4vw,48px)',
           fontStyle: 'italic', fontWeight: 400,
           color: '#fff', lineHeight: 1.3,

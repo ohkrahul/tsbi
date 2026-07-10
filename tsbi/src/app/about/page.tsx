@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import LeadershipReelShowcase from '@/components/about/LeadershipReelShowcase';
-import MarioTimeline from '@/components/about/MarioTimeline';
+// import MarioTimeline from '@/components/about/MarioTimeline'; // moved to the home page (in place of the case-study carousel)
 import AboutAwardsSection from '@/components/about/AboutAwardsSection';
 import AboutGallery from '@/components/about/AboutGallery';
-import HeroSection from '@/components/home/HeroSection';
+import HeroBanner from '@/components/HeroBanner';
 import { getLeadershipSlides, mediaUrl } from '@/lib/strapi';
 import { getGalleryImages } from '@/lib/gallery';
 
@@ -39,13 +39,14 @@ export default async function AboutPage() {
 
   return (
     <div className="about-dark">
-      {/* Hero Banner Slider */}
-      <HeroSection content={{
-        h1: <>Ideas.<span style={{ display: 'block', color: 'var(--magenta)' }}>People.</span><span style={{ display: 'block' }}>Momentum.</span></>,
-        body: 'A decade of building TSBI powered by digital marketing experts, strategists, and storytellers who help brands grow.',
-        cta1: { label: 'Explore Our Work', href: '/case-studies' },
-        cta2: { label: 'Avail Our Services', href: '/services' },
-      }} />
+      {/* Hero Banner Slider — same style as the home hero */}
+      <HeroBanner
+        slides={[{ src: '/herobanner/dfdfdfdfz.webp', alt: 'Default Slide', tag: 'Default', caption: 'Default Slide' }]}
+        eyebrow="About Us"
+        title={<>Ideas. <span className="pink italic text-magenta">People.</span> Momentum.</>}
+        subtitle="A decade of building TSBI powered by digital marketing experts, strategists, and storytellers who help brands grow."
+        cta={{ label: 'Explore Our Work', href: '/case-studies' }}
+      />
 
       {/* Expanding strip */}
       <div className="ab-strip">
@@ -61,8 +62,8 @@ export default async function AboutPage() {
       {/* Story + Awards */}
       <AboutAwardsSection />
 
-      {/* Timeline */}
-      <MarioTimeline />
+      {/* Timeline — moved to the home page (in place of the case-study carousel) */}
+      {/* <MarioTimeline /> */}
 
       {/* Interactive quest entry point */}
       {/* <section

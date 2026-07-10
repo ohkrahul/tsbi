@@ -274,13 +274,13 @@ export default function MarioTimeline() {
           <motion.div initial={{ opacity:0, y:-10 }} animate={inView ? { opacity:1, y:0 } : {}} transition={{ duration:0.5, delay:0.1 }}
             style={{ fontFamily:'var(--fm)', fontSize:10, letterSpacing:'0.22em', textTransform:'uppercase', color:PINK, display:'flex', alignItems:'center', gap:7, marginBottom:9, fontWeight:700 }}
           >
-            About Us <span style={{ fontSize:8 }}>✦</span>
+            About Us <span style={{ fontSize:8 }}>✦</span>  
           </motion.div>
           <div style={{ overflow:'hidden', padding:'2px 4px 4px' }}>
             <motion.h2 initial={{ y:'110%' }} animate={inView ? { y:0 } : {}} transition={{ duration:0.7, ease:[0.22,1,0.36,1] }}
-              style={{ fontFamily:'var(--fa)', fontSize:'clamp(32px,4.2vw,58px)', fontWeight:400, lineHeight:1.28, letterSpacing:'0.01em', margin:0, padding:'2px 0 10px', textShadow:'0 1px 0 rgba(255,255,255,0.35)' }}
+              style={{ fontFamily:'var(--fm)', fontSize:'clamp(32px,4.2vw,58px)', fontWeight:800, lineHeight:1.28, letterSpacing:'0.01em', margin:0, padding:'2px 0 10px', textShadow:'0 1px 0 rgba(255,255,255,0.35)' }}
             >
-              <span style={{ color:INK }}>TSBI </span>
+              <span style={{ color:INK }}>TSBI </span>  
               <em style={{ color:PINK, fontStyle:'italic' }}>Story</em>
             </motion.h2>
           </div>
@@ -288,7 +288,8 @@ export default function MarioTimeline() {
             style={{ fontFamily:'var(--fb)', fontSize:13, color:'rgba(36,22,64,0.78)', fontWeight:500, margin:'9px auto 0', lineHeight:1.6, maxWidth:460, textShadow:'0 1px 0 rgba(255,255,255,0.25)' }}
           >
             From a single idea to a regional force — watch how we grew, evolved and made impact.
-          </motion.p>
+          </motion.p>  
+         
         </div>
 
         {/* ── HUD (bottom-right game chip, clear of the centered heading) ── */}
@@ -296,9 +297,9 @@ export default function MarioTimeline() {
           <div style={{ display:'flex', gap: isMobile ? 14 : 26, alignItems:'center', padding:'7px 16px', borderRadius:12, background:'rgba(8,6,44,0.55)', backdropFilter:'blur(6px)', border:'1px solid rgba(255,255,255,0.14)', boxShadow:'0 6px 22px rgba(0,0,0,0.3)' }}>
             {([['YEAR', milestones[activeIdx].year], ['MILESTONE', `${String(activeIdx + 1).padStart(2, '0')} / ${String(LAST_REACHED + 1).padStart(2, '0')}`], ['WORLD', '1 - 1']] as [string, string][]).map(([label, value]) => (
               <div key={label} style={{ textAlign:'center' }}>
-                <div style={{ fontFamily:"'Courier New',monospace", fontSize:7, letterSpacing:'0.2em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:2 }}>{label}</div>
+                <div style={{ fontFamily:'var(--fm)', fontSize:7, letterSpacing:'0.2em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:2 }}>{label}</div>
                 <motion.div key={value} initial={{ opacity:0, y:-4 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.25 }}
-                  style={{ fontFamily:"'Courier New',monospace", fontSize:13, fontWeight:700, color:'#fff', textShadow:'0 0 10px rgba(224,25,125,0.8)', letterSpacing:'0.06em' }}
+                  style={{ fontFamily:'var(--fm)', fontSize:13, fontWeight:700, color:'#fff', textShadow:'0 0 10px rgba(224,25,125,0.8)', letterSpacing:'0.06em' }}
                 >{value}</motion.div>
               </div>
             ))}
@@ -368,7 +369,7 @@ export default function MarioTimeline() {
                 <div style={{
                   position:'absolute', bottom:STEM_H, left:'50%', transform:'translateX(-50%)',
                   padding:'5px 13px', borderRadius:20, whiteSpace:'nowrap',
-                  fontFamily:"'Courier New',monospace", fontSize:13, fontWeight:700, letterSpacing:'0.05em',
+                  fontFamily:'var(--fm)', fontSize:13, fontWeight:700, letterSpacing:'0.05em',
                   color:'#fff',
                   background: isAct ? PINK : 'rgba(13,8,64,0.6)',
                   border: `1.5px ${isUp && !isAct ? 'dashed' : 'solid'} ${isAct ? PINK : (isUp ? 'rgba(224,25,125,0.7)' : (visited ? 'rgba(224,25,125,0.6)' : 'rgba(255,255,255,0.35)'))}`,

@@ -89,15 +89,21 @@ const FALLBACK_CLIENTS = [
 export default async function ClientsPage() {
   const cmsBrands = await getClientBrands();
 
-  const clients = cmsBrands.length
-    ? cmsBrands.map((b) => ({
-        name: b.name,
-        type: b.type,
-        accent: b.accent,
-        isEntertainment: b.isEntertainment,
-        logo: b.image ? mediaUrl(b.image) : undefined,
-      }))
-    : FALLBACK_CLIENTS;
+  // Always show the full curated roster (every logo in FALLBACK_CLIENTS), then fold in
+  // any extra CMS-managed brands by name — so a partial CMS response can never hide the
+  // logos added here in code.
+  const seen = new Set(FALLBACK_CLIENTS.map((c) => c.name.toLowerCase()));
+  const extraFromCms = cmsBrands
+    .map((b) => ({
+      name: b.name,
+      type: b.type,
+      accent: b.accent,
+      isEntertainment: b.isEntertainment,
+      logo: b.image ? mediaUrl(b.image) : undefined,
+    }))
+    .filter((b) => !seen.has(b.name.toLowerCase()));
+
+  const clients = [...FALLBACK_CLIENTS, ...extraFromCms];
 
   return <ClientsPageClient clients={clients} />;
 }

@@ -169,6 +169,15 @@ export default function Nav() {
                 {s.label}
               </Link>
             ))}
+
+            {/* Contact — plain link, kept last (matches desktop nav) */}
+            <Link
+              href="/contact"
+              className={isActive('/contact') ? 'active' : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              Contact
+            </Link>
           </div>
         )}
       </div>

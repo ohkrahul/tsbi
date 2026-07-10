@@ -59,7 +59,7 @@ function getCategory(title: string): string {
 const PER_PAGE = 30;
 
 /* shared font helpers (matches the home page) */
-const FA = 'font-fa'; // Abril Fatface — display headings (same as home hero)
+const FA = 'font-fa'; // display headings — maps to Space Grotesk (same as home hero)
 const FM = 'font-fm'; // Space Grotesk — labels & body
 
 export default function MediaPageClient({ articles }: { articles: Article[] }) {
@@ -126,7 +126,7 @@ export default function MediaPageClient({ articles }: { articles: Article[] }) {
       <div className="flex flex-col gap-8 border-b border-black/[0.07] px-5 py-9 sm:px-10 sm:py-12 lg:flex-row lg:items-center lg:justify-between lg:px-20 lg:py-14">
         <div className="flex-1">
           <div className="mb-3.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-magenta">Media Coverage</div>
-          <h1 className={`mb-4 text-[clamp(34px,9vw,68px)] font-normal leading-[1.05] tracking-[0.01em] ${FA}`}>
+          <h1 className={`mb-4 text-[clamp(34px,9vw,68px)] font-semibold uppercase leading-[1.05] tracking-[0.01em] ${FA}`}>
             TSBI In The <em className="italic text-magenta">News</em>
           </h1>
           <div className="mb-[18px] h-[3px] w-9 rounded-sm bg-magenta" />

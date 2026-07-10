@@ -14,11 +14,15 @@
   --color-orange: #ff4c0c;
   --color-navy: #0d1528;
   --color-electric: #1a6aff;
-  /* Brand fonts exposed as Tailwind utilities: font-fd / font-fb / font-fm / font-fa */
-  --font-fd: var(--font-playfair), Georgia, serif;
-  --font-fb: var(--font-dm-sans), system-ui, sans-serif;
+  /* Brand fonts — the site is locked to THREE fonts:
+     Space Grotesk (headings/nav/labels/buttons), DM Sans (body), Playfair (italic accents only).
+     --fd and --fa are kept as aliases pointing at Space Grotesk so every existing
+     heading usage flips automatically; --fi is Playfair for italic accents/quotes. */
   --font-fm: var(--font-space-grotesk), 'Helvetica Neue', sans-serif;
-  --font-fa: var(--font-abril), 'Abril Fatface', Georgia, serif;
+  --font-fb: var(--font-dm-sans), system-ui, sans-serif;
+  --font-fi: var(--font-playfair), Georgia, serif;
+  --font-fd: var(--font-space-grotesk), 'Helvetica Neue', sans-serif;
+  --font-fa: var(--font-space-grotesk), 'Helvetica Neue', sans-serif;
 }
 
 :root {
@@ -35,13 +39,14 @@
   --orange: #ff4c0c;
   --navy: #0d1528;
   --electric: #1a6aff;
-  /* --fd: var(--font-playfair), Georgia, serif;
-  --fb: var(--font-dm-sans), system-ui, sans-serif;
-  --fm: var(--font-space-grotesk), 'Helvetica Neue', sans-serif; */
-  --fd: var(--font-playfair), Georgia, serif;
-  --fb: var(--font-dm-sans), system-ui, sans-serif;
+  /* Three-font system (see @theme note above).
+     --fm Space Grotesk · --fb DM Sans · --fi Playfair (italic accents).
+     --fd / --fa are aliases → Space Grotesk so legacy heading usages stay consistent. */
   --fm: var(--font-space-grotesk), 'Helvetica Neue', sans-serif;
-  --fa: var(--font-abril), 'Abril Fatface', Georgia, serif;
+  --fb: var(--font-dm-sans), system-ui, sans-serif;
+  --fi: var(--font-playfair), Georgia, serif;
+  --fd: var(--font-space-grotesk), 'Helvetica Neue', sans-serif;
+  --fa: var(--font-space-grotesk), 'Helvetica Neue', sans-serif;
   --mono: 'Courier New', monospace;
 }
 
@@ -135,6 +140,12 @@ body {
    if the markup keeps a hardcoded Tailwind mt-[108px]/mt-[72px] utility — this is the
    single source of truth for the hero's top offset (mobile 64px / desktop 74px). */
 .hero-section { margin-top: var(--nav-h) !important; }
+/* Home hero height — compact banner size (Sterling reference = 372px), full width.
+   Desktop only; !important beats the inline `sm:h-160` (640px) utility so it holds
+   even when page.tsx reverts. Mobile keeps its stacked aspect-ratio layout. */
+@media (min-width: 640px) {
+  .hero-section { height: 470px !important; }
+}
 .nav-links a {
   font-family: var(--fm); font-style: normal; font-size: 14px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase;
   color: #9b9b9b; text-decoration: none; cursor: pointer; position: relative; padding-bottom: 6px; white-space: nowrap;
@@ -249,7 +260,7 @@ body {
 }
 .hero-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--muted); }
 .eyebrow-dot { color: var(--magenta); }
-.hero-h1 { font-family: var(--fa); font-size: clamp(58px,8vw,90px); font-weight: 400; line-height: .96; letter-spacing: 0.01em; color: var(--ink); margin-bottom: 32px; }
+.hero-h1 { font-family: var(--fa); font-size: clamp(58px,8vw,90px); font-weight: 700; line-height: .96; letter-spacing: 0.01em; color: var(--ink); margin-bottom: 32px; }
 .hero-h1 .story { color: var(--magenta); font-style: italic; display: block; }
 .hero-h1 .systems { display: block; }
 .hero-body { font-size: 15px; color: var(--muted); font-weight: 300; line-height: 1.8; max-width: 400px; margin-bottom: 44px; }
@@ -352,7 +363,7 @@ body {
 .cw:hover { color: var(--ink); -webkit-text-stroke: 0px transparent; transform: translateX(10px); }
 .cw.lit { color: var(--magenta); -webkit-text-stroke: 0px transparent; }
 .cap-side { flex: 0 0 260px; }
-.cap-quote { font-family: var(--fd); font-size: 22px; font-weight: 400; font-style: italic; color: var(--ink); line-height: 1.5; margin-bottom: 24px; }
+.cap-quote { font-family: var(--fi); font-size: 22px; font-weight: 400; font-style: italic; color: var(--ink); line-height: 1.5; margin-bottom: 24px; }
 .cap-body { font-size: 14px; color: var(--muted); font-weight: 300; line-height: 1.8; margin-bottom: 32px; }
 
 /* ── STORIES SECTION ────────────────────────────────── */
@@ -402,7 +413,7 @@ body {
 .galaxy-h2 em { color: var(--magenta); font-style: italic; }
 .galaxy-sub { font-family: var(--fm); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 60px; position: relative; z-index: 2; }
 .galaxy-caption { position: relative; z-index: 2; margin-top: 50px; }
-.galaxy-cap-line { font-family: var(--fd); font-size: clamp(18px,2.5vw,26px); font-style: italic; color: rgba(255,255,255,.5); margin-bottom: 8px; }
+.galaxy-cap-line { font-family: var(--fi); font-size: clamp(18px,2.5vw,26px); font-style: italic; color: rgba(255,255,255,.5); margin-bottom: 8px; }
 .galaxy-cap-note { font-family: var(--fm); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.25); }
 .galaxy-brands { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; position: relative; z-index: 2; margin-bottom: 0; }
 .galaxy-brand {
@@ -727,7 +738,7 @@ body {
 .cs-hero-visual { position: absolute; inset: 0; background: linear-gradient(135deg,#1a2f50 0%,#0d1528 100%); }
 .cs-tags { display: flex; gap: 8px; margin-bottom: 22px; position: relative; z-index: 2; }
 .cs-tag { font-family: var(--fm); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6); }
-.cs-title { font-family: var(--fa); font-size: clamp(32px,7vw,90px); font-weight: 400; line-height: 1.06; letter-spacing: .01em; color: #fff; margin-bottom: 10px; position: relative; z-index: 2; overflow-wrap: anywhere; word-break: break-word; padding-bottom: .06em; }
+.cs-title { font-family: var(--fa); font-size: clamp(32px,7vw,90px); font-weight: 600; line-height: 1.06; letter-spacing: .01em; color: #fff; margin-bottom: 10px; position: relative; z-index: 2; overflow-wrap: anywhere; word-break: break-word; padding-bottom: .06em; }
 .cs-client { font-family: var(--fm); font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--magenta); position: relative; z-index: 2; }
 .cs-info-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 0; border: 1px solid var(--border); overflow: hidden; margin: 0 48px; }
 .cs-ic { padding: 24px; border-right: 1px solid var(--border); }
@@ -964,7 +975,7 @@ body {
 .svc-pg-body { padding: 80px 48px; background: var(--white); }
 .svc-pg-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; max-width: 1100px; }
 .svc-pg-col-label { font-family: var(--fm); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--magenta); margin-bottom: 20px; }
-.svc-pg-h2 { font-family: var(--fd); font-size: clamp(26px,3.5vw,40px); font-weight: 300; font-style: italic; color: var(--ink); line-height: 1.2; margin-bottom: 28px; }
+.svc-pg-h2 { font-family: var(--fi); font-size: clamp(26px,3.5vw,40px); font-weight: 300; font-style: italic; color: var(--ink); line-height: 1.2; margin-bottom: 28px; }
 .svc-pg-h2 strong { font-weight: 700; font-style: normal; }
 .svc-pg-features { list-style: none; display: flex; flex-direction: column; }
 .svc-pg-feature { padding: 18px 0; border-bottom: 1px solid var(--border); display: flex; gap: 20px; align-items: flex-start; }
@@ -977,7 +988,7 @@ body {
 .svc-pg-step-title { font-family: var(--fd); font-size: clamp(18px,2vw,22px); font-weight: 700; color: var(--ink); }
 .svc-pg-step-desc { font-size: 14px; color: var(--muted); font-weight: 300; line-height: 1.7; }
 .svc-pg-cta { padding: 80px 48px; background: var(--navy); display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
-.svc-pg-cta-h2 { font-family: var(--fd); font-size: clamp(28px,4vw,48px); color: #fff; font-weight: 300; font-style: italic; }
+.svc-pg-cta-h2 { font-family: var(--fi); font-size: clamp(28px,4vw,48px); color: #fff; font-weight: 300; font-style: italic; }
 .svc-pg-stat { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(10,10,10,.07); }
 .svc-pg-stat-val { font-family: var(--fd); font-size: clamp(18px,2vw,24px); font-weight: 700; color: var(--ink); }
 .svc-pg-stat-label { font-family: var(--fm); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
@@ -1009,7 +1020,7 @@ body {
 .cr-detail-list li { font-size: 13px; color: rgba(255,255,255,.72); font-weight: 300; padding-left: 18px; position: relative; line-height: 1.5; }
 .cr-detail-list li::before { content: '—'; position: absolute; left: 0; color: var(--magenta); }
 .cr-apply { padding: 80px 48px; background: var(--navy); }
-.cr-apply-h2 { font-family: var(--fd); font-size: clamp(32px,4vw,52px); color: #fff; font-weight: 300; font-style: italic; margin-bottom: 40px; }
+.cr-apply-h2 { font-family: var(--fi); font-size: clamp(32px,4vw,52px); color: #fff; font-weight: 300; font-style: italic; margin-bottom: 40px; }
 .cr-form { max-width: 640px; display: flex; flex-direction: column; gap: 4px; }
 .cr-form .fl { color: rgba(255,255,255,.45); }
 .cr-form .fi { color: #fff; border-bottom-color: rgba(255,255,255,.15); }
@@ -1019,7 +1030,7 @@ body {
 .cr-form .fsubmit { background: var(--magenta); margin-top: 16px; }
 .cr-file-label { font-family: var(--fm); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.5); display: block; border: 1px dashed rgba(255,255,255,.2); padding: 20px; border-radius: 8px; cursor: pointer; text-align: center; transition: border-color .2s, color .2s; }
 .cr-file-label:hover { border-color: var(--magenta); color: rgba(255,255,255,.8); }
-.cr-thank { font-family: var(--fd); font-size: 24px; color: #fff; font-style: italic; padding: 40px 0; }
+.cr-thank { font-family: var(--fi); font-size: 24px; color: #fff; font-style: italic; padding: 40px 0; }
 
 /* ── CLIENTS TABS ──────────────────────────────────── */
 .cl-tabs { display: flex; gap: 0; background: var(--white); border-bottom: 1px solid var(--border); padding: 0 48px; position: sticky; top: 56px; z-index: 100; }
@@ -1040,7 +1051,7 @@ body {
 .cl-card:hover .cl-card-logo { color: #fff; }
 .cl-card-type { font-family: var(--fm); font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: var(--magenta); }
 .cl-cta { padding: 80px 48px; background: var(--navy); text-align: center; }
-.cl-cta-h2 { font-family: var(--fd); font-size: clamp(28px,4vw,48px); color: #fff; font-weight: 300; font-style: italic; margin-bottom: 28px; }
+.cl-cta-h2 { font-family: var(--fi); font-size: clamp(28px,4vw,48px); color: #fff; font-weight: 300; font-style: italic; margin-bottom: 28px; }
 
 /* ── CASE STUDIES OVERVIEW ─────────────────────────── */
 .cs-ov-hero { padding: 140px 48px 60px; background: var(--off); }
@@ -1533,8 +1544,8 @@ body {
 .csc-cta:hover::before { transform: translateX(0); }
 .csc-cta:hover { color: #fff; border-color: var(--magenta); }
 .csc-cta:hover .arr { color: #fff; }
-.csc-kicker { font-family: var(--fa); font-style: italic; font-weight: 700; color: var(--magenta); font-size: clamp(22px,2.6vw,34px); line-height: 1; margin-bottom: 2px; }
-.csc-h2 { font-family: var(--fa); font-weight: 400; color: var(--ink); font-size: 34px; line-height: 1.22; letter-spacing: 0.01em; margin-bottom: 20px; }
+.csc-kicker { font-family: var(--fi); font-style: italic; font-weight: 700; color: var(--magenta); font-size: clamp(22px,2.6vw,34px); line-height: 1; margin-bottom: 2px; }
+.csc-h2 { font-family: var(--fa); font-weight: 600; color: var(--ink); font-size: 34px; line-height: 1.22; letter-spacing: 0.01em; margin-bottom: 20px; }
 @media (min-width: 640px) {
   .csc-h2 { font-size: 3.75rem; }
 }
@@ -1659,9 +1670,9 @@ body {
   margin-bottom: 10px;
 }
 .connect-title {
-  font-family: var(--fa);
-  font-style: normal;
-  font-weight: 400;
+  font-family: var(--fm);
+  font-style: italic;
+  font-weight: 600;
   font-size: clamp(28px,3vw,44px);
   color: var(--ink);
   line-height: 1.22;
@@ -1672,6 +1683,8 @@ body {
   word-break: normal;
   max-width: 720px;
   margin: 0 auto;
+   text-transform: uppercase;
+
 }
 .connect-sub {
   font-family: var(--fm);
@@ -1725,7 +1738,7 @@ body {
 .bic-center { position: relative; z-index: 2; max-width: 640px; margin: 0 auto; display: flex; align-items: center; justify-content: center; min-height: clamp(300px,36vw,420px); }
 .bic-orbit { position: absolute; z-index: 1; width: min(720px, 98vw); height: auto; left: 50%; top: 50%; transform: translate(-50%,-50%); pointer-events: none; overflow: visible; }
 .bic-content { position: relative; z-index: 2; text-align: center; }
-.bic-h2 { font-family: var(--fa); font-weight: 400; font-style: normal; color: var(--ink); font-size: clamp(30px,4.4vw,56px); line-height: 1.15; letter-spacing: 0.01em; margin-bottom: 28px; }
+.bic-h2 { font-family: var(--fa); font-weight: 600; font-style: normal; color: var(--ink); font-size: clamp(30px,4.4vw,56px); line-height: 1.15; letter-spacing: 0.01em; margin-bottom: 28px; }
 .bic-h2 .accent { color: var(--magenta); font-style: italic; }
 
 @keyframes bic-spin-cw  { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

@@ -32,7 +32,7 @@ const CASE_STUDY_MAP: Record<string, string> = {
 type Tab = 'all' | 'entertainment' | 'non-entertainment';
 
 /* fonts — same as the home page */
-const FA = 'font-fa'; // Abril Fatface — display headings
+const FA = 'font-fa'; // display headings — maps to Space Grotesk
 const FM = 'font-fm'; // Space Grotesk — labels & body
 
 /* ── Single logo card ── */
@@ -65,7 +65,7 @@ function LogoCard({ client }: { client: ClientEntry }) {
           />
         ) : (
           <div
-            className={`flex h-[72px] w-[72px] items-center justify-center rounded-xl text-[22px] font-normal tracking-[0.01em] ${FA}`}
+            className={`flex h-[72px] w-[72px] items-center justify-center rounded-xl text-[22px] font-semibold tracking-[0.01em] ${FA}`}
             style={{ background: `${client.accent}18`, color: client.accent }}
           >
             {initials}
@@ -160,7 +160,7 @@ export default function ClientsPageClient({ clients }: { clients: ClientEntry[] 
         <div className={`mb-2 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.18em] text-white/40 ${FM}`}>
           <span className="h-px w-6 bg-white/30" /> Our Clients
         </div>
-        <h1 ref={heroRef} className={`mt-3 text-[clamp(40px,10vw,96px)] font-normal leading-[1.05] tracking-[0.01em] text-white ${FA}`}>
+        <h1 ref={heroRef} className={`mt-3 text-[clamp(40px,10vw,96px)] font-semibold uppercase leading-[1.05] tracking-[0.01em] text-white ${FA}`}>
           <span className="block overflow-hidden"><span className="cl-hero-line block opacity-0 [will-change:transform,opacity,filter]">Brands That</span></span>
           <span className="block overflow-hidden"><span className="cl-hero-line block opacity-0 [will-change:transform,opacity,filter]">Trust</span></span>
           <span className="block overflow-hidden"><span className="cl-hero-line block opacity-0 [will-change:transform,opacity,filter]"><em className="italic text-magenta">TSBI.</em></span></span>
@@ -197,7 +197,7 @@ export default function ClientsPageClient({ clients }: { clients: ClientEntry[] 
 
       {/* CTA */}
       <section className="bg-[var(--navy)] px-5 py-16 text-center sm:px-10 sm:py-20">
-        <p className={`mb-7 text-[clamp(26px,5vw,48px)] font-normal italic text-white ${FA}`}>Want to work with us?</p>
+        <p className="mb-7 text-[clamp(26px,5vw,48px)] font-normal italic text-white font-fi">Want to work with us?</p>
         <Link href="/contact" className="btn-fill" style={{ background: 'var(--magenta)' }}>
           Start a Conversation →
         </Link>
