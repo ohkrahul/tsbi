@@ -148,10 +148,10 @@ body {
 }
 .nav-links a {
   font-family: var(--fm); font-style: normal; font-size: 14px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase;
-  color: #9b9b9b; text-decoration: none; cursor: pointer; position: relative; padding-bottom: 6px; white-space: nowrap;
+  color: #6b6b6b; text-decoration: none; cursor: pointer; position: relative; padding-bottom: 6px; white-space: nowrap;
 }
-.nav-links a.active { color: #f01891; font-weight: 800;}
-.nav-links a.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #f01891; }
+.nav-links a.active { color: #e0197d; font-weight: 800;}
+.nav-links a.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #e0197d; }
 /* SplitText wraps each character in a span; keep them inline and clip nothing. */
 .nav-links a .char { display: inline-block; will-change: transform; }
 .nav-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 3; display: flex; align-items: center; }
@@ -1391,7 +1391,7 @@ body {
    ════════════════════════════════════════════════════════════════ */
 
 /* ── NAV — mobile active link colour (desktop styles live in the header block) ── */
-.nav-mobile-menu a.active { color: #f01891; }
+.nav-mobile-menu a.active { color: #e0197d; }
 
 /* ── HOME HERO ────────────────────────────────────────── */
 .hh-root {

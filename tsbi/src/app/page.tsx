@@ -11,11 +11,13 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import HeroAnimation from '@/components/HeroAnimation';
 // import Preloader from '@/components/Preloader'; // preloader disabled for now
-import CaseStudyCarousel from '@/components/CaseStudyCarousel';
-import MarioTimeline from '@/components/about/MarioTimeline';
+// import CaseStudyCarousel from '@/components/CaseStudyCarousel'; // not rendered — kept out of the bundle
 import LazyMount from '@/components/LazyMount';
 // Heavy R3F/three.js widget — loaded on demand (kept out of the initial bundle).
 const TechWorkTube = dynamic(() => import('@/components/home/TechWorkTube'), { ssr: false });
+// MarioTimeline pulls in all of framer-motion and sits far below the fold — load
+// it on demand so framer-motion stays out of the initial JS (helps mobile TBT/LCP).
+const MarioTimeline = dynamic(() => import('@/components/about/MarioTimeline'), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -528,10 +530,8 @@ export default function HomePage() {
               type="button"
               onClick={() => scrollTo(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className="hero-slider-dot flex h-6 w-6 items-center justify-center"
-            >
-              <span className={`block h-2 rounded-full transition-all ${i === selected ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'}`} />
-            </button>
+              className={`hero-slider-dot h-2 rounded-full transition-all ${i === selected ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'}`}
+            />
           ))}
         </div>
       </section>
@@ -718,7 +718,9 @@ export default function HomePage() {
 
       {/* ── CASE STUDY — CONNECT ─────────────────────────── */}
       {/* <CaseStudyCarousel /> */}
-      <MarioTimeline />
+      <LazyMount rootMargin="500px" minHeight={760}>
+        <MarioTimeline />
+      </LazyMount>
 
       {/* ── MOVIE CONNECT ────────────────────────────────── */}
       <section className="movie-connect-section" aria-label="Connect — featured productions ">

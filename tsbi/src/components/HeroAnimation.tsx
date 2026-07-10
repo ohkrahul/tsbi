@@ -36,7 +36,10 @@ export default function HeroAnimation() {
     }
 
     // ── Initial states ─────────────────────────────────────────────────────
-    gsap.set('.hero-image',             { clipPath: 'inset(0 0 100% 0)', scale: 1.06 });
+    // Don't clip-hide the hero image — it's the LCP on the real network. Keeping
+    // it visible from first paint (subtle zoom only) means the largest paint no
+    // longer waits on hydration/JS (fixes the ~10s mobile LCP on deploy).
+    gsap.set('.hero-image',             { scale: 1.06 });
     gsap.set('.hero-subtitle',          { opacity: 0, y: 12 });
     gsap.set('.hero-cta',               { opacity: 0, y: 8 });
     gsap.set('.hero-slider-dot',        { opacity: 0, scale: 0.6 });
@@ -411,9 +414,8 @@ export default function HeroAnimation() {
     const startOnce = () => {
       if (started) return;
       started = true;
-      // Reveal the hero image right away — it's the LCP and needs no fonts, so
-      // don't let the largest paint wait on fonts.ready (big LCP win on mobile).
-      gsap.to('.hero-image', { clipPath: 'inset(0 0 0% 0)', scale: 1, duration: 0.7, ease: 'power3.out' });
+      // Hero image is already visible (no clip hide) — just settle the subtle zoom.
+      gsap.to('.hero-image', { scale: 1, duration: 0.7, ease: 'power3.out' });
       (fonts?.ready ?? Promise.resolve()).then(run);
     };
     window.addEventListener('tsbi:intro-done', startOnce, { once: true });

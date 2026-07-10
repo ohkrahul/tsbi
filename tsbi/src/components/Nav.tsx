@@ -41,9 +41,9 @@ export default function Nav() {
     <nav className="nav-root">
       {/* scoped overrides so dropdown items aren't restyled by `.nav-links a` */}
       <style dangerouslySetInnerHTML={{ __html: `
-        .nav-links .nav-dd-btn { font-family: var(--fm); font-size: 14px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; color: #9b9b9b; }
+        .nav-links .nav-dd-btn { font-family: var(--fm); font-size: 14px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; color: #6b6b6b; }
         .nav-links .nav-dropdown.open .nav-dd-btn, .nav-links .nav-dd-btn:hover { color: var(--ink); }
-        .nav-links .nav-dd-btn.active { color: #f01891; font-weight: 800; }
+        .nav-links .nav-dd-btn.active { color: #e0197d; font-weight: 800; }
         /* invisible bridge across the 18px gap so the menu stays open while the cursor travels to it */
         .nav-links .nav-dropdown .nav-dd-panel::before { content: ''; position: absolute; left: -8px; right: -8px; bottom: 100%; height: 26px; }
         /* CSS-driven hover (no JS timing race): panel + bridge become interactive the instant the trigger is hovered */
