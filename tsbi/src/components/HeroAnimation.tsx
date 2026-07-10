@@ -409,7 +409,7 @@ export default function HeroAnimation() {
     };
 
     // Delay entrance animation until the preloader signals it's done.
-    // Falls back after 5s in case the page is loaded without a preloader.
+    // Falls back after 2s in case the page is loaded without a preloader.
     let started = false;
     const startOnce = () => {
       if (started) return;
@@ -417,7 +417,7 @@ export default function HeroAnimation() {
       (fonts?.ready ?? Promise.resolve()).then(run);
     };
     window.addEventListener('tsbi:intro-done', startOnce, { once: true });
-    const fallback = setTimeout(startOnce, 5000);
+    const fallback = setTimeout(startOnce, 2000);
     cleanups.push(() => {
       window.removeEventListener('tsbi:intro-done', startOnce);
       clearTimeout(fallback);

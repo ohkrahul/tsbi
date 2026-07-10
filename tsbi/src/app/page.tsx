@@ -9,7 +9,7 @@ import { SplitText } from 'gsap/SplitText';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import HeroAnimation from '@/components/HeroAnimation';
-import Preloader from '@/components/Preloader';
+// import Preloader from '@/components/Preloader'; // preloader disabled for now
 import CaseStudyCarousel from '@/components/CaseStudyCarousel';
 import MarioTimeline from '@/components/about/MarioTimeline';
 import TechWorkTube from '@/components/home/TechWorkTube';
@@ -211,6 +211,14 @@ export default function HomePage() {
     };
   }, [emblaApi]);
 
+  // Preloader is disabled for now — fire the intro-done signal ourselves (next
+  // frame, so every listener is already attached) so the hero, nav, scroll-reveal
+  // and stat count-up entrance animations still run without the loader.
+  useEffect(() => {
+    const id = requestAnimationFrame(() => window.dispatchEvent(new Event('tsbi:intro-done')));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
   // Stats count-up — animate 0 → target when the row scrolls into view (after the intro).
   useEffect(() => {
     const nums = gsap.utils.toArray<HTMLElement>('.stat-num');
@@ -220,30 +228,40 @@ export default function HomePage() {
 
     let started = false;
     let trigger: ScrollTrigger | undefined;
+    const runCount = () =>
+      nums.forEach((el) => {
+        const to = parseFloat(el.dataset.to ?? '0');
+        const suffix = el.dataset.suffix ?? '';
+        const obj = { v: 0 };
+        gsap.to(obj, {
+          v: to,
+          duration: 1.6,
+          ease: 'power2.out',
+          onUpdate: () => { el.textContent = Math.round(obj.v) + suffix; },
+        });
+      });
     const start = () => {
       if (started) return;
       started = true;
-      trigger = ScrollTrigger.create({
-        trigger: '.stats-row',
-        start: 'top 88%',
-        once: true,
-        onEnter: () =>
-          nums.forEach((el) => {
-            const to = parseFloat(el.dataset.to ?? '0');
-            const suffix = el.dataset.suffix ?? '';
-            const obj = { v: 0 };
-            gsap.to(obj, {
-              v: to,
-              duration: 1.6,
-              ease: 'power2.out',
-              onUpdate: () => { el.textContent = Math.round(obj.v) + suffix; },
-            });
-          }),
-      });
+      // The stats row sits right under the hero, so it's usually already on-screen
+      // by the time the intro finishes. ScrollTrigger won't fire onEnter for an
+      // element that's already past its start at creation — so count immediately
+      // when it's in view, and only defer to ScrollTrigger when it's still below.
+      const row = document.querySelector<HTMLElement>('.stats-row');
+      if (row && row.getBoundingClientRect().top < window.innerHeight * 0.9) {
+        runCount();
+      } else {
+        trigger = ScrollTrigger.create({
+          trigger: '.stats-row',
+          start: 'top 88%',
+          once: true,
+          onEnter: runCount,
+        });
+      }
     };
     // Fire after the preloader intro so the count is actually seen; fallback if the event never comes.
     window.addEventListener('tsbi:intro-done', start, { once: true });
-    const fallback = window.setTimeout(start, 5000);
+    const fallback = window.setTimeout(start, 2000);
     return () => {
       window.removeEventListener('tsbi:intro-done', start);
       clearTimeout(fallback);
@@ -904,8 +922,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Preloader — overlays the page with a ~4s intro sequence */}
-      <Preloader />
+      {/* Preloader disabled for now — the intro-done signal is fired on mount
+          (see the effect above) so entrance animations still run without it. */}
+      {/* <Preloader /> */}
 
       {/* GSAP animation orchestrator + custom cursor elements */}
       <HeroAnimation />

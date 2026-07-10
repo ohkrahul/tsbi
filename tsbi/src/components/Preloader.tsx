@@ -4,21 +4,17 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 /**
- * beeyond.agency-style intro loader. A 150%-wide row of TSBI work visuals rises
- * up and pans across the screen; then every image except the centre TSBI
- * wordmark is wiped away (clip-path collapsing to the top edge), the curtain wipes
- * up the same way, and the whole layer fades out to reveal the homepage.
+ * Fast intro loader. A 150%-wide row of TSBI work visuals rises + pans into
+ * centre, then every image except the centre TSBI wordmark wipes away and the
+ * whole dark layer fades out to reveal the homepage.
  *
- * Purely time-based (~4s) — it never waits on real asset loading. Layout lives
- * in the `.loader / .loader-imgs / .img` rules in globals.css; timing lives in
- * the GSAP timeline below. Edit REEL (work visuals) or LOGO to restyle it.
+ * Time-based (~1.1s) — it never waits on real asset loading. Shows once per
+ * browser-tab session (sessionStorage), so returning to Home is instant.
+ * Layout lives in `.loader / .loader-imgs / .img` in globals.css.
  */
 
-// 6 work visuals; the TSBI logo is injected dead-centre as the 7th cell so it
-// is the one image left standing when the others wipe away. `pos` keeps the
-// subject in frame when a cell crops (object-fit: cover).
 const REEL: { src: string; pos?: string }[] = [
-  { src: '/about%20us/webbanner%202%20msd.jpg.jpeg', pos: 'right center' },
+  { src: '/loader/tsbi1.png ', pos: 'right center' },
   { src: '/loader/tsbi.png' },
   { src: '/loader/tsbi4.png' },
   { src: '/loader/tsbi3.png' },
@@ -28,45 +24,60 @@ const REEL: { src: string; pos?: string }[] = [
 
 export default function Preloader() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [done, setDone] = useState(false);
+  // 'pending' until we decide; 'play' runs the intro; 'done' unmounts.
+  const [phase, setPhase] = useState<'pending' | 'play' | 'done'>('pending');
 
+  // Decide once on mount: skip entirely if the intro already played this session.
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (sessionStorage.getItem('tsbi:intro-seen')) {
+      // Defer to the next frame so every 'tsbi:intro-done' listener (attached in
+      // its own mount effect) is registered before we fire — else they'd miss it.
+      const id = requestAnimationFrame(() => window.dispatchEvent(new Event('tsbi:intro-done')));
+      setPhase('done');
+      return () => cancelAnimationFrame(id);
+    }
+    setPhase('play');
+  }, []);
+
+  // Run the GSAP intro once the loader DOM is mounted.
+  useEffect(() => {
+    if (phase !== 'play') return;
     document.body.style.overflow = 'hidden';
     const finish = () => {
       document.body.style.overflow = '';
-      setDone(true);
+      // Flag only after a real completion (not at decide-time) so React
+      // StrictMode's throwaway first mount doesn't suppress the intro in dev.
+      sessionStorage.setItem('tsbi:intro-seen', '1');
+      setPhase('done');
     };
 
     const ctx = gsap.context(() => {
-      // Starting states: every image 500px below its slot; the whole row shoved
-      // 500px to the right so it can pan back into centre.
-      gsap.set('.img', { y: 500 });
-      gsap.set('.loader-imgs', { x: 500 });
-      gsap.set('.loader-out', { yPercent: 100 }); // white panel parked below the viewport
+      gsap.set('.img', { y: 240 });
+      gsap.set('.loader-imgs', { x: 240 });
 
       const wipeUp = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)'; // collapse to top edge
 
       gsap
         .timeline({ onComplete: finish, defaults: { force3D: true } })
-        // 1. images fly up — expo.out lands crisply with no slow crawl at the top
-        .to('.img', { y: 0, duration: 0.95, stagger: 0.055, ease: 'expo.out' })
-        // 2. row glides left into centre, starts immediately with the rise
-        .to('.loader-imgs', { x: 0, duration: 1.7, ease: 'expo.out' }, 0)
-        // 3. wipe images away — starts as soon as the last image lands
-        .to('.img:not(#loader-logo)', { clipPath: wipeUp, duration: 0.55, stagger: 0.06, ease: 'expo.in' }, '-=0.1')
-        // 4. white panel sweeps up immediately after wipe — no gap
-        .to('.loader-out', { yPercent: -100, duration: 0.75, ease: 'power3.inOut' }, '-=0.05')
-        .set('.loader', { autoAlpha: 0 }, '-=0.38')
-        .call(() => window.dispatchEvent(new Event('tsbi:intro-done')), undefined, '-=0.38');
+        // 1. images rise into place
+        .to('.img', { y: 0, duration: 0.45, stagger: 0.03, ease: 'expo.out' })
+        // 2. row glides into centre alongside the rise
+        .to('.loader-imgs', { x: 0, duration: 0.6, ease: 'expo.out' }, 0)
+        // 3. wipe every image except the centre logo
+        .to('.img:not(#loader-logo)', { clipPath: wipeUp, duration: 0.28, stagger: 0.03, ease: 'expo.in' }, '-=0.12')
+        // 4. fade the whole dark layer out to reveal the page
+        .to('.loader', { autoAlpha: 0, duration: 0.28, ease: 'power2.inOut' }, '-=0.02')
+        .call(() => window.dispatchEvent(new Event('tsbi:intro-done')), undefined, '-=0.26');
     }, rootRef);
 
     return () => {
       ctx.revert();
       document.body.style.overflow = '';
     };
-  }, []);
+  }, [phase]);
 
-  if (done) return null;
+  if (phase !== 'play') return null;
 
   // If a visual fails to load, hide just that cell — the timeline is time-based
   // and never waits on images, so the sequence still completes cleanly.
@@ -97,9 +108,6 @@ export default function Preloader() {
           {REEL.slice(3).map(cell)}
         </div>
       </div>
-      {/* <div className="loader-out" /> */}
     </div>
   );
 }
-
-

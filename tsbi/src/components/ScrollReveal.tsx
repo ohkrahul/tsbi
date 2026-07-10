@@ -23,9 +23,9 @@ export default function ScrollReveal() {
       document.querySelectorAll<HTMLElement>('.reveal:not(.vis)').forEach((el) => obs!.observe(el));
     };
 
-    // On the home page the preloader fires 'tsbi:intro-done' after ~4 s.
-    // Wait for that signal so .reveal animations don't play behind the preloader.
-    // Fall back after 5 s in case we're on a page without a preloader.
+    // On the home page the preloader fires 'tsbi:intro-done' (~1.1s, or instantly
+    // when the intro is skipped). Wait for that signal so .reveal animations don't
+    // play behind the preloader. Fall back in case there's no preloader / it errors.
     let started = false;
     const startOnce = () => {
       if (started) return;
@@ -36,7 +36,7 @@ export default function ScrollReveal() {
     window.addEventListener('tsbi:intro-done', startOnce, { once: true });
     // Home page waits for the preloader to fire intro-done; all other pages reveal immediately.
     const isHome = pathname === '/';
-    const fallback = setTimeout(startOnce, isHome ? 5000 : 300);
+    const fallback = setTimeout(startOnce, isHome ? 2000 : 300);
 
     return () => {
       window.removeEventListener('tsbi:intro-done', startOnce);
