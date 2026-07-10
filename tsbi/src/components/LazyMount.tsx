@@ -35,5 +35,16 @@ export default function LazyMount({
     return () => obs.disconnect();
   }, [rootMargin, show]);
 
+  // When the deferred content mounts it changes the page height, which leaves any
+  // ScrollTrigger below it with stale positions. Recalculate them so scroll-reveal
+  // animations further down the page still fire correctly.
+  useEffect(() => {
+    if (!show) return;
+    const id = requestAnimationFrame(() => {
+      import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => ScrollTrigger.refresh()).catch(() => {});
+    });
+    return () => cancelAnimationFrame(id);
+  }, [show]);
+
   return <div ref={ref} style={minHeight != null ? { minHeight } : undefined}>{show ? children : null}</div>;
 }

@@ -281,6 +281,7 @@ export default function HomePage() {
     // SplitText (not raw innerHTML) so revert() restores the DOM React owns.
     let titleSplit: ReturnType<typeof SplitText.create> | null = null;
     let subSplit: ReturnType<typeof SplitText.create> | null = null;
+    let fallback = 0;
     const ctx = gsap.context(() => {
       const title = document.querySelector<HTMLElement>('.connect-title');
       const sub = document.querySelector<HTMLElement>('.connect-sub');
@@ -305,28 +306,36 @@ export default function HomePage() {
       gsap.set([...titleChars, ...subChars], scattered);
       gsap.set(['.connect-kicker', '.connect-cta'], { y: 20, opacity: 0 });
 
-      ScrollTrigger.create({
-        trigger: '.connect-text-block',
-        start: 'top 82%',
-        once: true,
-        onEnter: () => {
-          // Fast assemble — short duration + tight stagger so it snaps in quickly.
-          gsap.to(titleChars, {
-            x: 0, y: 0, rotation: 0, opacity: 1,
-            duration: 0.5, ease: 'power3.out', stagger: 0.008,
-          });
-          // The sub has many more chars — cap the total stagger so it doesn't drag on.
-          gsap.to(subChars, {
-            x: 0, y: 0, rotation: 0, opacity: 1,
-            duration: 0.45, ease: 'power3.out', stagger: { amount: 0.3, from: 'random' }, delay: 0.15,
-          });
-          gsap.to(['.connect-kicker', '.connect-cta'], {
-            y: 0, opacity: 1, duration: 0.45, ease: 'power3.out', stagger: 0.1, delay: 0.4,
-          });
-        },
-      });
+      let revealed = false;
+      const reveal = () => {
+        if (revealed) return;
+        revealed = true;
+        // Fast assemble — short duration + tight stagger so it snaps in quickly.
+        gsap.to(titleChars, {
+          x: 0, y: 0, rotation: 0, opacity: 1,
+          duration: 0.5, ease: 'power3.out', stagger: 0.008,
+        });
+        // The sub has many more chars — cap the total stagger so it doesn't drag on.
+        gsap.to(subChars, {
+          x: 0, y: 0, rotation: 0, opacity: 1,
+          duration: 0.45, ease: 'power3.out', stagger: { amount: 0.3, from: 'random' }, delay: 0.15,
+        });
+        gsap.to(['.connect-kicker', '.connect-cta'], {
+          y: 0, opacity: 1, duration: 0.45, ease: 'power3.out', stagger: 0.1, delay: 0.4,
+        });
+      };
+
+      ScrollTrigger.create({ trigger: '.connect-text-block', start: 'top 82%', once: true, onEnter: reveal });
+
+      // Bulletproofing so the heading can NEVER stay hidden: reveal now if it's
+      // already in view, and a hard fallback in case a lazy section above shifts
+      // the trigger's cached position before it fires (was hiding on mobile).
+      const block = document.querySelector('.connect-text-block');
+      if (block && block.getBoundingClientRect().top < window.innerHeight * 0.9) reveal();
+      fallback = window.setTimeout(reveal, 6000);
     });
     return () => {
+      clearTimeout(fallback);
       ctx.revert();
       titleSplit?.revert();
       subSplit?.revert();
@@ -541,26 +550,41 @@ export default function HomePage() {
 
       
 
-      {/* ── STATS — numbers only (no card), centered in the band; count up on reveal ── */}
-      <section className="stats-row relative z-30 mx-auto w-full max-w-5xl px-5 py-11 sm:py-14">
-        <div className="grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-4">
-          {[
-            { to: 15, suffix: 'K+', label: 'Campaigns' },
-            { to: 500, suffix: '+', label: 'Brands' },
-            { to: 300, suffix: '+', label: 'Employees strong' },
-            { to: 30, suffix: '+', label: 'Languages' },
-          ].map((s) => (
-            <div key={s.label} className="flex flex-col items-center text-center">
-              <span
-                className="stat-num font-fm text-[clamp(36px,5vw,60px)] font-black leading-none text-magenta"
-                data-to={s.to}
-                data-suffix={s.suffix}
-              >
-                0{s.suffix}
+      {/* ── CLIENT LOGO MARQUEE — right after the hero ──────────────────────── */}
+      <section className="lm-section" aria-label="Brands we work with">
+        {/* magenta connector line — overlaps the hero bottom, runs into the white area.
+            hero-pink-svg / hero-pink-start-node / hero-pink-end-node → GSAP draws this
+            after the hero headline appears, then pulses the end-node. */}
+        <div className="lm-connector" aria-hidden>
+          <svg className="lm-connector-svg hero-pink-svg" viewBox="0 0 1000 130" fill="none" preserveAspectRatio="none">
+            <polyline points="6,118 300,118 360,40 1000,40" pathLength={1} stroke="#f01891" strokeWidth="1" fill="none" vectorEffect="non-scaling-stroke" />
+          </svg>
+          <span className="lm-node lm-node--square hero-pink-start-node" />
+          <span className="lm-node lm-node--circle hero-pink-end-node" />
+        </div>
+
+        {/* Row 1 — moving left→right; cells carry the moving grid lines */}
+        <div className="lm-marquee">
+          <div className="lm-track lm-track--1" aria-hidden>
+            {[...ROW_ONE, ...ROW_ONE, ...ROW_ONE].map((l, i) => (
+              <span key={`r1-${i}-${l.name}`} className="lm-cell lm-cell--divider" title={l.name}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={l.src} alt={l.name} loading="lazy" decoding="async" />
               </span>
-              <span className="mt-2 text-xs font-light uppercase tracking-[0.1em] text-black/55 sm:text-sm">{s.label}</span>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2 — same speed so the vertical grid lines stay aligned with row 1 */}
+        <div className="lm-marquee">
+          <div className="lm-track lm-track--2" aria-hidden>
+            {[...ROW_TWO, ...ROW_TWO, ...ROW_TWO].map((l, i) => (
+              <span key={`r2-${i}-${l.name}`} className="lm-cell" title={l.name}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={l.src} alt={l.name} loading="lazy" decoding="async" />
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -594,7 +618,26 @@ export default function HomePage() {
               <p className="mt-3 max-w-75 text-sm font-light leading-relaxed text-white/85">
                 Great things happen when the right brands meet the right people. We&apos;re a digital marketing agency that believes the perfect collaboration is waiting to happen.
               </p>
-              {/* stats moved to the centered white card above (Sterling-style) */}
+              {/* stats — count up on reveal, white on the pink section */}
+              <div className="stats-row mt-8 grid max-w-md grid-cols-2 gap-x-8 gap-y-7">
+                {[
+                  { to: 15, suffix: 'K+', label: 'Campaigns' },
+                  { to: 500, suffix: '+', label: 'Brands' },
+                  { to: 300, suffix: '+', label: 'Employees strong' },
+                  { to: 30, suffix: '+', label: 'Languages' },
+                ].map((s) => (
+                  <div key={s.label} className="flex flex-col max-[1280px]:items-center max-[1280px]:text-center">
+                    <span
+                      className="stat-num font-fm text-[clamp(30px,4.2vw,52px)] font-black leading-none text-white"
+                      data-to={s.to}
+                      data-suffix={s.suffix}
+                    >
+                      0{s.suffix}
+                    </span>
+                    <span className="mt-1.5 text-[11px] font-light uppercase tracking-[0.12em] text-white/75">{s.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -659,6 +702,50 @@ export default function HomePage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── OUR SERVICES (display only — no links) ─────────── */}
+      <section className="bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-14" aria-label="Our Services">
+        <div className="mx-auto max-w-[1300px]">
+          <div className="reveal mb-14 text-center sm:mb-16">
+            <div className="mb-3 font-fm text-[11px] font-semibold uppercase tracking-[0.24em] text-magenta">Our Services</div>
+            <h2 className="font-fm text-[clamp(28px,4.4vw,46px)] font-bold leading-[1.12] tracking-[-0.01em] text-ink uppercase">
+              Conceptualising <span className="text-magenta">|</span> Produce <span className="text-magenta">|</span> Perform
+            </h2>
+            <p className="mx-auto mt-4 max-w-[720px] text-sm font-light leading-[1.8] text-muted sm:text-[15px]">
+              We focus on reaching your last-mile customer with the right treatment. Content is crafted
+              to maximize ROAS, ensuring it connects with the right audience and delivers your message
+              where it matters most.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              { title: 'Social Media Marketing', desc: "We turn scrolls into stops. From moment marketing to platform-native storytelling, we create thumb-stopping content that builds engagement and drives conversations. Our social media strategies blend trends, reels, carousels, and analytics to keep your brand top of mind—and always in feed.",
+                icon: (<><rect x="6" y="2.5" width="12" height="19" rx="2.5" /><path d="M10 5h4" /><circle cx="12" cy="12.5" r="3.2" /><path d="M11.3 11.3l2.2 1.2-2.2 1.2z" fill="currentColor" stroke="none" /></>) },
+              { title: 'Performance Media Marketing', desc: "Performance is in our DNA. With funnel-based targeting, real-time optimization, and ROAS-focused campaigns, we deliver digital media strategies that convert. Whether it's Google, Meta, or Programmatic—our media plans reduce spend leakage and increase results.",
+                icon: (<><path d="M3 3v18h18" /><path d="M7 14l3.5-4.5 3 2L20 6" /><path d="M16 6h4v4" /></>) },
+              { title: 'Content Production (TVC & DVC)', desc: "From storyboard to screen, we produce high-impact content that connects. Be it big-screen TVCs or mobile-first DVCs, our in-house team crafts cinematic, branded content designed for attention and built for scale—across YouTube, OTT, and social platforms.",
+                icon: (<><rect x="2.5" y="7" width="13" height="10" rx="2" /><path d="M15.5 10.5l5-2.5v8l-5-2.5z" /></>) },
+              { title: 'Influencer & Meme Marketing', desc: "We help brands go viral (for the right reasons). From micro-influencers to celebrity creators, we build influencer collaborations and meme-led campaigns that bring in reach, relevance, and results. Think collabs, reels, reaction trends—done right.",
+                icon: (<><circle cx="10" cy="8" r="3.4" /><path d="M4 20a6 6 0 0112 0" /><path d="M18.5 3.5l.8 1.9 2 .2-1.5 1.4.5 2-1.8-1.1-1.8 1.1.5-2-1.5-1.4 2-.2z" /></>) },
+              { title: 'Search Engine Optimisation', desc: "We make your brand discoverable, naturally. With keyword-rich content, on-page and off-page SEO, and deep tech audits, we boost rankings and drive high-intent traffic. More clicks, better visibility, zero fluff.",
+                icon: (<><circle cx="10.5" cy="10.5" r="6.5" /><path d="M4 10.5h13M10.5 4c-2.6 3-2.6 10 0 13M10.5 4c2.6 3 2.6 10 0 13" /><path d="M15.5 15.5L21 21" /></>) },
+              { title: 'Digital Transformation Services', desc: "We build digital-first brands. From identity design to Shopify builds, we enable D2C brands to go live, scale fast, and sell smarter. Whether it's marketplace listings, UI/UX, or quick commerce setup—we help brands go from idea to impact, digitally.",
+                icon: (<><rect x="2.5" y="4" width="19" height="12.5" rx="1.5" /><path d="M2.5 20h19" /><path d="M9 8.5l-2 2 2 2M13 8.5l2 2-2 2" /></>) },
+            ].map((s) => (
+              <div key={s.title} className="reveal flex gap-5">
+                <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0 text-magenta">
+                  {s.icon}
+                </svg>
+                <div className="border-l border-black/10 pl-5">
+                  <h3 className="font-fm mb-2 text-[18px] font-bold leading-tight text-ink uppercase italic">{s.title}</h3>
+                  <p className="text-justify text-[13px] font-light leading-[1.7] text-navy/75">{s.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -851,90 +938,7 @@ export default function HomePage() {
         </div>
       </section> */}
 
-      {/* ── GREAT PLACE TO WORK ──────────────────────────── */}
-   {/* ── CLIENT LOGO MARQUEE ──────────────────────────── */}
-      <section className="lm-section" aria-label="Brands we work with">
-        {/* magenta connector line — overlaps the hero bottom, runs into the white area.
-            hero-pink-svg / hero-pink-start-node / hero-pink-end-node → GSAP draws this
-            after the hero headline appears, then pulses the end-node. */}
-        <div className="lm-connector" aria-hidden>
-          <svg className="lm-connector-svg hero-pink-svg" viewBox="0 0 1000 130" fill="none" preserveAspectRatio="none">
-            <polyline points="6,118 300,118 360,40 1000,40" pathLength={1} stroke="#f01891" strokeWidth="1" fill="none" vectorEffect="non-scaling-stroke" />
-            {/* mid-point dot at the geometric centre of the line */}
-            {/* <circle className="hero-pink-mid-node" cx="490" cy="40" r="5" fill="#f01891" /> */}
-          </svg>
-          <span className="lm-node lm-node--square hero-pink-start-node" />
-          <span className="lm-node lm-node--circle hero-pink-end-node" />
-        </div>
-
-        {/* Row 1 — moving left→right; cells carry the moving grid lines */}
-        <div className="lm-marquee">
-          <div className="lm-track lm-track--1" aria-hidden>
-            {[...ROW_ONE, ...ROW_ONE, ...ROW_ONE].map((l, i) => (
-              <span key={`r1-${i}-${l.name}`} className="lm-cell lm-cell--divider" title={l.name}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={l.src} alt={l.name} loading="lazy" decoding="async" />
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Row 2 — same speed so the vertical grid lines stay aligned with row 1 */}
-        <div className="lm-marquee">
-          <div className="lm-track lm-track--2" aria-hidden>
-            {[...ROW_TWO, ...ROW_TWO, ...ROW_TWO].map((l, i) => (
-              <span key={`r2-${i}-${l.name}`} className="lm-cell" title={l.name}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={l.src} alt={l.name} loading="lazy" decoding="async" />
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── OUR SERVICES (display only — no links) ─────────── */}
-      <section className="bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-14" aria-label="Our Services">
-        <div className="mx-auto max-w-[1300px]">
-          <div className="reveal mb-14 text-center sm:mb-16">
-            <div className="mb-3 font-fm text-[11px] font-semibold uppercase tracking-[0.24em] text-magenta">Our Services</div>
-            <h2 className="font-fm text-[clamp(28px,4.4vw,46px)] font-bold leading-[1.12] tracking-[-0.01em] text-ink uppercase">
-              Conceptualising <span className="text-magenta">|</span> Produce <span className="text-magenta">|</span> Perform
-            </h2>
-            <p className="mx-auto mt-4 max-w-[720px] text-sm font-light leading-[1.8] text-muted sm:text-[15px]">
-              We focus on reaching your last-mile customer with the right treatment. Content is crafted
-              to maximize ROAS, ensuring it connects with the right audience and delivers your message
-              where it matters most.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              { title: 'Social Media Marketing', desc: "We turn scrolls into stops. From moment marketing to platform-native storytelling, we create thumb-stopping content that builds engagement and drives conversations. Our social media strategies blend trends, reels, carousels, and analytics to keep your brand top of mind—and always in feed.",
-                icon: (<><rect x="6" y="2.5" width="12" height="19" rx="2.5" /><path d="M10 5h4" /><circle cx="12" cy="12.5" r="3.2" /><path d="M11.3 11.3l2.2 1.2-2.2 1.2z" fill="currentColor" stroke="none" /></>) },
-              { title: 'Performance Media Marketing', desc: "Performance is in our DNA. With funnel-based targeting, real-time optimization, and ROAS-focused campaigns, we deliver digital media strategies that convert. Whether it's Google, Meta, or Programmatic—our media plans reduce spend leakage and increase results.",
-                icon: (<><path d="M3 3v18h18" /><path d="M7 14l3.5-4.5 3 2L20 6" /><path d="M16 6h4v4" /></>) },
-              { title: 'Content Production (TVC & DVC)', desc: "From storyboard to screen, we produce high-impact content that connects. Be it big-screen TVCs or mobile-first DVCs, our in-house team crafts cinematic, branded content designed for attention and built for scale—across YouTube, OTT, and social platforms.",
-                icon: (<><rect x="2.5" y="7" width="13" height="10" rx="2" /><path d="M15.5 10.5l5-2.5v8l-5-2.5z" /></>) },
-              { title: 'Influencer & Meme Marketing', desc: "We help brands go viral (for the right reasons). From micro-influencers to celebrity creators, we build influencer collaborations and meme-led campaigns that bring in reach, relevance, and results. Think collabs, reels, reaction trends—done right.",
-                icon: (<><circle cx="10" cy="8" r="3.4" /><path d="M4 20a6 6 0 0112 0" /><path d="M18.5 3.5l.8 1.9 2 .2-1.5 1.4.5 2-1.8-1.1-1.8 1.1.5-2-1.5-1.4 2-.2z" /></>) },
-              { title: 'Search Engine Optimisation', desc: "We make your brand discoverable, naturally. With keyword-rich content, on-page and off-page SEO, and deep tech audits, we boost rankings and drive high-intent traffic. More clicks, better visibility, zero fluff.",
-                icon: (<><circle cx="10.5" cy="10.5" r="6.5" /><path d="M4 10.5h13M10.5 4c-2.6 3-2.6 10 0 13M10.5 4c2.6 3 2.6 10 0 13" /><path d="M15.5 15.5L21 21" /></>) },
-              { title: 'Digital Transformation Services', desc: "We build digital-first brands. From identity design to Shopify builds, we enable D2C brands to go live, scale fast, and sell smarter. Whether it's marketplace listings, UI/UX, or quick commerce setup—we help brands go from idea to impact, digitally.",
-                icon: (<><rect x="2.5" y="4" width="19" height="12.5" rx="1.5" /><path d="M2.5 20h19" /><path d="M9 8.5l-2 2 2 2M13 8.5l2 2-2 2" /></>) },
-            ].map((s) => (
-              <div key={s.title} className="reveal flex gap-5">
-                <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0 text-magenta">
-                  {s.icon}
-                </svg>
-                <div className="border-l border-black/10 pl-5">
-                  <h3 className="font-fm mb-2 text-[18px] font-bold leading-tight text-ink uppercase italic">{s.title}</h3>
-                  <p className="text-justify text-[13px] font-light leading-[1.7] text-navy/75">{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Our Services section moved above — now sits before the Sports section. */}
 
       {/* Preloader disabled for now — the intro-done signal is fired on mount
           (see the effect above) so entrance animations still run without it. */}
