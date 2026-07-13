@@ -140,16 +140,22 @@ const MARQUEE_HALF = Math.ceil(MARQUEE_LOGOS.length / 2);
 const ROW_ONE: Logo[] = MARQUEE_LOGOS.slice(0, MARQUEE_HALF);
 const ROW_TWO: Logo[] = MARQUEE_LOGOS.slice(MARQUEE_HALF);
 
-// ── Brands that trust us — 6 featured trailers; each opens on YouTube (no inline embed) ──
-type Video = { id: string; client: string; title: string };
+// ── Brands that trust us — featured cards. YouTube entries (id only) open on YouTube;
+// an entry with `href` opens that link (internal `/…` route → case study, same tab;
+// external `http…` → hosted video, new tab) and uses `poster` as the card image ──
+type Video = { id: string; client: string; title: string; href?: string; poster?: string };
 const VIDEOS: Video[] = [
-  { id: '9FUd-D4FWjw', client: 'Dharma Productions', title: 'Sunny Sanskari Ki Tulsi Kumari' },
-  { id: 'o2h-9sNPAo4', client: 'Ashok Leyland × CSK', title: 'Whistle Podu Please' },
-  { id: 'Hx7l9Uoj7CQ', client: 'Ashok Leyland × MI', title: 'She Drives It' },
-  { id: 'MJofvf2lBNY', client: 'DHL × Mumbai Indians', title: '#ThatsMyGame & Dil Se Indian' },
-  { id: 'aQo7sFLPwGw', client: 'Zydus Lifesciences', title: '#LifeKaFilter' },
-  { id: '4D4H43PBEEo', client: 'ICICI Direct', title: 'Flash Trade — The Turkish Ice-Cream' },
+  { id: 'v2c1uigYjLk', client: 'Ashok Leyland', title: 'AI Film' },
+  { id: '37CCZAHaYx8', client: 'Ashok Leyland × AI', title: 'Ashok Leyland Diwali Film' },
+  { id: 'EQvD2DvnE0M', client: 'Ashok Leyland × MI', title: 'She Drives It' },
+  { id: 'tMP_euOcGx4', client: 'DHL × Mumbai Indians', title: '#ThatsMyGame & Dil Se Indian' },
+  { id: 'lipton-squid-game', client: 'Lipton × Squid Game', title: 'A Gamified Brand Experience',
+    href: '/case-studies/lipton-squid-game', poster: '/tech/1.png' },
+  { id: 'gsk-yeh-science-hai', client: 'GSK', title: 'Yeh Science Hai',
+    href: 'https://res.cloudinary.com/dna8mp2n7/video/upload/v1782721426/CP_45SEC_1920x1080_WA_o3syft.mp4',
+    poster: 'https://res.cloudinary.com/dna8mp2n7/video/upload/so_2/v1782721426/CP_45SEC_1920x1080_WA_o3syft.jpg' },
 ];
+
 const ytThumb = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 const ytThumbFallback = (id: string) => `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
 
@@ -657,48 +663,71 @@ export default function HomePage() {
                 : `aspect-video ${BTS_CELL[i]} max-[680px]:col-auto max-[680px]:row-auto`;
               const innerClass = 'bts-card-inner relative h-full w-full overflow-hidden rounded-2xl bg-black shadow-[0_10px_30px_rgba(0,0,0,0.28)] will-change-transform';
 
+              // Shared card face — YouTube entries use a YT thumbnail (with fallback);
+              // an entry with its own `poster` shows that image as-is.
+              const cardFace = (
+                <>
+                  {failed[v.id] ? (
+                    // styled fallback when the YouTube thumbnail can't load
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-linear-to-br from-[#2a1640] to-navy px-4 text-center">
+                      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-magenta">
+                        <span className="ml-0.75 border-y-[7px] border-l-11 border-y-transparent border-l-white" />
+                      </span>
+                      <span className="font-fd text-sm font-bold leading-tight text-white">{v.title}</span>
+                    </div>
+                  ) : (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={v.poster ?? ytThumb(v.id)}
+                        onError={v.poster ? undefined : onThumbError(v.id)}
+                        onLoad={v.poster ? undefined : onThumbLoad(v.id)}
+                        alt={v.title}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-600 ease-out group-hover:scale-110"
+                      />
+                      <span className="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent opacity-0 transition-opacity duration-400 ease-out group-hover:opacity-100" />
+                    </>
+                  )}
+                  {/* play button — larger for featured card */}
+                  <span className={`pointer-events-none absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 ring-1 ring-white/60 backdrop-blur-sm transition group-hover:bg-magenta group-hover:ring-magenta ${isFeatured ? 'h-16 w-16' : 'h-12 w-12'}`}>
+                    <span className={`ml-0.75 border-y-transparent border-l-white ${isFeatured ? 'border-y-[9px] border-l-14' : 'border-y-[7px] border-l-11'}`} />
+                  </span>
+                  {/* title on hover */}
+                  <span className={`pointer-events-none absolute inset-x-0 bottom-0 z-2 flex translate-y-2.5 flex-col gap-px text-left opacity-0 transition-[opacity,transform] duration-400 ease-out group-hover:translate-y-0 group-hover:opacity-100 ${isFeatured ? 'px-5 py-4' : 'px-3.5 py-3'}`}>
+                    <span className={`font-fm uppercase tracking-[0.14em] text-white/75 ${isFeatured ? 'text-[10px]' : 'text-[8px]'}`}>{v.client}</span>
+                    <span className={`font-fd font-bold leading-[1.15] text-white ${isFeatured ? 'text-[18px]' : 'text-[13px]'}`}>{v.title}</span>
+                  </span>
+                </>
+              );
+              const faceClass = `group block cursor-pointer ${innerClass}`;
+              const isInternal = v.href?.startsWith('/');
+
               return (
                 <div key={v.id} className={`bts-card relative ${spanClass}`}>
-                  <a
-                    href={`https://www.youtube.com/watch?v=${v.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onMouseEnter={focusCard}
-                    aria-label={`Watch ${v.title} on YouTube`}
-                    className={`group block cursor-pointer ${innerClass}`}
-                  >
-                      {failed[v.id] ? (
-                        // styled fallback when the YouTube thumbnail can't load
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-linear-to-br from-[#2a1640] to-navy px-4 text-center">
-                          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-magenta">
-                            <span className="ml-0.75 border-y-[7px] border-l-11 border-y-transparent border-l-white" />
-                          </span>
-                          <span className="font-fd text-sm font-bold leading-tight text-white">{v.title}</span>
-                        </div>
-                      ) : (
-                        <>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={ytThumb(v.id)}
-                            onError={onThumbError(v.id)}
-                            onLoad={onThumbLoad(v.id)}
-                            alt={v.title}
-                            loading="lazy"
-                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-600 ease-out group-hover:scale-110"
-                          />
-                          <span className="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent opacity-0 transition-opacity duration-400 ease-out group-hover:opacity-100" />
-                        </>
-                      )}
-                      {/* play button — larger for featured card */}
-                      <span className={`pointer-events-none absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 ring-1 ring-white/60 backdrop-blur-sm transition group-hover:bg-magenta group-hover:ring-magenta ${isFeatured ? 'h-16 w-16' : 'h-12 w-12'}`}>
-                        <span className={`ml-0.75 border-y-transparent border-l-white ${isFeatured ? 'border-y-[9px] border-l-14' : 'border-y-[7px] border-l-11'}`} />
-                      </span>
-                      {/* title on hover */}
-                      <span className={`pointer-events-none absolute inset-x-0 bottom-0 z-2 flex translate-y-2.5 flex-col gap-px text-left opacity-0 transition-[opacity,transform] duration-400 ease-out group-hover:translate-y-0 group-hover:opacity-100 ${isFeatured ? 'px-5 py-4' : 'px-3.5 py-3'}`}>
-                        <span className={`font-fm uppercase tracking-[0.14em] text-white/75 ${isFeatured ? 'text-[10px]' : 'text-[8px]'}`}>{v.client}</span>
-                        <span className={`font-fd font-bold leading-[1.15] text-white ${isFeatured ? 'text-[18px]' : 'text-[13px]'}`}>{v.title}</span>
-                      </span>
-                  </a>
+                  {isInternal ? (
+                    // internal route → its own case study (client-side nav, same tab)
+                    <Link
+                      href={v.href!}
+                      onMouseEnter={focusCard}
+                      aria-label={`View the ${v.client} case study`}
+                      className={faceClass}
+                    >
+                      {cardFace}
+                    </Link>
+                  ) : (
+                    // external link → hosted video (v.href) or YouTube (from id); new tab
+                    <a
+                      href={v.href ?? `https://www.youtube.com/watch?v=${v.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onMouseEnter={focusCard}
+                      aria-label={v.href ? `Play ${v.title}` : `Watch ${v.title} on YouTube`}
+                      className={faceClass}
+                    >
+                      {cardFace}
+                    </a>
+                  )}
                 </div>
               );
             })}
