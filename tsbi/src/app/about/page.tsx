@@ -51,9 +51,10 @@ export default async function AboutPage() {
         subtitle="A decade of building TSBI powered by digital marketing experts, strategists, and storytellers who help brands grow."
         cta={{ label: 'Explore Our Work', href: '/case-studies' }}
       />
-      <div className="mario-lead">
-           <MarioTimeline />
-      </div>
+      {/* <div className="mario-lead">
+        
+      </div> */}
+         <MarioTimeline />
    
 
       {/* Expanding strip */}

@@ -9,7 +9,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const WEB = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif']);
+const IMG = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif']);
+const VID = new Set(['.mp4', '.webm', '.mov', '.m4v']);
+// Nicer captions for otherwise raw dump-folder names (event defaults to the folder name).
+const PRETTY = { newImg: 'Moments' };
 const cwd = process.cwd();
 const pub = path.join(cwd, 'public');
 const root = path.join(pub, 'about us', 'galary');
@@ -21,8 +24,10 @@ const walk = (dir, event) => {
   for (const it of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, it.name);
     if (it.isDirectory()) walk(full, it.name);
-    else if (WEB.has(path.extname(it.name).toLowerCase())) {
-      out.push({ src: toUrl(path.relative(pub, full)), event, name: it.name });
+    else {
+      const ext = path.extname(it.name).toLowerCase();
+      const type = IMG.has(ext) ? 'image' : VID.has(ext) ? 'video' : null;
+      if (type) out.push({ src: toUrl(path.relative(pub, full)), event: PRETTY[event] ?? event, type, name: it.name });
     }
   }
 };
@@ -34,7 +39,7 @@ const file = `/* Static manifest of /public/about us/galary web images.
    Generated build-time — do NOT read the filesystem here: a runtime fs scan makes
    Next.js bundle the whole gallery folder into the serverless function (250MB limit).
    To refresh after adding/removing photos, run: node scripts/gallery.gen.mjs */
-export interface GalleryImage { src: string; event: string; name: string; }
+export interface GalleryImage { src: string; event: string; type: 'image' | 'video'; name: string; }
 
 export const galleryImages: GalleryImage[] = [
 ${body}

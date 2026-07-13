@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/CustomEase';
 
-type GalleryImage = { src: string; event: string; name: string };
+type GalleryImage = { src: string; event: string; type?: 'image' | 'video'; name: string };
 
 /* Infinite draggable gallery — drag to pan an endless tiled grid, click a tile to
    zoom it to centre with an overlay, click again (or the overlay) to close.
@@ -25,9 +25,17 @@ export default function AboutGallery({ images }: { images: GalleryImage[] }) {
     gsap.registerPlugin(CustomEase);
     try { CustomEase.create('hop', '0.9, 0, 0.1, 1'); } catch { /* already created */ }
 
-    const SRCS  = images.map(i => i.src);
-    const NAMES = images.map(i => i.event);
-    const itemCount = images.length;
+    // Shuffle once per mount (Fisher–Yates) so visitors don't always see the same
+    // arrangement. Safe here because tiles are built in this client effect, not SSR'd.
+    const shuffled = [...images];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    const SRCS  = shuffled.map(i => i.src);
+    const NAMES = shuffled.map(i => i.event);
+    const itemCount = shuffled.length;
+    const isVideo = (src: string) => /\.(mp4|webm|mov|m4v)$/i.test(src);
 
     /* ── settings (Tweakpane removed; sized responsively) ── */
     const small = container.clientWidth < 640;
@@ -112,12 +120,27 @@ export default function AboutGallery({ images }: { images: GalleryImage[] }) {
 
           const wrap = document.createElement('div');
           wrap.className = 'ig-item-img';
-          const img = document.createElement('img');
-          img.src = SRCS[itemNum];
-          img.alt = NAMES[itemNum];
-          img.loading = 'lazy';
-          img.draggable = false;
-          wrap.appendChild(img);
+          const src = SRCS[itemNum];
+          if (isVideo(src)) {
+            // muted; plays on hover, paused otherwise (saves CPU/battery). Listeners live on
+            // the item because the video itself has pointer-events:none.
+            const v = document.createElement('video');
+            v.src = src;
+            v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'metadata';
+            v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+            v.setAttribute('aria-label', NAMES[itemNum]);
+            v.draggable = false;
+            item.addEventListener('mouseenter', () => { void v.play().catch(() => {}); });
+            item.addEventListener('mouseleave', () => { v.pause(); });
+            wrap.appendChild(v);
+          } else {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = NAMES[itemNum];
+            img.loading = 'lazy';
+            img.draggable = false;
+            wrap.appendChild(img);
+          }
           item.appendChild(wrap);
 
           const cap = document.createElement('div');
@@ -156,7 +179,8 @@ export default function AboutGallery({ images }: { images: GalleryImage[] }) {
       isExpanded = true; activeItem = item; activeItemId = item.id; canDrag = false;
       container.style.cursor = 'auto';
 
-      const imgSrc = (item.querySelector('img') as HTMLImageElement).src;
+      const mediaEl = item.querySelector('img, video') as HTMLImageElement | HTMLVideoElement;
+      const imgSrc = mediaEl.src;
       const w = Number(item.dataset.width), h = Number(item.dataset.height);
       setTitle(NAMES[itemNum]);
 
@@ -173,10 +197,22 @@ export default function AboutGallery({ images }: { images: GalleryImage[] }) {
       expandedItem.className = 'ig-expanded';
       expandedItem.style.width = `${w}px`;
       expandedItem.style.height = `${h}px`;
-      const eImg = document.createElement('img');
-      eImg.src = imgSrc;
-      eImg.draggable = false;
-      expandedItem.appendChild(eImg);
+      if (isVideo(imgSrc)) {
+        const eVid = document.createElement('video');
+        eVid.src = imgSrc;
+        eVid.controls = true; eVid.autoplay = true; eVid.loop = true; eVid.playsInline = true; eVid.muted = true;
+        eVid.setAttribute('playsinline', '');
+        eVid.draggable = false;
+        // let the native controls work without the click bubbling up to close the view
+        eVid.addEventListener('click', (e) => e.stopPropagation());
+        eVid.play?.().catch(() => {});
+        expandedItem.appendChild(eVid);
+      } else {
+        const eImg = document.createElement('img');
+        eImg.src = imgSrc;
+        eImg.draggable = false;
+        expandedItem.appendChild(eImg);
+      }
       expandedItem.addEventListener('click', closeExpanded);
       document.body.appendChild(expandedItem);
 
@@ -336,13 +372,13 @@ export default function AboutGallery({ images }: { images: GalleryImage[] }) {
           user-select:none; -webkit-user-select:none; -ms-user-select:none;
           -webkit-touch-callout:none; -webkit-user-drag:none;
         }
-        .ig-item img, .ig-expanded img { -webkit-user-drag:none; -khtml-user-drag:none; }
+        .ig-item img, .ig-item video, .ig-expanded img, .ig-expanded video { -webkit-user-drag:none; -khtml-user-drag:none; }
         .ig-container { position:relative; width:100%; height:100%; overflow:hidden; cursor:grab; }
         .ig-canvas { position:absolute; top:0; left:0; will-change:transform; }
         .ig-item { position:absolute; overflow:hidden; background:#000; cursor:pointer; border-radius:var(--ig-radius); }
         .ig-item-img { width:100%; height:100%; overflow:hidden; position:relative; }
-        .ig-item img { width:100%; height:100%; object-fit:cover; pointer-events:none; display:block; transition:transform .4s ease; }
-        .ig-item:hover img { transform:scale(1.06); }
+        .ig-item img, .ig-item video { width:100%; height:100%; object-fit:cover; pointer-events:none; display:block; transition:transform .4s ease; }
+        .ig-item:hover img, .ig-item:hover video { transform:scale(1.06); }
         .ig-cap { position:absolute; left:0; bottom:0; width:100%; padding:10px 12px; z-index:2; pointer-events:none;
           background:linear-gradient(to top, rgba(0,0,0,.72) 0%, transparent 100%); }
         .ig-name { font-family:var(--fm); color:#fff; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; }
@@ -350,7 +386,9 @@ export default function AboutGallery({ images }: { images: GalleryImage[] }) {
         .ig-overlay { position:fixed; inset:0; background:#000; opacity:0; pointer-events:none; z-index:9999; }
         .ig-overlay.active { pointer-events:auto; }
         .ig-expanded { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#000; overflow:hidden; cursor:pointer; z-index:10000; border-radius:var(--ig-radius); }
-        .ig-expanded img { width:100%; height:100%; object-fit:cover; pointer-events:none; display:block; }
+        .ig-expanded img, .ig-expanded video { width:100%; height:100%; object-fit:cover; display:block; }
+        .ig-expanded img { pointer-events:none; }
+        .ig-expanded video { pointer-events:auto; }
         .ig-title { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:100%; text-align:center; pointer-events:none; z-index:10002; }
         .ig-title p { position:relative; height:48px; overflow:hidden; margin:0; display:inline-block; }
         .ig-title span { display:inline-block; font-family:var(--fa); font-weight:600; font-size:clamp(26px,4vw,42px); letter-spacing:.01em; text-transform:uppercase; color:#fff; will-change:transform; }

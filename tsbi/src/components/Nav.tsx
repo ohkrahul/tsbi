@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import IN from 'country-flag-icons/react/3x2/IN';
+import AE from 'country-flag-icons/react/3x2/AE';
 
 const navLinks = [
   { href: '/', label: 'Home', exact: true },
@@ -21,6 +23,12 @@ const serviceLinks = [
   { href: '/services/digital-transformation', label: 'Digital Transformation' },
   { href: '/services/influencer-management', label: 'Influencer Management' },
   { href: '/services/social-media',          label: 'Social Media' },
+];
+
+/* Where TSBI is based — shown as flag badges in the nav's right corner. */
+const locations = [
+  { Flag: IN, label: 'TSBI HQ',   title: 'India' },
+  { Flag: AE, label: 'TSBI MENA', title: 'United Arab Emirates' },
 ];
 
 export default function Nav() {
@@ -129,6 +137,16 @@ export default function Nav() {
               Contact
             </Link>
           </li>
+
+          {/* Where we're based — flag badges pinned to the right corner */}
+          <li className="header-nav-item nav-locations" aria-label="TSBI locations">
+            {locations.map(({ Flag, label, title }) => (
+              <span key={label} className="nav-loc">
+                <Flag title={title} className="nav-loc-flag" />
+                <span className="nav-loc-text">{label}</span>
+              </span>
+            ))}
+          </li>
         </ul>
 
         <div className="nav-right">
@@ -178,6 +196,16 @@ export default function Nav() {
             >
               Contact
             </Link>
+
+            {/* Where we're based */}
+            <div className="nav-mobile-locations" aria-label="TSBI locations">
+              {locations.map(({ Flag, label, title }) => (
+                <span key={label} className="nav-loc">
+                  <Flag title={title} className="nav-loc-flag" />
+                  <span className="nav-loc-text">{label}</span>
+                </span>
+              ))}
+            </div>
           </div>
         )}
       </div>
