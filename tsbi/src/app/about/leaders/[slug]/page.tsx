@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getLeaderBySlug, getAllLeaderSlugs } from '@/lib/leaders';
 import { notFound } from 'next/navigation';
 import { use } from 'react';
+import LeaderHoverPhoto from '@/components/about/LeaderHoverPhoto';
 
 export const generateStaticParams = async () => {
   const slugs = getAllLeaderSlugs();
@@ -180,12 +181,8 @@ export default function LeaderPage({ params }: { params: Promise<{ slug: string 
                 aspectRatio: '3/4',
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={leader.profileImage}
-                alt={leader.name}
-                style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover' }}
-              />
+              {/* Still image; plays a short clip on hover when the leader has one. */}
+              <LeaderHoverPhoto image={leader.profileImage} video={leader.hoverVideo} alt={leader.name} />
               <div
                 style={{
                   position: 'absolute',

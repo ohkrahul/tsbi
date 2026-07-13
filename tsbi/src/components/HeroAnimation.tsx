@@ -61,8 +61,10 @@ export default function HeroAnimation() {
     // Movie connect section — strip + track are shown immediately (no entrance
     // reveal); only the small dot accent animates in. The carousel already runs.
     gsap.set('.movie-connect-dot', { y: -30, opacity: 0, scale: 0.7 });
-    gsap.set('.connect-text-block', { opacity: 0 });
-    gsap.set('.connect-cta',       { opacity: 0, y: 12 });
+    // NOTE: .connect-text-block / .connect-cta are intentionally NOT pre-hidden. If the
+    // scroll reveal's onToggle misfires (e.g. fonts resolve late and the trigger is created
+    // already in view), a pre-hidden block would stay blank forever. They stay visible by
+    // default; the reveal below only animates them when it actually runs.
     // Case study section — hidden before scroll (GSAP-driven, replays on re-entry)
     gsap.set('.csc-visual', { opacity: 0, x: -40 });
     gsap.set('.csc-stats',  { opacity: 0, y: 26 });
@@ -341,18 +343,23 @@ export default function HeroAnimation() {
           });
         };
         const hideConnect = () => {
+          // Reset to the VISIBLE resting state (never hide) so the section can't be left
+          // stuck blank when it's off-screen or if the toggle misfires.
           splitConnect?.revert();
           splitConnect = null;
           gsap.killTweensOf('.connect-cta');
-          gsap.set('.connect-text-block', { opacity: 0 });
-          gsap.set('.connect-cta', { opacity: 0, y: 12 });
+          gsap.set('.connect-text-block', { opacity: 1 });
+          gsap.set('.connect-cta', { opacity: 1, y: 0 });
         };
-        ScrollTrigger.create({
+        const connectST = ScrollTrigger.create({
           trigger: connectTextBlock,
           start: 'top 88%',
           end: 'bottom 15%',
           onToggle: (self) => (self.isActive ? playConnect() : hideConnect()),
         });
+        // onToggle only fires on scroll state CHANGES — if the trigger is created while the
+        // section is already in view (fonts resolved late), play now so it isn't skipped.
+        if (connectST.isActive) playConnect();
         cleanups.push(() => { splitConnect?.revert(); });
       }
 

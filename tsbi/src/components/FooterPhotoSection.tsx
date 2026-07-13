@@ -144,9 +144,9 @@ export default function FooterPhotoSection({ children }: { children: React.React
 
   return (
     <div ref={wrapRef} className="relative cursor-crosshair overflow-hidden">
-      {/* revealed photo underneath — kept behind a ~50% white tint so the dark
-          heading / tagline / pill text stays readable once the veil is scratched */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), url('${SRC}')` }} />
+      {/* revealed photo underneath — shown at full clarity (no white tint). The veil
+          auto-heals a couple seconds after brushing, so text readability returns on its own. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${SRC}')` }} />
       {/* scratch surface (blurred photo + white veil) — brushed away to reveal the clear photo */}
       <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute inset-0 h-full w-full" />
       {/* content above */}

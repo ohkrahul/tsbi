@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 
@@ -16,6 +16,7 @@ interface Slide {
   intro: string;
   bgImage: string;
   cardImage: string;
+  video?: string;
   ctaLabel: string;
   ctaHref: string | null;
 }
@@ -31,6 +32,7 @@ const DEFAULT_SLIDES: Slide[] = [
       'A visionary entrepreneur and business builder, Harikrishnan Pillai brings over 18 years of experience in strategy, marketing and scaling brands. His clarity of thought and long-term perspective continue to shape TSBI’s journey of meaningful impact.',
     bgImage: '/main%20ppl/backgound%20ceo.jpg',
     cardImage: '/Hari/harii.jpeg',
+    video: '/Hari/IMG_8689.mp4',
     ctaLabel: 'Know More',
     ctaHref: '/about/leaders/harikrishnan-pillai',
   },
@@ -44,6 +46,7 @@ const DEFAULT_SLIDES: Slide[] = [
       'A seasoned operator and brand strategist, Manish Solanki excels at unlocking growth and building high-performance teams. His deep understanding of markets and focus on operational excellence drive TSBI’s commitment to creating sustainable, scalable value.',
     bgImage: '/main%20ppl/coo%20backgorund.webp',
     cardImage: '/Manish/manish.png',
+    video: '/Manish/IMG_8124.mp4',
     ctaLabel: 'Know More',
     ctaHref: '/about/leaders/manish-solanki',
   },
@@ -127,6 +130,20 @@ function Sprig({ flip = false }: { flip?: boolean }) {
 
 function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; displayNum: string }) {
   const photoLeft = index % 2 === 0;
+  const vidRef = useRef<HTMLVideoElement>(null);
+  const playVid = () => {
+    const v = vidRef.current;
+    if (!v) return;
+    try { v.currentTime = 0; } catch { /* ignore */ }
+    v.style.opacity = '1';
+    void v.play().catch(() => {});
+  };
+  const stopVid = () => {
+    const v = vidRef.current;
+    if (!v) return;
+    v.style.opacity = '0';
+    v.pause();
+  };
 
   return (
     <motion.article
@@ -153,7 +170,22 @@ function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; 
         <div
           className="relative z-[1] aspect-[4/5] overflow-hidden rounded-[20px] border border-magenta/20 bg-navy bg-cover bg-top shadow-[0_30px_70px_rgba(75,15,40,0.16)]"
           style={{ backgroundImage: `url(${slide.cardImage})` }}
-        />
+          onMouseEnter={slide.video ? playVid : undefined}
+          onMouseLeave={slide.video ? stopVid : undefined}
+        >
+          {slide.video && (
+            <video
+              ref={vidRef}
+              src={slide.video}
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden
+              className="absolute inset-0 h-full w-full object-cover object-top opacity-0 transition-opacity duration-300"
+            />
+          )}
+        </div>
       </div>
 
       {/* Text */}

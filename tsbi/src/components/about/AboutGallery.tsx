@@ -393,17 +393,25 @@ export default function AboutGallery({ images }: { images: GalleryImage[] }) {
         .ig-title p { position:relative; height:48px; overflow:hidden; margin:0; display:inline-block; }
         .ig-title span { display:inline-block; font-family:var(--fa); font-weight:600; font-size:clamp(26px,4vw,42px); letter-spacing:.01em; text-transform:uppercase; color:#fff; will-change:transform; }
         .ig-vignette { position:absolute; inset:0; pointer-events:none; z-index:50; box-shadow: inset 0 0 220px rgba(0,0,0,.8); }
-        .ig-header { text-align:center; padding:64px 24px 30px; }
+        /* One-line header: eyebrow left · heading centre · hint right — compact so it
+           doesn't eat vertical space. Stacks to centred rows on small screens. */
+        .ig-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px clamp(16px,4vw,44px); }
         .ig-eyebrow { font-family:var(--fm); font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:#e0197d; }
-        .ig-heading { font-family:var(--fm); font-weight:800; font-size:clamp(30px,4vw,56px); letter-spacing:.01em; color:#fff; margin:8px 0 0; line-height:1.05; }
+        .ig-header .ig-hd-eyebrow { flex:1 1 0; text-align:left; }
+        .ig-header .ig-hd-hint { flex:1 1 0; text-align:right; }
+        .ig-heading { font-family:var(--fm); font-weight:800; font-size:clamp(22px,3vw,40px); letter-spacing:.01em; color:#fff; margin:0; line-height:1.05; white-space:nowrap; }
         .ig-heading em { color:#e0197d; font-style:italic; }
+        @media (max-width: 700px) {
+          .ig-header { flex-direction:column; gap:6px; padding:24px 16px 14px; text-align:center; }
+          .ig-header .ig-hd-eyebrow, .ig-header .ig-hd-hint { flex:none; text-align:center; }
+        }
       ` }} />
 
       {/* visible header (above the draggable canvas, not overlaid on photos) */}
       <div className="ig-header">
-        <div className="ig-eyebrow">Life at TSBI ✦</div>
+        <div className="ig-eyebrow ig-hd-eyebrow">Life at TSBI ✦</div>
         <h2 className="ig-heading">TSBI <em>Gallery</em></h2>
-        <div className="ig-eyebrow mt-1 font-fm font-normal">drag to explore or zoom to view details</div>
+        <div className="ig-eyebrow ig-hd-hint font-fm font-normal">drag to explore or zoom to view details</div>
       </div>
 
       <div ref={containerRef} className="ig-container" style={{ height: 'clamp(520px, 96vh, 900px)' }}>
