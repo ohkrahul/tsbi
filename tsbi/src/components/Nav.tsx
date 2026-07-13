@@ -150,6 +150,15 @@ export default function Nav() {
         </ul>
 
         <div className="nav-right">
+          {/* Location badges in the collapsed mobile bar (desktop uses the nav-links copy). */}
+          <div className="nav-locations nav-locations--bar" aria-label="TSBI locations">
+            {locations.map(({ Flag, label, title }) => (
+              <span key={label} className="nav-loc">
+                <Flag title={title} className="nav-loc-flag" />
+                <span className="nav-loc-text">{label}</span>
+              </span>
+            ))}
+          </div>
           <button
             className={`nav-burger${menuOpen ? ' open' : ''}`}
             aria-label="Toggle menu"
@@ -196,16 +205,6 @@ export default function Nav() {
             >
               Contact
             </Link>
-
-            {/* Where we're based */}
-            <div className="nav-mobile-locations" aria-label="TSBI locations">
-              {locations.map(({ Flag, label, title }) => (
-                <span key={label} className="nav-loc">
-                  <Flag title={title} className="nav-loc-flag" />
-                  <span className="nav-loc-text">{label}</span>
-                </span>
-              ))}
-            </div>
           </div>
         )}
       </div>

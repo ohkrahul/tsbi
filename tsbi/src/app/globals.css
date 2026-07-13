@@ -161,10 +161,16 @@ body {
 .nav-loc { display: flex; align-items: center; gap: 7px; }
 .nav-loc-flag { width: 20px; height: auto; flex-shrink: 0; display: block; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.10); }
 .nav-loc-text { font-family: var(--fm); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); line-height: 1; white-space: nowrap; }
-/* Mobile menu variant — slightly larger, divided from the links above */
-.nav-mobile-locations { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08); }
-.nav-mobile-locations .nav-loc-flag { width: 24px; }
-.nav-mobile-locations .nav-loc-text { font-size: 12px; }
+/* Mobile-bar variant — hidden on desktop (nav-links shows the badges there); shown in the
+   collapsed bar beside the burger ≤1130px. No divider/padding since it isn't inline with links. */
+.nav-locations--bar { display: none; padding-left: 0; border-left: 0; }
+@media (max-width: 1130px) {
+  .nav-locations--bar { display: flex; margin-right: 14px; }
+}
+@media (max-width: 380px) {
+  /* very small phones: drop the labels, keep the flags so logo + burger still fit */
+  .nav-locations--bar .nav-loc-text { display: none; }
+}
 .nav-talk {
   font-family: var(--fm); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
   color: var(--ink); border: 1px solid var(--ink); padding: 9px 20px; border-radius: 100px;

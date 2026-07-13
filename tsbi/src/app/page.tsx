@@ -35,11 +35,10 @@ type Slide = { src: string; alt: string; tag?: string; caption?: string };
 const SLIDES: Slide[] = [
   { src: '/herobanner/dfdfdfdfz.webp', alt: 'Tsbi Family', tag: 'Family', caption: 'Tsbi Family' },
   { src: '/herobanner/yeh-science-hai-shingles-and-diabetes.webp', alt: 'Yeh Science Hai Shingles and Diabetes', tag: 'Featured', caption: 'Yeh Science Hai Shingles and Diabetes' },
- 
   { src: '/herobanner/11.jpeg', alt: 'Ashish Vidyarthi', tag: 'Featured', caption: 'Ashish Vidyarthi' },
   { src: '/herobanner/12.jpeg', alt: 'MS Dhoni', tag: 'Featured', caption: 'MS Dhoni' },
   { src: '/herobanner/13.jpeg', alt: 'Mumbai Indians', tag: 'Official Partner', caption: 'Mumbai Indians' },
-  // { src: '/herobanner/yeh-science-hai-shingles-and-diabetes.webp', alt: 'Yeh Science Hai Shingles and Diabetes', tag: 'Featured', caption: 'Yeh Science Hai Shingles and Diabetes' }
+  
   
 ];
 
@@ -455,7 +454,7 @@ export default function HomePage() {
     <>
       {/* ── HERO (full-bleed Embla slider with the text overlaid on it) ───── */}
       {/* hero-section → ScrollTrigger anchor; GSAP parallax target */}
-      <section className="hero-section group relative  flex w-full flex-col overflow-hidden min-[1130px]:mt-[108px] sm:block sm:h-190">
+      <section className="hero-section group relative bg-navy flex w-full flex-col overflow-hidden min-[1130px]:mt-[108px] sm:block sm:h-190">
         {/* hero-image → clip-path wipe + scale reveal + cursor parallax.
             Mobile: full banner BELOW the copy (order-2), sized to the 1920×630 ratio so
             nothing is cropped. Desktop: full-bleed background behind the overlaid copy. */}
@@ -542,7 +541,7 @@ export default function HomePage() {
         </div>
 
         {/* pagination dots — hero-slider-dot → stagger opacity in */}
-        <div className="absolute bottom-16 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+        <div className="absolute bottom-3 sm:bottom-16 left-1/2 z-20 flex -translate-x-1/2 gap-2">
           {snaps.map((_, i) => (
             <button
               key={i}
@@ -780,7 +779,10 @@ export default function HomePage() {
         </div>
       </section>
 
-       <LazyMount rootMargin="500px" minHeight={760}>
+       {/* minHeight = the Mario timeline's smallest real height (mobile WORLD_H) so the
+           wrapper collapses to the content on every breakpoint — no dead space below it —
+           while still reserving space to limit layout shift before it lazy-mounts. */}
+       <LazyMount rootMargin="500px" minHeight={580}>
         <MarioTimeline />
       </LazyMount>
 

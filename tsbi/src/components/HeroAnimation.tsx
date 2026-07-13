@@ -9,7 +9,13 @@ export default function HeroAnimation() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // No animation — but the subtitle/CTA are CSS opacity:0 for the reveal, so make
+      // them (and the slider dots) visible outright, otherwise they'd never show.
+      gsap.set(['.hero-subtitle', '.hero-cta'], { opacity: 1, y: 0 });
+      gsap.set('.hero-slider-dot', { opacity: 1, scale: 1 });
+      return;
+    }
 
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -91,16 +97,12 @@ export default function HeroAnimation() {
         0.15,
       );
 
-      // Subtitle + CTA
-      tl.to('.hero-subtitle', { opacity: 1, y: 0, duration: 0.5 }, 0.35);
-      tl.to('.hero-cta',      { opacity: 1, y: 0, duration: 0.4 }, 0.5);
+      // NOTE: subtitle + CTA + slider dots are now revealed immediately in startOnce
+      // (not here) so they don't wait on fonts.ready — see the note there.
 
       // NOTE: the pink connector line is drawn on SCROLL (scroll-scrubbed timeline set
       // up further below) so it progressively connects to its end node as the user
       // scrolls from the hero into the logo section — it is no longer drawn on load.
-
-      // Slider dots
-      tl.to('.hero-slider-dot', { opacity: 1, scale: 1, duration: 0.3, stagger: 0.08 }, 0.75);
 
       // Pink word glow on hover — activates after words have all appeared (~t=2.6)
       if (isPointerDevice) {
@@ -232,9 +234,6 @@ export default function HeroAnimation() {
       const mcTrack   = q<HTMLElement>('.mc-track');
       if (mcSection && mcTrack) {
         const cards = qa<HTMLElement>('.poster-card');
-        const scaleQ = cards.map(c => gsap.quickSetter(c, 'scale'));
-        const yQ     = cards.map(c => gsap.quickSetter(c, 'y', 'px'));
-        const zQ     = cards.map(c => gsap.quickSetter(c, 'zIndex'));
 
         // PERFORMANCE: the old tick called getBoundingClientRect() on the section +
         // every card EACH frame (21 forced layout reflows/frame) while CSS animations
@@ -256,14 +255,18 @@ export default function HeroAnimation() {
         };
 
         // Reads the track once, then only writes — no read/write thrashing.
+        // Write transform + z-index straight to each card's style. (Previously used
+        // gsap.quickSetter(el,'scale') which fell through to gsap's SVG attribute path and
+        // threw "Invalid qualified name: 'scaleX,scaleY'" every frame. Direct writes are
+        // bug-free and cheaper — transform composites without layout.)
         const scaleTick = () => {
           const tLeft = mcTrack.getBoundingClientRect().left;
           for (let i = 0; i < cards.length; i++) {
             const dist = Math.abs(tLeft + cardOffset[i] - sectionCenterX);
             const t = dist < zone ? 1 - dist / zone : 0;
-            scaleQ[i](0.72 + t * 0.43);   // scale: 0.72 → 1.15
-            yQ[i](-t * 28);               // popup: rises 28 px at center
-            zQ[i](Math.round(t * 10) + 1);
+            const s = 0.72 + t * 0.43;   // scale: 0.72 → 1.15
+            cards[i].style.transform = `translateY(${(-t * 28).toFixed(2)}px) scale(${s.toFixed(4)})`; // rises 28px at center
+            cards[i].style.zIndex = String(Math.round(t * 10) + 1);
           }
         };
 
@@ -414,6 +417,14 @@ export default function HeroAnimation() {
       started = true;
       // Hero image is already visible (no clip hide) — just settle the subtle zoom.
       gsap.to('.hero-image', { scale: 1, duration: 0.7, ease: 'power3.out' });
+      // Reveal subtitle + CTA (+ slider dots) right away. These are plain opacity fades
+      // that don't need final font metrics, so DON'T gate them on fonts.ready — on slow
+      // mobile connections that promise resolves seconds late, which left these two
+      // ("A full-service…" and "Let's Talk →") invisible for a long time. The
+      // font-dependent work (title SplitText, scroll reveals) still waits in run().
+      gsap.to('.hero-subtitle',   { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' });
+      gsap.to('.hero-cta',        { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out', delay: 0.15 });
+      gsap.to('.hero-slider-dot', { opacity: 1, scale: 1, duration: 0.3, stagger: 0.08, ease: 'power3.out', delay: 0.4 });
       (fonts?.ready ?? Promise.resolve()).then(run);
     };
     window.addEventListener('tsbi:intro-done', startOnce, { once: true });
