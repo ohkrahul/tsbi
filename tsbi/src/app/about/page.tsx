@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import LeadershipReelShowcase from '@/components/about/LeadershipReelShowcase';
-// import MarioTimeline from '@/components/about/MarioTimeline'; // moved to the home page (in place of the case-study carousel)
+import MarioTimeline from '@/components/about/MarioTimeline';
 import AboutAwardsSection from '@/components/about/AboutAwardsSection';
 import AboutGallery from '@/components/about/AboutGallery';
 import HeroBanner from '@/components/HeroBanner';
@@ -39,6 +39,10 @@ export default async function AboutPage() {
 
   return (
     <div className="about-dark">
+      {/* Mario timeline game — same one used on the home page; shown first, above the hero.
+          .mario-lead clears the fixed header (it leads the page now, not the hero). */}
+      
+
       {/* Hero Banner Slider — same style as the home hero */}
       <HeroBanner
         slides={[{ src: '/herobanner/dfdfdfdfz.webp', alt: 'Default Slide', tag: 'Default', caption: 'Default Slide' }]}
@@ -47,6 +51,10 @@ export default async function AboutPage() {
         subtitle="A decade of building TSBI powered by digital marketing experts, strategists, and storytellers who help brands grow."
         cta={{ label: 'Explore Our Work', href: '/case-studies' }}
       />
+      <div className="mario-lead">
+           <MarioTimeline />
+      </div>
+   
 
       {/* Expanding strip */}
       <div className="ab-strip">
@@ -62,8 +70,6 @@ export default async function AboutPage() {
       {/* Story + Awards */}
       <AboutAwardsSection />
 
-      {/* Timeline — moved to the home page (in place of the case-study carousel) */}
-      {/* <MarioTimeline /> */}
 
       {/* Interactive quest entry point */}
       {/* <section

@@ -50,14 +50,14 @@ const FALLBACK_CLIENTS = [
   { name: 'Dharma Productions',   type: 'Film · Entertainment',    accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/dharma%20production.png',               slug: 'dharma-production'   },
   { name: 'Devgn Films',          type: 'Film · Entertainment',    accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/devgan.png',                            slug: 'son-of-sardaar-2'    },
   { name: 'Disney India',         type: 'Entertainment',           accent: '#0051a5', isEntertainment: true,  logo: '/entertainment/disney%20india.png',                    slug: 'disney-india'        },
-  { name: 'Warner Bros',          type: 'Film · Studio',           accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/warner%20bros.png'                     },
+  // { name: 'Warner Bros',          type: 'Film · Studio',           accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/warner%20bros.png'                     },
   { name: 'Warner Music India',   type: 'Music Label',             accent: '#f05100', isEntertainment: true,  logo: '/entertainment/warner%20msuic.png'                    },
-  { name: 'North Records',        type: 'Music Label',             accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/north%20recorods.webp'                 },
+  // { name: 'North Records',        type: 'Music Label',             accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/north%20recorods.webp'                 },
   // { name: 'Star Studios',         type: 'Film · Studio',           accent: '#f05100', isEntertainment: true,  logo: '/entertainment/Star_Studios_Logo.jpg'                 },
   { name: 'ZEE TV',               type: 'Media · Broadcasting',    accent: '#1a6aff', isEntertainment: true,  logo: '/entertainment/zee%20tv.png'                          },
   { name: 'Z5',                   type: 'OTT · Streaming',         accent: '#1a6aff', isEntertainment: true,  logo: '/entertainment/z5.png'                                },
   { name: 'Z5 Marathi',           type: 'Regional OTT',            accent: '#1a6aff', isEntertainment: true,  logo: '/entertainment/marathi%20z5.jpg'                      },
-  { name: 'Colors TV',            type: 'Media · Broadcasting',    accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/colors.webp'                           },
+  // { name: 'Colors TV',            type: 'Media · Broadcasting',    accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/colors.webp'                           },
   { name: 'Big Magic',            type: 'Media · Broadcasting',    accent: '#f07a1a', isEntertainment: true,  logo: '/entertainment/big%20magic.png'                       },
   { name: '&TV',                  type: 'Media · Broadcasting',    accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/%26tv.webp'                            },
   { name: 'JioHotstar',           type: 'OTT · Streaming',         accent: '#0051a5', isEntertainment: true,  logo: '/entertainment/jiohotstart.png'                       },
@@ -65,10 +65,10 @@ const FALLBACK_CLIENTS = [
   // { name: 'Star Utsav',           type: 'Media · Broadcasting',    accent: '#f05100', isEntertainment: true,  logo: '/entertainment/star%20utsav.jpg'                      },
   { name: 'National Geographic',  type: 'Media · Documentary',     accent: '#f0c000', isEntertainment: true,  logo: '/entertainment/national%20geographic.png'             },
   { name: 'Filmfare',             type: 'Media · Awards',          accent: '#c89b3c', isEntertainment: true,  logo: '/entertainment/filmfare.webp'                         },
-  { name: 'Cineplex',             type: 'Film · Exhibition',        accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/cineplex.png'                          },
+  // { name: 'Cineplex',             type: 'Film · Exhibition',        accent: '#e0197d', isEntertainment: true,  logo: '/entertainment/cineplex.png'                          },
   { name: 'Bigg Boss',            type: 'Reality TV',              accent: '#c42b6e', isEntertainment: true,  logo: '/entertainment/big%20boss.jpg'                        },
   { name: 'Shark Tank India',     type: 'Reality TV',              accent: '#1a3070', isEntertainment: true,  logo: '/entertainment/shark%20tank.png'                      },
-  { name: 'Dhaan Dhoom',          type: 'Entertainment',           accent: '#f07a1a', isEntertainment: true,  logo: '/entertainment/dhaan%20dhoom.png'                     },
+  // { name: 'Dhaan Dhoom',          type: 'Entertainment',           accent: '#f07a1a', isEntertainment: true,  logo: '/entertainment/dhaan%20dhoom.png'                     },
   // Sports
   { name: 'Mumbai Indians',       type: 'Sports · IPL',            accent: '#004ba0', isEntertainment: true,  logo: '/entertainment/MI.jpg',                                slug: 'mumbai-indians'      },
   { name: 'Jaipur Pink Panthers', type: 'Sports · Pro Kabaddi',    accent: '#e040a0', isEntertainment: true,  logo: '/entertainment/Jaipur_Pink_panthers_logo.jpg'         },
@@ -145,15 +145,16 @@ const ROW_TWO: Logo[] = MARQUEE_LOGOS.slice(MARQUEE_HALF);
 // external `http…` → hosted video, new tab) and uses `poster` as the card image ──
 type Video = { id: string; client: string; title: string; href?: string; poster?: string };
 const VIDEOS: Video[] = [
-  { id: 'v2c1uigYjLk', client: 'Ashok Leyland', title: 'AI Film' },
-  { id: '37CCZAHaYx8', client: 'Ashok Leyland × AI', title: 'Ashok Leyland Diwali Film' },
-  { id: 'EQvD2DvnE0M', client: 'Ashok Leyland × MI', title: 'She Drives It' },
-  { id: 'tMP_euOcGx4', client: 'DHL × Mumbai Indians', title: '#ThatsMyGame & Dil Se Indian' },
-  { id: 'lipton-squid-game', client: 'Lipton × Squid Game', title: 'A Gamified Brand Experience',
-    href: '/case-studies/lipton-squid-game', poster: '/tech/1.png' },
   { id: 'gsk-yeh-science-hai', client: 'GSK', title: 'Yeh Science Hai',
     href: 'https://res.cloudinary.com/dna8mp2n7/video/upload/v1782721426/CP_45SEC_1920x1080_WA_o3syft.mp4',
     poster: 'https://res.cloudinary.com/dna8mp2n7/video/upload/so_2/v1782721426/CP_45SEC_1920x1080_WA_o3syft.jpg' },
+  { id: 'v2c1uigYjLk', client: 'Ashok Leyland', title: 'AI Film' },
+  { id: 'wWmPFUrZiHM', client: 'Zydus', title: 'Do Hath teen minute' },
+  { id: 'MJofvf2lBNY', client: 'MI', title: 'Dil Se Indian' },
+  { id: 'D8cXWh7g2kk', client: 'danone', title: 'Nurses Day Tribute Film' },
+  { id: 'lipton-squid-game', client: 'Lipton × Squid Game', title: 'A Gamified Brand Experience',
+    href: '/case-studies/lipton-squid-game', poster: '/tech/1.png' },
+  
 ];
 
 const ytThumb = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
@@ -779,6 +780,10 @@ export default function HomePage() {
         </div>
       </section>
 
+       <LazyMount rootMargin="500px" minHeight={760}>
+        <MarioTimeline />
+      </LazyMount>
+
       {/* ── SPORTS WORK — posts + reels from /public/sports (masonry; videos play on hover) ── */}
       <section className="bg-white px-6 py-16 sm:px-10 sm:py-24 lg:px-14" aria-label="Sports work">
         <div className="mx-auto max-w-[1300px]">
@@ -795,18 +800,20 @@ export default function HomePage() {
 
           <div className="columns-2 gap-3 sm:columns-3 sm:gap-4 lg:columns-4">
             {[
-              { type: 'image', src: '/sports/SaveInta.com_548320255_17877968577403289_8131991900820163843_n.jpg' },
+              // Files sourced from /public/sports (all present items). Images compressed with
+              // sharp (≤1200px, q72); videos re-encoded to 720p H.264 (muted). Interleaved for the masonry.
+              { type: 'image', src: '/sports/614584591_1348221954011940_6027328606420306636_n.jpg' },
               { type: 'video', src: '/sports/SaveInta.com_AQMrc9YHuB_l4_zZQyKoXM7SaOJhHeLOzLi-VVq2gvqCXle8yAts11z8r6y90d1CTJjwPxR9Rcflau20987IXLCMfIVZXWtJFFHn_Gs.mp4' },
-              { type: 'image', src: '/sports/SaveInta.com_548514489_17877968592403289_7510407476921162021_n.jpg' },
-              { type: 'video', src: '/sports/SaveInta.com_AQNZw53QTW9_M1zR_EwzNoTKu86y3SLFGf-VLys5ApXwxslD6haxY4WTkiFoAPq0t48crg9t1s7vwavOAvDJwt9arg5dBajGf1SXFZw.mp4' },
-              { type: 'image', src: '/sports/SaveInta.com_613589273_18401810815126115_6536866526273168917_n.jpg' },
-              { type: 'video', src: '/sports/SaveInta.com_AQNpTaK3i7hMHcTTFrAS67W_XDVZcmZmk9321yxqeq9bv8CwuisAOrA1TSTUGljLJs1C0c8-pnXpEVqykvM40fg1eC4CDfmhPQwLGO_eNA.mp4' },
-              { type: 'image', src: '/sports/SaveInta.com_615792909_18401810812126115_7441326536203395668_n.jpg' },
-              { type: 'video', src: '/sports/SaveInta.com_AQO5i5s9VzuWUIAwbtnbByOCTELgXlqSRmFmsHA6Xruct4SgKvCrSMH4WmihDzxK-jh_ybE5U4RI8SdColRZXisONpN7_y35Zhp6zrU.mp4' },
-              { type: 'image', src: '/sports/SaveInta.com_658967794_18400598950195478_251385632267113290_n.jpg' },
-              { type: 'video', src: '/sports/SaveInta.com_AQOX9GN47iZIDqG9WtTGpovw5RkgEhRC7HIpMy0PPPZLt4X8IyRS1otu739wmX3ObeuBrU50Dy442fUDGAmIfPQE5tvdn_PyqzDJ2K4.mp4' },
-              { type: 'image', src: '/sports/SaveInta.com_660839403_18143048989441988_1537628296392152860_n.jpg' },
-              { type: 'video', src: '/sports/SaveInta.com_AQPcjNFTv_hQVy73r5eJ246Qrbi62NvNs4K7Jqh39-myV5ivpsWm36wZR0tia5b6_Zvzg3CEcfhv3S8cvKJwdvL9.mp4' },
+                { type: 'video', src: '/sports/SaveInta.com_AQNZw53QTW9_M1zR_EwzNoTKu86y3SLFGf-VLys5ApXwxslD6haxY4WTkiFoAPq0t48crg9t1s7vwavOAvDJwt9arg5dBajGf1SXFZw.mp4' },
+             
+               { type: 'video', src: '/sports/SaveInta.com_AQPU9o5LS1j1m7e76sBbLkGDB4naT1zXJdA0aF8Hv5zBTUBakcLxHW4r6O-8UfB023ylnCI-68rqy64rYaOKkT6pCNgPACniLGYcjeA.mp4' },
+          
+              { type: 'image', src: '/sports/SaveInta.com_519265654_18376525570126115_5241556755529506506_n.jpg' },
+                { type: 'image', src: '/sports/End%20of%20season%20sale%207.jpg.jpeg' },
+              // { type: 'image', src: '/sports/SaveInta.com_548320255_17877968577403289_8131991900820163843_n.jpg' },
+              { type: 'video', src: '/sports/IMG_6422.MP4' },
+              { type: 'image', src: '/sports/SaveInta.com_571892496_18392441026126115_4264773148219399283_n.jpg' },
+              // { type: 'image', src: '/sports/SaveInta.com_613589273_18401810815126115_6536866526273168917_n.jpg' },
             ].map((m) => (
               <div key={m.src} className="reveal group mb-3 break-inside-avoid overflow-hidden rounded-xl sm:mb-4">
                 {m.type === 'video' ? (
@@ -837,9 +844,7 @@ export default function HomePage() {
 
       {/* ── CASE STUDY — CONNECT ─────────────────────────── */}
       {/* <CaseStudyCarousel /> */}
-      <LazyMount rootMargin="500px" minHeight={760}>
-        <MarioTimeline />
-      </LazyMount>
+     
 
       {/* ── MOVIE CONNECT ────────────────────────────────── */}
       <section className="movie-connect-section" aria-label="Connect — featured productions ">

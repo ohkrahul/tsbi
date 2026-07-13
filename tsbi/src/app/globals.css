@@ -364,6 +364,13 @@ body {
   .hero-content { max-width: 600px; padding: 0 40px 0 64px; }
 }
 
+/* About page: the Mario timeline leads the page, so IT (not the hero) must clear the
+   fixed header. Push it down by the nav height; the yellow band it creates sits behind
+   the opaque white nav so nothing shows. Then collapse the following hero's default
+   nav-clearing margin to a slim 10px gap so game → hero sit tight. */
+.about-dark .mario-lead { padding-top: var(--nav-h); background: #f3e08a; }
+.about-dark .hero-section { margin-top: 10px !important; }
+
 .about-dark .ab-strip { background: #070e1e; }
 
 .about-dark .fcta-section { background: #050b1a; }
