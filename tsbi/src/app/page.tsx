@@ -13,6 +13,7 @@ import HeroAnimation from '@/components/HeroAnimation';
 // import Preloader from '@/components/Preloader'; // preloader disabled for now
 // import CaseStudyCarousel from '@/components/CaseStudyCarousel'; // not rendered — kept out of the bundle
 import LazyMount from '@/components/LazyMount';
+import ArebiaSection from '@/components/home/ArebiaSection';
 // Heavy R3F/three.js widget — loaded on demand (kept out of the initial bundle).
 const TechWorkTube = dynamic(() => import('@/components/home/TechWorkTube'), { ssr: false });
 // MarioTimeline pulls in all of framer-motion and sits far below the fold — load
@@ -844,9 +845,12 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── TSBI ARABIA — MENA studio work showcase ───────── */}
+      <ArebiaSection />
+
       {/* ── CASE STUDY — CONNECT ─────────────────────────── */}
       {/* <CaseStudyCarousel /> */}
-     
+
 
       {/* ── MOVIE CONNECT ────────────────────────────────── */}
       <section className="movie-connect-section" aria-label="Connect — featured productions ">
