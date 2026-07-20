@@ -1,12 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 
 /**
- * TSBI Arabia — MENA studio work as a two-row auto-scrolling marquee. Cards show a light
- * poster/image by default; local clips load + play on hover (rows pause on hover), and
- * YouTube/Instagram items open externally. A brand roster strip lists the full regional
- * client list (including work without a public asset).
+ * TSBI Arabia — featured-showcase layout: headline + filter tabs + thumbnail picker on the
+ * left, a large hero player on the right (poster → plays the clip / opens the link on click),
+ * with dot pagination and auto-advance. Uses the compressed /arebia assets.
  */
 
 type Media =
@@ -15,198 +15,250 @@ type Media =
   | { kind: 'youtube'; id: string }
   | { kind: 'instagram'; url: string };
 
-type Item = { brand: string; category: string; label?: string; media: Media };
+type Tag = 'filmcgi' | 'influencer' | 'ooh' | 'games';
+type Item = { brand: string; category: string; label?: string; tag: Tag; media: Media };
 
 const ITEMS: Item[] = [
-  // { brand: 'Dabur Amla Kids', category: '3D · Character', label: 'Eid', media: { kind: 'instagram', url: 'https://www.instagram.com/reel/DY1K6yuIh0p/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==' } },
-  { brand: 'Dabur Amla Kids', category: '3D · Character', label: 'GRWM', media: { kind: 'video', src: '/arebia/grwm-dabur-amla-kids.mp4' } },
-  { brand: 'Vatika', category: 'AI & 3D', label: 'A Drop of Nature', media: { kind: 'video', src: '/arebia/vatika-drop-of-nature.mp4' } },
-  { brand: 'Vatika', category: 'AI & 3D', label: 'CGI', media: { kind: 'video', src: '/arebia/vatika-eho-cgi.mp4' } },
-  { brand: 'Vatika Bodywash', category: '3D Animation', label: 'Product AV', media: { kind: 'video', src: '/arebia/vatika-bodywash-av.mp4' } },
-  { brand: 'Vatika Menz', category: 'Influencer', label: 'Naser', media: { kind: 'video', src: '/arebia/vatika-menz-naser.mp4' } },
-  { brand: 'Vatika Ethiopia', category: '3D Animation', label: 'Digital Hoarding', media: { kind: 'video', src: '/arebia/vatika-ethiopia-hoarding.mp4' } },
-  { brand: 'Hobby', category: '3D · OOH', label: 'Digital Hoarding', media: { kind: 'video', src: '/arebia/hobby-hoarding.mp4' } },
-  { brand: 'Fem', category: 'CGI', label: 'CGI Film', media: { kind: 'video', src: '/arebia/fem-cgi.mp4' } },
-  { brand: 'Lipton', category: 'Game Dev', label: 'Game Walkthrough', media: { kind: 'video', src: '/arebia/lipton-game.mp4' } },
-  { brand: 'Brooke Bond Red Label', category: 'Brand Film', label: 'Brand Film', media: { kind: 'youtube', id: 'msXrpyBuoxo' } },
-  { brand: 'Brooke Bond Red Label', category: 'Influencer', label: 'Champions Trophy', media: { kind: 'video', src: '/arebia/red-label-parikshit.mp4' } },
-  { brand: 'AllBirds', category: 'CGI', label: 'CGI 1', media: { kind: 'video', src: '/arebia/allbirds-cgi-1.mp4' } },
-  { brand: 'AllBirds', category: 'CGI', label: 'CGI 2', media: { kind: 'video', src: '/arebia/allbirds-cgi-2.mp4' } },
-  { brand: 'Thumbay', category: 'Influencer', label: 'Dalelak Nahed', media: { kind: 'video', src: '/arebia/thumbay-dalelak-nahed.mp4' } },
-  { brand: 'Thumbay', category: 'Influencer', label: 'Groor Albloshi', media: { kind: 'video', src: '/arebia/thumbay-groor-albloshi.mp4' } },
-  { brand: 'Thumbay', category: 'Influencer', label: 'Collab', media: { kind: 'video', src: '/arebia/thumbay-collab.mp4' } },
-  { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Fruit Exotica', media: { kind: 'video', src: '/arebia/lulu-fruit-exotica.mp4' } },
-  { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Promo', media: { kind: 'video', src: '/arebia/lulu-cgi-2.mp4' } },
-  { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Promo', media: { kind: 'video', src: '/arebia/lulu-cgi-3.mp4' } },
-  { brand: 'Goot', category: 'Product Shoot', media: { kind: 'image', src: '/arebia/goot-1.jpg' } },
-  { brand: 'Goot', category: 'Product Shoot', media: { kind: 'image', src: '/arebia/goot-2.jpg' } },
-  { brand: 'Goot', category: 'Product Shoot', media: { kind: 'image', src: '/arebia/goot-3.jpg' } },
-  { brand: 'Goot', category: 'Product Shoot', media: { kind: 'image', src: '/arebia/goot-4.jpg' } },
-  { brand: 'Goot', category: 'Product Shoot', media: { kind: 'image', src: '/arebia/goot-5.jpg' } },
-  { brand: 'Waseem Akram', category: 'Photography', media: { kind: 'image', src: '/arebia/waseem-1.jpg' } },
-  { brand: 'Waseem Akram', category: 'Photography', media: { kind: 'image', src: '/arebia/waseem-2.jpg' } },
-  { brand: 'Waseem Akram', category: 'Photography', media: { kind: 'image', src: '/arebia/waseem-3.jpg' } },
+  // { brand: 'Dabur Amla Kids', category: '3D · Character', label: 'Eid', tag: 'filmcgi', media: { kind: 'instagram', url: 'https://www.instagram.com/reel/DY1K6yuIh0p/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==' } },
+  { brand: 'Dabur Amla Kids', category: '3D · Character', label: 'GRWM', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/grwm-dabur-amla-kids.mp4' } },
+  { brand: 'Vatika', category: 'AI & 3D', label: 'A Drop of Nature', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/vatika-drop-of-nature.mp4' } },
+  { brand: 'Vatika', category: 'AI & 3D', label: 'CGI', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/vatika-eho-cgi.mp4' } },
+  { brand: 'Vatika Bodywash', category: '3D Animation', label: 'Product AV', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/vatika-bodywash-av.mp4' } },
+  { brand: 'Vatika Menz', category: 'Influencer', label: 'Naser', tag: 'influencer', media: { kind: 'video', src: '/arebia/vatika-menz-naser.mp4' } },
+  { brand: 'Vatika Ethiopia', category: 'Digital OOH', label: 'Digital Hoarding', tag: 'ooh', media: { kind: 'video', src: '/arebia/vatika-ethiopia-hoarding.mp4' } },
+  { brand: 'Hobby', category: 'Digital OOH', label: 'Digital Hoarding', tag: 'ooh', media: { kind: 'video', src: '/arebia/hobby-hoarding.mp4' } },
+  { brand: 'Fem', category: 'CGI Film', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/fem-cgi.mp4' } },
+  { brand: 'Lipton', category: 'Game Development', label: 'Walkthrough', tag: 'games', media: { kind: 'video', src: '/arebia/lipton-game.mp4' } },
+  { brand: 'Brooke Bond Red Label', category: 'Brand Film', tag: 'filmcgi', media: { kind: 'youtube', id: 'msXrpyBuoxo' } },
+  { brand: 'Brooke Bond Red Label', category: 'Influencer', label: 'Champions Trophy', tag: 'influencer', media: { kind: 'video', src: '/arebia/red-label-parikshit.mp4' } },
+  { brand: 'AllBirds', category: 'CGI', label: 'CGI 1', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/allbirds-cgi-1.mp4' } },
+  { brand: 'AllBirds', category: 'CGI', label: 'CGI 2', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/allbirds-cgi-2.mp4' } },
+  { brand: 'Thumbay', category: 'Influencer', label: 'Dalelak Nahed', tag: 'influencer', media: { kind: 'video', src: '/arebia/thumbay-dalelak-nahed.mp4' } },
+  { brand: 'Thumbay', category: 'Influencer', label: 'Groor Albloshi', tag: 'influencer', media: { kind: 'video', src: '/arebia/thumbay-groor-albloshi.mp4' } },
+  { brand: 'Thumbay', category: 'Influencer', label: 'Collab', tag: 'influencer', media: { kind: 'video', src: '/arebia/thumbay-collab.mp4' } },
+  { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Fruit Exotica', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/lulu-fruit-exotica.mp4' } },
+  { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Promo', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/lulu-cgi-2.mp4' } },
+  { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Promo', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/lulu-cgi-3.mp4' } },
+  { brand: 'Waseem Akram', category: 'Celebrity Shoot', tag: 'influencer', media: { kind: 'image', src: '/arebia/waseem-1.jpg' } },
+  { brand: 'Waseem Akram', category: 'Celebrity Shoot', tag: 'influencer', media: { kind: 'image', src: '/arebia/waseem-2.jpg' } },
+  { brand: 'Waseem Akram', category: 'Celebrity Shoot', tag: 'influencer', media: { kind: 'image', src: '/arebia/waseem-3.jpg' } },
 ];
 
-// Full regional roster — includes brands whose work has no public asset above.
-const BRANDS = [
-  'Dabur Amla', 'Dabur Amla Kids', 'Dabur Healthcare', 'Vatika', 'Vatika Bodywash', 'Vatika Menz',
-  'Vatika Ethiopia', 'ORS Olive Oil', 'Hobby', 'Dabur Herbal Toothpaste', 'Fem', 'Dubai College of Tourism',
-  'Lipton', 'Brooke Bond Red Label', 'Nair', 'Goot', 'Sobha Realty', 'Thumbay', 'Black Amber', 'AllBirds',
-  'Iraave Skincare', 'Lulu Hypermarket', 'Policy Bazaar', 'Paisa Bazaar',
+const FILTERS: { id: 'all' | Tag; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'filmcgi', label: 'Films & CGI' },
+  { id: 'influencer', label: 'Influencer' },
+  { id: 'ooh', label: 'Digital OOH' },
+  { id: 'games', label: 'Games' },
 ];
 
-const ROW_A = ITEMS.filter((_, i) => i % 2 === 0);
-const ROW_B = ITEMS.filter((_, i) => i % 2 === 1);
-const ytThumb = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 const posterOf = (src: string) => src.replace(/\.mp4$/, '.jpg');
+const posterFor = (it: Item): string | null => {
+  const m = it.media;
+  if (m.kind === 'video') return posterOf(m.src);
+  if (m.kind === 'image') return m.src;
+  if (m.kind === 'youtube') return `https://img.youtube.com/vi/${m.id}/hqdefault.jpg`;
+  return null; // instagram — no thumbnail
+};
+const meta = (it: Item) => `${it.category}${it.label ? ` · ${it.label}` : ''}`;
 
-function Label({ item }: { item: Item }) {
-  return (
-    <span className="pointer-events-none absolute inset-x-0 bottom-0 z-2 bg-linear-to-t from-black/90 via-black/35 to-transparent px-3 pb-2.5 pt-8 text-left">
-      <span className="block font-fm text-[8px] font-semibold uppercase tracking-[0.14em] text-magenta">
-        {item.category}{item.label ? ` · ${item.label}` : ''}
-      </span>
-      <span className="block font-fd text-[13px] font-bold leading-tight text-white">{item.brand}</span>
-    </span>
-  );
-}
-
-function PlayBadge() {
-  return (
-    <span className="pointer-events-none absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 ring-1 ring-white/50 backdrop-blur-sm transition group-hover:bg-magenta group-hover:ring-magenta">
-      <span className="ml-0.5 border-y-[6px] border-l-9 border-y-transparent border-l-white" />
-    </span>
-  );
-}
-
-// Uniform card HEIGHT keeps the strip tidy; WIDTH is natural so nothing is cropped —
-// EXCEPT ultra-wide digital hoardings, which are width-capped (object-cover) so a 5:1
-// banner can't blow out the row. "wide" is detected from the media's natural dimensions.
-const CARD = 'arebia-card group relative shrink-0 overflow-hidden rounded-xl bg-black h-[clamp(168px,18.5vw,230px)]';
-const WIDE_W = 'w-[clamp(300px,30vw,430px)]';
-
-function Card({ item }: { item: Item }) {
-  const m = item.media;
-  const vidRef = useRef<HTMLVideoElement>(null);
-  const [wide, setWide] = useState(false);
-  const measure = (el: HTMLImageElement | null) => {
-    if (el && el.naturalWidth && el.naturalHeight) setWide(el.naturalWidth / el.naturalHeight > 2.2);
-  };
-  const cls = `${CARD}${wide ? ` ${WIDE_W}` : ''}`;
-  const imgCls = `block select-none ${wide ? 'h-full w-full object-cover' : 'h-full w-auto max-w-none'}`;
-
-  if (m.kind === 'video') {
-    const play = () => { const v = vidRef.current; if (!v) return; v.style.opacity = '1'; void v.play().catch(() => {}); };
-    const stop = () => { const v = vidRef.current; if (!v) return; v.style.opacity = '0'; v.pause(); };
-    return (
-      <div className={cls} onMouseEnter={play} onMouseLeave={stop}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img ref={measure} src={posterOf(m.src)} onLoad={(e) => measure(e.currentTarget)} alt={`${item.brand} — ${item.category}`} className={imgCls} draggable={false} />
-        <video
-          ref={vidRef}
-          src={m.src}
-          muted
-          loop
-          playsInline
-          preload="none"
-          aria-hidden
-          className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300"
-        />
-        <PlayBadge />
-        <Label item={item} />
-      </div>
-    );
-  }
-
-  if (m.kind === 'image') {
-    return (
-      <div className={cls}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img ref={measure} src={m.src} onLoad={(e) => measure(e.currentTarget)} alt={`${item.brand} — ${item.category}`} loading="lazy" className={imgCls} draggable={false} />
-        <Label item={item} />
-      </div>
-    );
-  }
-
-  if (m.kind === 'youtube') {
-    return (
-      <a href={`https://www.youtube.com/watch?v=${m.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Watch ${item.brand} on YouTube`} className={`${cls} cursor-pointer`}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img ref={measure} src={ytThumb(m.id)} onLoad={(e) => measure(e.currentTarget)} alt={`${item.brand} — ${item.label ?? ''}`} loading="lazy" className={imgCls} draggable={false} />
-        <PlayBadge />
-        <Label item={item} />
-      </a>
-    );
-  }
-
-  // instagram — no media, so a fixed portrait-ish branded card that links out
-  return (
-    <a href={m.url} target="_blank" rel="noopener noreferrer" aria-label={`Watch ${item.brand} on Instagram`} className={`${CARD} w-[clamp(132px,15vw,178px)] cursor-pointer`}>
-      <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-linear-to-br from-[#3a1640] via-[#2a1230] to-navy px-4 text-center">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.6" aria-hidden>
-          <rect x="3" y="3" width="18" height="18" rx="5" />
-          <circle cx="12" cy="12" r="4" />
-          <circle cx="17.5" cy="6.5" r="1.1" fill="#fff" stroke="none" />
-        </svg>
-        <span className="font-fm text-[9px] uppercase tracking-[0.16em] text-magenta">Watch on Instagram →</span>
-      </span>
-      <Label item={item} />
-    </a>
-  );
-}
+const IG_BG = 'bg-linear-to-br from-[#3a1640] via-[#2a1230] to-[#0c1020]';
 
 export default function ArebiaSection() {
+  const [filter, setFilter] = useState<'all' | Tag>('all');
+  const [selected, setSelected] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [paused, setPaused] = useState(false);
+
+  const pool = useMemo(
+    () => (filter === 'all' ? ITEMS : ITEMS.filter((it) => it.tag === filter)),
+    [filter],
+  );
+  const idx = Math.min(selected, pool.length - 1);
+  const cur = pool[idx] ?? ITEMS[0];
+  const curPoster = posterFor(cur);
+  const canPlay = cur.media.kind !== 'image';
+
+  // reset when the filter changes
+  useEffect(() => { setSelected(0); setPlaying(false); }, [filter]);
+
+  // auto-advance (paused on hover / while a clip is playing)
+  useEffect(() => {
+    if (paused || playing || pool.length <= 1) return;
+    const t = setInterval(() => setSelected((s) => (s + 1) % pool.length), 5200);
+    return () => clearInterval(t);
+  }, [paused, playing, pool.length]);
+
+  const pick = (i: number) => { setSelected(i); setPlaying(false); };
+  const activate = () => {
+    const m = cur.media;
+    if (m.kind === 'video') setPlaying(true);
+    else if (m.kind === 'youtube') window.open(`https://www.youtube.com/watch?v=${m.id}`, '_blank', 'noopener');
+    else if (m.kind === 'instagram') window.open(m.url, '_blank', 'noopener');
+  };
+
   return (
     <section
       aria-label="TSBI Arabia — Middle East work"
-      className="relative overflow-hidden py-20 sm:py-24"
-      style={{ background: 'radial-gradient(circle at 82% 10%, rgba(224,25,125,.18), transparent 46%), radial-gradient(circle at 8% 90%, rgba(26,106,255,.14), transparent 46%), #0a0e1a' }}
+      className="relative overflow-hidden px-6 py-16 sm:px-10 sm:py-20 lg:px-14"
+      style={{ background: 'radial-gradient(circle at 78% 8%, rgba(224,25,125,.16), transparent 42%), radial-gradient(circle at 6% 88%, rgba(26,106,255,.12), transparent 44%), #080b14' }}
     >
       <style dangerouslySetInnerHTML={{ __html: `
-        .arebia-marquee { position:relative; overflow:hidden; }
-        .arebia-marquee::before, .arebia-marquee::after { content:''; position:absolute; top:0; bottom:0; width:clamp(40px,7vw,110px); z-index:4; pointer-events:none; }
-        .arebia-marquee::before { left:0; background:linear-gradient(90deg,#0a0e1a,transparent); }
-        .arebia-marquee::after { right:0; background:linear-gradient(270deg,#0a0e1a,transparent); }
-        .arebia-row { display:flex; align-items:center; gap:16px; width:max-content; will-change:transform; }
-        .arebia-row.a { animation: arebiaA var(--dur,70s) linear infinite; }
-        .arebia-row.b { animation: arebiaB var(--dur,70s) linear infinite; }
-        .arebia-marquee:hover .arebia-row { animation-play-state: paused; }
-        @keyframes arebiaA { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        @keyframes arebiaB { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-        @media (prefers-reduced-motion: reduce) { .arebia-row { animation: none; } }
+        .arebia-thumbs { scrollbar-width: thin; scrollbar-color: rgba(224,25,125,0.55) transparent; }
+        .arebia-thumbs::-webkit-scrollbar { width: 6px; }
+        .arebia-thumbs::-webkit-scrollbar-thumb { background: rgba(224,25,125,0.55); border-radius: 6px; }
+        .arebia-thumbs::-webkit-scrollbar-track { background: transparent; }
       ` }} />
+      <div className="mx-auto grid max-w-[1440px] items-start gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-stretch lg:gap-14">
+        {/* ── LEFT: headline + filters + thumbnail picker ── */}
+        <div>
+          <div className="font-fm text-[11px] font-bold uppercase tracking-[0.3em] text-magenta">TSBI Arabia</div>
+          <h2 className="mt-4 font-fm text-[clamp(38px,6vw,74px)] font-bold uppercase leading-[0.94] tracking-[-0.01em] text-white">
+            Made for the <span className="italic text-magenta">Middle East</span>
+          </h2>
+          <p className="mt-5 max-w-[440px] text-sm font-light leading-[1.8] text-white/55 sm:text-[15px]">
+            From Mumbai to MENA — 3D &amp; CGI, brand films, games, digital hoardings and influencer
+            work for the region&apos;s biggest brands.
+          </p>
 
-      <div className="reveal mb-10 px-6 text-center sm:mb-14 sm:px-10">
-        <span className="mb-5 inline-flex items-center gap-2.5 font-fm text-[11px] font-bold uppercase tracking-[0.24em] text-magenta">
-          <span className="h-px w-7 bg-magenta/50" /> TSBI Arabia <span className="h-px w-7 bg-magenta/50" />
-        </span>
-        <h2 className="font-fm text-[clamp(30px,5vw,58px)] font-bold uppercase leading-[1.08] tracking-[-0.01em] text-white">
-          Made for the <span className="italic text-magenta">Middle East</span>
-        </h2>
-        <p className="mx-auto mt-4 max-w-[560px] text-sm font-light leading-[1.8] text-white/60 sm:text-[15px]">
-          From Mumbai to MENA — 3D &amp; CGI, brand films, games, digital hoardings and influencer
-          work for the region&apos;s biggest brands.
-        </p>
-      </div>
+          {/* filter tabs */}
+          <div className="mt-7 flex flex-wrap gap-2">
+            {FILTERS.map((f) => {
+              const active = filter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setFilter(f.id)}
+                  className={`rounded-full px-4 py-2 font-fm text-[11px] font-semibold uppercase tracking-[0.06em] transition ${
+                    active ? 'bg-magenta text-white' : 'border border-white/15 bg-white/5 text-white/65 hover:border-white/40 hover:text-white'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
 
-      {/* two auto-scrolling rows (opposite directions) — pause on hover */}
-      <div className="arebia-marquee flex flex-col gap-4">
-        <div className="arebia-row a">
-          {[...ROW_A, ...ROW_A].map((item, i) => <Card key={`a${i}`} item={item} />)}
+          {/* thumbnail picker */}
+          <div className="arebia-thumbs mt-6 grid max-h-[344px] grid-cols-4 gap-2.5 overflow-y-auto pr-1.5 sm:gap-3">
+            {pool.map((it, i) => {
+              const p = posterFor(it);
+              const active = i === idx;
+              return (
+                <button
+                  key={`${it.brand}-${i}`}
+                  type="button"
+                  onClick={() => pick(i)}
+                  aria-label={`Show ${it.brand}`}
+                  className={`group relative aspect-[4/3] overflow-hidden rounded-lg bg-black text-left transition ${
+                    active ? 'ring-2 ring-magenta' : 'ring-1 ring-white/10 hover:ring-white/30'
+                  }`}
+                >
+                  {p ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={p} alt={it.brand} loading="lazy" className={`absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 ${active ? '' : 'opacity-80 group-hover:opacity-100'}`} />
+                  ) : (
+                    <span className={`absolute inset-0 ${IG_BG}`} />
+                  )}
+                  <span className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/90 to-transparent px-2 pb-1.5 pt-6">
+                    <span className="block truncate font-fd text-[10px] font-bold leading-tight text-white">{it.brand}</span>
+                    <span className="block truncate font-fm text-[7px] uppercase tracking-[0.12em] text-magenta">{it.category}</span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <Link href="/case-studies" className="mt-6 inline-flex items-center gap-2 font-fm text-[12px] font-semibold uppercase tracking-[0.1em] text-magenta transition hover:gap-3">
+            View all projects <span aria-hidden>→</span>
+          </Link>
         </div>
-        <div className="arebia-row b">
-          {[...ROW_B, ...ROW_B].map((item, i) => <Card key={`b${i}`} item={item} />)}
-        </div>
-      </div>
 
-      {/* Brand roster */}
-      <div className="reveal mx-auto mt-12 flex max-w-[1200px] flex-wrap justify-center gap-2.5 px-6 sm:mt-16">
-        {BRANDS.map((b) => (
-          <span key={b} className="rounded-full border border-white/12 bg-white/5 px-3.5 py-1.5 font-fm text-[11px] font-medium tracking-[0.02em] text-white/70">
-            {b}
-          </span>
-        ))}
+        {/* ── RIGHT: featured player ── */}
+        <div className="flex flex-col lg:h-full" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-black shadow-[0_30px_90px_rgba(0,0,0,0.5)] ring-1 ring-white/10 lg:aspect-auto lg:min-h-0 lg:flex-1">
+            {/* blurred backdrop fills the frame so contained media never shows empty bars */}
+            {curPoster && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={curPoster} alt="" aria-hidden className="absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-2xl" />
+            )}
+            {playing && cur.media.kind === 'video' ? (
+              <video
+                key={cur.media.src}
+                src={cur.media.src}
+                autoPlay
+                controls
+                loop
+                playsInline
+                className="absolute inset-0 h-full w-full bg-black object-contain"
+              />
+            ) : (
+              <>
+                {curPoster ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={curPoster} alt={cur.brand} className="absolute inset-0 h-full w-full object-contain" />
+                ) : (
+                  <span className={`absolute inset-0 flex items-center justify-center ${IG_BG}`}>
+                    <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.4" aria-hidden>
+                      <rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1.1" fill="#fff" stroke="none" />
+                    </svg>
+                  </span>
+                )}
+                <span className="absolute inset-0 bg-linear-to-t from-black/85 via-black/10 to-black/20" />
+
+                {canPlay && (
+                  <button
+                    type="button"
+                    onClick={activate}
+                    aria-label={`Play ${cur.brand}`}
+                    className="group absolute left-1/2 top-1/2 flex h-[72px] w-[72px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 ring-1 ring-white/60 backdrop-blur-md transition hover:bg-magenta hover:ring-magenta"
+                  >
+                    <span className="ml-1 border-y-[11px] border-l-[18px] border-y-transparent border-l-white" />
+                  </button>
+                )}
+
+                {/* title / category / watch */}
+                <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 px-6 pb-6 pt-16 sm:px-8">
+                  <h3 className="font-fm text-[clamp(22px,2.6vw,34px)] font-bold leading-tight text-white">{cur.brand}</h3>
+                  <p className="font-fm text-[11px] font-semibold uppercase tracking-[0.16em] text-magenta">{meta(cur)}</p>
+                  {canPlay && (
+                    <button type="button" onClick={activate} className="mt-3 inline-flex w-max items-center gap-2.5 font-fm text-[12px] font-semibold uppercase tracking-[0.1em] text-white/90 transition hover:text-white">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-magenta">
+                        <span className="ml-0.5 border-y-[5px] border-l-[8px] border-y-transparent border-l-white" />
+                      </span>
+                      Watch showcase
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* dots + connect */}
+          <div className="mt-5 flex items-center justify-between gap-4">
+            {pool.length <= 8 ? (
+              <div className="flex items-center gap-2">
+                {pool.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => pick(i)}
+                    aria-label={`Go to item ${i + 1}`}
+                    className={`h-2 rounded-full transition-all ${i === idx ? 'w-6 bg-magenta' : 'w-2 bg-white/25 hover:bg-white/55'}`}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="font-fm text-[13px] font-semibold tracking-[0.12em] text-white/55">
+                <span className="text-magenta">{String(idx + 1).padStart(2, '0')}</span> / {String(pool.length).padStart(2, '0')}
+              </div>
+            )}
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-magenta/60 px-5 py-2.5 font-fm text-[12px] font-semibold uppercase tracking-[0.08em] text-magenta transition hover:bg-magenta hover:text-white">
+              Connect with Us <span aria-hidden>→</span>
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -283,11 +283,11 @@ export default function HeroAnimation() {
             if (tickerStarted) return;
             tickerStarted = true;
 
-            // Set CSS animation duration so speed ≈ 54 px/s regardless of viewport
+            // Set CSS animation duration so speed ≈ 110 px/s regardless of viewport
             const cw = (cards[0] as HTMLElement | null)?.offsetWidth ?? 0;
             if (cw > 0) {
               const setW    = (cards.length / 2) * (cw + 18); // one 10-card copy width
-              const dur     = Math.max(10, setW / 54);         // 54 px/s target
+              const dur     = Math.max(6, setW / 110);         // 110 px/s target (faster scroll)
               mcTrack.style.setProperty('--mc-duration', `${dur.toFixed(1)}s`);
             }
 

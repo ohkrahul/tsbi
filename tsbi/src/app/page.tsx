@@ -808,8 +808,8 @@ export default function HomePage() {
               { type: 'image', src: '/sports/614584591_1348221954011940_6027328606420306636_n.jpg' },
               { type: 'video', src: '/sports/SaveInta.com_AQMrc9YHuB_l4_zZQyKoXM7SaOJhHeLOzLi-VVq2gvqCXle8yAts11z8r6y90d1CTJjwPxR9Rcflau20987IXLCMfIVZXWtJFFHn_Gs.mp4' },
                 { type: 'video', src: '/sports/SaveInta.com_AQNZw53QTW9_M1zR_EwzNoTKu86y3SLFGf-VLys5ApXwxslD6haxY4WTkiFoAPq0t48crg9t1s7vwavOAvDJwt9arg5dBajGf1SXFZw.mp4' },
-             
-               { type: 'video', src: '/sports/SaveInta.com_AQPU9o5LS1j1m7e76sBbLkGDB4naT1zXJdA0aF8Hv5zBTUBakcLxHW4r6O-8UfB023ylnCI-68rqy64rYaOKkT6pCNgPACniLGYcjeA.mp4' },
+              { type: 'image', src: '/sports/ffass.jpeg' },
+              //  { type: 'video', src: '/sports/SaveInta.com_AQPU9o5LS1j1m7e76sBbLkGDB4naT1zXJdA0aF8Hv5zBTUBakcLxHW4r6O-8UfB023ylnCI-68rqy64rYaOKkT6pCNgPACniLGYcjeA.mp4' },
           
               { type: 'image', src: '/sports/SaveInta.com_519265654_18376525570126115_5241556755529506506_n.jpg' },
                 { type: 'image', src: '/sports/End%20of%20season%20sale%207.jpg.jpeg' },
