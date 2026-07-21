@@ -180,7 +180,7 @@ function LeaderRow({ slide, index, displayNum }: { slide: Slide; index: number; 
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="none"
               aria-hidden
               className="absolute inset-0 h-full w-full object-cover object-top opacity-0 transition-opacity duration-300"
             />

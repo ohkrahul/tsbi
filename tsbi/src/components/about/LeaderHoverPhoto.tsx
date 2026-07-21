@@ -51,7 +51,7 @@ export default function LeaderHoverPhoto({
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
           aria-hidden
           style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',

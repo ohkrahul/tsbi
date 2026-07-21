@@ -106,7 +106,7 @@ export default async function CaseStudyDetailPage({
                 key={i}
                 controls
                 playsInline
-                preload="metadata"
+                preload="none"
                 poster={cloudinaryPoster(src)}
                 style={{ width: '100%', aspectRatio: '16 / 9', display: 'block', borderRadius: 14, background: '#000', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}
               >

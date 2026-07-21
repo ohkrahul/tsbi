@@ -16,6 +16,15 @@ const nextConfig: NextConfig = {
   },
   // Bare hostnames only — NOT full URLs (no protocol/port), or they won't match.
   allowedDevOrigins: ['192.168.1.2', 'localhost'],
+  // Serve AVIF (then WebP) from next/image — much smaller than the source JPEG/PNG/WebP.
+  // remotePatterns lets us run the YouTube case-study thumbnails through the optimizer too.
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'img.youtube.com' },
+      { protocol: 'https', hostname: 'i.ytimg.com' },
+    ],
+  },
 };
 
 export default nextConfig;

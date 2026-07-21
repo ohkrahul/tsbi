@@ -822,11 +822,12 @@ export default function HomePage() {
                 {m.type === 'video' ? (
                   <div className="relative">
                     <video
-                      src={`${m.src}#t=0.1`}
+                      src={m.src}
+                      poster={m.src.replace(/\.[^.]+$/, '.jpg')}
                       muted
                       loop
                       playsInline
-                      preload="metadata"
+                      preload="none"
                       onMouseEnter={(e) => { void e.currentTarget.play().catch(() => {}); }}
                       onMouseLeave={(e) => { e.currentTarget.pause(); }}
                       className="block w-full transition-transform duration-500 group-hover:scale-105"
