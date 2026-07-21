@@ -109,7 +109,7 @@ export default function ArebiaSection() {
         .arebia-thumbs::-webkit-scrollbar-thumb { background: rgba(224,25,125,0.55); border-radius: 6px; }
         .arebia-thumbs::-webkit-scrollbar-track { background: transparent; }
       ` }} />
-      <div className="mx-auto grid max-w-[1440px] items-start gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-stretch lg:gap-14">
+      <div className="mx-auto grid max-w-[1440px] items-start gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
         {/* ── LEFT: headline + filters + thumbnail picker ── */}
         <div>
           <div className="font-fm text-[11px] font-bold uppercase tracking-[0.3em] text-magenta">TSBI Arabia</div>
@@ -176,8 +176,8 @@ export default function ArebiaSection() {
         </div>
 
         {/* ── RIGHT: featured player ── */}
-        <div className="flex flex-col lg:h-full" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-black shadow-[0_30px_90px_rgba(0,0,0,0.5)] ring-1 ring-white/10 lg:aspect-auto lg:min-h-0 lg:flex-1">
+        <div className="flex flex-col" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-black shadow-[0_30px_90px_rgba(0,0,0,0.5)] ring-1 ring-white/10 lg:aspect-[16/11] lg:max-h-[80vh]">
             {/* blurred backdrop fills the frame so contained media never shows empty bars */}
             {curPoster && (
               // eslint-disable-next-line @next/next/no-img-element

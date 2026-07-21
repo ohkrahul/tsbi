@@ -13,12 +13,14 @@ import HeroAnimation from '@/components/HeroAnimation';
 // import Preloader from '@/components/Preloader'; // preloader disabled for now
 // import CaseStudyCarousel from '@/components/CaseStudyCarousel'; // not rendered — kept out of the bundle
 import LazyMount from '@/components/LazyMount';
-import ArebiaSection from '@/components/home/ArebiaSection';
 // Heavy R3F/three.js widget — loaded on demand (kept out of the initial bundle).
 const TechWorkTube = dynamic(() => import('@/components/home/TechWorkTube'), { ssr: false });
 // MarioTimeline pulls in all of framer-motion and sits far below the fold — load
 // it on demand so framer-motion stays out of the initial JS (helps mobile TBT/LCP).
 const MarioTimeline = dynamic(() => import('@/components/about/MarioTimeline'), { ssr: false });
+// Heavy client showcase (marquee/state/interval + ~20 posters) — code-split and mounted on
+// scroll-approach so it stays out of the initial mobile bundle + DOM.
+const ArebiaSection = dynamic(() => import('@/components/home/ArebiaSection'), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -595,28 +597,53 @@ export default function HomePage() {
         </div>
       </section>
 
+         {/* ── MOVIE CONNECT ────────────────────────────────── */}
+      <section className="movie-connect-section" aria-label="Connect — featured productions ">
+        <span className="movie-connect-dot" aria-hidden />
+        <div className="connect-text-block">
+          <span className="connect-kicker uppercase">TSBI Studios</span>
+          <h2 className="connect-title ">Stories crafted for screens, shares and second looks.</h2>
+          <p className="connect-sub">Lights, lenses, locations and everything in between to bring stories to life frame by frame, shot by shot.</p>
+          <Link href="/services/content-production" className="btn-border connect-cta">
+            Watch Our Work <span className="arr">→</span>
+          </Link>
+        </div>
+        <div className="mc-overflow" style={{ marginTop: 'clamp(28px,3.5vw,48px)' }}>
+          <div className="mc-strip" aria-hidden />
+          <div className="mc-track">
+            {[...CONNECT_POSTERS, ...CONNECT_POSTERS].map((p, i) => (
+              <div key={i} className="poster-card">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.img} alt={p.label} className="poster-image" loading="lazy" draggable={false} />
+                <div className="poster-shade" aria-hidden />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── BRANDS THAT TRUST US (top 6 case studies) — Tailwind ─────── */}
       <section className="relative  w-full overflow-visible bg-[#f01891]" aria-label="Brands that trust us">
-        <div className="relative flex w-full items-center justify-between gap-12 px-14 py-14 max-[1280px]:flex-col max-[1280px]:items-stretch max-[1280px]:gap-6 max-[1280px]:px-6 max-[1280px]:pb-15 max-[1280px]:pt-12">
+        <div className="relative flex w-full items-center justify-between gap-12 px-14 py-14 max-[1440px]:flex-col max-[1440px]:items-stretch max-[1440px]:gap-6 max-[1440px]:px-6 max-[1440px]:pb-15 max-[1440px]:pt-12">
           {/* decorative arcs + dots (top-left) */}
-          <svg className="pointer-events-none absolute left-0 top-0 z-[1] h-[300px] w-[320px] max-[1280px]:hidden" viewBox="0 0 320 300" fill="none" aria-hidden>
+          <svg className="pointer-events-none absolute left-0 top-0 z-[1] h-[300px] w-[320px] max-[1440px]:hidden" viewBox="0 0 320 300" fill="none" aria-hidden>
             <path d="M-20 250 A 280 280 0 0 1 300 -20" stroke="rgba(255,255,255,0.45)" strokeWidth="1" />
             <path d="M-20 205 A 235 235 0 0 1 255 -20" stroke="rgba(255,255,255,0.28)" strokeWidth="1" />
             <circle cx="150" cy="86" r="6" fill="#fff" />
             <circle cx="120" cy="126" r="3.5" fill="#fff" />
           </svg>
           {/* decorative arcs (bottom-right) */}
-          <svg className="pointer-events-none absolute bottom-0 right-0 z-[1] h-[220px] w-[260px] max-[1280px]:hidden" viewBox="0 0 260 220" fill="none" aria-hidden>
+          <svg className="pointer-events-none absolute bottom-0 right-0 z-[1] h-[220px] w-[260px] max-[1440px]:hidden" viewBox="0 0 260 220" fill="none" aria-hidden>
             <path d="M260 -10 A 250 250 0 0 1 10 230" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
             <path d="M260 55 A 195 195 0 0 1 70 235" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
           </svg>
           {/* large blue dot, partly overlapping the section */}
-          <span className="absolute -bottom-6 right-9 z-[6] h-[52px] w-[52px] rounded-full bg-[#209bd8] max-[1280px]:-bottom-[22px] max-[1280px]:right-6" aria-hidden />
+          <span className="absolute -bottom-6 right-9 z-[6] h-[52px] w-[52px] rounded-full bg-[#209bd8] max-[1440px]:-bottom-[22px] max-[1440px]:right-6" aria-hidden />
 
           {/* left text — centered in the available left space (sits toward the middle,
               filling the gap) on desktop; full-width left-aligned on mobile. */}
-          <div className="bts-text relative z-[4] flex flex-1 justify-center max-[1280px]:block max-[1280px]:flex-none">
-            <div className="max-w-95 max-[1280px]:max-w-full">
+          <div className="bts-text relative z-[4] flex flex-1 justify-center max-[1440px]:block max-[1440px]:flex-none">
+            <div className="max-w-95 max-[1440px]:max-w-full">
           <h2 className="hero-title font-fm text-[34px] font-normal text-white leading-[1.22] tracking-[0.01em] sm:text-5xl uppercase">
                 Brands that
                 <br />
@@ -626,16 +653,16 @@ export default function HomePage() {
                 Great things happen when the right brands meet the right people. We&apos;re a digital marketing agency that believes the perfect collaboration is waiting to happen.
               </p>
               {/* stats — count up on reveal, white on the pink section */}
-              <div className="stats-row mt-8 grid max-w-md grid-cols-2 gap-x-8 gap-y-7">
+              <div className="stats-row mt-8 grid max-w-md grid-cols-2 gap-x-6 gap-y-6">
                 {[
                   { to: 15, suffix: 'K+', label: 'Campaigns' },
                   { to: 500, suffix: '+', label: 'Brands' },
                   { to: 300, suffix: '+', label: 'Employees strong' },
                   { to: 30, suffix: '+', label: 'Languages' },
                 ].map((s) => (
-                  <div key={s.label} className="flex flex-col max-[1280px]:items-center max-[1280px]:text-center">
+                  <div key={s.label} className="flex flex-col max-[1440px]:items-center max-[1440px]:text-center">
                     <span
-                      className="stat-num font-fm text-[clamp(30px,4.2vw,52px)] font-black leading-none text-white"
+                      className="stat-num font-fm text-[clamp(30px,3vw,46px)] font-black leading-none text-white whitespace-nowrap"
                       data-to={s.to}
                       data-suffix={s.suffix}
                     >
@@ -652,7 +679,7 @@ export default function HomePage() {
               inner handles the GSAP hover (scale/shift). overflow-visible so the
               enlarged card is never clipped. onMouseLeave on the grid resets all. */}
           <div
-            className="bts-grid grid w-240 flex-[0_0_960px] grid-cols-3 gap-4 max-[1280px]:w-full max-[1280px]:flex-none max-[680px]:grid-cols-2"
+            className="bts-grid grid w-240 flex-[0_0_960px] grid-cols-3 gap-4 max-[1440px]:w-full max-[1440px]:flex-none max-[680px]:grid-cols-2"
             onMouseLeave={resetCards}
           >
             {VIDEOS.map((v, i) => {
@@ -736,43 +763,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── OUR SERVICES (display only — no links) ─────────── */}
-      <section className="bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-14" aria-label="Our Services">
+      {/* ── OUR SERVICES — expertise list (charcoal + cream; hover animates) ─────────── */}
+      <section className="bg-[#1b1b1e] px-6 py-20 text-[#efece4] sm:px-10 sm:py-28 lg:px-14" aria-label="Our Services">
         <div className="mx-auto max-w-[1300px]">
-          <div className="reveal mb-14 text-center sm:mb-16">
-            <div className="mb-3 font-fm text-[11px] font-semibold uppercase tracking-[0.24em] text-magenta">Our Services</div>
-            <h2 className="font-fm text-[clamp(28px,4.4vw,46px)] font-bold leading-[1.12] tracking-[-0.01em] text-ink uppercase">
-              Conceptualising <span className="text-magenta">|</span> Produce <span className="text-magenta">|</span> Perform
-            </h2>
-            <p className="mx-auto mt-4 max-w-[720px] text-sm font-light leading-[1.8] text-muted sm:text-[15px]">
-              We focus on reaching your last-mile customer with the right treatment. Content is crafted
-              to maximize ROAS, ensuring it connects with the right audience and delivers your message
-              where it matters most.
-            </p>
-          </div>
+          <div className="reveal mb-3 text-center font-fm text-[11px] font-semibold uppercase tracking-[0.24em] text-[#efece4]/55">Our Services</div>
+          <h2 className="reveal text-center font-fm text-[clamp(30px,5vw,60px)] font-bold uppercase leading-[1.05] tracking-[-0.01em] text-[#efece4]">
+            Conceptualising <span className="text-[#efece4]/35">/</span> Produce <span className="text-[#efece4]/35">/</span> Perform
+          </h2>
 
-          <div className="grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 border-t border-[#efece4]/15 sm:mt-16">
             {[
-              { title: 'Social Media Marketing', desc: "We turn scrolls into stops. From moment marketing to platform-native storytelling, we create thumb-stopping content that builds engagement and drives conversations. Our social media strategies blend trends, reels, carousels, and analytics to keep your brand top of mind—and always in feed.",
-                icon: (<><rect x="6" y="2.5" width="12" height="19" rx="2.5" /><path d="M10 5h4" /><circle cx="12" cy="12.5" r="3.2" /><path d="M11.3 11.3l2.2 1.2-2.2 1.2z" fill="currentColor" stroke="none" /></>) },
-              { title: 'Performance Media Marketing', desc: "Performance is in our DNA. With funnel-based targeting, real-time optimization, and ROAS-focused campaigns, we deliver digital media strategies that convert. Whether it's Google, Meta, or Programmatic—our media plans reduce spend leakage and increase results.",
-                icon: (<><path d="M3 3v18h18" /><path d="M7 14l3.5-4.5 3 2L20 6" /><path d="M16 6h4v4" /></>) },
-              { title: 'Content Production (TVC & DVC)', desc: "From storyboard to screen, we produce high-impact content that connects. Be it big-screen TVCs or mobile-first DVCs, our in-house team crafts cinematic, branded content designed for attention and built for scale—across YouTube, OTT, and social platforms.",
-                icon: (<><rect x="2.5" y="7" width="13" height="10" rx="2" /><path d="M15.5 10.5l5-2.5v8l-5-2.5z" /></>) },
-              { title: 'Influencer & Meme Marketing', desc: "We help brands go viral (for the right reasons). From micro-influencers to celebrity creators, we build influencer collaborations and meme-led campaigns that bring in reach, relevance, and results. Think collabs, reels, reaction trends—done right.",
-                icon: (<><circle cx="10" cy="8" r="3.4" /><path d="M4 20a6 6 0 0112 0" /><path d="M18.5 3.5l.8 1.9 2 .2-1.5 1.4.5 2-1.8-1.1-1.8 1.1.5-2-1.5-1.4 2-.2z" /></>) },
-              { title: 'Search Engine Optimisation', desc: "We make your brand discoverable, naturally. With keyword-rich content, on-page and off-page SEO, and deep tech audits, we boost rankings and drive high-intent traffic. More clicks, better visibility, zero fluff.",
-                icon: (<><circle cx="10.5" cy="10.5" r="6.5" /><path d="M4 10.5h13M10.5 4c-2.6 3-2.6 10 0 13M10.5 4c2.6 3 2.6 10 0 13" /><path d="M15.5 15.5L21 21" /></>) },
-              { title: 'Digital Transformation Services', desc: "We build digital-first brands. From identity design to Shopify builds, we enable D2C brands to go live, scale fast, and sell smarter. Whether it's marketplace listings, UI/UX, or quick commerce setup—we help brands go from idea to impact, digitally.",
-                icon: (<><rect x="2.5" y="4" width="19" height="12.5" rx="1.5" /><path d="M2.5 20h19" /><path d="M9 8.5l-2 2 2 2M13 8.5l2 2-2 2" /></>) },
+              { title: 'Social Media Marketing',        desc: 'Thumb-stopping, platform-native content that turns scrolls into stops and keeps your brand in-feed.' },
+              { title: 'Performance Media Marketing',   desc: 'Funnel-based, ROAS-focused media across Google, Meta & programmatic — built to convert.' },
+              { title: 'Content Production (TVC & DVC)', desc: 'Cinematic TVCs and mobile-first DVCs, produced in-house for attention at scale.' },
+              { title: 'Influencer & Meme Marketing',   desc: 'Creator collaborations and meme-led campaigns built for reach, relevance and results.' },
+              { title: 'Search Engine Optimisation',    desc: 'Keyword-rich content and technical audits that lift rankings and high-intent traffic.' },
+              { title: 'Digital Transformation',        desc: 'D2C builds, Shopify, UI/UX and quick-commerce — from idea to impact, digitally.' },
             ].map((s) => (
-              <div key={s.title} className="reveal flex gap-5">
-                <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0 text-magenta">
-                  {s.icon}
-                </svg>
-                <div className="border-l border-black/10 pl-5">
-                  <h3 className="font-fm mb-2 text-[18px] font-bold leading-tight text-ink uppercase italic">{s.title}</h3>
-                  <p className="text-justify text-[13px] font-light leading-[1.7] text-navy/75">{s.desc}</p>
+              <div
+                key={s.title}
+                className="svc-row group grid grid-cols-1 items-center gap-x-8 gap-y-2 border-b border-[#efece4]/15 py-7 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:py-9"
+              >
+                <h3 className="svc-name font-fm text-[clamp(24px,3.6vw,46px)] font-bold uppercase leading-none tracking-[-0.01em]">
+                  {s.title}
+                </h3>
+                <span aria-hidden className="hidden select-none text-[clamp(22px,3vw,40px)] font-light text-[#efece4]/30 transition-[transform,color] duration-300 ease-out group-hover:rotate-12 group-hover:text-[#efece4]/70 md:block">/</span>
+                <div className="flex items-center justify-between gap-4">
+                  <p className="max-w-[440px] text-[13px] font-light leading-[1.7] text-[#efece4]/50 transition-colors duration-300 group-hover:text-[#efece4]/80 sm:text-sm">
+                    {s.desc}
+                  </p>
+                  <span aria-hidden className="shrink-0 -translate-x-3 text-xl text-[#efece4]/70 opacity-0 transition-[opacity,transform] duration-300 ease-out group-hover:translate-x-0 group-hover:opacity-100">→</span>
                 </div>
               </div>
             ))}
@@ -847,36 +867,15 @@ export default function HomePage() {
       </section>
 
       {/* ── TSBI ARABIA — MENA studio work showcase ───────── */}
-      <ArebiaSection />
+      <LazyMount rootMargin="600px" minHeight={640}>
+        <ArebiaSection />
+      </LazyMount>
 
       {/* ── CASE STUDY — CONNECT ─────────────────────────── */}
       {/* <CaseStudyCarousel /> */}
 
 
-      {/* ── MOVIE CONNECT ────────────────────────────────── */}
-      <section className="movie-connect-section" aria-label="Connect — featured productions ">
-        <span className="movie-connect-dot" aria-hidden />
-        <div className="connect-text-block">
-          <span className="connect-kicker uppercase">TSBI Studios</span>
-          <h2 className="connect-title ">Stories crafted for screens, shares and second looks.</h2>
-          <p className="connect-sub">Lights, lenses, locations and everything in between to bring stories to life frame by frame, shot by shot.</p>
-          <Link href="/services/content-production" className="btn-border connect-cta">
-            Watch Our Work <span className="arr">→</span>
-          </Link>
-        </div>
-        <div className="mc-overflow" style={{ marginTop: 'clamp(28px,3.5vw,48px)' }}>
-          <div className="mc-strip" aria-hidden />
-          <div className="mc-track">
-            {[...CONNECT_POSTERS, ...CONNECT_POSTERS].map((p, i) => (
-              <div key={i} className="poster-card">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.img} alt={p.label} className="poster-image" loading="lazy" draggable={false} />
-                <div className="poster-shade" aria-hidden />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+   
 
       {/* ── DIGITAL TRANSFORMATION (tech) — data mirrored from the service page ── */}
       <section
