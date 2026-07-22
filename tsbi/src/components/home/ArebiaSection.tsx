@@ -21,7 +21,7 @@ type Item = { brand: string; category: string; label?: string; tag: Tag; media: 
 const ITEMS: Item[] = [
   // { brand: 'Dabur Amla Kids', category: '3D · Character', label: 'Eid', tag: 'filmcgi', media: { kind: 'instagram', url: 'https://www.instagram.com/reel/DY1K6yuIh0p/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==' } },
   { brand: 'Dabur Amla Kids', category: '3D · Character', label: 'GRWM', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/grwm-dabur-amla-kids.mp4' } },
-  { brand: 'Vatika', category: 'AI & 3D', label: 'A Drop of Nature', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/vatika-drop-of-nature.mp4' } },
+  // { brand: 'Vatika', category: 'AI & 3D', label: 'A Drop of Nature', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/vatika-drop-of-nature.mp4' } },
   { brand: 'Vatika', category: 'AI & 3D', label: 'CGI', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/vatika-eho-cgi.mp4' } },
   { brand: 'Vatika Bodywash', category: '3D Animation', label: 'Product AV', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/vatika-bodywash-av.mp4' } },
   { brand: 'Vatika Menz', category: 'Influencer', label: 'Naser', tag: 'influencer', media: { kind: 'video', src: '/arebia/vatika-menz-naser.mp4' } },
@@ -36,8 +36,8 @@ const ITEMS: Item[] = [
   { brand: 'Thumbay', category: 'Influencer', label: 'Dalelak Nahed', tag: 'influencer', media: { kind: 'video', src: '/arebia/thumbay-dalelak-nahed.mp4' } },
   { brand: 'Thumbay', category: 'Influencer', label: 'Groor Albloshi', tag: 'influencer', media: { kind: 'video', src: '/arebia/thumbay-groor-albloshi.mp4' } },
   { brand: 'Thumbay', category: 'Influencer', label: 'Collab', tag: 'influencer', media: { kind: 'video', src: '/arebia/thumbay-collab.mp4' } },
-  { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Fruit Exotica', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/lulu-fruit-exotica.mp4' } },
-  { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Promo', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/lulu-cgi-2.mp4' } },
+  // { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Fruit Exotica', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/lulu-fruit-exotica.mp4' } },
+  // { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Promo', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/lulu-cgi-2.mp4' } },
   { brand: 'Lulu Hypermarket', category: 'CGI', label: 'Promo', tag: 'filmcgi', media: { kind: 'video', src: '/arebia/lulu-cgi-3.mp4' } },
   { brand: 'Waseem Akram', category: 'Celebrity Shoot', tag: 'influencer', media: { kind: 'image', src: '/arebia/waseem-1.jpg' } },
   { brand: 'Waseem Akram', category: 'Celebrity Shoot', tag: 'influencer', media: { kind: 'image', src: '/arebia/waseem-2.jpg' } },
@@ -45,7 +45,7 @@ const ITEMS: Item[] = [
 ];
 
 const FILTERS: { id: 'all' | Tag; label: string }[] = [
-  { id: 'all', label: 'All' },
+  // { id: 'all', label: 'All' },
   { id: 'filmcgi', label: 'Films & CGI' },
   { id: 'influencer', label: 'Influencer' },
   { id: 'ooh', label: 'Digital OOH' },

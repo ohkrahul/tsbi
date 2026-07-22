@@ -146,7 +146,7 @@ export default function Footer() {
         </p>
 
         {/* pill nav */}
-        <nav className="mt-8 flex flex-wrap justify-center gap-3" aria-label="Footer">
+        {/* <nav className="mt-8 flex flex-wrap justify-center gap-3" aria-label="Footer">
           {pills.map(({ href, label }) => (
             <Link
               key={href}
@@ -156,7 +156,7 @@ export default function Footer() {
               {label}
             </Link>
           ))}
-        </nav>
+        </nav> */}
 
         {/* office cards */}
         <div className="mx-auto mt-10 grid max-w-[940px] gap-6 text-left md:grid-cols-2">
@@ -189,7 +189,7 @@ export default function Footer() {
                   </span>
                   <span className="font-fb text-[14px] text-[#333] group-hover:text-magenta">{o.email}</span>
                 </a>
-                {o.phone && (
+                {/* {o.phone && (
                   <>
                     <span className="mx-4 h-5 w-px bg-black/10" />
                     <a href={o.phoneHref} className="group flex items-center gap-2.5">
@@ -199,20 +199,20 @@ export default function Footer() {
                       <span className="font-fb text-[14px] text-[#333] group-hover:text-magenta">{o.phone}</span>
                     </a>
                   </>
-                )}
+                )} */}
               </div>
             </div>
           ))}
         </div>
 
         {/* ── Subscribe Newsletter ── */}
-        <div className="mx-auto mt-12 max-w-[520px]">
+        {/* <div className="mx-auto mt-12 max-w-[520px]">
           <h3 className="font-fm text-lg font-bold uppercase tracking-[0.08em] text-ink">Subscribe Newsletter</h3>
           <p className="mx-auto mt-2 mb-5 max-w-[420px] font-fb text-[14px] leading-6 text-[#666]">
             Subscribe to receive our latest news &amp; ideas straight to your inbox.
           </p>
           <NewsletterForm />
-        </div>
+        </div> */}
         </div>
       </FooterPhotoSection>
 
@@ -224,6 +224,46 @@ export default function Footer() {
           className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l border-t border-magenta bg-[#1b1240]"
           aria-hidden
         />
+
+        {/* ── Dark footer band: brand + tagline · quick links · newsletter ── */}
+        <div className="mx-auto grid max-w-[1180px] gap-10 px-8 pb-10 pt-14 md:grid-cols-[1.15fr_0.7fr_1fr] md:gap-14">
+          {/* brand + tagline */}
+          <div>
+            <p className="font-fm text-[11px] font-semibold uppercase tracking-[0.3em] text-magenta">The Small Big Idea</p>
+            <p className="mt-4 max-w-[360px] font-fb text-[14px] leading-7 text-white/60">
+              From Mumbai to MENA, we help brands create stories that move culture, conversations, and communities.
+            </p>
+          </div>
+
+          {/* quick links */}
+          <nav aria-label="Footer navigation">
+            <h3 className="font-fm text-[11px] font-semibold uppercase tracking-[0.2em] text-magenta">Explore</h3>
+            <ul className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2.5">
+              {pills.map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="inline-block font-fm text-[13px] uppercase tracking-[0.08em] text-white/70 transition-[color,transform] duration-300 hover:translate-x-1 hover:text-magenta"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* newsletter */}
+          <div>
+            <h3 className="font-fm text-[11px] font-semibold uppercase tracking-[0.2em] text-magenta">Subscribe Newsletter</h3>
+            <p className="mb-4 mt-4 max-w-[340px] font-fb text-[14px] leading-6 text-white/60">
+              Subscribe to receive our latest news &amp; ideas straight to your inbox.
+            </p>
+            <NewsletterForm dark />
+          </div>
+        </div>
+
+        {/* divider */}
+        <div className="mx-auto max-w-[1180px] px-8"><span className="block h-px w-full bg-white/10" /></div>
 
         <div className="mx-auto flex max-w-[1180px] flex-col items-center gap-5 px-8 py-7 text-center md:flex-row md:justify-between md:text-left">
           {/* follow + socials */}

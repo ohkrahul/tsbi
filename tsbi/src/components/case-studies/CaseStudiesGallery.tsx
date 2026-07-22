@@ -21,7 +21,19 @@ const FILTERS: { label: string; fn: (s: CaseStudyGalleryItem) => boolean }[] = [
   })),
 ];
 
-const FEATURED = caseStudies.slice(0, 6); // carousel highlights only a few
+// Featured carousel — explicit running order (curated brands).
+const FEATURED_SLUGS = [
+  'gsk-yeh-science-hai',          // GSK
+  'zydus-easiest-exam',           // Zydus
+  'mumbai-indians',               // DHL × Mumbai Indians
+  'danone-nurses-day',            // Danone
+  'lipton-squid-game',            // Lipton
+  'sitaare-zameen-par',           // Sitaare Zameen Par
+  'ashok-leyland-she-drives-it',  // Ashok Leyland
+];
+const FEATURED = FEATURED_SLUGS
+  .map((slug) => caseStudies.find((c) => c.slug === slug))
+  .filter((c): c is CaseStudyGalleryItem => Boolean(c));
 const N        = FEATURED.length;
 const CARD_W   = 420;                  // base (desktop) card width (px)
 const GAP      = 16;
@@ -176,8 +188,8 @@ export default function CaseStudiesGallery() {
                   style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
                 <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)' }} />
 
-                {/* Featured badge */}
-                {isAct && study.order <= 3 && (
+                {/* Featured badge — on whichever card is centered */}
+                {isAct && (
                   <div style={{ position:'absolute', top:12, left:14, background:'rgba(255,200,0,0.92)', color:'#000', fontFamily:'var(--fm)', fontSize:9, fontWeight:700, letterSpacing:'0.1em', padding:'3px 9px', borderRadius:5 }}>
                     ★ FEATURED
                   </div>

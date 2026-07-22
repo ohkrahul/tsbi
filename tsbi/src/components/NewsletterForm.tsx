@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 
-/** Footer newsletter signup — stores the email in the DB via /api/newsletter. */
-export default function NewsletterForm() {
+/** Footer newsletter signup — stores the email in the DB via /api/newsletter.
+ *  `dark` switches the field styling for use over a dark background. */
+export default function NewsletterForm({ dark = false }: { dark?: boolean }) {
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
 
@@ -39,7 +40,7 @@ export default function NewsletterForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate className="w-full">
-      <div className="flex overflow-hidden rounded-full border border-black/15 bg-white transition-colors focus-within:border-magenta">
+      <div className={`flex overflow-hidden rounded-full border transition-colors focus-within:border-magenta ${dark ? 'border-white/25 bg-white/[0.06]' : 'border-black/15 bg-white'}`}>
         <input
           type="email"
           required
@@ -50,7 +51,7 @@ export default function NewsletterForm() {
           }}
           placeholder="Enter your email"
           aria-label="Email address"
-          className="min-w-0 flex-1 bg-transparent px-5 py-3 font-fb text-sm text-ink outline-none placeholder:text-black/40"
+          className={`min-w-0 flex-1 bg-transparent px-5 py-3 font-fb text-sm outline-none ${dark ? 'text-white placeholder:text-white/45' : 'text-ink placeholder:text-black/40'}`}
         />
         <button
           type="submit"
