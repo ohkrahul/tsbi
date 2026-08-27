@@ -111,7 +111,7 @@ export default function Footer() {
         style={{ background: 'linear-gradient(135deg,#1b0b2e 0%,#241041 55%,#2c1247 100%)' }}
       >
         {/* ── Main band ── */}
-        <div className="grid gap-10 p-6 sm:p-10 lg:grid-cols-[1.2fr_0.8fr_1.05fr_1fr] lg:gap-12 lg:p-12">
+        <div className="grid gap-10 p-6 sm:p-10 lg:grid-cols-[1.7fr_0.75fr_1fr_1fr] lg:gap-14 lg:p-12">
 
           {/* Left — image + brand card (pink glow) */}
           <div className="rounded-2xl border border-magenta/25 bg-white/[0.02] p-3 shadow-[0_0_50px_-14px_rgba(224,25,125,0.55)]">
@@ -122,7 +122,7 @@ export default function Footer() {
                 alt="The TSBI team"
                 loading="lazy"
                 decoding="async"
-                className="h-[210px] w-full object-cover"
+                className="h-[250px] w-full object-cover"
               />
             </div>
             <div className="mt-4 flex items-center gap-4 px-1 pb-1">
@@ -140,11 +140,11 @@ export default function Footer() {
             <ul className="space-y-0.5">
               {EXPLORE.map(({ href, label, icon }) => (
                 <li key={href}>
-                  <Link href={href} className="group flex items-center gap-3 py-2 text-white/75 transition-colors hover:text-white">
+                  <Link href={href} className="group inline-flex items-center gap-2 py-2 text-white/75 transition-colors hover:text-white">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-magenta/80">
                       {icon}
                     </svg>
-                    <span className="flex-1 font-fb text-[14px]">{label}</span>
+                    <span className="font-fb text-[14px]">{label}</span>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-white/30 transition-[transform,color] duration-300 group-hover:translate-x-0.5 group-hover:text-magenta">
                       <path d="M9 6l6 6-6 6" />
                     </svg>
