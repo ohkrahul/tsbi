@@ -786,9 +786,8 @@ export default function HomePage() {
               { num: '05', title: 'Search Engine Optimisation',    desc: 'Keyword-rich content and technical audits that lift rankings and high-intent traffic.' },
               { num: '06', title: 'Digital Transformation',        desc: 'D2C builds, Shopify, UI/UX and quick-commerce — from idea to impact, digitally.' },
             ].map((s) => (
-              <Link
+              <div
                 key={s.num}
-                href="/services"
                 className="group relative block aspect-[7/10] overflow-hidden rounded-2xl ring-1 ring-white/10 transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1.5 hover:ring-white/25 hover:shadow-[0_24px_60px_-20px_rgba(47,107,255,0.5)]"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -812,7 +811,7 @@ export default function HomePage() {
                     {s.desc}
                   </p>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>
