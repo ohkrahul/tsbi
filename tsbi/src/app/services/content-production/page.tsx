@@ -247,15 +247,21 @@ function HeroSlider() {
   const goTo = (i: number) => { setActive(((i % SLIDER_DATA.length) + SLIDER_DATA.length) % SLIDER_DATA.length); resetTimer(); };
   const N = SLIDER_DATA.length;
 
+  // responsive sizing — full size on desktop; shrink to fit so the active card isn't cut on mobile
+  const needsShrink = containerW < CARD_W + 48;
+  const cardW  = needsShrink ? Math.max(containerW - 56, 200) : CARD_W;
+  const cardH  = Math.round((cardW * CARD_H) / CARD_W);
+  const stride = needsShrink ? cardW + 16 : STRIDE;
+
   return (
-    <div ref={containerRef} style={{ position: 'relative', width: '100%', height: CARD_H + 56, overflow: 'hidden' }}>
+    <div ref={containerRef} style={{ position: 'relative', width: '100%', height: cardH + 56, overflow: 'hidden' }}>
       {SLIDER_DATA.map((c, i) => {
         const dist   = cDist(i, active, N);
         const isAct  = dist === 0;
         const absDist = Math.abs(dist);
         if (absDist > 2) return null;
 
-        const x       = containerW / 2 - CARD_W / 2 + dist * STRIDE;
+        const x       = containerW / 2 - cardW / 2 + dist * stride;
         const scale   = isAct ? 1 : absDist === 1 ? 0.85 : 0.72;
         const opacity = isAct ? 1 : absDist === 1 ? 0.62 : 0.28;
 
@@ -267,7 +273,7 @@ function HeroSlider() {
             onClick={() => !isAct && goTo(i)}
             style={{
               position: 'absolute', top: 4, left: 0,
-              width: CARD_W, height: CARD_H,
+              width: cardW, height: cardH,
               borderRadius: 16, overflow: 'hidden',
               cursor: isAct ? 'default' : 'pointer',
               zIndex: isAct ? 10 : absDist === 1 ? 5 : 1,
@@ -316,7 +322,7 @@ function HeroSlider() {
       {/* Arrows */}
       {(['prev','next'] as const).map(dir => (
         <button key={dir} onClick={() => goTo(dir === 'prev' ? (active - 1 + N) % N : (active + 1) % N)}
-          style={{ position: 'absolute', top: CARD_H / 2 + 4, ...(dir === 'prev' ? { left: `calc(50% - ${CARD_W/2 + 28}px)` } : { left: `calc(50% + ${CARD_W/2 - 10}px)` }), transform: 'translateY(-50%)', width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 20, padding: 0 }}
+          style={{ position: 'absolute', top: cardH / 2 + 4, ...(dir === 'prev' ? { left: `calc(50% - ${cardW/2 + 28}px)` } : { left: `calc(50% + ${cardW/2 - 10}px)` }), transform: 'translateY(-50%)', width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 20, padding: 0 }}
         >
           <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
             {dir === 'prev'

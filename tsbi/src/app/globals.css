@@ -57,14 +57,14 @@
 @layer base {
   * { margin: 0; padding: 0; box-sizing: border-box; }
 }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; } /* ponytail: kills stray mobile horizontal scroll at the root (body's own rule doesn't propagate to the viewport); if a specific element is the culprit, clip it there instead */
 body {
   background: var(--white);
   color: var(--ink);
   font-family: var(--fb);
   font-size: 16px;
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ── PRELOADER (beeyond.agency-style image-row intro) ─── */
@@ -2037,19 +2037,3 @@ body {
 .studio .st-work-card:hover { transform: translateY(-4px); box-shadow: 0 24px 60px rgba(0,0,0,.42); }
 .studio .st-tier { transition: padding-left .3s ease; }
 .studio .st-tier:hover { padding-left: 8px; }
-
-/* ── OUR SERVICES — hover "colour wave": magenta sweeps across the cream name (text clip) ── */
-.svc-name {
-  background-image: linear-gradient(90deg, var(--magenta) 0 50%, #ffffff 50% 100%);
-  background-size: 220% 100%;
-  background-position: 100% 0;            /* cream at rest (right half shows) */
-  background-repeat: no-repeat;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  transition: background-position .6s cubic-bezier(.22, 1, .36, 1), transform .4s cubic-bezier(.22, 1, .36, 1);
-  will-change: background-position;
-}
-.svc-row:hover .svc-name { background-position: 0 0; transform: translateX(8px); }  /* magenta wipes in L→R */
-@media (prefers-reduced-motion: reduce) { .svc-name { transition: none; } }

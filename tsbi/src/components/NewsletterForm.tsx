@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 /** Footer newsletter signup — stores the email in the DB via /api/newsletter.
- *  `dark` switches the field styling for use over a dark background. */
+ *  `dark` styles the field for a dark background. */
 export default function NewsletterForm({ dark = false }: { dark?: boolean }) {
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
@@ -40,7 +40,11 @@ export default function NewsletterForm({ dark = false }: { dark?: boolean }) {
 
   return (
     <form onSubmit={onSubmit} noValidate className="w-full">
-      <div className={`flex overflow-hidden rounded-full border transition-colors focus-within:border-magenta ${dark ? 'border-white/25 bg-white/[0.06]' : 'border-black/15 bg-white'}`}>
+      <div className={`flex items-center gap-2 rounded-2xl border p-1.5 pl-4 transition-colors ${dark ? 'border-white/12 bg-white/[0.04] focus-within:border-magenta/60' : 'border-black/15 bg-white focus-within:border-magenta'}`}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${dark ? 'text-white/40' : 'text-black/40'}`}>
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m3 7 9 6 9-6" />
+        </svg>
         <input
           type="email"
           required
@@ -51,15 +55,20 @@ export default function NewsletterForm({ dark = false }: { dark?: boolean }) {
           }}
           placeholder="Enter your email"
           aria-label="Email address"
-          className={`min-w-0 flex-1 bg-transparent px-5 py-3 font-fb text-sm outline-none ${dark ? 'text-white placeholder:text-white/45' : 'text-ink placeholder:text-black/40'}`}
+          className={`min-w-0 flex-1 bg-transparent py-2.5 font-fb text-sm outline-none ${dark ? 'text-white placeholder:text-white/40' : 'text-ink placeholder:text-black/40'}`}
         />
         <button
           type="submit"
           disabled={state === 'loading'}
           aria-label="Subscribe"
-          className="flex shrink-0 items-center gap-2 bg-magenta px-5 py-3 font-fm text-[11px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#c4176e] disabled:opacity-60"
+          className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-linear-to-r from-[#e0197d] to-[#ff2d92] px-5 py-2.5 font-fm text-[11px] font-bold uppercase tracking-[0.1em] text-white shadow-[0_6px_20px_-6px_rgba(224,25,125,0.8)] transition hover:brightness-110 disabled:opacity-60"
         >
-          {state === 'loading' ? '…' : <>Subscribe <span aria-hidden>→</span></>}
+          {state === 'loading' ? '…' : (
+            <>
+              Subscribe
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </>
+          )}
         </button>
       </div>
       {state === 'error' && (

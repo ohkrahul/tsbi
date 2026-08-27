@@ -154,8 +154,8 @@ const VIDEOS: Video[] = [
   { id: 'wWmPFUrZiHM', client: 'Zydus', title: 'Do Hath teen minute' },
   { id: 'MJofvf2lBNY', client: 'MI', title: 'Dil Se Indian' },
   { id: 'D8cXWh7g2kk', client: 'danone', title: 'Nurses Day Tribute Film' },
-  { id: 'lipton-squid-game', client: 'Lipton × Squid Game', title: 'A Gamified Brand Experience',
-    href: '/case-studies/lipton-squid-game', poster: '/tech/1.png' },
+  { id: 'ashok-leyland-diwali', client: 'Ashok Leyland', title: '#KhushiyonKiSteering',
+    href: '/case-studies/ashok-leyland-diwali', poster: 'https://img.youtube.com/vi/37CCZAHaYx8/hqdefault.jpg' },
   
 ];
 
@@ -644,13 +644,13 @@ export default function HomePage() {
               filling the gap) on desktop; full-width left-aligned on mobile. */}
           <div className="bts-text relative z-[4] flex flex-1 justify-center max-[1440px]:block max-[1440px]:flex-none">
             <div className="max-w-95 max-[1440px]:max-w-full">
-          <h2 className="hero-title font-fm text-[34px] font-normal text-white leading-[1.22] tracking-[0.01em] sm:text-5xl uppercase">
-                Brands that
+          <h2 className="hero-title font-fm text-[34px] font-bold text-white leading-[1.22] tracking-[0.01em] sm:text-5xl uppercase">
+                Stories
                 <br />
-                <span className="italic">trust us</span>
+                <span className="italic">worth telling</span>
               </h2>
               <p className="mt-3 max-w-75 text-sm font-light leading-relaxed text-white/85">
-                Great things happen when the right brands meet the right people. We&apos;re a digital marketing agency that believes the perfect collaboration is waiting to happen.
+                Great things happen when the right idea meets the right moment. A look at the stories we&apos;ve helped tell.
               </p>
               {/* stats — count up on reveal, white on the pink section */}
               <div className="stats-row mt-8 grid max-w-md grid-cols-2 gap-x-6 gap-y-6">
@@ -763,38 +763,56 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── OUR SERVICES — expertise list (charcoal + cream; hover animates) ─────────── */}
-      <section className="bg-[#1b1b1e] px-6 py-20 text-[#efece4] sm:px-10 sm:py-28 lg:px-14" aria-label="Our Services">
-        <div className="mx-auto max-w-[1300px]">
-          <div className="reveal mb-3 text-center font-fm text-[11px] font-semibold uppercase tracking-[0.24em] text-[#efece4]/55">Our Services</div>
-          <h2 className="reveal text-center font-fm text-[clamp(30px,5vw,60px)] font-bold uppercase leading-[1.05] tracking-[-0.01em] text-[#efece4]">
-            Conceptualising <span className="text-[#efece4]/35">/</span> Produce <span className="text-[#efece4]/35">/</span> Perform
+      {/* ── OUR SERVICES — card grid (AI imagery in /public/services · hover reveals copy) ── */}
+      <section
+        className="px-6 py-20 text-white sm:px-10 sm:py-28 lg:px-14"
+        style={{ background: 'radial-gradient(circle at 50% -10%, rgba(47,107,255,0.12), transparent 45%), #0a0e17' }}
+        aria-label="Our Services"
+      >
+        <div className="mx-auto max-w-[1600px]">
+          <div className="reveal mb-3 flex items-center justify-center gap-2 font-fm text-[11px] font-semibold uppercase tracking-[0.28em] text-[#4d8bff]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#4d8bff]" /> Our Services
+          </div>
+          <h2 className="reveal text-center font-fm text-[clamp(30px,5vw,60px)] font-bold uppercase leading-[1.05] tracking-[-0.01em] text-white">
+            Conceptualising <span className="text-white/30">/</span> Produce <span className="text-white/30">/</span> Perform
           </h2>
 
-          <div className="mt-12 border-t border-[#efece4]/15 sm:mt-16">
+          <div className="reveal mt-12 grid grid-cols-2 gap-4 sm:mt-16 sm:grid-cols-3 lg:grid-cols-6 lg:gap-5">
             {[
-              { title: 'Social Media Marketing',        desc: 'Thumb-stopping, platform-native content that turns scrolls into stops and keeps your brand in-feed.' },
-              { title: 'Performance Media Marketing',   desc: 'Funnel-based, ROAS-focused media across Google, Meta & programmatic — built to convert.' },
-              { title: 'Content Production (TVC & DVC)', desc: 'Cinematic TVCs and mobile-first DVCs, produced in-house for attention at scale.' },
-              { title: 'Influencer & Meme Marketing',   desc: 'Creator collaborations and meme-led campaigns built for reach, relevance and results.' },
-              { title: 'Search Engine Optimisation',    desc: 'Keyword-rich content and technical audits that lift rankings and high-intent traffic.' },
-              { title: 'Digital Transformation',        desc: 'D2C builds, Shopify, UI/UX and quick-commerce — from idea to impact, digitally.' },
+              { num: '01', title: 'Social Media Marketing',        desc: 'Thumb-stopping, platform-native content that turns scrolls into stops and keeps your brand in-feed.' },
+              { num: '02', title: 'Performance Media Marketing',   desc: 'Funnel-based, ROAS-focused media across Google, Meta & programmatic — built to convert.' },
+              { num: '03', title: 'Content Production (TVC & DVC)', desc: 'Cinematic TVCs and mobile-first DVCs, produced in-house for attention at scale.' },
+              { num: '04', title: 'Influencer & Meme Marketing',   desc: 'Creator collaborations and meme-led campaigns built for reach, relevance and results.' },
+              { num: '05', title: 'Search Engine Optimisation',    desc: 'Keyword-rich content and technical audits that lift rankings and high-intent traffic.' },
+              { num: '06', title: 'Digital Transformation',        desc: 'D2C builds, Shopify, UI/UX and quick-commerce — from idea to impact, digitally.' },
             ].map((s) => (
-              <div
-                key={s.title}
-                className="svc-row group grid grid-cols-1 items-center gap-x-8 gap-y-2 border-b border-[#efece4]/15 py-7 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:py-9"
+              <Link
+                key={s.num}
+                href="/services"
+                className="group relative block aspect-[7/10] overflow-hidden rounded-2xl ring-1 ring-white/10 transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1.5 hover:ring-white/25 hover:shadow-[0_24px_60px_-20px_rgba(47,107,255,0.5)]"
               >
-                <h3 className="svc-name font-fm text-[clamp(24px,3.6vw,46px)] font-bold uppercase leading-none tracking-[-0.01em]">
-                  {s.title}
-                </h3>
-                <span aria-hidden className="hidden select-none text-[clamp(22px,3vw,40px)] font-light text-[#efece4]/30 transition-[transform,color] duration-300 ease-out group-hover:rotate-12 group-hover:text-[#efece4]/70 md:block">/</span>
-                <div className="flex items-center justify-between gap-4">
-                  <p className="max-w-[440px] text-[13px] font-light leading-[1.7] text-[#efece4]/50 transition-colors duration-300 group-hover:text-[#efece4]/80 sm:text-sm">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/services/${s.num}.png`}
+                  alt={s.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
+                />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#05070d] via-[#05070d]/30 to-transparent" />
+
+                <span aria-hidden className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-black/20 text-white backdrop-blur-sm transition-[background-color,border-color,transform] duration-300 group-hover:-translate-y-0.5 group-hover:border-[#2f6bff] group-hover:bg-[#2f6bff]">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                </span>
+
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <div className="font-fm text-[12px] font-bold tracking-[0.14em] text-[#4d8bff]">{s.num}</div>
+                  <h3 className="mt-1 font-fm text-[14px] font-semibold leading-tight text-white sm:text-[15px]">{s.title}</h3>
+                  <p className="max-h-0 overflow-hidden text-[12px] font-light leading-snug text-white/70 opacity-0 transition-[max-height,opacity,margin-top] duration-500 ease-out group-hover:mt-2 group-hover:max-h-28 group-hover:opacity-100">
                     {s.desc}
                   </p>
-                  <span aria-hidden className="shrink-0 -translate-x-3 text-xl text-[#efece4]/70 opacity-0 transition-[opacity,transform] duration-300 ease-out group-hover:translate-x-0 group-hover:opacity-100">→</span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

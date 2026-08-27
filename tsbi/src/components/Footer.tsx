@@ -1,39 +1,44 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import NewsletterForm from '@/components/NewsletterForm';
-import FooterPhotoSection from '@/components/FooterPhotoSection';
 
-const pills = [
-  { href: '/about', label: 'About Us' },
-  { href: '/services', label: 'Services' },
-  { href: '/careers', label: 'Careers' },
-  { href: '/case-studies', label: 'Case Studies' },
-  { href: '/clients', label: 'Clients' },
-  { href: '/media', label: 'Media' },
+// ── EXPLORE links (each with a small leading icon) ──
+const EXPLORE = [
+  {
+    href: '/about', label: 'About Us',
+    icon: <><circle cx="12" cy="12" r="9" /><path d="M12 16v-4M12 8h.01" /></>,
+  },
+  {
+    href: '/services', label: 'Services',
+    icon: <><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>,
+  },
+  {
+    href: '/careers', label: 'Careers',
+    icon: <><rect x="2.5" y="7" width="19" height="13" rx="2" /><path d="M8 7V5.5A2 2 0 0 1 10 3.5h4a2 2 0 0 1 2 2V7" /></>,
+  },
+  {
+    href: '/case-studies', label: 'Case Studies',
+    icon: <><path d="M14 2.5H7A2 2 0 0 0 5 4.5v15a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7.5z" /><path d="M14 2.5v5h5M9 13h6M9 17h6" /></>,
+  },
+  {
+    href: '/clients', label: 'Clients',
+    icon: <><path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20" /><circle cx="10" cy="8" r="3.2" /><path d="M20 20v-1.5a3.5 3.5 0 0 0-2.6-3.4" /></>,
+  },
+  {
+    href: '/media', label: 'Media',
+    icon: <><rect x="3" y="4" width="18" height="16" rx="2.5" /><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none" /></>,
+  },
 ];
 
 const offices = [
   {
     name: 'TSBI HQ',
-    address: [
-      'Neelkamal Building, next to Satyam Tower,',
-      'Deonar, Govandi East, Mumbai,',
-      'Maharashtra 400088',
-    ],
+    address: ['Neelkamal Building, next to Satyam Tower,', 'Deonar, Govandi East, Mumbai,', 'Maharashtra 400088'],
     email: 'communication@tsbi.in',
-    phone: '+022 2551 3339',
-    phoneHref: 'tel:+912225513339',
   },
   {
     name: 'TSBI MENA',
-    address: [
-      'Business Center 1, M Floor,',
-      'The Meydan Hotel, Nad Al Sheba,',
-      'Dubai, U.A.E.',
-    ],
+    address: ['Business Center 1, M Floor,', 'The Meydan Hotel, Nad Al Sheba,', 'Dubai, U.A.E.'],
     email: 'enquiries@tsbiglobal.com',
-    phone: '',
-    phoneHref: '',
   },
 ];
 
@@ -45,230 +50,164 @@ const bottomLinks = [
 
 const socials = [
   {
-    label: 'Instagram',
-    href: 'https://www.instagram.com/thesmallbigidea/',
+    label: 'Instagram', href: 'https://www.instagram.com/thesmallbigidea/',
     svg: (
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
       </svg>
     ),
   },
   {
-    label: 'Facebook',
-    href: 'https://www.facebook.com/TheSmallBigIdea/?fref=ts',
+    label: 'Facebook', href: 'https://www.facebook.com/TheSmallBigIdea/?fref=ts',
     svg: (
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M14 8.5h2.2V5.4c-.4-.05-1.7-.17-3-.17-3 0-5 1.8-5 5.2v2.3H5.3v3.4h2.9V24h3.5v-7.9h2.8l.5-3.4h-3.3v-2c0-1 .3-1.7 1.8-1.7z" />
       </svg>
     ),
   },
   {
-    label: 'X',
-    href: 'https://twitter.com/thesmallbigidea',
+    label: 'X', href: 'https://twitter.com/thesmallbigidea',
     svg: (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
         <path d="M13.6 10.6 20.9 2h-1.7l-6.3 7.4L7.8 2H2l7.7 11.2L2 22h1.7l6.7-7.9 5.4 7.9H22l-8-11.4zm-2.4 2.8-.8-1.1L4.3 3.3h2.6l5 7.2.8 1.1 6.5 9.3h-2.6l-5.2-7.5z" />
       </svg>
     ),
   },
   {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/company/thesmallbigidea/',
+    label: 'LinkedIn', href: 'https://www.linkedin.com/company/thesmallbigidea/',
     svg: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
       </svg>
     ),
   },
   {
-    label: 'YouTube',
-    href: 'https://www.youtube.com/channel/UCjZKp_9V6SVAKnr9KpQC6OA',
+    label: 'YouTube', href: 'https://www.youtube.com/channel/UCjZKp_9V6SVAKnr9KpQC6OA',
     svg: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2.5" y="6" width="19" height="12" rx="3.5" />
-        <path d="M10.5 9.4l4.6 2.6-4.6 2.6z" fill="currentColor" stroke="none" />
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2.5" y="6" width="19" height="12" rx="3.5" /><path d="M10.5 9.4l4.6 2.6-4.6 2.6z" fill="currentColor" stroke="none" />
       </svg>
     ),
   },
 ];
 
-const pinIcon = (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z" />
-    <circle cx="12" cy="10" r="2.5" />
-  </svg>
-);
-const mailIcon = (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="5" width="18" height="14" rx="2" />
-    <path d="m3 7 9 6 9-6" />
-  </svg>
-);
-const phoneIcon = (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7A2 2 0 0 1 22 16.9z" />
-  </svg>
-);
+/** magenta section heading + short underline bar */
+function Head({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-5">
+      <h3 className="font-fm text-[12px] font-bold uppercase tracking-[0.18em] text-magenta">{children}</h3>
+      <span className="mt-2 block h-[2px] w-7 rounded-full bg-magenta" />
+    </div>
+  );
+}
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-white">
-      {/* ── White content area (photo backdrop + cursor spotlight) ── */}
-      <FooterPhotoSection>
-        <div className="mx-auto max-w-[1180px] px-6 pb-12 pt-16 text-center">
-        <Link href="/" className="inline-flex" aria-label="The Small Big Idea — home">
-          <Image src="/TSBIInOBG.png" alt="The Small Big Idea" width={517} height={483} style={{ width: 'auto', height: 100 }} />
-        </Link>
+    <footer className="bg-white p-3 sm:p-4">
+      <div
+        className="overflow-hidden rounded-[28px] border border-white/10 text-white shadow-[0_24px_90px_-40px_rgba(224,25,125,0.55)]"
+        style={{ background: 'linear-gradient(135deg,#1b0b2e 0%,#241041 55%,#2c1247 100%)' }}
+      >
+        {/* ── Main band ── */}
+        <div className="grid gap-10 p-6 sm:p-10 lg:grid-cols-[1.2fr_0.8fr_1.05fr_1fr] lg:gap-12 lg:p-12">
 
-        <p className="mt-5 font-fm text-[11px] font-semibold uppercase tracking-[0.32em] text-magenta">
-          The Small Big Idea
-        </p>
-
-        <h2 className="mt-3 font-fm text-[44px] font-black leading-[1.02] tracking-tight text-ink sm:text-[64px] uppercase italic">
-          Small Ideas.
-          <br />
-          <span className="italic text-magenta">Big Impact.</span>
-        </h2>
-
-        {/* dot divider */}
-        <div className="mt-4 flex items-center justify-center gap-2.5">
-          <span className="h-px w-12 bg-magenta/40" />
-          <span className="h-1.5 w-1.5 rounded-full bg-magenta" />
-          <span className="h-px w-12 bg-magenta/40" />
-        </div>
-
-        <p className="mx-auto mt-5 max-w-[540px] font-fb text-[15px] leading-7 text-[#666]">
-          From Mumbai to MENA, we help brands create stories that move culture, conversations, and communities.
-        </p>
-
-        {/* pill nav */}
-        {/* <nav className="mt-8 flex flex-wrap justify-center gap-3" aria-label="Footer">
-          {pills.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="btn-pink-fill rounded-full border border-black/15 px-5 py-2.5 font-fm text-[11px] font-semibold uppercase tracking-[0.1em] text-ink"
-            >
-              {label}
-            </Link>
-          ))}
-        </nav> */}
-
-        {/* office cards */}
-        <div className="mx-auto mt-10 grid max-w-[940px] gap-6 text-left md:grid-cols-2">
-          {offices.map((o) => (
-            <div
-              key={o.name}
-              className="rounded-2xl border border-black/[0.06] bg-white p-6 shadow-[0_12px_40px_rgba(0,0,0,0.06)]"
-            >
-              <div className="flex items-start gap-4">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-magenta/10 text-magenta">
-                  {pinIcon}
-                </span>
-                <div>
-                  <h3 className="font-fm text-sm font-bold uppercase tracking-[0.12em] text-magenta">{o.name}</h3>
-                  <span className="mt-1.5 block h-[3px] w-6 rounded-full bg-magenta" />
-                  <p className="mt-2.5 font-fb text-[14px] leading-6 text-[#333]">
-                    {o.address.map((line, i) => (
-                      <span key={i} className="block">{line}</span>
-                    ))}
-                  </p>
-                </div>
-              </div>
-
-              <hr className="my-4 border-black/[0.07]" />
-
-              <div className="flex flex-wrap items-center gap-y-3">
-                <a href={`mailto:${o.email}`} className="group flex items-center gap-2.5">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-magenta/10 text-magenta">
-                    {mailIcon}
-                  </span>
-                  <span className="font-fb text-[14px] text-[#333] group-hover:text-magenta">{o.email}</span>
-                </a>
-                {/* {o.phone && (
-                  <>
-                    <span className="mx-4 h-5 w-px bg-black/10" />
-                    <a href={o.phoneHref} className="group flex items-center gap-2.5">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-magenta/10 text-magenta">
-                        {phoneIcon}
-                      </span>
-                      <span className="font-fb text-[14px] text-[#333] group-hover:text-magenta">{o.phone}</span>
-                    </a>
-                  </>
-                )} */}
-              </div>
+          {/* Left — image + brand card (pink glow) */}
+          <div className="rounded-2xl border border-magenta/25 bg-white/[0.02] p-3 shadow-[0_0_50px_-14px_rgba(224,25,125,0.55)]">
+            <div className="overflow-hidden rounded-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/about%20us/IMG_2081.webp"
+                alt="The TSBI team"
+                loading="lazy"
+                decoding="async"
+                className="h-[210px] w-full object-cover"
+              />
             </div>
-          ))}
-        </div>
-
-        {/* ── Subscribe Newsletter ── */}
-        {/* <div className="mx-auto mt-12 max-w-[520px]">
-          <h3 className="font-fm text-lg font-bold uppercase tracking-[0.08em] text-ink">Subscribe Newsletter</h3>
-          <p className="mx-auto mt-2 mb-5 max-w-[420px] font-fb text-[14px] leading-6 text-[#666]">
-            Subscribe to receive our latest news &amp; ideas straight to your inbox.
-          </p>
-          <NewsletterForm />
-        </div> */}
-        </div>
-      </FooterPhotoSection>
-
-      {/* ── Dark bottom bar ── */}
-      <div className="relative bg-linear-to-r from-[#101a33] via-[#241640] to-[#34195a]">
-        {/* magenta top line + centered notch */}
-        <span className="absolute inset-x-0 top-0 h-px bg-magenta" aria-hidden />
-        <span
-          className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l border-t border-magenta bg-[#1b1240]"
-          aria-hidden
-        />
-
-        {/* ── Dark footer band: brand + tagline · quick links · newsletter ── */}
-        <div className="mx-auto grid max-w-[1180px] gap-10 px-8 pb-10 pt-14 md:grid-cols-[1.15fr_0.7fr_1fr] md:gap-14">
-          {/* brand + tagline */}
-          <div>
-            <p className="font-fm text-[11px] font-semibold uppercase tracking-[0.3em] text-magenta">The Small Big Idea</p>
-            <p className="mt-4 max-w-[360px] font-fb text-[14px] leading-7 text-white/60">
-              From Mumbai to MENA, we help brands create stories that move culture, conversations, and communities.
-            </p>
+            <div className="mt-4 flex items-center gap-4 px-1 pb-1">
+              <span className="h-9 w-[3px] shrink-0 rounded-full bg-magenta" />
+              <span className="font-fm text-3xl font-black leading-none tracking-tight text-white">TSBI</span>
+              <p className="font-fb text-[12.5px] leading-5 text-white/55">
+                Technology. Strategy. Innovation. Building digital solutions that drive impact.
+              </p>
+            </div>
           </div>
 
-          {/* quick links */}
+          {/* Explore */}
           <nav aria-label="Footer navigation">
-            <h3 className="font-fm text-[11px] font-semibold uppercase tracking-[0.2em] text-magenta">Explore</h3>
-            <ul className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2.5">
-              {pills.map(({ href, label }) => (
+            <Head>Explore</Head>
+            <ul className="space-y-0.5">
+              {EXPLORE.map(({ href, label, icon }) => (
                 <li key={href}>
-                  <Link
-                    href={href}
-                    className="inline-block font-fm text-[13px] uppercase tracking-[0.08em] text-white/70 transition-[color,transform] duration-300 hover:translate-x-1 hover:text-magenta"
-                  >
-                    {label}
+                  <Link href={href} className="group flex items-center gap-3 py-2 text-white/75 transition-colors hover:text-white">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-magenta/80">
+                      {icon}
+                    </svg>
+                    <span className="flex-1 font-fb text-[14px]">{label}</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-white/30 transition-[transform,color] duration-300 group-hover:translate-x-0.5 group-hover:text-magenta">
+                      <path d="M9 6l6 6-6 6" />
+                    </svg>
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* newsletter */}
+          {/* Newsletter */}
           <div>
-            <h3 className="font-fm text-[11px] font-semibold uppercase tracking-[0.2em] text-magenta">Subscribe Newsletter</h3>
-            <p className="mb-4 mt-4 max-w-[340px] font-fb text-[14px] leading-6 text-white/60">
+            <Head>Subscribe Newsletter</Head>
+            <p className="mb-4 font-fb text-[13.5px] leading-6 text-white/60">
               Subscribe to receive our latest news &amp; ideas straight to your inbox.
             </p>
             <NewsletterForm dark />
+            <p className="mt-3 flex items-center gap-2 font-fb text-[12px] text-white/45">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-magenta/70">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" />
+              </svg>
+              No spam. Unsubscribe anytime.
+            </p>
+          </div>
+
+          {/* Offices */}
+          <div>
+            <Head>Offices</Head>
+            <div className="space-y-5">
+              {offices.map((o, idx) => (
+                <div key={o.name}>
+                  <div className="flex gap-3">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-magenta/12 text-magenta">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z" /><circle cx="12" cy="10" r="2.5" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p className="font-fm text-[12px] font-bold uppercase tracking-[0.1em] text-white">{o.name}</p>
+                      <p className="mt-1.5 font-fb text-[12.5px] leading-6 text-white/55">
+                        {o.address.map((line, i) => (
+                          <span key={i} className="block">{line}</span>
+                        ))}
+                      </p>
+                      <a href={`mailto:${o.email}`} className="mt-1 inline-block font-fb text-[12.5px] text-magenta transition-colors hover:underline">
+                        {o.email}
+                      </a>
+                    </div>
+                  </div>
+                  {idx === 0 && <div className="mt-5 h-px w-full bg-white/10" />}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* divider */}
-        <div className="mx-auto max-w-[1180px] px-8"><span className="block h-px w-full bg-white/10" /></div>
-
-        <div className="mx-auto flex max-w-[1180px] flex-col items-center gap-5 px-8 py-7 text-center md:flex-row md:justify-between md:text-left">
-          {/* follow + socials */}
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3">
-            <span className="font-fm text-[11px] uppercase tracking-[0.16em] text-white/60">Follow us on</span>
+        {/* ── Bottom bar ── */}
+        <div className="flex flex-col items-center gap-5 border-t border-white/10 px-6 py-6 text-center sm:px-10 lg:flex-row lg:justify-between lg:px-12 lg:text-left">
+          {/* badge + follow + socials */}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-magenta/50 font-fm text-[10px] font-black tracking-tight text-magenta shadow-[0_0_20px_-4px_rgba(224,25,125,0.7)]">
+              TSBI
+            </span>
+            <span className="font-fm text-[11px] uppercase tracking-[0.16em] text-white/55">Follow us on</span>
             <div className="flex gap-2.5">
               {socials.map((s) => (
                 <a
@@ -277,7 +216,7 @@ export default function Footer() {
                   aria-label={s.label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 text-white/80 transition-colors hover:border-magenta hover:bg-magenta hover:text-white"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 text-white/75 transition-colors hover:border-magenta hover:bg-magenta hover:text-white"
                 >
                   {s.svg}
                 </a>
@@ -285,19 +224,19 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* center links */}
-          <nav className="flex items-center gap-3 font-fm text-[11px] uppercase tracking-[0.1em] text-white/75">
+          {/* legal links */}
+          <nav className="flex items-center gap-4 font-fm text-[11px] uppercase tracking-[0.1em] text-white/70">
             {bottomLinks.map((l, i) => (
-              <span key={l.href} className="flex items-center gap-3">
-                {i > 0 && <span className="text-white/25">|</span>}
+              <span key={l.href} className="flex items-center gap-4">
+                {i > 0 && <span className="h-1 w-1 rounded-full bg-magenta" />}
                 <Link href={l.href} className="transition-colors hover:text-magenta">{l.label}</Link>
               </span>
             ))}
           </nav>
 
           {/* copyright */}
-          <div className="font-fm text-[11px] leading-5 md:text-right">
-            <p className="text-white/80">© {year} TSBI. All Right Reserved.</p>
+          <div className="font-fm text-[11px] leading-5 lg:text-right">
+            <p className="text-white/70">© {year} TSBI. All Rights Reserved.</p>
             <p className="text-magenta">All Wrong Reversed.</p>
           </div>
         </div>
