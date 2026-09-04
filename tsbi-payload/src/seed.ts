@@ -119,4 +119,4 @@ async function run() {
   process.exit(0)
 }
 
-run().catch((e) => { console.error(e); process.exit(1) })
+await run().catch((e) => { console.error(e); process.exit(1) })
