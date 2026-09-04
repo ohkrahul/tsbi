@@ -80,6 +80,21 @@ assert.deepEqual(parseFields(fields, fd([['order', '  ']])), {
 // Non-numeric upload ids (non-postgres adapters) stay strings.
 assert.deepEqual(parseFields([fields[7]!], fd([['cover', 'abc123']])), { cover: 'abc123' })
 
+// Auth fields: a blank password is omitted (an edit must not wipe it), a filled
+// one goes through verbatim — no trimming, whitespace can be part of it.
+const authFields: FieldDef[] = [
+  { name: 'email', label: 'E', type: 'email', required: true },
+  { name: 'password', label: 'P', type: 'password' },
+]
+assert.deepEqual(parseFields(authFields, fd([['email', ' me@tsbi.in '], ['password', '']])), {
+  email: 'me@tsbi.in',
+})
+assert.deepEqual(parseFields(authFields, fd([['email', 'me@tsbi.in'], ['password', ' pa ss ']])), {
+  email: 'me@tsbi.in',
+  password: ' pa ss ',
+})
+assert.deepEqual(parseFields(authFields, fd([])), { email: null })
+
 // Registry sanity: unique slugs, every column has a field, rows declare subFields.
 const slugs = COLLECTIONS.map((c) => c.slug)
 assert.equal(new Set(slugs).size, slugs.length, 'collection slugs must be unique')

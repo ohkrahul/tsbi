@@ -4,8 +4,22 @@ export type ColumnDef = { key: string; label: string }
 export type FieldDef = {
   name: string
   label: string
-  /** `tags` = text hasMany (one per line), `rows` = array of objects, `upload` = media relation. */
-  type: 'text' | 'textarea' | 'number' | 'select' | 'checkbox' | 'date' | 'tags' | 'rows' | 'upload'
+  /**
+   * `tags` = text hasMany (one per line), `rows` = array of objects,
+   * `upload` = media relation, `password` = write-only (blank means "leave as is").
+   */
+  type:
+    | 'text'
+    | 'textarea'
+    | 'number'
+    | 'select'
+    | 'checkbox'
+    | 'date'
+    | 'tags'
+    | 'rows'
+    | 'upload'
+    | 'email'
+    | 'password'
   required?: boolean
   options?: string[]
   hint?: string
@@ -115,6 +129,25 @@ export const COLLECTIONS: CollectionDef[] = [
       { name: 'cells', label: 'Cells', type: 'tags' },
       { name: 'isEntertainment', label: 'Entertainment client', type: 'checkbox', half: true },
       { name: 'showOnHome', label: 'Show on home', type: 'checkbox', half: true },
+    ],
+  },
+  {
+    // Studio accounts. This is the only place users can be managed now that
+    // Payload's own /admin UI is gone. If every user is ever deleted, Payload
+    // allows creating the first one unauthenticated:
+    //   curl -X POST localhost:3005/api/users -H 'Content-Type: application/json' \
+    //        -d '{"email":"you@tsbi.in","password":"…"}'
+    slug: 'users', label: 'Users', singular: 'User', defaultSort: 'email',
+    columns: [{ key: 'email', label: 'Email' }, { key: 'name', label: 'Name' }],
+    fields: [
+      { name: 'email', label: 'Email', type: 'email', required: true, half: true },
+      t('name', 'Name', { half: true }),
+      {
+        name: 'password',
+        label: 'Password',
+        type: 'password',
+        hint: 'Required for a new user. Leave blank to keep the existing password.',
+      },
     ],
   },
 ]

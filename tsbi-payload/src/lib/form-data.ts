@@ -45,6 +45,13 @@ export function parseFields(fields: FieldDef[], fd: FormData) {
         data[f.name] = s === null ? null : /^\d+$/.test(s) ? Number(s) : s
         break
       }
+      case 'password': {
+        // Omitted entirely when blank — sending null would clear the password
+        // on every edit. Never trimmed: whitespace can be part of a password.
+        const s = String(raw ?? '')
+        if (s !== '') data[f.name] = s
+        break
+      }
       default:
         data[f.name] = blankToNull(raw)
     }

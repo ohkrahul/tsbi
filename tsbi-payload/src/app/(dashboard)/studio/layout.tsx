@@ -28,12 +28,6 @@ export default async function StudioLayout({ children }: { children: React.React
         <SidebarNav items={navItems} />
         <div className="mt-auto grid gap-1 px-3 pt-4">
           <ThemeToggle />
-          <a
-            href="/admin"
-            className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-xs transition-colors"
-          >
-            Payload admin →
-          </a>
           <div className="px-3 pt-2">
             <LogoutButton email={typeof user.email === 'string' ? user.email : undefined} />
           </div>

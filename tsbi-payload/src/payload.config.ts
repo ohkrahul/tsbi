@@ -18,10 +18,9 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
-  admin: {
-    user: Users.slug,
-    importMap: { baseDir: path.resolve(dirname) },
-  },
+  // No admin UI — /studio replaces it. `user` still tells Payload which
+  // collection authenticates.
+  admin: { user: Users.slug },
   collections: [Users, Media, CaseStudies, Journal, MediaCoverage, Careers, Clients],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

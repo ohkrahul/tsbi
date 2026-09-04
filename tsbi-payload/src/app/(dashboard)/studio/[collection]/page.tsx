@@ -103,6 +103,11 @@ export default async function ListPage({
       {one('deleted') ? (
         <p className="text-muted-foreground mt-6 rounded-md border px-3 py-2 text-sm">Deleted.</p>
       ) : null}
+      {one('error') ? (
+        <p className="border-destructive/40 bg-destructive/10 text-destructive mt-6 rounded-md border px-3 py-2 text-sm">
+          {one('error')}
+        </p>
+      ) : null}
 
       <form className="mt-6 flex max-w-sm gap-2">
         <Input name="q" defaultValue={q} placeholder={`Search ${def.columns[0].label.toLowerCase()}…`} />

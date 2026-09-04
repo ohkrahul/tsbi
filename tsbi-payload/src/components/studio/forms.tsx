@@ -46,6 +46,8 @@ function initialValue(f: FieldDef, doc?: Doc): string {
       return String(v).slice(0, 10)
     case 'upload':
       return String(typeof v === 'object' ? ((v as Doc).id ?? '') : v)
+    case 'password':
+      return '' // write-only
     default:
       return String(v)
   }
@@ -125,9 +127,14 @@ function Field({ f, doc, media }: { f: FieldDef; doc?: Doc; media: MediaOption[]
         <Input
           id={id}
           name={f.name}
-          type={f.type === 'number' ? 'number' : f.type === 'date' ? 'date' : 'text'}
+          type={
+            f.type === 'number' || f.type === 'date' || f.type === 'email' || f.type === 'password'
+              ? f.type
+              : 'text'
+          }
           defaultValue={value}
           required={f.required}
+          autoComplete={f.type === 'password' ? 'new-password' : undefined}
         />
       )}
 

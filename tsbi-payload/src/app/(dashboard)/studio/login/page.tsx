@@ -20,13 +20,6 @@ export default async function StudioLoginPage() {
         </CardHeader>
         <CardContent>
           <LoginForm />
-          <p className="text-muted-foreground mt-4 text-xs">
-            No account yet? Create the first user in the{' '}
-            <a href="/admin" className="underline">
-              Payload admin
-            </a>
-            .
-          </p>
         </CardContent>
       </Card>
     </div>

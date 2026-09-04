@@ -44,8 +44,21 @@ export async function deleteDoc(fd: FormData) {
   const id = String(fd.get('__id') ?? '')
   if (!WRITABLE.has(slug) || !id) throw new Error('Bad delete request')
 
-  await assertUser()
+  const user = await assertUser()
   const payload = await getPayloadClient()
+
+  // Losing every account means losing the studio — there's no /admin to fall
+  // back to any more.
+  if (slug === 'users') {
+    const blocked =
+      String(user.id) === id
+        ? 'You cannot delete the account you are signed in with.'
+        : (await payload.count({ collection: 'users' })).totalDocs <= 1
+          ? 'This is the last account — the studio would be locked out.'
+          : null
+    if (blocked) redirect(`/studio/users?error=${encodeURIComponent(blocked)}`)
+  }
+
   await payload.delete({ collection: slug as never, id })
 
   revalidatePath(`/studio/${slug}`)
