@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { caseStudies } from '@/lib/caseStudies';
+import { getCaseStudiesGallery } from '@/lib/cms';
 
 /* Small typographic helpers for the rich (tech) case-study layout. */
 function Heading({ children }: { children: string }) {
@@ -33,14 +34,16 @@ export default async function CaseStudyDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const idx   = caseStudies.findIndex((s) => s.slug === slug);
-  const study = caseStudies[idx];
+  const cmsList = await getCaseStudiesGallery();
+  const list = cmsList.length ? cmsList : caseStudies; // CMS first, hardcoded fallback
+  const idx   = list.findIndex((s) => s.slug === slug);
+  const study = list[idx];
 
   if (!study) notFound();
 
-  const prev = idx > 0                         ? caseStudies[idx - 1] : null;
-  const next = idx < caseStudies.length - 1    ? caseStudies[idx + 1] : null;
-  const total = caseStudies.length;
+  const prev = idx > 0                 ? list[idx - 1] : null;
+  const next = idx < list.length - 1   ? list[idx + 1] : null;
+  const total = list.length;
 
   return (
     <main className="cs-detail-main">

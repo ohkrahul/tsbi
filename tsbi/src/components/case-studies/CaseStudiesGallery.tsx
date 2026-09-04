@@ -1,25 +1,15 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { caseStudies } from '@/lib/caseStudies';
 import type { CaseStudyGalleryItem } from '@/lib/caseStudies';
 
-/* ── Brand filters — one chip per brand, A→Z, plus "All". ── */
 /* Collapse same-brand variants into one chip (e.g. Zydus Lifesciences / Zydus India /
    Zydus Vaxiflu → "Zydus"). */
 const brandOf = (clientName: string) =>
   clientName.startsWith('Zydus') ? 'Zydus' : clientName;
-const BRANDS = Array.from(new Set(caseStudies.map((c) => brandOf(c.clientName))))
-  .sort((a, b) => a.localeCompare(b));
-const FILTERS: { label: string; fn: (s: CaseStudyGalleryItem) => boolean }[] = [
-  { label: 'All', fn: () => true },
-  ...BRANDS.map((brand) => ({
-    label: brand,
-    fn: (s: CaseStudyGalleryItem) => brandOf(s.clientName) === brand,
-  })),
-];
 
 // Featured carousel — explicit running order (curated brands).
 const FEATURED_SLUGS = [
@@ -31,17 +21,13 @@ const FEATURED_SLUGS = [
   'sitaare-zameen-par',           // Sitaare Zameen Par
   'ashok-leyland-she-drives-it',  // Ashok Leyland
 ];
-const FEATURED = FEATURED_SLUGS
-  .map((slug) => caseStudies.find((c) => c.slug === slug))
-  .filter((c): c is CaseStudyGalleryItem => Boolean(c));
-const N        = FEATURED.length;
 const CARD_W   = 420;                  // base (desktop) card width (px)
 const GAP      = 16;
 
 /* circular distance: shortest path around the ring */
-function cDist(i: number, active: number) {
-  const d = ((i - active) % N + N) % N;
-  return d > N / 2 ? d - N : d;
+function cDist(i: number, active: number, n: number) {
+  const d = ((i - active) % n + n) % n;
+  return d > n / 2 ? d - n : d;
 }
 
 /* scale / opacity per distance */
@@ -82,13 +68,31 @@ function GridCard({ study }: { study: CaseStudyGalleryItem }) {
   );
 }
 
-export default function CaseStudiesGallery() {
+export default function CaseStudiesGallery({ studies = caseStudies }: { studies?: CaseStudyGalleryItem[] }) {
   const [active, setActive]           = useState(0);
   const [activeFilter, setActiveFilter] = useState(0);
   const [query, setQuery]             = useState('');
   const [containerW, setContainerW]   = useState(1280);
   const containerRef = useRef<HTMLDivElement>(null);
   const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Brand filter chips (A→Z) + featured carousel — derived from the current data set.
+  const BRANDS = useMemo(
+    () => Array.from(new Set(studies.map((c) => brandOf(c.clientName)))).sort((a, b) => a.localeCompare(b)),
+    [studies],
+  );
+  const FILTERS = useMemo<{ label: string; fn: (s: CaseStudyGalleryItem) => boolean }[]>(
+    () => [
+      { label: 'All', fn: () => true },
+      ...BRANDS.map((brand) => ({ label: brand, fn: (s: CaseStudyGalleryItem) => brandOf(s.clientName) === brand })),
+    ],
+    [BRANDS],
+  );
+  const FEATURED = useMemo(
+    () => FEATURED_SLUGS.map((slug) => studies.find((c) => c.slug === slug)).filter((c): c is CaseStudyGalleryItem => Boolean(c)),
+    [studies],
+  );
+  const N = FEATURED.length || 1;
 
   /* measure container */
   useEffect(() => {
@@ -125,7 +129,7 @@ export default function CaseStudiesGallery() {
   const centerX = containerW / 2 - cardW / 2;
 
   const q = query.trim().toLowerCase();
-  const filteredGrid = caseStudies
+  const filteredGrid = studies
     .filter(FILTERS[activeFilter].fn)
     .filter((s) =>
       !q ||
@@ -159,7 +163,7 @@ export default function CaseStudiesGallery() {
           style={{ position:'relative', width:'100%', height: cardH * activeScale + 32, overflow:'hidden' }}
         >
           {FEATURED.map((study, i) => {
-            const d   = cDist(i, active);
+            const d   = cDist(i, active, N);
             if (Math.abs(d) > visible) return null; // don't render invisible cards
 
             const sc  = sOf(d);

@@ -1,5 +1,5 @@
 import CareersPageClient from './CareersPageClient';
-import { getJobListings } from '@/lib/strapi';
+import { getJobListings } from '@/lib/cms';
 
 const FALLBACK_JOBS = [
   {

@@ -4,7 +4,7 @@ import MarioTimeline from '@/components/about/MarioTimeline';
 import AboutAwardsSection from '@/components/about/AboutAwardsSection';
 import AboutGallery from '@/components/about/AboutGallery';
 import HeroBanner from '@/components/HeroBanner';
-import { getLeadershipSlides, mediaUrl } from '@/lib/strapi';
+import { getLeadershipSlides, mediaUrl } from '@/lib/cms';
 import { getGalleryImages } from '@/lib/gallery';
 
 const stripItems = [

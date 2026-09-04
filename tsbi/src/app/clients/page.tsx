@@ -1,5 +1,5 @@
 import ClientsPageClient from './ClientsPageClient';
-import { getClientBrands, mediaUrl } from '@/lib/strapi';
+import { getClientBrands, mediaUrl } from '@/lib/cms';
 
 const FALLBACK_CLIENTS = [
   // ─────────── Entertainment & Media ──────────────────────────────────

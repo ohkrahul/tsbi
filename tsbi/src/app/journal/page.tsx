@@ -1,5 +1,5 @@
 import JournalPageClient from './JournalPageClient';
-import { getJournalArticles } from '@/lib/strapi';
+import { getJournalArticles } from '@/lib/cms';
 
 const FALLBACK_ARTICLES = [
   { category: 'Thought Leadership', title: "Why Influencer Marketing Is Entering Its Most Mature Phase Yet", excerpt: "The creator economy is consolidating — and brands that understand talent partnerships at a strategic level will win.", date: 'May 2025', readTime: '6 min', gradient: 'linear-gradient(135deg,#1a0a30,#100520)' },

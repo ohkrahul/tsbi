@@ -1,0 +1,37 @@
+{
+  "name": "tsbi-payload",
+  "version": "1.0.0",
+  "description": "TSBI headless CMS (Payload 3)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "generate:types": "payload generate:types",
+    "seed": "payload run src/seed.ts",
+    "payload": "payload"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "^3",
+    "@payloadcms/next": "^3",
+    "@payloadcms/richtext-lexical": "^3",
+    "@payloadcms/storage-vercel-blob": "^3",
+    "cross-env": "^7.0.3",
+    "graphql": "^16.8.2",
+    "next": "16.2.6",
+    "payload": "^3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": "^18.20.2 || >=20.9.0"
+  }
+}
