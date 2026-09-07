@@ -41,7 +41,11 @@ export function parseFields(fields: FieldDef[], fd: FormData) {
         break
       }
       case 'tags':
-        data[f.name] = lines(raw)
+        // One input per bullet, all sharing the field name.
+        data[f.name] = fd
+          .getAll(f.name)
+          .map((v) => String(v).trim())
+          .filter(Boolean)
         break
       case 'rows': {
         const subs = f.subFields ?? []

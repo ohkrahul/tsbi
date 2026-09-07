@@ -42,7 +42,9 @@ assert.deepEqual(
       ['track', 'tech'],
       ['live', 'on'],
       ['at', '2026-01-31'],
-      ['services', ' Film \n\n Edit \n'],
+      ['services', ' Film '],
+      ['services', ' Edit '],
+      ['services', '   '],
       ['cover', '42'],
       ['impact', '2.4M | Views in week one\n | Label only\n88% | Recall'],
     ]),
@@ -77,6 +79,18 @@ assert.deepEqual(parseFields(fields, fd([['order', '  ']])), {
   cover: null,
   impact: [],
 })
+
+// One bullet per value: blanks are dropped and each item is trimmed.
+assert.deepEqual(
+  parseFields([{ name: 'skills', label: 'S', type: 'tags' }], fd([
+    ['skills', '  Attention to detail.  '],
+    ['skills', ''],
+    ['skills', 'Strong writing, editing, and proofreading skills.'],
+  ])),
+  { skills: ['Attention to detail.', 'Strong writing, editing, and proofreading skills.'] },
+)
+// A list emptied down to one blank bullet clears the field.
+assert.deepEqual(parseFields([{ name: 'skills', label: 'S', type: 'tags' }], fd([['skills', '']])), { skills: [] })
 
 // Non-numeric upload ids (non-postgres adapters) stay strings.
 assert.deepEqual(parseFields([fields[7]!], fd([['cover', 'abc123']])), { cover: 'abc123' })

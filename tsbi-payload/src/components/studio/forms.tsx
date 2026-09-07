@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { useActionState, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { LogOut, Moon, Sun } from 'lucide-react'
+import { LogOut, Moon, Plus, Sun, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -78,7 +78,7 @@ function initialValue(f: FieldDef, doc?: Doc): string {
   const v = doc[f.name]
   if (v === null || v === undefined) return ''
   switch (f.type) {
-    case 'tags':
+    // `tags` is rendered by ListField from the array itself, not this string.
     case 'youtubeList':
       return Array.isArray(v) ? v.map(String).join('\n') : ''
     case 'rows':
@@ -127,6 +127,87 @@ function UploadField({ f, value, media }: { f: FieldDef; value: string; media: M
         </p>
       ) : null}
     </>
+  )
+}
+
+/**
+ * A bulleted list where each item is its own input, rather than one textarea of
+ * newline-separated text. Enter starts the next bullet and Backspace in an
+ * empty one removes it, so it behaves the way a list in a word processor does.
+ * Every input shares the field name, so they submit as repeated values.
+ */
+function ListField({ f, initial }: { f: FieldDef; initial: string[] }) {
+  const nextId = React.useRef(0)
+  const make = (value: string) => ({ id: nextId.current++, value })
+  const [items, setItems] = useState(() => (initial.length ? initial : ['']).map(make))
+  const [focusId, setFocusId] = useState<number | null>(null)
+
+  const setValue = (id: number, value: string) =>
+    setItems((cur) => cur.map((it) => (it.id === id ? { ...it, value } : it)))
+
+  const addAfter = (id: number) =>
+    setItems((cur) => {
+      const at = cur.findIndex((it) => it.id === id)
+      const item = make('')
+      setFocusId(item.id)
+      return [...cur.slice(0, at + 1), item, ...cur.slice(at + 1)]
+    })
+
+  const removeAt = (id: number) =>
+    setItems((cur) => {
+      if (cur.length === 1) return [make('')]
+      const at = cur.findIndex((it) => it.id === id)
+      setFocusId(cur[at - 1]?.id ?? cur[at + 1]?.id ?? null)
+      return cur.filter((it) => it.id !== id)
+    })
+
+  return (
+    <div className="grid gap-1.5">
+      {items.map((it, i) => (
+        <div key={it.id} className="flex items-start gap-2">
+          <span className="text-muted-foreground w-4 shrink-0 pt-2 text-center text-xs select-none">•</span>
+          <textarea
+            name={f.name}
+            value={it.value}
+            rows={1}
+            autoFocus={it.id === focusId}
+            onChange={(e) => setValue(it.id, e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                addAfter(it.id)
+              }
+              if (e.key === 'Backspace' && it.value === '' && items.length > 1) {
+                e.preventDefault()
+                removeAt(it.id)
+              }
+            }}
+            className={cn(ctl, 'min-h-9 resize-y py-1.5')}
+            aria-label={`${f.label} item ${i + 1}`}
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground hover:text-destructive shrink-0"
+            onClick={() => removeAt(it.id)}
+            aria-label={`Remove ${f.label} item ${i + 1}`}
+            title="Remove"
+          >
+            <X />
+          </Button>
+        </div>
+      ))}
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="mt-1 w-fit"
+        onClick={() => addAfter(items[items.length - 1]!.id)}
+      >
+        <Plus /> Add item
+      </Button>
+    </div>
   )
 }
 
@@ -209,7 +290,9 @@ function Field({
 
       {f.type === 'textarea' ? (
         <textarea id={id} name={f.name} defaultValue={value} rows={4} className={ctl} />
-      ) : f.type === 'tags' || f.type === 'rows' || f.type === 'youtubeList' ? (
+      ) : f.type === 'tags' ? (
+        <ListField f={f} initial={Array.isArray(doc?.[f.name]) ? (doc[f.name] as unknown[]).map(String) : []} />
+      ) : f.type === 'rows' || f.type === 'youtubeList' ? (
         <textarea id={id} name={f.name} defaultValue={value} rows={4} className={cn(ctl, 'font-mono text-xs')} />
       ) : f.type === 'select' ? (
         <select id={id} name={f.name} defaultValue={value} className={ctl}>
