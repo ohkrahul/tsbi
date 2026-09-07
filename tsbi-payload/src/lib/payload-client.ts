@@ -25,6 +25,32 @@ export async function getRelationOptions(fields: { name: string; type: string; r
   return out
 }
 
+/**
+ * Existing values for each `combo` field, so the form can offer them as a
+ * dropdown. There is no separate vocabulary to maintain — whatever editors have
+ * typed before is the list, and a new value joins it the moment it is saved.
+ */
+export async function getFieldSuggestions(
+  collection: string,
+  fields: { name: string; type: string }[],
+): Promise<Record<string, string[]>> {
+  const combos = fields.filter((f) => f.type === 'combo')
+  if (!combos.length) return {}
+
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({ collection: collection as never, limit: 1000, depth: 0 })
+  const out: Record<string, string[]> = {}
+  for (const f of combos) {
+    const seen = new Set<string>()
+    for (const d of docs) {
+      const v = (d as unknown as Record<string, unknown>)[f.name]
+      if (typeof v === 'string' && v.trim() !== '') seen.add(v.trim())
+    }
+    out[f.name] = [...seen].sort((a, b) => a.localeCompare(b))
+  }
+  return out
+}
+
 /** Options for the studio's image picker (upload fields). */
 export async function getMediaOptions() {
   const payload = await getPayloadClient()

@@ -15,7 +15,6 @@
     "seed:tags": "payload run src/seed-tags.ts",
     "seed:services": "payload run src/seed-service-areas.ts",
     "seed:cards": "payload run src/seed-service-cards.ts",
-    "seed:pages": "payload run src/seed-service-pages.ts",
     "repair:case-studies": "payload run src/repair-case-studies.ts"
   },
   "dependencies": {

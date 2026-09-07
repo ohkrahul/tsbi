@@ -163,11 +163,13 @@ function Field({
   doc,
   media,
   relations,
+  suggestions,
 }: {
   f: FieldDef
   doc?: Doc
   media: MediaOption[]
   relations: Record<string, RelationOption[]>
+  suggestions: Record<string, string[]>
 }) {
   const value = initialValue(f, doc)
   const id = `f-${f.name}`
@@ -220,6 +222,15 @@ function Field({
         />
       ) : f.type === 'relation' ? (
         <RelationField f={f} doc={doc} options={relations[f.name] ?? []} />
+      ) : f.type === 'combo' ? (
+        <>
+          <Input id={id} name={f.name} defaultValue={value} required={f.required} list={`dl-${f.name}`} autoComplete="off" />
+          <datalist id={`dl-${f.name}`}>
+            {(suggestions[f.name] ?? []).map((o) => (
+              <option key={o} value={o} />
+            ))}
+          </datalist>
+        </>
       ) : (
         <Input
           id={id}
@@ -247,16 +258,13 @@ export function CollectionForm({
   doc,
   media = [],
   relations = {},
-  isGlobal = false,
-  cancelHref,
+  suggestions = {},
 }: {
-  /** A CollectionDef, or a page global — both just need a slug and fields. */
   def: { slug: string; singular?: string; fields: FieldDef[] }
   doc?: Doc
   media?: MediaOption[]
   relations?: Record<string, RelationOption[]>
-  isGlobal?: boolean
-  cancelHref?: string
+  suggestions?: Record<string, string[]>
 }) {
   const [state, formAction, pending] = useActionState(saveDoc, null)
   const docId = doc?.id
@@ -271,17 +279,17 @@ export function CollectionForm({
 
   return (
     <form action={formAction} className="grid max-w-3xl gap-5">
-      <input type="hidden" name={isGlobal ? '__global' : '__collection'} value={def.slug} />
+      <input type="hidden" name="__collection" value={def.slug} />
       {/* Tells the action which fields this form actually rendered, so an
           untouched field is never written as null. */}
       <input type="hidden" name="__fields" value={def.fields.map((f) => f.name).join(',')} />
-      {!isGlobal && docId != null ? <input type="hidden" name="__id" value={String(docId)} /> : null}
+      {docId != null ? <input type="hidden" name="__id" value={String(docId)} /> : null}
 
       <Err>{state?.error}</Err>
 
       <div className="grid gap-5 sm:grid-cols-2">
         {main.map((f) => (
-          <Field key={f.name} f={f} doc={doc} media={media} relations={relations} />
+          <Field key={f.name} f={f} doc={doc} media={media} relations={relations} suggestions={suggestions} />
         ))}
       </div>
 
@@ -293,7 +301,7 @@ export function CollectionForm({
           </summary>
           <div className="grid gap-5 border-t p-4 sm:grid-cols-2">
             {fields.map((f) => (
-              <Field key={f.name} f={f} doc={doc} media={media} relations={relations} />
+              <Field key={f.name} f={f} doc={doc} media={media} relations={relations} suggestions={suggestions} />
             ))}
           </div>
         </details>
@@ -301,10 +309,10 @@ export function CollectionForm({
 
       <div className="flex items-center gap-2 border-t pt-5">
         <Button type="submit" disabled={pending}>
-          {pending ? 'Saving…' : isGlobal || docId != null ? 'Save changes' : `Create ${def.singular}`}
+          {pending ? 'Saving…' : docId != null ? 'Save changes' : `Create ${def.singular}`}
         </Button>
         <Button variant="ghost" asChild>
-          <Link href={cancelHref ?? `/studio/${def.slug}`}>Cancel</Link>
+          <Link href={`/studio/${def.slug}`}>Cancel</Link>
         </Button>
       </div>
     </form>

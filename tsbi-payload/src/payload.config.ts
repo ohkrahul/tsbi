@@ -14,7 +14,6 @@ import { MediaCoverage } from './collections/MediaCoverage'
 import { Careers } from './collections/Careers'
 import { Clients } from './collections/Clients'
 import { Tags } from './collections/Tags'
-import { serviceGlobals } from './globals/ServicePages'
 
 const cloudinary = {
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -30,8 +29,6 @@ export default buildConfig({
   // collection authenticates.
   admin: { user: Users.slug },
   collections: [Users, Media, CaseStudies, Journal, MediaCoverage, Careers, Clients, Tags],
-  // One editable document per service page — see src/globals/ServicePages.ts.
-  globals: serviceGlobals,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },

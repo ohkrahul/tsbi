@@ -172,6 +172,14 @@ https://vimeo.com/1
 )
 assert.deepEqual(parseFields(listField, fd([])), { youtubeFilms: [] })
 
+// `combo` is stored as plain text — typing a value that isn't in the dropdown
+// is how a new one gets created, so it must pass through untouched.
+const comboField: FieldDef[] = [{ name: 'category', label: 'C', type: 'combo' }]
+assert.deepEqual(parseFields(comboField, fd([['category', '  Brand New Category  ']])), {
+  category: 'Brand New Category',
+})
+assert.deepEqual(parseFields(comboField, fd([['category', '']])), { category: null })
+
 // __fields scopes the write: a field the form didn't render is left alone, so a
 // partial submission can't blank out unrelated columns.
 const partial = new FormData()

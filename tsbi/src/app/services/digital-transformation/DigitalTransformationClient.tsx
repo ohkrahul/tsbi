@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { CaseStudyGalleryItem } from '@/lib/caseStudies';
-import type { DigitalTransformationContent } from '@/lib/servicePageContent';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,14 +34,49 @@ function Icon({ type, color = '#e0197d', size = 26 }: { type: string; color?: st
   return <svg width={size} height={size} viewBox="0 0 24 24">{map[type] ?? map.web}</svg>;
 }
 
+const offerings = [
+  { icon: 'web', title: 'Website Development', desc: 'Fast, responsive and SEO-friendly websites that reflect your brand.' },
+  { icon: 'app', title: 'Web App Development', desc: 'Scalable web applications built for performance and growth.' },
+  { icon: 'mobile', title: 'Mobile App Development', desc: 'Native & cross-platform apps for iOS and Android.' },
+  { icon: 'micro', title: 'Microsites & Landing Pages', desc: 'Conversion-driven microsites for campaigns and launches.' },
+  { icon: 'cart', title: 'Ecommerce Development', desc: 'Secure, scalable and delightful online shopping experiences.' },
+  { icon: 'game', title: 'Gamified Experiences', desc: 'Engaging games & interactive experiences that drive results.' },
+  { icon: 'dash', title: 'Custom Dashboards & Portals', desc: 'Real-time dashboards and portals that simplify complex data.' },
+  { icon: 'api', title: 'Backend & API Integrations', desc: 'Robust backend systems and seamless third-party integrations.' },
+  { icon: 'seo', title: 'SEO & Performance Optimization', desc: 'Better visibility, speed and performance that rank.' },
+  { icon: 'support', title: 'Maintenance & Support', desc: 'Reliable support & continuous updates to keep you ahead.' },
+];
 
-export default function DigitalTransformationClient({
-  caseStudies,
-  content,
-}: {
-  caseStudies: CaseStudyGalleryItem[];
-  content: DigitalTransformationContent;
-}) {
+const whatWeBuild = [
+  { icon: 'globe', tint: '#7b1fa2', title: 'Brand Websites', desc: 'Modern, high-performance websites that strengthen brand presence.' },
+  { icon: 'mega', tint: '#e0197d', title: 'Campaign Tech', desc: 'Interactive campaigns & microsites that engage and convert audiences.' },
+  { icon: 'layers', tint: '#1a6aff', title: 'Business Platforms', desc: 'Custom platforms & portals that streamline operations and boost efficiency.' },
+  { icon: 'growth', tint: '#16a34a', title: 'Commerce & Growth', desc: 'Ecommerce & digital products designed to acquire, engage and scale revenue.' },
+];
+
+const steps = [
+  { n: '1', color: '#7b1fa2', icon: 'search', title: 'Discover', desc: 'We understand your goals, audience and challenges.' },
+  { n: '2', color: '#e0197d', icon: 'pen', title: 'Design', desc: 'We craft strategy, UX/UI and product roadmap.' },
+  { n: '3', color: '#1a6aff', icon: 'code', title: 'Develop', desc: 'We build robust, scalable and future-ready solutions.' },
+  { n: '4', color: '#16a34a', icon: 'rocket', title: 'Launch & Support', desc: 'We launch, monitor and optimize for long-term growth.' },
+];
+
+const logos = [
+  { name: 'Lipton', color: '#d99000' },
+  { name: 'Red Label', color: '#c4161c' },
+  { name: 'Zydus', color: '#0066b3' },
+  { name: 'Vatika', color: '#2e7d32' },
+  { name: 'Sandu', color: '#1a1a2e' },
+  { name: 'LuLu', color: '#6a1b9a' },
+];
+
+const phoneRows = [
+  { img: '/tech/2.png', name: 'Red Label Campaign', v: '2.3%' },
+  { img: '/tech/1.png', name: 'Lipton Game', v: '6.3%' },
+  { img: '/tech/9.png', name: 'Thank You Fighter', v: '3.5%' },
+];
+
+export default function DigitalTransformationClient({ caseStudies }: { caseStudies: CaseStudyGalleryItem[] }) {
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const ctx = gsap.context(() => {
@@ -92,26 +126,26 @@ export default function DigitalTransformationClient({
         <div className="mx-auto grid max-w-[1300px] items-center gap-9 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12">
           {/* left — copy */}
           <div>
-            <div className="sec-label pink mb-[18px] dt-hero-anim opacity-0">{content.eyebrow}</div>
+            <div className="sec-label pink mb-[18px] dt-hero-anim opacity-0">Technology · Strategy · Experience</div>
             <h1 className="dt-hero-anim opacity-0 font-fa m-0 text-[clamp(30px,4.4vw,56px)] font-semibold uppercase leading-[1.06] tracking-[0.01em] text-white">
-              {content.heroTitleBefore}{' '}
-              {content.heroWords.map((w) => (
-                <span key={w.text} style={{ color: w.color }}>
-                  {w.text}{' '}
-                </span>
-              ))}
-              {content.heroTitleAfter}
+              Tech Solutions That{' '}
+              <span className="text-[#b96cff]">Build</span>,{' '}
+              <span className="text-magenta">Launch</span> &{' '}
+              <span className="text-[#4d8bff]">Scale</span>{' '}
+              Digital Experiences
             </h1>
             <p className="dt-hero-anim opacity-0 font-fb mt-6 mb-8 max-w-[540px] text-base font-light leading-[1.8] text-white/65">
-              {content.heroBody}
+              TSBI is a digital product and technology partner that helps brands create powerful websites,
+              web &amp; mobile apps, microsites, campaign tech, eCommerce experiences, dashboards and custom
+              platforms that drive growth.
             </p>
             <div className="dt-hero-anim opacity-0 flex flex-wrap gap-3.5">
-              <Link href={content.heroPrimaryHref} className="btn-fill" style={{ background: 'var(--magenta)' }}>{content.heroPrimaryLabel}</Link>
-              <Link href={content.heroSecondaryHref} className="btn-border" style={{ color: 'rgba(255,255,255,.8)', borderColor: 'rgba(255,255,255,.3)' }}>{content.heroSecondaryLabel}</Link>
+              <Link href="#offer" className="btn-fill" style={{ background: 'var(--magenta)' }}>Explore Services →</Link>
+              <Link href="/case-studies" className="btn-border" style={{ color: 'rgba(255,255,255,.8)', borderColor: 'rgba(255,255,255,.3)' }}>▶ View Work</Link>
             </div>
             <div className="dt-hero-anim opacity-0 mt-9 flex flex-wrap items-center gap-[22px]">
-              <span className="font-fm -mb-2 w-full text-[11px] tracking-[0.04em] text-white/45">{content.logosLabel}</span>
-              {content.logos.map((l) => (
+              <span className="font-fm -mb-2 w-full text-[11px] tracking-[0.04em] text-white/45">Trusted by startups, enterprises &amp; global brands</span>
+              {logos.map((l) => (
                 <span key={l.name} className="font-fd text-[19px] font-extrabold leading-none text-white/75">{l.name}</span>
               ))}
             </div>
@@ -143,7 +177,7 @@ export default function DigitalTransformationClient({
               <div className="overflow-hidden rounded-2xl bg-white px-[11px] py-3">
                 <div className="font-fm text-[9px] font-semibold text-muted">Campaign Overview</div>
                 <div className="font-fd mb-3 mt-0.5 text-xl font-black leading-[1.1] text-ink">2.45M<small className="font-fm ml-1.5 text-[9px] font-semibold text-[#16a34a]">+8.32%</small></div>
-                {content.phoneRows.map((r) => (
+                {phoneRows.map((r) => (
                   <div key={r.name} className="flex items-center gap-2 border-t border-black/5 py-1.5">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={r.img} alt="" className="h-[22px] w-[22px] shrink-0 rounded-md object-cover" />
@@ -166,10 +200,10 @@ export default function DigitalTransformationClient({
       {/* ── SERVICES WE OFFER ── */}
       <section id="offer" className="bg-off px-12 py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
-          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">{content.offerHeading}</h2>
+          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">Services We Offer</h2>
           <div className="mx-auto mb-12 mt-2 h-[3px] w-[46px] rounded-sm bg-magenta" />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-            {content.offerings.map((o) => (
+            {offerings.map((o) => (
               <div key={o.title} className="dt-card opacity-0 rounded-xl border border-border-c bg-white p-6 transition-all duration-200 hover:-translate-y-1.5 hover:border-magenta hover:shadow-[0_22px_50px_rgba(0,0,0,0.10)]">
                 <div className="mb-4 flex h-[46px] w-[46px] items-center justify-center rounded-[10px] bg-magenta/10"><Icon type={o.icon} /></div>
                 <div className="font-fd mb-2 text-lg font-bold leading-tight">{o.title}</div>
@@ -183,10 +217,10 @@ export default function DigitalTransformationClient({
       {/* ── WHAT WE BUILD ── */}
       <section className="bg-white px-12 py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
-          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">{content.buildHeading}</h2>
+          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">What We Build</h2>
           <div className="mx-auto mb-12 mt-2 h-[3px] w-[46px] rounded-sm bg-magenta" />
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {content.whatWeBuild.map((b) => (
+            {whatWeBuild.map((b) => (
               <div key={b.title} className="dt-card opacity-0 rounded-xl border border-border-c bg-white p-7">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl" style={{ background: `${b.tint}14` }}><Icon type={b.icon} color={b.tint} size={24} /></div>
                 <div className="font-fd mb-2 text-[19px] font-bold">{b.title}</div>
@@ -201,8 +235,8 @@ export default function DigitalTransformationClient({
       <section className="bg-off  py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
           <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
-            <h2 className="dt-reveal opacity-0 font-fa m-0 text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">{content.workHeading}</h2>
-            <Link href="/case-studies" className="font-fm text-xs tracking-[0.06em] text-magenta no-underline">{content.workLinkLabel}</Link>
+            <h2 className="dt-reveal opacity-0 font-fa m-0 text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">Selected Work</h2>
+            <Link href="/case-studies" className="font-fm text-xs tracking-[0.06em] text-magenta no-underline">View all projects →</Link>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[...caseStudies]
@@ -215,7 +249,7 @@ export default function DigitalTransformationClient({
                 </div>
                 <div className="flex items-center justify-between gap-2 px-3.5 pb-3.5 pt-3">
                   <div>
-                    <div className="font-fm mb-1 text-[8px] uppercase tracking-[0.1em]" style={{ color: s.accent }}>{s.category?.split(' · ')[0] ?? ''}</div>
+                    <div className="font-fm mb-1 text-[8px] uppercase tracking-[0.1em]" style={{ color: s.accent }}>{s.category.split(' · ')[0]}</div>
                     <div className="font-fd text-[15px] font-bold leading-tight text-ink">{s.clientName}</div>
                   </div>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="shrink-0 text-muted"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -229,10 +263,10 @@ export default function DigitalTransformationClient({
       {/* ── HOW WE WORK ── */}
       <section className="bg-white px-12 py-[84px] max-sm:px-6 max-sm:py-[60px]">
         <div className="mx-auto max-w-[1300px]">
-          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">{content.processHeading}</h2>
+          <h2 className="dt-reveal opacity-0 font-fa m-0 text-center text-[clamp(28px,3.4vw,44px)] font-semibold leading-[1.1] tracking-[0.01em]">How We Work</h2>
           <div className="mx-auto mb-12 mt-2 h-[3px] w-[46px] rounded-sm bg-magenta" />
           <div className="relative grid grid-cols-2 gap-7 md:grid-cols-4 md:before:absolute md:before:left-[6%] md:before:right-[6%] md:before:top-4 md:before:z-0 md:before:border-t-2 md:before:border-dashed md:before:border-black/10 md:before:content-['']">
-            {content.steps.map((st) => (
+            {steps.map((st) => (
               <div key={st.n} className="dt-card opacity-0 relative z-[1] text-center">
                 <div className="font-fd mx-auto mb-[18px] flex h-[34px] w-[34px] items-center justify-center rounded-full text-[15px] font-extrabold text-white" style={{ background: st.color }}>{st.n}</div>
                 <div className="mx-auto mb-3.5 flex h-11 w-11 items-center justify-center rounded-xl bg-off"><Icon type={st.icon} color={st.color} size={22} /></div>
@@ -248,12 +282,12 @@ export default function DigitalTransformationClient({
       <section className="px-12 pb-20 pt-6 max-sm:px-6">
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-8 rounded-[22px] bg-[linear-gradient(110deg,#7b1fa2_0%,#e0197d_70%,#ff4fa3_100%)] p-[clamp(36px,5vw,64px)] text-white">
           <div>
-            <h2 className="dt-reveal opacity-0 font-fa m-0 mb-2 text-[clamp(24px,3vw,40px)] font-semibold leading-[1.12] tracking-[0.01em]" style={{ whiteSpace: 'pre-line' }}>{content.ctaHeading}</h2>
-            <p className="font-fb m-0 text-sm font-light opacity-90">{content.ctaBody}</p>
+            <h2 className="dt-reveal opacity-0 font-fa m-0 mb-2 text-[clamp(24px,3vw,40px)] font-semibold leading-[1.12] tracking-[0.01em]">Need a tech partner for<br />your next digital product?</h2>
+            <p className="font-fb m-0 text-sm font-light opacity-90">Let&apos;s build something impactful together.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/contact" className="btn-fill" style={{ background: '#fff', color: 'var(--ink)' }}>{content.ctaPrimaryLabel}</Link>
-            <Link href="/case-studies" className="btn-border" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.45)' }}>{content.ctaSecondaryLabel}</Link>
+            <Link href="/contact" className="btn-fill" style={{ background: '#fff', color: 'var(--ink)' }}>Let&apos;s Talk →</Link>
+            <Link href="/case-studies" className="btn-border" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.45)' }}>See More Case Studies →</Link>
           </div>
         </div>
       </section>

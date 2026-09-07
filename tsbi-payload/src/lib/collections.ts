@@ -8,7 +8,9 @@ export type FieldDef = {
    * `tags` = text hasMany (one per line), `rows` = array of objects,
    * `upload` = media relation, `relation` = pick many from another collection,
    * `youtube` = any YouTube link normalized to its id, `coverUrl` = image URL
-   * that falls back to the video's thumbnail, `password` = write-only.
+   * that falls back to the video's thumbnail, `password` = write-only,
+   * `combo` = free text with a dropdown of the values already in use, so a new
+   * one is created just by typing it.
    */
   type:
     | 'text'
@@ -20,6 +22,7 @@ export type FieldDef = {
     | 'tags'
     | 'rows'
     | 'upload'
+    | 'combo'
     | 'multiselect'
     | 'relation'
     | 'youtube'
@@ -71,7 +74,10 @@ export const COLLECTIONS: CollectionDef[] = [
       t('title', 'Title', { required: true }),
       t('slug', 'Slug', { required: true, half: true, hint: 'URL segment — must be unique.' }),
       t('clientName', 'Client name', { required: true, half: true }),
-      t('category', 'Category', { half: true, hint: 'Shown on the card, e.g. Film Marketing · Romantic Comedy' }),
+      {
+        name: 'category', label: 'Category', type: 'combo', half: true,
+        hint: 'Pick one already in use, or type a new one — it is created as you type. e.g. Film Marketing · Romantic Comedy',
+      },
       { name: 'track', label: 'Track', type: 'select', options: ['film', 'tech'], half: true, defaultValue: 'film', required: true },
       { name: 'order', label: 'Order', type: 'number', half: true, defaultValue: '100', hint: 'Lower numbers show first.' },
       { name: 'year', label: 'Year', type: 'number', half: true },
@@ -137,7 +143,7 @@ export const COLLECTIONS: CollectionDef[] = [
     fields: [
       t('title', 'Title', { required: true }),
       t('slug', 'Slug', { required: true, half: true }),
-      t('category', 'Category', { half: true }),
+      { name: 'category', label: 'Category', type: 'combo', half: true, hint: 'Pick one already in use, or type a new one.' },
       { name: 'publishedAt', label: 'Published at', type: 'date', half: true },
       t('readTime', 'Read time', { half: true }),
       { name: 'excerpt', label: 'Excerpt', type: 'textarea' },

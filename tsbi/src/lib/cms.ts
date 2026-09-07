@@ -142,35 +142,6 @@ export async function getCaseStudiesForService(service: string): Promise<CaseStu
   return docs as unknown as CaseStudyGalleryItem[];
 }
 
-/**
- * A service page's content from its CMS global, merged over the shipped
- * defaults. A field is only taken from the CMS when it actually has something
- * in it, so a half-filled or unseeded global never blanks out the page.
- */
-export async function getServicePageContent<T extends Record<string, unknown>>(
-  globalSlug: string,
-  defaults: T,
-): Promise<T> {
-  let cms: Record<string, unknown> | null = null;
-  try {
-    const res = await fetch(new URL(`/api/globals/${globalSlug}?depth=1`, CMS).toString(), {
-      next: { revalidate: 60 },
-    });
-    if (res.ok) cms = (await res.json()) as Record<string, unknown>;
-  } catch {
-    cms = null;
-  }
-  if (!cms) return defaults;
-
-  const merged: Record<string, unknown> = { ...defaults };
-  for (const key of Object.keys(defaults)) {
-    const v = cms[key];
-    if (typeof v === 'string' && v.trim() !== '') merged[key] = v;
-    else if (Array.isArray(v) && v.length > 0) merged[key] = v;
-  }
-  return merged as T;
-}
-
 /** Films for a card: the full campaign list if set, else the single video. */
 function filmsOf(s: CaseStudyGalleryItem): string[] {
   if (s.youtubeFilms?.length) return s.youtubeFilms;
