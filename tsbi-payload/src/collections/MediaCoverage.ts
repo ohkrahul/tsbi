@@ -12,5 +12,7 @@ export const MediaCoverage: CollectionConfig = {
     { name: 'source', type: 'text', admin: { description: 'Publication name.' } },
     { name: 'url', type: 'text', required: true, admin: { description: 'Link to the article.' } },
     { name: 'order', type: 'number', defaultValue: 100 },
+    { name: 'logo', type: 'upload', relationTo: 'media',
+      admin: { description: 'Publication logo. Only needed when the site has no logo for this publication yet.' } },
   ],
 }

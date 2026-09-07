@@ -309,6 +309,10 @@ export interface MediaCoverage {
    */
   url: string;
   order?: number | null;
+  /**
+   * Publication logo. Only needed when the site has no logo for this publication yet.
+   */
+  logo?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -561,6 +565,7 @@ export interface MediaCoverageSelect<T extends boolean = true> {
   source?: T;
   url?: T;
   order?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
 }

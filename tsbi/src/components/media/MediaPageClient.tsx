@@ -8,6 +8,8 @@ interface Article {
   title: string;
   source: string;
   url: string;
+  /** Chosen in the CMS; overrides the built-in per-publication logo. */
+  logo?: string | null;
 }
 
 /* ── Publication → logo file ─────────────────────────────── */
@@ -248,23 +250,29 @@ export default function MediaPageClient({ articles }: { articles: Article[] }) {
                 rel="noopener noreferrer"
                 className="group flex items-center gap-3.5 rounded-md border-b border-black/[0.07] py-4 no-underline transition-colors hover:bg-magenta/[0.03] sm:gap-6 sm:py-[22px]"
               >
-                {/* Logo */}
-                <div
-                  className="flex h-11 w-[84px] shrink-0 items-center justify-center overflow-hidden rounded p-1 sm:h-[52px] sm:w-[120px] lg:w-[140px]"
-                  style={{ backgroundColor: PUB_LOGO[article.source] ? 'transparent' : '#f0f0f0' }}
-                >
-                  {PUB_LOGO[article.source] ? (
-                    <Image
-                      src={PUB_LOGO[article.source]}
-                      alt={article.source}
-                      width={220}
-                      height={68}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <span className={`text-center text-[11px] font-bold sm:text-[13px] ${FA}`}>{article.source}</span>
-                  )}
-                </div>
+                {/* Logo: the one picked in the CMS wins, then the built-in
+                    per-publication logo, then the publication's name. */}
+                {(() => {
+                  const logo = article.logo || PUB_LOGO[article.source];
+                  return (
+                    <div
+                      className="flex h-11 w-[84px] shrink-0 items-center justify-center overflow-hidden rounded p-1 sm:h-[52px] sm:w-[120px] lg:w-[140px]"
+                      style={{ backgroundColor: logo ? 'transparent' : '#f0f0f0' }}
+                    >
+                      {logo ? (
+                        <Image
+                          src={logo}
+                          alt={article.source}
+                          width={220}
+                          height={68}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className={`text-center text-[11px] font-bold sm:text-[13px] ${FA}`}>{article.source}</span>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {/* Content */}
                 <div className="min-w-0 flex-1">

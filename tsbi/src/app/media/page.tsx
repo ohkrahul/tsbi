@@ -5,7 +5,7 @@ import { getMediaCoverage } from '@/lib/cms';
 
 export const metadata = { title: 'TSBI In The News — Media Coverage' };
 
-type Article = { id: string; title: string; source: string; url: string };
+type Article = { id: string; title: string; source: string; url: string; logo?: string | null };
 
 export default async function MediaPage() {
   const cms = await getMediaCoverage();

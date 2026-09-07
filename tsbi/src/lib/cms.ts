@@ -60,6 +60,8 @@ export interface MediaCoverageItem {
   title: string;
   source: string;
   url: string;
+  /** Logo chosen in the CMS. Overrides the built-in per-publication logo. */
+  logo?: string | null;
 }
 
 export interface LeadershipSlide {
@@ -249,6 +251,7 @@ export async function getMediaCoverage(): Promise<MediaCoverageItem[]> {
     title: String(d.title ?? ''),
     source: String(d.source ?? ''),
     url: String(d.url ?? ''),
+    logo: mediaUrl(toImage(d.logo)) || null,
   }));
 }
 

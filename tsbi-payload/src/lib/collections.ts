@@ -154,12 +154,19 @@ export const COLLECTIONS: CollectionDef[] = [
   },
   {
     slug: 'media-coverage', label: 'Media Coverage', singular: 'Press Item', defaultSort: 'order',
-    columns: [{ key: 'title', label: 'Title' }, { key: 'source', label: 'Source' }, { key: 'order', label: 'Order' }],
+    columns: [{ key: 'title', label: 'Title' }, { key: 'source', label: 'Publication' }, { key: 'order', label: 'Order' }],
     fields: [
       t('title', 'Title', { required: true }),
-      t('source', 'Source', { half: true, hint: 'Publication name.' }),
-      { name: 'order', label: 'Order', type: 'number', half: true },
+      {
+        name: 'source', label: 'Publication', type: 'combo', half: true,
+        hint: 'Pick a publication already in use so its logo is recognised, or type a new one.',
+      },
+      { name: 'order', label: 'Order', type: 'number', half: true, defaultValue: '100' },
       t('url', 'URL', { required: true, hint: 'Link to the article.' }),
+      {
+        name: 'logo', label: 'Publication logo', type: 'upload',
+        hint: 'Only needed for a publication the site has no logo for yet — otherwise leave it blank and the built-in one is used.',
+      },
     ],
   },
   {
