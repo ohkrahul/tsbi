@@ -111,7 +111,49 @@ export async function login(_prev: ActionState, fd: FormData): Promise<ActionSta
   redirect('/studio')
 }
 
+/**
+ * Start a password reset. Always reports success, whether or not the address
+ * exists — telling an anonymous caller which emails are registered is an
+ * account-enumeration leak. Payload mails the reset link through the
+ * configured email adapter; with none configured it writes it to the server
+ * log, so see the CLI escape hatch in `npm run reset:password`.
+ */
+export async function requestPasswordReset(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  const email = String(fd.get('email') ?? '').trim()
+  if (!email) return { error: 'Enter the email address on your account.' }
+
+  try {
+    const payload = await getPayloadClient()
+    await payload.forgotPassword({ collection: 'users', data: { email }, disableEmail: false })
+  } catch (e) {
+    // A missing account throws; that must look identical to a real send.
+    console.warn('[studio] password reset request failed:', (e as Error).message)
+  }
+  return { ok: true }
+}
+
+/** Finish a reset with the emailed token. */
+export async function resetPassword(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  const token = String(fd.get('token') ?? '').trim()
+  const password = String(fd.get('password') ?? '')
+  const confirm = String(fd.get('confirm') ?? '')
+
+  if (!token) return { error: 'This reset link is missing its token — request a new one.' }
+  if (password.length < 8) return { error: 'Use at least 8 characters.' }
+  if (password !== confirm) return { error: 'The two passwords do not match.' }
+
+  try {
+    const payload = await getPayloadClient()
+    await payload.resetPassword({ collection: 'users', data: { token, password }, overrideAccess: true })
+  } catch {
+    return { error: 'That reset link is invalid or has expired. Request a new one.' }
+  }
+  redirect('/login?reset=1')
+}
+
 export async function logout() {
   ;(await cookies()).delete('payload-token')
-  redirect('/studio')
+  // Straight to /login: bouncing through /studio would re-use the signed-in
+  // layout for one render and flash the sidebar at a signed-out user.
+  redirect('/login')
 }

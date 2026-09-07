@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { COLLECTIONS } from '@/lib/collections'
 import { currentUser } from '@/lib/auth'
 import { SidebarNav } from '@/components/studio/sidebar-nav'
@@ -6,9 +7,10 @@ import { LogoutButton, ThemeToggle } from '@/components/studio/forms'
 
 export default async function StudioLayout({ children }: { children: React.ReactNode }) {
   // Chrome only. The actual gate lives in each page (`requireUser`) — a check
-  // here can't stop a page segment from rendering its data.
+  // here can't stop a page segment from rendering its data. The login page
+  // lives outside this layout, so there is nothing to pass through here.
   const user = await currentUser()
-  if (!user) return <>{children}</>
+  if (!user) redirect('/login')
 
   const navItems = [
     { href: '/studio', label: 'Dashboard' },

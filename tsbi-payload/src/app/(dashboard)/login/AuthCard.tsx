@@ -1,11 +1,13 @@
-import { redirect } from 'next/navigation'
-import { currentUser } from '@/lib/auth'
-import { LoginForm } from '@/components/studio/forms'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
-export default async function StudioLoginPage() {
-  if (await currentUser()) redirect('/studio')
-
+/** The centred card the sign-in, forgot and reset screens all sit in. */
+export function AuthCard({
+  description,
+  children,
+}: {
+  description: string
+  children: React.ReactNode
+}) {
   return (
     <div className="bg-muted/40 grid min-h-svh place-items-center p-6">
       <Card className="w-full max-w-sm">
@@ -16,11 +18,9 @@ export default async function StudioLoginPage() {
             </span>
             <CardTitle>TSBI Studio</CardTitle>
           </div>
-          <CardDescription>Sign in with your Payload account.</CardDescription>
+          <CardDescription>{description}</CardDescription>
         </CardHeader>
-        <CardContent>
-          <LoginForm />
-        </CardContent>
+        <CardContent>{children}</CardContent>
       </Card>
     </div>
   )

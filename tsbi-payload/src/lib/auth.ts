@@ -28,9 +28,13 @@ export async function currentUser() {
  * early return in the layout is not enough, because Next renders page
  * segments even when the layout drops `children`, which would put their data
  * in the RSC payload of an unauthenticated response.
+ *
+ * Sends people to /login rather than a route under the studio layout: Next
+ * reuses a layout across navigations inside it, so a signed-out redirect that
+ * stayed under the shell left the authenticated sidebar on screen.
  */
 export async function requireUser() {
   const user = await currentUser()
-  if (!user) redirect('/studio/login')
+  if (!user) redirect('/login')
   return user
 }

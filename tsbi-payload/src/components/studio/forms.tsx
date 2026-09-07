@@ -9,7 +9,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import type { FieldDef } from '@/lib/collections'
-import { deleteDoc, login, logout, saveDoc, uploadMedia } from '@/app/(dashboard)/studio/actions'
+import {
+  deleteDoc,
+  login,
+  logout,
+  requestPasswordReset,
+  resetPassword,
+  saveDoc,
+  uploadMedia,
+} from '@/app/(dashboard)/studio/actions'
 
 export type MediaOption = { id: string | number; filename: string; url: string; mimeType?: string }
 export type RelationOption = { id: string | number; label: string }
@@ -374,6 +382,63 @@ export function LoginForm() {
       </div>
       <Button type="submit" disabled={pending}>
         {pending ? 'Signing in…' : 'Sign in'}
+      </Button>
+      <Link href="/login/forgot" className="text-muted-foreground hover:text-foreground text-center text-xs underline">
+        Forgot your password?
+      </Link>
+    </form>
+  )
+}
+
+export function ForgotPasswordForm() {
+  const [state, formAction, pending] = useActionState(requestPasswordReset, null)
+
+  if (state?.ok) {
+    return (
+      <div className="grid gap-4">
+        <p className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-400">
+          If that address has an account, a reset link is on its way.
+        </p>
+        <Link href="/login" className="text-muted-foreground hover:text-foreground text-center text-xs underline">
+          Back to sign in
+        </Link>
+      </div>
+    )
+  }
+
+  return (
+    <form action={formAction} className="grid gap-4">
+      <Err>{state?.error}</Err>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="email">Email</Label>
+        <Input id="email" name="email" type="email" autoComplete="username" required />
+      </div>
+      <Button type="submit" disabled={pending}>
+        {pending ? 'Sending…' : 'Send reset link'}
+      </Button>
+      <Link href="/login" className="text-muted-foreground hover:text-foreground text-center text-xs underline">
+        Back to sign in
+      </Link>
+    </form>
+  )
+}
+
+export function ResetPasswordForm({ token }: { token: string }) {
+  const [state, formAction, pending] = useActionState(resetPassword, null)
+  return (
+    <form action={formAction} className="grid gap-4">
+      <input type="hidden" name="token" value={token} />
+      <Err>{state?.error}</Err>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="password">New password</Label>
+        <Input id="password" name="password" type="password" autoComplete="new-password" required minLength={8} />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="confirm">Confirm new password</Label>
+        <Input id="confirm" name="confirm" type="password" autoComplete="new-password" required minLength={8} />
+      </div>
+      <Button type="submit" disabled={pending}>
+        {pending ? 'Saving…' : 'Set new password'}
       </Button>
     </form>
   )
