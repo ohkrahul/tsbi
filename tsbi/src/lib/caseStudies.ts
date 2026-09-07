@@ -39,6 +39,19 @@ export type CaseStudyGalleryItem = {
   whyItWorked?: string;
 };
 
+/**
+ * The day a record was added, for "newest first" ordering. Day precision, not
+ * the raw timestamp: the original set was imported in one run with timestamps
+ * milliseconds apart, so sorting on the exact value would reverse the curated
+ * running order. Anything added later floats to the top; same-day records fall
+ * through to whatever each list's own rule is.
+ */
+export const addedDay = (c: { createdAt?: string | null }) => (c.createdAt ?? '').slice(0, 10);
+
+/** Compare two day strings, newest first. */
+export const newestDayFirst = (a: { createdAt?: string | null }, b: { createdAt?: string | null }) =>
+  addedDay(a) < addedDay(b) ? 1 : addedDay(a) > addedDay(b) ? -1 : 0;
+
 const YT = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
 export const caseStudies: CaseStudyGalleryItem[] = [

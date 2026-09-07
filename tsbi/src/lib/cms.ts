@@ -163,6 +163,7 @@ export async function getServiceCampaigns(service: string): Promise<Campaign[]> 
     videos: filmsOf(s),
     poster: s.image || undefined,
     caseStudySlug: s.slug,
+    createdAt: s.createdAt ?? null,
   }));
 }
 
@@ -183,6 +184,7 @@ export async function getServiceYouTubeWork(service: string): Promise<YTWork[]> 
       desc: s.cardBlurb || s.shortDescription || s.concept || '',
       videoId: filmsOf(s)[0],
       caseStudySlug: s.slug,
+      createdAt: s.createdAt ?? null,
     }));
 }
 

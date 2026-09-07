@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { YTWork } from '@/lib/serviceCampaigns';
+import { newestDayFirst } from '@/lib/caseStudies';
 import OtherServices from '@/components/services/OtherServices';
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
@@ -789,7 +790,8 @@ export default function SocialMediaClient({ youtubeWork }: { youtubeWork: YTWork
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 28 }}>
           {[...youtubeWork]
-            .sort((a, b) => a.client.localeCompare(b.client))
+            // Newly added first, then the existing A-Z by client.
+            .sort((a, b) => newestDayFirst(a, b) || a.client.localeCompare(b.client))
             .map((w, i) => <YouTubeCard key={w.videoId} w={w} index={i} />)}
         </div>
       </section>

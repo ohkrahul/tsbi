@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { CaseStudyGalleryItem } from '@/lib/caseStudies';
+import { newestDayFirst } from '@/lib/caseStudies';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -240,7 +241,8 @@ export default function DigitalTransformationClient({ caseStudies }: { caseStudi
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[...caseStudies]
-              .sort((a, b) => a.clientName.localeCompare(b.clientName))
+              // Newly added first, then the existing A-Z by client.
+              .sort((a, b) => newestDayFirst(a, b) || a.clientName.localeCompare(b.clientName))
               .map((s) => (
               <Link key={s.slug} href={`/case-studies/${s.slug}`} className="dt-card opacity-0 group block overflow-hidden rounded-xl border border-border-c bg-white no-underline transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_50px_rgba(0,0,0,0.12)]">
                 <div className="relative aspect-video overflow-hidden" style={{ background: `linear-gradient(135deg, ${s.gradFrom}, ${s.gradTo})` }}>

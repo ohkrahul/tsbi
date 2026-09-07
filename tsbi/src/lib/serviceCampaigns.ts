@@ -16,6 +16,8 @@ export type Campaign = {
   videos: string[]; // YouTube video IDs
   poster?: string;  // thumbnail override (e.g. Cloudinary still) when there's no YouTube video
   caseStudySlug?: string; // Link to full case study
+  /** Set by the CMS; absent on the bundled copy. Drives newest-first order. */
+  createdAt?: string | null;
 };
 
 export const campaigns: Campaign[] = [
@@ -198,6 +200,8 @@ The outcome: healthy oil leads to a healthy you. A healthy you gives you the opp
 export type YTWork = {
   client: string; house?: string; category: string;
   title: string; desc: string; videoId: string; caseStudySlug?: string;
+  /** Set by the CMS; absent on the bundled copy. Drives newest-first order. */
+  createdAt?: string | null;
 };
 
 export const youtubeWork: YTWork[] = [

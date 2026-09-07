@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { Campaign } from '@/lib/serviceCampaigns';
+import { newestDayFirst } from '@/lib/caseStudies';
 import OtherServices from '@/components/services/OtherServices';
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -569,7 +570,8 @@ export default function ContentProductionClient({ campaigns }: { campaigns: Camp
           }}
         >
           {[...campaigns]
-            .sort((a, b) => a.client.localeCompare(b.client))
+            // Newly added first, then the existing A-Z by client.
+            .sort((a, b) => newestDayFirst(a, b) || a.client.localeCompare(b.client))
             .map((c, i) => (
               <CampaignCard key={`${c.client}-${i}`} c={c} />
             ))}

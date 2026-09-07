@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import OtherServices from '@/components/services/OtherServices';
 import type { Campaign } from '@/lib/serviceCampaigns';
+import { newestDayFirst } from '@/lib/caseStudies';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
@@ -739,7 +740,7 @@ export default function InfluencerManagementClient({ campaigns }: { campaigns: C
               </Link>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
-              {campaigns.map((c) => (
+              {[...campaigns].sort(newestDayFirst).map((c) => (
                 <Link
                   key={c.caseStudySlug ?? c.title}
                   href={c.caseStudySlug ? `/case-studies/${c.caseStudySlug}` : '/case-studies'}
