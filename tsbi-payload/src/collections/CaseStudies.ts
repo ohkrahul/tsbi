@@ -19,6 +19,14 @@ export const CaseStudies: CollectionConfig = {
     { name: 'category', type: 'text' },
     { name: 'tags', type: 'relationship', relationTo: 'tags', hasMany: true,
       admin: { description: 'Drives the filter dropdown on the public case-studies page.' } },
+    // Values are the /services/<slug> route segments — a new option here needs a
+    // matching service page, so this is a fixed list rather than a collection.
+    { name: 'serviceAreas', type: 'select', hasMany: true, options: [
+      { label: 'Social Media', value: 'social-media' },
+      { label: 'Content Production', value: 'content-production' },
+      { label: 'Influencer Management', value: 'influencer-management' },
+      { label: 'Digital Transformation', value: 'digital-transformation' },
+    ], admin: { description: 'Which service pages this case study is listed on.' } },
     { name: 'order', type: 'number', defaultValue: 100 },
     { name: 'track', type: 'select', options: ['film', 'tech'], defaultValue: 'film' },
     { name: 'year', type: 'number' },

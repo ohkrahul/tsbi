@@ -150,6 +150,16 @@ const relField: FieldDef[] = [{ name: 'tags', label: 'Tags', type: 'relation', r
 assert.deepEqual(parseFields(relField, fd([['tags', '3'], ['tags', '7']])), { tags: [3, 7] })
 assert.deepEqual(parseFields(relField, fd([])), { tags: [] })
 
+// Multiselect keeps the option strings as given (no numeric coercion).
+const msField: FieldDef[] = [{
+  name: 'serviceAreas', label: 'S', type: 'multiselect',
+  options: [{ label: 'Social Media', value: 'social-media' }, { label: 'Content', value: 'content-production' }],
+}]
+assert.deepEqual(parseFields(msField, fd([['serviceAreas', 'social-media'], ['serviceAreas', 'content-production']])), {
+  serviceAreas: ['social-media', 'content-production'],
+})
+assert.deepEqual(parseFields(msField, fd([])), { serviceAreas: [] })
+
 // Registry sanity: unique slugs, every column has a field, rows declare subFields.
 const slugs = COLLECTIONS.map((c) => c.slug)
 assert.equal(new Set(slugs).size, slugs.length, 'collection slugs must be unique')
@@ -162,7 +172,9 @@ for (const c of COLLECTIONS) {
   }
   for (const f of c.fields) {
     if (f.type === 'rows') assert.ok(f.subFields?.length, `${c.slug}.${f.name}: rows needs subFields`)
-    if (f.type === 'select') assert.ok(f.options?.length, `${c.slug}.${f.name}: select needs options`)
+    if (f.type === 'select' || f.type === 'multiselect') {
+      assert.ok(f.options?.length, `${c.slug}.${f.name}: ${f.type} needs options`)
+    }
     if (f.type === 'relation') {
       assert.ok(f.relationTo, `${c.slug}.${f.name}: relation needs relationTo`)
       assert.ok(collectionBySlug(f.relationTo!), `${c.slug}.${f.name}: relationTo "${f.relationTo}" is not in the registry`)

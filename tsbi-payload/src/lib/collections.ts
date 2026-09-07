@@ -20,13 +20,15 @@ export type FieldDef = {
     | 'tags'
     | 'rows'
     | 'upload'
+    | 'multiselect'
     | 'relation'
     | 'youtube'
     | 'coverUrl'
     | 'email'
     | 'password'
   required?: boolean
-  options?: string[]
+  /** For `select` / `multiselect`. A bare string is used as both label and value. */
+  options?: (string | { label: string; value: string })[]
   hint?: string
   /** For `rows` — the sub-fields, in the order they appear on each `a | b` line. */
   subFields?: { name: string; label: string }[]
@@ -74,6 +76,16 @@ export const COLLECTIONS: CollectionDef[] = [
       {
         name: 'tags', label: 'Tags', type: 'relation', relationTo: 'tags', relationLabel: 'name',
         hint: 'Drives the filter dropdown on the public case-studies page.',
+      },
+      {
+        name: 'serviceAreas', label: 'Show on service pages', type: 'multiselect',
+        options: [
+          { label: 'Social Media', value: 'social-media' },
+          { label: 'Content Production', value: 'content-production' },
+          { label: 'Influencer Management', value: 'influencer-management' },
+          { label: 'Digital Transformation', value: 'digital-transformation' },
+        ],
+        hint: 'This case study is listed on every service page you tick.',
       },
       { name: 'shortDescription', label: 'Short description', type: 'textarea' },
       { name: 'concept', label: 'Concept', type: 'textarea' },

@@ -129,6 +129,18 @@ export async function getCaseStudiesGallery(): Promise<CaseStudyGalleryItem[]> {
   return docs as unknown as CaseStudyGalleryItem[];
 }
 
+/**
+ * Case studies an editor has ticked for a given service page, e.g.
+ * 'digital-transformation'. Ordered by the curated `order` field.
+ */
+export async function getCaseStudiesForService(service: string): Promise<CaseStudyGalleryItem[]> {
+  const docs = await payloadGet('case-studies', {
+    sort: 'order',
+    where: { 'where[serviceAreas][contains]': service },
+  });
+  return docs as unknown as CaseStudyGalleryItem[];
+}
+
 /** Single case study by slug (for /case-studies/[slug]); null if not found. */
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyGalleryItem | null> {
   const docs = await payloadGet('case-studies', { where: { 'where[slug][equals]': slug }, limit: 1 });

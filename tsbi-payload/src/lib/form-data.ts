@@ -54,6 +54,13 @@ export function parseFields(fields: FieldDef[], fd: FormData) {
           .filter(Boolean)
           .map((v) => (/^\d+$/.test(v) ? Number(v) : v))
         break
+      case 'multiselect':
+        // Same checkbox shape, but the values are the option strings themselves.
+        data[f.name] = fd
+          .getAll(f.name)
+          .map((v) => String(v))
+          .filter(Boolean)
+        break
       case 'youtube':
         // Accepts a watch/share/embed/shorts link or a bare id.
         data[f.name] = youtubeId(raw as string)

@@ -19,6 +19,41 @@ type Doc = Record<string, unknown>
 const ctl =
   'border-input placeholder:text-muted-foreground w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]'
 
+/** `options` accepts bare strings or {label,value} pairs. */
+const asChoices = (f: FieldDef) =>
+  (f.options ?? []).map((o) => (typeof o === 'string' ? { label: o, value: o } : o))
+
+/** The checkbox grid shared by `relation` and `multiselect`. */
+function CheckboxGrid({
+  name,
+  choices,
+  selected,
+}: {
+  name: string
+  choices: { label: string; value: string }[]
+  selected: Set<string>
+}) {
+  return (
+    <div className="grid max-h-56 gap-1.5 overflow-y-auto rounded-md border p-3 sm:grid-cols-3">
+      {choices.map((c) => (
+        <Label key={c.value} htmlFor={`f-${name}-${c.value}`} className="cursor-pointer font-normal">
+          <input
+            id={`f-${name}-${c.value}`}
+            name={name}
+            type="checkbox"
+            value={c.value}
+            defaultChecked={selected.has(c.value)}
+            className="border-input size-4 rounded-sm"
+          />
+          <span className="truncate" title={c.label}>
+            {c.label}
+          </span>
+        </Label>
+      ))}
+    </div>
+  )
+}
+
 function Err({ children }: { children?: React.ReactNode }) {
   if (!children) return null
   return (
@@ -93,23 +128,11 @@ function RelationField({ f, doc, options }: { f: FieldDef; doc?: Doc; options: R
   return (
     <>
       {options.length ? (
-        <div className="grid max-h-56 gap-1.5 overflow-y-auto rounded-md border p-3 sm:grid-cols-3">
-          {options.map((o) => (
-            <Label key={o.id} htmlFor={`f-${f.name}-${o.id}`} className="cursor-pointer font-normal">
-              <input
-                id={`f-${f.name}-${o.id}`}
-                name={f.name}
-                type="checkbox"
-                value={String(o.id)}
-                defaultChecked={selected.has(String(o.id))}
-                className="border-input size-4 rounded-sm"
-              />
-              <span className="truncate" title={o.label}>
-                {o.label}
-              </span>
-            </Label>
-          ))}
-        </div>
+        <CheckboxGrid
+          name={f.name}
+          choices={options.map((o) => ({ label: o.label, value: String(o.id) }))}
+          selected={selected}
+        />
       ) : (
         <p className="text-muted-foreground rounded-md border border-dashed px-3 py-4 text-xs">
           No {f.label.toLowerCase()} yet —{' '}
@@ -176,14 +199,20 @@ function Field({
       ) : f.type === 'select' ? (
         <select id={id} name={f.name} defaultValue={value} className={ctl}>
           {!f.required ? <option value="">— none —</option> : null}
-          {(f.options ?? []).map((o) => (
-            <option key={o} value={o}>
-              {o}
+          {asChoices(f).map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
             </option>
           ))}
         </select>
       ) : f.type === 'upload' ? (
         <UploadField f={f} value={value} media={media} />
+      ) : f.type === 'multiselect' ? (
+        <CheckboxGrid
+          name={f.name}
+          choices={asChoices(f)}
+          selected={new Set((Array.isArray(doc?.[f.name]) ? (doc[f.name] as unknown[]) : []).map(String))}
+        />
       ) : f.type === 'relation' ? (
         <RelationField f={f} doc={doc} options={relations[f.name] ?? []} />
       ) : (

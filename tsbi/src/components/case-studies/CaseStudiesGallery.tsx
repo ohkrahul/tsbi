@@ -71,6 +71,7 @@ function GridCard({ study }: { study: CaseStudyGalleryItem }) {
 export default function CaseStudiesGallery({ studies = caseStudies }: { studies?: CaseStudyGalleryItem[] }) {
   const [active, setActive]           = useState(0);
   const [activeTag, setActiveTag]       = useState('');
+  const [sortOrder, setSortOrder]     = useState<'newest' | 'oldest'>('newest');
   const [query, setQuery]             = useState('');
   const [containerW, setContainerW]   = useState(1280);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -144,7 +145,14 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
       s.clientName.toLowerCase().includes(q) ||
       s.category.toLowerCase().includes(q),
     )
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .sort((a, b) => {
+      const dir = sortOrder === 'newest' ? -1 : 1;
+      return (
+        ((a.year ?? 0) - (b.year ?? 0)) * dir ||
+        (a.order ?? 0) - (b.order ?? 0) ||
+        a.title.localeCompare(b.title)
+      );
+    });
 
   return (
     <div style={{ background:'linear-gradient(to right, #101a33 0%, #241640 50%, #34195a 100%)', minHeight:'100vh', paddingTop:80 }}>
@@ -270,7 +278,8 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
             </h2>
           </div>
           {/* filter dropdown (options are CMS tags) + search bar */}
-          <div style={{ display:'flex', gap:10, flexWrap:'wrap', alignItems:'center' }}>
+          {/* one row on desktop; allowed to wrap on phones so it can't overflow */}
+          <div style={{ display:'flex', gap:10, flexWrap: isMobile ? 'wrap' : 'nowrap', alignItems:'center' }}>
           <div style={{ position:'relative', flex:'0 0 auto' }}>
             <select
               value={activeTag}
@@ -288,7 +297,22 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
               <path d="M3 5l4 4 4-4" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <div style={{ position:'relative', flex:'0 1 300px', minWidth:200 }}>
+          <div style={{ position:'relative', flex:'0 0 auto' }}>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value as 'newest' | 'oldest')}
+              aria-label="Sort case studies by year"
+              style={{ appearance:'none', WebkitAppearance:'none', fontFamily:'var(--fm)', fontSize:12, color:'#fff', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.16)', borderRadius:999, padding:'11px 38px 11px 18px', outline:'none', cursor:'pointer' }}
+            >
+              <option value="newest" style={{ background:'#241640', color:'#fff' }}>Newest first</option>
+              <option value="oldest" style={{ background:'#241640', color:'#fff' }}>Oldest first</option>
+            </select>
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"
+              style={{ position:'absolute', right:16, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }}>
+              <path d="M3 5l4 4 4-4" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <div style={{ position:'relative', flex:'1 1 200px', minWidth:150 }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position:'absolute', left:15, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }}>
               <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
             </svg>
@@ -322,7 +346,7 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
         </div>
 
         <motion.div
-          key={activeTag}
+          key={`${activeTag}-${sortOrder}`}
           initial={{ opacity:0, y:10 }}
           animate={{ opacity:1, y:0 }}
           transition={{ duration:0.35, ease:[0.22,1,0.36,1] }}

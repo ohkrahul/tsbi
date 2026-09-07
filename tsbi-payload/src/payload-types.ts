@@ -188,6 +188,10 @@ export interface CaseStudy {
    * Drives the filter dropdown on the public case-studies page.
    */
   tags?: (number | Tag)[] | null;
+  /**
+   * Which service pages this case study is listed on.
+   */
+  serviceAreas?: ('social-media' | 'content-production' | 'influencer-management' | 'digital-transformation')[] | null;
   order?: number | null;
   track?: ('film' | 'tech') | null;
   year?: number | null;
@@ -463,6 +467,7 @@ export interface CaseStudiesSelect<T extends boolean = true> {
   clientName?: T;
   category?: T;
   tags?: T;
+  serviceAreas?: T;
   order?: T;
   track?: T;
   year?: T;
