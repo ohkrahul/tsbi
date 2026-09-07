@@ -12,9 +12,11 @@ export default async function NewDocPage({ params }: { params: Promise<{ collect
   const def = collectionBySlug(collection)
   if (!def) notFound()
 
-  const media = def.fields.some((f) => f.type === 'upload') ? await getMediaOptions() : []
-  const relations = await getRelationOptions(def.fields)
-  const suggestions = await getFieldSuggestions(def.slug, def.fields)
+  const [media, relations, suggestions] = await Promise.all([
+    def.fields.some((f) => f.type === 'upload') ? getMediaOptions() : Promise.resolve([]),
+    getRelationOptions(def.fields),
+    getFieldSuggestions(def.slug, def.fields),
+  ])
 
   return (
     <div className="mx-auto max-w-6xl p-6 md:p-10">

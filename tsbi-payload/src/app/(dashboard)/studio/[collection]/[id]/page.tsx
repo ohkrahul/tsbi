@@ -13,14 +13,15 @@ export default async function EditDocPage({ params }: { params: Promise<{ collec
   if (!def) notFound()
 
   const payload = await getPayloadClient()
-  const doc = await payload
-    .findByID({ collection: def.slug as never, id, depth: 0 })
-    .catch(() => null)
+  // All four hit a remote database, so run them together rather than paying
+  // each round trip in turn.
+  const [doc, media, relations, suggestions] = await Promise.all([
+    payload.findByID({ collection: def.slug as never, id, depth: 0 }).catch(() => null),
+    def.fields.some((f) => f.type === 'upload') ? getMediaOptions() : Promise.resolve([]),
+    getRelationOptions(def.fields),
+    getFieldSuggestions(def.slug, def.fields),
+  ])
   if (!doc) notFound()
-
-  const media = def.fields.some((f) => f.type === 'upload') ? await getMediaOptions() : []
-  const relations = await getRelationOptions(def.fields)
-  const suggestions = await getFieldSuggestions(def.slug, def.fields)
   const d = doc as Record<string, unknown>
   const title = String(d[def.columns[0].key] ?? id)
 

@@ -16,6 +16,8 @@ export async function getRelationOptions(fields: { name: string; type: string; r
       limit: 500,
       sort: labelKey,
       depth: 0,
+      // Only the label column — these lists exist to fill a picker.
+      select: { [labelKey]: true } as never,
     })
     out[f.name] = docs.map((d) => {
       const doc = d as unknown as Record<string, unknown>
@@ -38,7 +40,15 @@ export async function getFieldSuggestions(
   if (!combos.length) return {}
 
   const payload = await getPayloadClient()
-  const { docs } = await payload.find({ collection: collection as never, limit: 1000, depth: 0 })
+  // Only the combo columns. Without `select` this pulled every field of every
+  // document — on case studies that meant 40-odd long concept and blurb texts
+  // fetched just to collect the distinct categories.
+  const { docs } = await payload.find({
+    collection: collection as never,
+    limit: 1000,
+    depth: 0,
+    select: Object.fromEntries(combos.map((f) => [f.name, true])) as never,
+  })
   const out: Record<string, string[]> = {}
   for (const f of combos) {
     const seen = new Set<string>()
@@ -54,7 +64,13 @@ export async function getFieldSuggestions(
 /** Options for the studio's image picker (upload fields). */
 export async function getMediaOptions() {
   const payload = await getPayloadClient()
-  const { docs } = await payload.find({ collection: 'media', limit: 200, sort: '-createdAt', depth: 0 })
+  const { docs } = await payload.find({
+    collection: 'media',
+    limit: 200,
+    sort: '-createdAt',
+    depth: 0,
+    select: { filename: true, url: true, mimeType: true },
+  })
   return docs.map((d) => ({
     id: d.id as string | number,
     filename: String(d.filename ?? d.id),
