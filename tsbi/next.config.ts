@@ -23,6 +23,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: 'img.youtube.com' },
       { protocol: 'https', hostname: 'i.ytimg.com' },
+      // CMS media (images + video posters) is hosted on Cloudinary.
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
   },
 };

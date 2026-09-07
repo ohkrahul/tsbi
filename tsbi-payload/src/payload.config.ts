@@ -1,6 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { cloudinaryStorage } from 'payload-storage-cloudinary'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -14,6 +14,12 @@ import { MediaCoverage } from './collections/MediaCoverage'
 import { Careers } from './collections/Careers'
 import { Clients } from './collections/Clients'
 import { Tags } from './collections/Tags'
+
+const cloudinary = {
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+}
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -38,10 +44,13 @@ export default buildConfig({
   cors: [process.env.FRONTEND_URL || 'http://localhost:3000'].filter(Boolean),
   csrf: [process.env.FRONTEND_URL || 'http://localhost:3000'].filter(Boolean),
   plugins: [
-    vercelBlobStorage({
-      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-      collections: { media: true },
-      token: process.env.BLOB_READ_WRITE_TOKEN || '',
-    }),
+    // Media (images and video) lives on Cloudinary. resource_type defaults to
+    // 'auto', so Cloudinary decides image vs video from the file itself.
+    // Only registered when the credentials are present, so an environment
+    // without them falls back to Payload's local disk storage instead of
+    // failing every upload.
+    ...(cloudinary.cloud_name && cloudinary.api_key && cloudinary.api_secret
+      ? [cloudinaryStorage({ cloudConfig: cloudinary, collections: { media: true } })]
+      : []),
   ],
 })

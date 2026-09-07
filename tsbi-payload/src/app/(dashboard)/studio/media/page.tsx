@@ -19,7 +19,7 @@ export default async function MediaLibraryPage() {
       <Card className="mt-8">
         <CardHeader>
           <CardTitle className="text-base">Upload</CardTitle>
-          <CardDescription>Images are processed by sharp; several files at once is fine.</CardDescription>
+          <CardDescription>Images and video both go to Cloudinary. Several files at once is fine.</CardDescription>
         </CardHeader>
         <CardContent>
           <MediaUpload />
@@ -30,15 +30,19 @@ export default async function MediaLibraryPage() {
         {res.docs.map((doc) => {
           const d = doc as unknown as Record<string, unknown>
           const url = String(d.url ?? '')
-          const isImage = String(d.mimeType ?? '').startsWith('image/')
+          const mime = String(d.mimeType ?? '')
+          const isImage = mime.startsWith('image/')
+          const isVideo = mime.startsWith('video/')
           return (
             <div key={String(d.id)} className="flex flex-col gap-2 rounded-xl border p-3">
               <div className="bg-muted grid aspect-video place-items-center overflow-hidden rounded-md">
                 {isImage && url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={url} alt={String(d.alt ?? '')} className="h-full w-full object-contain" />
+                ) : isVideo && url ? (
+                  <video src={url} controls preload="metadata" className="h-full w-full object-contain" />
                 ) : (
-                  <span className="text-muted-foreground text-xs">{String(d.mimeType ?? 'file')}</span>
+                  <span className="text-muted-foreground text-xs">{mime || 'file'}</span>
                 )}
               </div>
               <p className="truncate text-xs font-medium" title={String(d.filename ?? '')}>
