@@ -13,6 +13,7 @@ import { Journal } from './collections/Journal'
 import { MediaCoverage } from './collections/MediaCoverage'
 import { Careers } from './collections/Careers'
 import { Clients } from './collections/Clients'
+import { Tags } from './collections/Tags'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,7 +22,7 @@ export default buildConfig({
   // No admin UI — /studio replaces it. `user` still tells Payload which
   // collection authenticates.
   admin: { user: Users.slug },
-  collections: [Users, Media, CaseStudies, Journal, MediaCoverage, Careers, Clients],
+  collections: [Users, Media, CaseStudies, Journal, MediaCoverage, Careers, Clients, Tags],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },

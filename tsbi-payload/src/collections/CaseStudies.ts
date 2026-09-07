@@ -17,6 +17,8 @@ export const CaseStudies: CollectionConfig = {
     { name: 'slug', type: 'text', required: true, unique: true, index: true },
     { name: 'clientName', type: 'text', required: true },
     { name: 'category', type: 'text' },
+    { name: 'tags', type: 'relationship', relationTo: 'tags', hasMany: true,
+      admin: { description: 'Drives the filter dropdown on the public case-studies page.' } },
     { name: 'order', type: 'number', defaultValue: 100 },
     { name: 'track', type: 'select', options: ['film', 'tech'], defaultValue: 'film' },
     { name: 'year', type: 'number' },

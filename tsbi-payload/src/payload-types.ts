@@ -74,6 +74,7 @@ export interface Config {
     'media-coverage': MediaCoverage;
     careers: Career;
     clients: Client;
+    tags: Tag;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +89,7 @@ export interface Config {
     'media-coverage': MediaCoverageSelect<false> | MediaCoverageSelect<true>;
     careers: CareersSelect<false> | CareersSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -182,6 +184,10 @@ export interface CaseStudy {
   slug: string;
   clientName: string;
   category?: string | null;
+  /**
+   * Drives the filter dropdown on the public case-studies page.
+   */
+  tags?: (number | Tag)[] | null;
   order?: number | null;
   track?: ('film' | 'tech') | null;
   year?: number | null;
@@ -217,6 +223,20 @@ export interface CaseStudy {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: number;
+  name: string;
+  /**
+   * Lower numbers sort first in the filter dropdown.
+   */
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -345,6 +365,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'clients';
         value: number | Client;
+      } | null)
+    | ({
+        relationTo: 'tags';
+        value: number | Tag;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -438,6 +462,7 @@ export interface CaseStudiesSelect<T extends boolean = true> {
   slug?: T;
   clientName?: T;
   category?: T;
+  tags?: T;
   order?: T;
   track?: T;
   year?: T;
@@ -524,6 +549,16 @@ export interface ClientsSelect<T extends boolean = true> {
   cells?: T;
   isEntertainment?: T;
   showOnHome?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  name?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;

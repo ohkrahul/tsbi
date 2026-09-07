@@ -4,6 +4,7 @@
  */
 import assert from 'node:assert/strict'
 import { parseFields } from './form-data.ts'
+import { youtubeId } from './media-url.ts'
 import { COLLECTIONS, collectionBySlug } from './collections.ts'
 import type { FieldDef } from './collections.ts'
 
@@ -95,6 +96,60 @@ assert.deepEqual(parseFields(authFields, fd([['email', 'me@tsbi.in'], ['password
 })
 assert.deepEqual(parseFields(authFields, fd([])), { email: null })
 
+// Editors paste links, not ids — every common YouTube URL shape must resolve.
+const YT = 'dQw4w9WgXcQ'
+for (const url of [
+  `https://www.youtube.com/watch?v=${YT}`,
+  `https://www.youtube.com/watch?v=${YT}&t=42s`,
+  `https://www.youtube.com/watch?list=PL123&v=${YT}`,
+  `https://youtu.be/${YT}`,
+  `https://youtu.be/${YT}?si=abcdef`,
+  `https://www.youtube.com/embed/${YT}`,
+  `https://www.youtube.com/shorts/${YT}`,
+  `https://www.youtube.com/live/${YT}`,
+  `https://m.youtube.com/watch?v=${YT}`,
+  `  https://www.youtube.com/watch?v=${YT}  `,
+  YT,
+]) {
+  assert.equal(youtubeId(url), YT, `youtubeId failed for ${url}`)
+}
+assert.equal(youtubeId(''), null)
+assert.equal(youtubeId('https://vimeo.com/12345'), null)
+assert.equal(youtubeId('https://example.com/video.mp4'), null)
+assert.equal(youtubeId('short'), null)
+assert.equal(youtubeId('twelve-chars'), null)
+// Anything 11 chars of YouTube's own alphabet is indistinguishable from an id,
+// so a bare token that long is taken at face value — that's the point.
+assert.equal(youtubeId('not-a-video'), 'not-a-video')
+
+const mediaFields: FieldDef[] = [
+  { name: 'youtube', label: 'Y', type: 'youtube' },
+  { name: 'image', label: 'I', type: 'coverUrl' },
+]
+const thumb = `https://img.youtube.com/vi/${YT}/hqdefault.jpg`
+
+// A pasted watch link becomes an id, and the blank cover falls back to its thumbnail.
+assert.deepEqual(parseFields(mediaFields, fd([['youtube', `https://youtu.be/${YT}`], ['image', '']])), {
+  youtube: YT,
+  image: thumb,
+})
+// A YouTube link pasted into the cover field becomes that video's thumbnail.
+assert.deepEqual(parseFields(mediaFields, fd([['youtube', ''], ['image', `https://www.youtube.com/watch?v=${YT}`]])), {
+  youtube: null,
+  image: thumb,
+})
+// Any other cover URL is kept exactly as given.
+assert.deepEqual(parseFields(mediaFields, fd([['youtube', ''], ['image', '/tech/cover.jpg']])), {
+  youtube: null,
+  image: '/tech/cover.jpg',
+})
+assert.deepEqual(parseFields(mediaFields, fd([])), { youtube: null, image: null })
+
+// Relations arrive as one checkbox per option.
+const relField: FieldDef[] = [{ name: 'tags', label: 'Tags', type: 'relation', relationTo: 'tags' }]
+assert.deepEqual(parseFields(relField, fd([['tags', '3'], ['tags', '7']])), { tags: [3, 7] })
+assert.deepEqual(parseFields(relField, fd([])), { tags: [] })
+
 // Registry sanity: unique slugs, every column has a field, rows declare subFields.
 const slugs = COLLECTIONS.map((c) => c.slug)
 assert.equal(new Set(slugs).size, slugs.length, 'collection slugs must be unique')
@@ -108,6 +163,10 @@ for (const c of COLLECTIONS) {
   for (const f of c.fields) {
     if (f.type === 'rows') assert.ok(f.subFields?.length, `${c.slug}.${f.name}: rows needs subFields`)
     if (f.type === 'select') assert.ok(f.options?.length, `${c.slug}.${f.name}: select needs options`)
+    if (f.type === 'relation') {
+      assert.ok(f.relationTo, `${c.slug}.${f.name}: relation needs relationTo`)
+      assert.ok(collectionBySlug(f.relationTo!), `${c.slug}.${f.name}: relationTo "${f.relationTo}" is not in the registry`)
+    }
   }
 }
 

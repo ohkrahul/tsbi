@@ -70,24 +70,31 @@ function GridCard({ study }: { study: CaseStudyGalleryItem }) {
 
 export default function CaseStudiesGallery({ studies = caseStudies }: { studies?: CaseStudyGalleryItem[] }) {
   const [active, setActive]           = useState(0);
-  const [activeFilter, setActiveFilter] = useState(0);
+  const [activeTag, setActiveTag]       = useState('');
   const [query, setQuery]             = useState('');
   const [containerW, setContainerW]   = useState(1280);
   const containerRef = useRef<HTMLDivElement>(null);
   const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Brand filter chips (A→Z) + featured carousel — derived from the current data set.
-  const BRANDS = useMemo(
-    () => Array.from(new Set(studies.map((c) => brandOf(c.clientName)))).sort((a, b) => a.localeCompare(b)),
-    [studies],
-  );
-  const FILTERS = useMemo<{ label: string; fn: (s: CaseStudyGalleryItem) => boolean }[]>(
-    () => [
-      { label: 'All', fn: () => true },
-      ...BRANDS.map((brand) => ({ label: brand, fn: (s: CaseStudyGalleryItem) => brandOf(s.clientName) === brand })),
-    ],
-    [BRANDS],
-  );
+  /* Filter options come from the CMS `tags` relationship, ordered by each tag's
+     `order` then name. If the CMS is unreachable the page falls back to the
+     bundled studies, which carry no tags — so fall back to client brands there
+     and the filter keeps working either way. */
+  const FILTER_OPTIONS = useMemo(() => {
+    const tagged = studies.flatMap((c) => c.tags ?? []);
+    if (tagged.length) {
+      const byName = new Map<string, number>();
+      for (const t of tagged) if (!byName.has(t.name)) byName.set(t.name, t.order ?? 100);
+      return Array.from(byName, ([name, order]) => ({ name, order }))
+        .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name))
+        .map((t) => t.name);
+    }
+    return Array.from(new Set(studies.map((c) => brandOf(c.clientName)))).sort((a, b) => a.localeCompare(b));
+  }, [studies]);
+
+  const matchesFilter = (c: CaseStudyGalleryItem) =>
+    !activeTag ||
+    (c.tags?.length ? c.tags.some((t) => t.name === activeTag) : brandOf(c.clientName) === activeTag);
   const FEATURED = useMemo(
     () => FEATURED_SLUGS.map((slug) => studies.find((c) => c.slug === slug)).filter((c): c is CaseStudyGalleryItem => Boolean(c)),
     [studies],
@@ -130,7 +137,7 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
 
   const q = query.trim().toLowerCase();
   const filteredGrid = studies
-    .filter(FILTERS[activeFilter].fn)
+    .filter(matchesFilter)
     .filter((s) =>
       !q ||
       s.title.toLowerCase().includes(q) ||
@@ -262,8 +269,26 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
               More Work.<br/>More Impact.
             </h2>
           </div>
-          {/* search bar */}
-          <div style={{ position:'relative', flex:'0 1 320px', minWidth:200 }}>
+          {/* filter dropdown (options are CMS tags) + search bar */}
+          <div style={{ display:'flex', gap:10, flexWrap:'wrap', alignItems:'center' }}>
+          <div style={{ position:'relative', flex:'0 0 auto' }}>
+            <select
+              value={activeTag}
+              onChange={(e) => setActiveTag(e.target.value)}
+              aria-label="Filter case studies by tag"
+              style={{ appearance:'none', WebkitAppearance:'none', fontFamily:'var(--fm)', fontSize:12, color:'#fff', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.16)', borderRadius:999, padding:'11px 38px 11px 18px', outline:'none', cursor:'pointer', minWidth:190 }}
+            >
+              <option value="" style={{ background:'#241640', color:'#fff' }}>All case studies</option>
+              {FILTER_OPTIONS.map((name) => (
+                <option key={name} value={name} style={{ background:'#241640', color:'#fff' }}>{name}</option>
+              ))}
+            </select>
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none" aria-hidden="true"
+              style={{ position:'absolute', right:16, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }}>
+              <path d="M3 5l4 4 4-4" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <div style={{ position:'relative', flex:'0 1 300px', minWidth:200 }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position:'absolute', left:15, top:'50%', transform:'translateY(-50%)', pointerEvents:'none' }}>
               <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
             </svg>
@@ -276,22 +301,28 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
               style={{ width:'100%', fontFamily:'var(--fm)', fontSize:12, color:'#fff', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.16)', borderRadius:999, padding:'11px 16px 11px 40px', outline:'none' }}
             />
           </div>
+          </div>
         </div>
 
-        {/* brand filter chips (A→Z) */}
-        <div style={{ display:'flex', gap:6, flexWrap:'wrap', marginBottom:30 }}>
-          {FILTERS.map((f,i)=>(
-            <button key={f.label} onClick={()=>setActiveFilter(i)}
-              style={{ fontFamily:'var(--fm)', fontSize:11, fontWeight:i===activeFilter?600:400, color:i===activeFilter?'#fff':'rgba(255,255,255,0.42)', background:i===activeFilter?'rgba(255,255,255,0.1)':'transparent', border:`1px solid ${i===activeFilter?'rgba(255,255,255,0.22)':'rgba(255,255,255,0.08)'}`, borderRadius:999, padding:'6px 16px', cursor:'pointer', transition:'all 0.2s' }}
+        {/* result count / active filter readout */}
+        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:24, flexWrap:'wrap' }}>
+          <span style={{ fontFamily:'var(--fm)', fontSize:11, color:'rgba(255,255,255,0.42)' }}>
+            {filteredGrid.length} {filteredGrid.length === 1 ? 'case study' : 'case studies'}
+            {activeTag ? ' in' : ''}
+          </span>
+          {activeTag && (
+            <button onClick={()=>setActiveTag('')}
+              style={{ display:'inline-flex', alignItems:'center', gap:7, fontFamily:'var(--fm)', fontSize:11, fontWeight:600, color:'#fff', background:'rgba(224,25,125,0.18)', border:'1px solid rgba(224,25,125,0.5)', borderRadius:999, padding:'5px 12px', cursor:'pointer' }}
+              aria-label={`Clear the ${activeTag} filter`}
             >
-              {i===activeFilter && <span style={{ color:'#e0197d', marginRight:4 }}>—</span>}
-              {f.label}
+              {activeTag}
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
             </button>
-          ))}
+          )}
         </div>
 
         <motion.div
-          key={activeFilter}
+          key={activeTag}
           initial={{ opacity:0, y:10 }}
           animate={{ opacity:1, y:0 }}
           transition={{ duration:0.35, ease:[0.22,1,0.36,1] }}

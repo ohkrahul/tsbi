@@ -6,7 +6,9 @@ export type FieldDef = {
   label: string
   /**
    * `tags` = text hasMany (one per line), `rows` = array of objects,
-   * `upload` = media relation, `password` = write-only (blank means "leave as is").
+   * `upload` = media relation, `relation` = pick many from another collection,
+   * `youtube` = any YouTube link normalized to its id, `coverUrl` = image URL
+   * that falls back to the video's thumbnail, `password` = write-only.
    */
   type:
     | 'text'
@@ -18,6 +20,9 @@ export type FieldDef = {
     | 'tags'
     | 'rows'
     | 'upload'
+    | 'relation'
+    | 'youtube'
+    | 'coverUrl'
     | 'email'
     | 'password'
   required?: boolean
@@ -27,6 +32,13 @@ export type FieldDef = {
   subFields?: { name: string; label: string }[]
   /** Renders half-width from `sm` up. */
   half?: boolean
+  /** Prefilled on the "new" form — mirror the Payload field's defaultValue. */
+  defaultValue?: string
+  /** Collapsed `<details>` section to file this field under. Ungrouped = always visible. */
+  group?: string
+  /** For `relation` — the collection to pick from, and which field labels it. */
+  relationTo?: string
+  relationLabel?: string
 }
 
 export type CollectionDef = {
@@ -40,6 +52,10 @@ export type CollectionDef = {
 
 const t = (name: string, label: string, extra: Partial<FieldDef> = {}): FieldDef => ({ name, label, type: 'text', ...extra })
 
+// Collapsed sections — everything an editor can safely ignore.
+const THEME = 'Theme colours (optional)'
+const TECH = 'Tech-track long-form sections (optional)'
+
 export const COLLECTIONS: CollectionDef[] = [
   {
     slug: 'case-studies', label: 'Case Studies', singular: 'Case Study', defaultSort: 'order',
@@ -51,28 +67,43 @@ export const COLLECTIONS: CollectionDef[] = [
       t('title', 'Title', { required: true }),
       t('slug', 'Slug', { required: true, half: true, hint: 'URL segment — must be unique.' }),
       t('clientName', 'Client name', { required: true, half: true }),
-      t('category', 'Category', { half: true }),
-      { name: 'track', label: 'Track', type: 'select', options: ['film', 'tech'], half: true },
-      { name: 'order', label: 'Order', type: 'number', half: true },
+      t('category', 'Category', { half: true, hint: 'Shown on the card, e.g. Film Marketing · Romantic Comedy' }),
+      { name: 'track', label: 'Track', type: 'select', options: ['film', 'tech'], half: true, defaultValue: 'film', required: true },
+      { name: 'order', label: 'Order', type: 'number', half: true, defaultValue: '100', hint: 'Lower numbers show first.' },
       { name: 'year', label: 'Year', type: 'number', half: true },
+      {
+        name: 'tags', label: 'Tags', type: 'relation', relationTo: 'tags', relationLabel: 'name',
+        hint: 'Drives the filter dropdown on the public case-studies page.',
+      },
       { name: 'shortDescription', label: 'Short description', type: 'textarea' },
       { name: 'concept', label: 'Concept', type: 'textarea' },
       { name: 'services', label: 'Services', type: 'tags' },
-      t('image', 'Cover image URL', { hint: 'YouTube thumbnail, /tech path, or a Blob URL.' }),
-      t('youtube', 'YouTube video ID', { half: true }),
-      { name: 'videos', label: 'Video URLs', type: 'tags', hint: 'Direct MP4 URLs.' },
-      t('colorTheme', 'Color theme', { half: true }),
-      t('accent', 'Accent', { half: true }),
-      t('gradFrom', 'Gradient from', { half: true }),
-      t('gradTo', 'Gradient to', { half: true }),
-      { name: 'overview', label: 'Overview', type: 'textarea' },
-      { name: 'challenge', label: 'Challenge', type: 'textarea' },
-      { name: 'idea', label: 'Idea', type: 'textarea' },
-      { name: 'experienceIntro', label: 'Experience intro', type: 'textarea' },
-      { name: 'experienceItems', label: 'Experience items', type: 'tags' },
-      { name: 'whyItWorked', label: 'Why it worked', type: 'textarea' },
       {
-        name: 'impact', label: 'Impact stats', type: 'rows',
+        name: 'youtube', label: 'YouTube link', type: 'youtube',
+        hint: 'Paste the normal YouTube link — watch, youtu.be, shorts or embed. The ID is pulled out for you.',
+      },
+      {
+        name: 'image', label: 'Cover image', type: 'coverUrl',
+        hint: 'Paste an image URL, or a YouTube link to use its thumbnail. Leave blank to reuse the video above.',
+      },
+      {
+        name: 'videos', label: 'Video files', type: 'tags',
+        hint: 'Direct video-file URLs only (…/clip.mp4), one per line — these play instead of the YouTube embed. A YouTube link goes in the field above, not here.',
+      },
+      // Cosmetic — the public detail page falls back to sensible values, so an
+      // editor never has to touch these to publish a case study.
+      t('colorTheme', 'Colour theme', { half: true, group: THEME }),
+      t('accent', 'Accent', { half: true, group: THEME }),
+      t('gradFrom', 'Gradient from', { half: true, group: THEME }),
+      t('gradTo', 'Gradient to', { half: true, group: THEME }),
+      { name: 'overview', label: 'Overview', type: 'textarea', group: TECH },
+      { name: 'challenge', label: 'Challenge', type: 'textarea', group: TECH },
+      { name: 'idea', label: 'Idea', type: 'textarea', group: TECH },
+      { name: 'experienceIntro', label: 'Experience intro', type: 'textarea', group: TECH },
+      { name: 'experienceItems', label: 'Experience items', type: 'tags', group: TECH },
+      { name: 'whyItWorked', label: 'Why it worked', type: 'textarea', group: TECH },
+      {
+        name: 'impact', label: 'Impact stats', type: 'rows', group: TECH,
         subFields: [{ name: 'value', label: 'Value' }, { name: 'label', label: 'Label' }],
         hint: 'One per line, pipe-separated: 2.4M | Views in week one. Label is required.',
       },
@@ -129,6 +160,14 @@ export const COLLECTIONS: CollectionDef[] = [
       { name: 'cells', label: 'Cells', type: 'tags' },
       { name: 'isEntertainment', label: 'Entertainment client', type: 'checkbox', half: true },
       { name: 'showOnHome', label: 'Show on home', type: 'checkbox', half: true },
+    ],
+  },
+  {
+    slug: 'tags', label: 'Tags', singular: 'Tag', defaultSort: 'name',
+    columns: [{ key: 'name', label: 'Name' }, { key: 'order', label: 'Order' }],
+    fields: [
+      t('name', 'Name', { required: true, half: true, hint: 'Shown as-is in the public filter dropdown.' }),
+      { name: 'order', label: 'Order', type: 'number', half: true, defaultValue: '100', hint: 'Lower numbers sort first.' },
     ],
   },
   {

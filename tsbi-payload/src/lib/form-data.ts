@@ -1,4 +1,5 @@
 import type { FieldDef } from './collections'
+import { coverImageUrl, youtubeId } from './media-url.ts'
 
 const lines = (v: FormDataEntryValue | null) =>
   String(v ?? '')
@@ -45,6 +46,18 @@ export function parseFields(fields: FieldDef[], fd: FormData) {
         data[f.name] = s === null ? null : /^\d+$/.test(s) ? Number(s) : s
         break
       }
+      case 'relation':
+        // One checkbox per related doc, so read every checked value.
+        data[f.name] = fd
+          .getAll(f.name)
+          .map((v) => String(v))
+          .filter(Boolean)
+          .map((v) => (/^\d+$/.test(v) ? Number(v) : v))
+        break
+      case 'youtube':
+        // Accepts a watch/share/embed/shorts link or a bare id.
+        data[f.name] = youtubeId(raw as string)
+        break
       case 'password': {
         // Omitted entirely when blank — sending null would clear the password
         // on every edit. Never trimmed: whitespace can be part of a password.
@@ -52,9 +65,21 @@ export function parseFields(fields: FieldDef[], fd: FormData) {
         if (s !== '') data[f.name] = s
         break
       }
+      case 'coverUrl':
+        // Filled in by the post-pass below, which needs the video field too.
+        break
       default:
         data[f.name] = blankToNull(raw)
     }
   }
+
+  // A cover image can be derived from the video on the same document, so it is
+  // resolved after every field has been read.
+  const cover = fields.find((f) => f.type === 'coverUrl')
+  if (cover) {
+    const video = fields.find((f) => f.type === 'youtube')
+    data[cover.name] = coverImageUrl(fd.get(cover.name) as string, video ? (data[video.name] as string) : null)
+  }
+
   return data
 }

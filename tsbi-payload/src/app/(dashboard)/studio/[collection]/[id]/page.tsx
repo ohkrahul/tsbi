@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { collectionBySlug } from '@/lib/collections'
-import { getMediaOptions, getPayloadClient } from '@/lib/payload-client'
+import { getMediaOptions, getPayloadClient, getRelationOptions } from '@/lib/payload-client'
 import { requireUser } from '@/lib/auth'
 import { CollectionForm, DeleteButton } from '@/components/studio/forms'
 
@@ -19,6 +19,7 @@ export default async function EditDocPage({ params }: { params: Promise<{ collec
   if (!doc) notFound()
 
   const media = def.fields.some((f) => f.type === 'upload') ? await getMediaOptions() : []
+  const relations = await getRelationOptions(def.fields)
   const d = doc as Record<string, unknown>
   const title = String(d[def.columns[0].key] ?? id)
 
@@ -39,7 +40,7 @@ export default async function EditDocPage({ params }: { params: Promise<{ collec
         </div>
         <DeleteButton collection={def.slug} id={String(d.id)} />
       </div>
-      <CollectionForm def={def} doc={d} media={media} />
+      <CollectionForm def={def} doc={d} media={media} relations={relations} />
     </div>
   )
 }

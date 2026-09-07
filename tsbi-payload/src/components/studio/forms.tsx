@@ -12,6 +12,7 @@ import type { CollectionDef, FieldDef } from '@/lib/collections'
 import { deleteDoc, login, logout, saveDoc, uploadMedia } from '@/app/(dashboard)/studio/actions'
 
 export type MediaOption = { id: string | number; filename: string; url: string }
+export type RelationOption = { id: string | number; label: string }
 type Doc = Record<string, unknown>
 
 /** Shared control styling — same look as <Input>, for native select/textarea. */
@@ -29,7 +30,9 @@ function Err({ children }: { children?: React.ReactNode }) {
 
 /** Doc value -> the string the input should start with. */
 function initialValue(f: FieldDef, doc?: Doc): string {
-  const v = doc?.[f.name]
+  // Creating: prefill the schema default so an editor doesn't have to know it.
+  if (!doc) return f.defaultValue ?? ''
+  const v = doc[f.name]
   if (v === null || v === undefined) return ''
   switch (f.type) {
     case 'tags':
@@ -79,7 +82,65 @@ function UploadField({ f, value, media }: { f: FieldDef; value: string; media: M
   )
 }
 
-function Field({ f, doc, media }: { f: FieldDef; doc?: Doc; media: MediaOption[] }) {
+/** Checkbox list of another collection's docs — e.g. the tags on a case study. */
+function RelationField({ f, doc, options }: { f: FieldDef; doc?: Doc; options: RelationOption[] }) {
+  const selected = new Set(
+    (Array.isArray(doc?.[f.name]) ? (doc[f.name] as unknown[]) : []).map((v) =>
+      String(v !== null && typeof v === 'object' ? ((v as Doc).id ?? '') : v),
+    ),
+  )
+  const manage = `/studio/${f.relationTo}`
+  return (
+    <>
+      {options.length ? (
+        <div className="grid max-h-56 gap-1.5 overflow-y-auto rounded-md border p-3 sm:grid-cols-3">
+          {options.map((o) => (
+            <Label key={o.id} htmlFor={`f-${f.name}-${o.id}`} className="cursor-pointer font-normal">
+              <input
+                id={`f-${f.name}-${o.id}`}
+                name={f.name}
+                type="checkbox"
+                value={String(o.id)}
+                defaultChecked={selected.has(String(o.id))}
+                className="border-input size-4 rounded-sm"
+              />
+              <span className="truncate" title={o.label}>
+                {o.label}
+              </span>
+            </Label>
+          ))}
+        </div>
+      ) : (
+        <p className="text-muted-foreground rounded-md border border-dashed px-3 py-4 text-xs">
+          No {f.label.toLowerCase()} yet —{' '}
+          <Link href={`${manage}/new`} className="underline">
+            create the first one
+          </Link>
+          .
+        </p>
+      )}
+      <p className="text-muted-foreground text-xs">
+        {f.hint}{' '}
+        <Link href={manage} className="underline">
+          Manage {f.label.toLowerCase()}
+        </Link>
+        .
+      </p>
+    </>
+  )
+}
+
+function Field({
+  f,
+  doc,
+  media,
+  relations,
+}: {
+  f: FieldDef
+  doc?: Doc
+  media: MediaOption[]
+  relations: Record<string, RelationOption[]>
+}) {
   const value = initialValue(f, doc)
   const id = `f-${f.name}`
 
@@ -123,6 +184,8 @@ function Field({ f, doc, media }: { f: FieldDef; doc?: Doc; media: MediaOption[]
         </select>
       ) : f.type === 'upload' ? (
         <UploadField f={f} value={value} media={media} />
+      ) : f.type === 'relation' ? (
+        <RelationField f={f} doc={doc} options={relations[f.name] ?? []} />
       ) : (
         <Input
           id={id}
@@ -138,15 +201,34 @@ function Field({ f, doc, media }: { f: FieldDef; doc?: Doc; media: MediaOption[]
         />
       )}
 
-      {f.hint && f.type !== 'upload' ? <p className="text-muted-foreground text-xs">{f.hint}</p> : null}
-      {f.type === 'tags' ? <p className="text-muted-foreground text-xs">One per line.</p> : null}
+      {f.hint && f.type !== 'upload' && f.type !== 'relation' ? (
+        <p className="text-muted-foreground text-xs">{f.hint}</p>
+      ) : null}
     </div>
   )
 }
 
-export function CollectionForm({ def, doc, media = [] }: { def: CollectionDef; doc?: Doc; media?: MediaOption[] }) {
+export function CollectionForm({
+  def,
+  doc,
+  media = [],
+  relations = {},
+}: {
+  def: CollectionDef
+  doc?: Doc
+  media?: MediaOption[]
+  relations?: Record<string, RelationOption[]>
+}) {
   const [state, formAction, pending] = useActionState(saveDoc, null)
   const docId = doc?.id
+
+  // Ungrouped fields are the form; anything with a `group` is optional detail
+  // tucked into a collapsed section so publishing needs the top block only.
+  const main = def.fields.filter((f) => !f.group)
+  const groups = def.fields.reduce<Record<string, FieldDef[]>>((acc, f) => {
+    if (f.group) (acc[f.group] ??= []).push(f)
+    return acc
+  }, {})
 
   return (
     <form action={formAction} className="grid max-w-3xl gap-5">
@@ -156,10 +238,24 @@ export function CollectionForm({ def, doc, media = [] }: { def: CollectionDef; d
       <Err>{state?.error}</Err>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        {def.fields.map((f) => (
-          <Field key={f.name} f={f} doc={doc} media={media} />
+        {main.map((f) => (
+          <Field key={f.name} f={f} doc={doc} media={media} relations={relations} />
         ))}
       </div>
+
+      {Object.entries(groups).map(([name, fields]) => (
+        <details key={name} className="rounded-xl border">
+          <summary className="hover:bg-muted/50 cursor-pointer rounded-xl px-4 py-3 text-sm font-medium">
+            {name}
+            <span className="text-muted-foreground ml-2 text-xs font-normal">{fields.length} fields</span>
+          </summary>
+          <div className="grid gap-5 border-t p-4 sm:grid-cols-2">
+            {fields.map((f) => (
+              <Field key={f.name} f={f} doc={doc} media={media} relations={relations} />
+            ))}
+          </div>
+        </details>
+      ))}
 
       <div className="flex items-center gap-2 border-t pt-5">
         <Button type="submit" disabled={pending}>

@@ -11,7 +11,8 @@
     "generate:types": "payload generate:types",
     "seed": "payload run src/seed.ts",
     "payload": "payload",
-    "check": "node --experimental-strip-types src/lib/form-data.check.ts"
+    "check": "node --experimental-strip-types src/lib/form-data.check.ts",
+    "seed:tags": "payload run src/seed-tags.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3",
