@@ -65,6 +65,13 @@ export function parseFields(fields: FieldDef[], fd: FormData) {
         // Accepts a watch/share/embed/shorts link or a bare id.
         data[f.name] = youtubeId(raw as string)
         break
+      case 'youtubeList':
+        // One link per line; anything that isn't a YouTube link is dropped
+        // rather than stored as a broken id.
+        data[f.name] = lines(raw)
+          .map((l) => youtubeId(l))
+          .filter((v): v is string => Boolean(v))
+        break
       case 'password': {
         // Omitted entirely when blank — sending null would clear the password
         // on every edit. Never trimmed: whitespace can be part of a password.

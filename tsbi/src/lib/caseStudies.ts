@@ -17,6 +17,13 @@ export type CaseStudyGalleryItem = {
   /** Direct MP4 URLs (e.g. Cloudinary) — played inline on the detail page; takes precedence over `youtube`. */
   videos?: string[];
   order: number;
+  /** Service-page card overrides; cards fall back to title/concept. */
+  cardHeadline?: string | null;
+  cardBlurb?: string | null;
+  /** Every film in the campaign (YouTube ids) — drives the "N Films" badge. */
+  youtubeFilms?: string[] | null;
+  /** Which /services/<slug> pages list this study. */
+  serviceAreas?: string[] | null;
   /** CMS-managed filter tags (Payload `tags` relationship, populated). */
   tags?: { id: number | string; name: string; order?: number | null }[];
   /** 'tech' studies use the rich section fields below + a /tech image. */

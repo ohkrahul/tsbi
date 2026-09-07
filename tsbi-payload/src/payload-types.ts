@@ -220,6 +220,18 @@ export interface CaseStudy {
   experienceIntro?: string | null;
   experienceItems?: string[] | null;
   whyItWorked?: string | null;
+  /**
+   * Headline shown on service-page cards instead of the title.
+   */
+  cardHeadline?: string | null;
+  /**
+   * Short blurb for service-page cards instead of the concept.
+   */
+  cardBlurb?: string | null;
+  /**
+   * Every film in this campaign (YouTube IDs). Drives the "N Films" badge.
+   */
+  youtubeFilms?: string[] | null;
   impact?:
     | {
         value?: string | null;
@@ -487,6 +499,9 @@ export interface CaseStudiesSelect<T extends boolean = true> {
   experienceIntro?: T;
   experienceItems?: T;
   whyItWorked?: T;
+  cardHeadline?: T;
+  cardBlurb?: T;
+  youtubeFilms?: T;
   impact?:
     | T
     | {

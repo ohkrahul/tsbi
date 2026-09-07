@@ -160,6 +160,18 @@ assert.deepEqual(parseFields(msField, fd([['serviceAreas', 'social-media'], ['se
 })
 assert.deepEqual(parseFields(msField, fd([])), { serviceAreas: [] })
 
+// A list of YouTube links, one per line, becomes a list of ids; junk is dropped.
+const listField: FieldDef[] = [{ name: 'youtubeFilms', label: 'F', type: 'youtubeList' }]
+assert.deepEqual(
+  parseFields(listField, fd([['youtubeFilms', `https://youtu.be/${YT}
+  https://www.youtube.com/watch?v=aaaaaaaaaaa  
+
+https://vimeo.com/1
+`]])),
+  { youtubeFilms: [YT, 'aaaaaaaaaaa'] },
+)
+assert.deepEqual(parseFields(listField, fd([])), { youtubeFilms: [] })
+
 // Registry sanity: unique slugs, every column has a field, rows declare subFields.
 const slugs = COLLECTIONS.map((c) => c.slug)
 assert.equal(new Set(slugs).size, slugs.length, 'collection slugs must be unique')

@@ -50,6 +50,11 @@ export const CaseStudies: CollectionConfig = {
     { name: 'experienceIntro', type: 'textarea' },
     { name: 'experienceItems', type: 'text', hasMany: true },
     { name: 'whyItWorked', type: 'textarea' },
+    // Service-page card overrides. The cards fall back to title/concept, so these
+    // only exist for copy written specifically for a service page.
+    { name: 'cardHeadline', type: 'text', admin: { description: 'Headline shown on service-page cards instead of the title.' } },
+    { name: 'cardBlurb', type: 'textarea', admin: { description: 'Short blurb for service-page cards instead of the concept.' } },
+    { name: 'youtubeFilms', type: 'text', hasMany: true, admin: { description: 'Every film in this campaign (YouTube IDs). Drives the "N Films" badge.' } },
     { name: 'impact', type: 'array', fields: [
       { name: 'value', type: 'text' },
       { name: 'label', type: 'text', required: true },

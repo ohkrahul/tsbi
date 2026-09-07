@@ -5,6 +5,7 @@
  * fallbacks on top of an empty response).
  */
 import type { CaseStudyGalleryItem } from './caseStudies';
+import type { Campaign, YTWork } from './serviceCampaigns';
 
 const CMS = process.env.NEXT_PUBLIC_CMS_URL ?? 'http://localhost:3001';
 
@@ -139,6 +140,50 @@ export async function getCaseStudiesForService(service: string): Promise<CaseStu
     where: { 'where[serviceAreas][contains]': service },
   });
   return docs as unknown as CaseStudyGalleryItem[];
+}
+
+/** Films for a card: the full campaign list if set, else the single video. */
+function filmsOf(s: CaseStudyGalleryItem): string[] {
+  if (s.youtubeFilms?.length) return s.youtubeFilms;
+  return s.youtube ? [s.youtube] : [];
+}
+
+/**
+ * Case studies shaped for the Content Production cards: the brand on top, the
+ * campaign as the headline. Falls back to the case study's own copy when no
+ * service-card override is set.
+ */
+export async function getServiceCampaigns(service: string): Promise<Campaign[]> {
+  const studies = await getCaseStudiesForService(service);
+  return studies.map((s) => ({
+    client: s.clientName,
+    category: s.category,
+    title: s.cardHeadline || s.title,
+    desc: s.cardBlurb || s.concept || s.shortDescription || '',
+    videos: filmsOf(s),
+    poster: s.image || undefined,
+    caseStudySlug: s.slug,
+  }));
+}
+
+/**
+ * Case studies shaped for the Social Media cards, which show three lines: the
+ * campaign, the brand under it, and the headline. Studies with no video are
+ * skipped — the card is built around one.
+ */
+export async function getServiceYouTubeWork(service: string): Promise<YTWork[]> {
+  const studies = await getCaseStudiesForService(service);
+  return studies
+    .filter((s) => filmsOf(s).length > 0)
+    .map((s) => ({
+      client: s.title,
+      house: s.clientName,
+      category: s.category,
+      title: s.cardHeadline || s.title,
+      desc: s.cardBlurb || s.shortDescription || s.concept || '',
+      videoId: filmsOf(s)[0],
+      caseStudySlug: s.slug,
+    }));
 }
 
 /** Single case study by slug (for /case-studies/[slug]); null if not found. */

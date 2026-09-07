@@ -71,6 +71,7 @@ function initialValue(f: FieldDef, doc?: Doc): string {
   if (v === null || v === undefined) return ''
   switch (f.type) {
     case 'tags':
+    case 'youtubeList':
       return Array.isArray(v) ? v.map(String).join('\n') : ''
     case 'rows':
       return Array.isArray(v)
@@ -194,7 +195,7 @@ function Field({
 
       {f.type === 'textarea' ? (
         <textarea id={id} name={f.name} defaultValue={value} rows={4} className={ctl} />
-      ) : f.type === 'tags' || f.type === 'rows' ? (
+      ) : f.type === 'tags' || f.type === 'rows' || f.type === 'youtubeList' ? (
         <textarea id={id} name={f.name} defaultValue={value} rows={4} className={cn(ctl, 'font-mono text-xs')} />
       ) : f.type === 'select' ? (
         <select id={id} name={f.name} defaultValue={value} className={ctl}>

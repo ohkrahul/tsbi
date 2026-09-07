@@ -23,6 +23,7 @@ export type FieldDef = {
     | 'multiselect'
     | 'relation'
     | 'youtube'
+    | 'youtubeList'
     | 'coverUrl'
     | 'email'
     | 'password'
@@ -57,6 +58,7 @@ const t = (name: string, label: string, extra: Partial<FieldDef> = {}): FieldDef
 // Collapsed sections — everything an editor can safely ignore.
 const THEME = 'Theme colours (optional)'
 const TECH = 'Tech-track long-form sections (optional)'
+const CARD = 'Service-page card (optional)'
 
 export const COLLECTIONS: CollectionDef[] = [
   {
@@ -101,6 +103,14 @@ export const COLLECTIONS: CollectionDef[] = [
       {
         name: 'videos', label: 'Video files', type: 'tags',
         hint: 'Direct video-file URLs only (…/clip.mp4), one per line — these play instead of the YouTube embed. A YouTube link goes in the field above, not here.',
+      },
+      // Only needed when a service page should show different copy than the
+      // case study itself; every card falls back to the fields above.
+      t('cardHeadline', 'Card headline', { group: CARD, hint: 'Shown on service-page cards instead of the title.' }),
+      { name: 'cardBlurb', label: 'Card blurb', type: 'textarea', group: CARD, hint: 'Shown on service-page cards instead of the concept.' },
+      {
+        name: 'youtubeFilms', label: 'All films in this campaign', type: 'youtubeList', group: CARD,
+        hint: 'One YouTube link per line. Drives the "N Films" badge on the card. Leave blank to use the single link above.',
       },
       // Cosmetic — the public detail page falls back to sensible values, so an
       // editor never has to touch these to publish a case study.
