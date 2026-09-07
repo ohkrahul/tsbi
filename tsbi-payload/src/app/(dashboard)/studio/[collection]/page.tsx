@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { SortSelect } from '@/components/studio/forms'
 
 const PER_PAGE = 25
 
@@ -64,19 +65,26 @@ export default async function ListPage({
   const q = (one('q') ?? '').trim()
   const page = Math.max(1, Number(one('page') ?? 1) || 1)
 
+  // Newest first by default: a freshly added record should be the first thing
+  // you see, not buried wherever its `order` puts it. "In display order" keeps
+  // the collection's own arrangement available.
+  const sort = one('sort') ?? 'newest'
+  const sortBy =
+    sort === 'oldest' ? 'createdAt' : sort === 'display' ? (def.defaultSort ?? '-createdAt') : '-createdAt'
+
   const payload = await getPayloadClient()
   const res = await payload.find({
     collection: def.slug as never,
     limit: PER_PAGE,
     page,
-    sort: def.defaultSort,
+    sort: sortBy,
     depth: 0,
     // Search the first column — the only field worth free-texting on these collections.
     ...(q ? { where: { [def.columns[0].key]: { like: q } } as never } : {}),
   })
 
   const pageHref = (p: number) =>
-    `/studio/${def.slug}?${new URLSearchParams({ ...(q ? { q } : {}), page: String(p) })}`
+    `/studio/${def.slug}?${new URLSearchParams({ ...(q ? { q } : {}), sort, page: String(p) })}`
 
   return (
     <div className="mx-auto max-w-6xl p-6 md:p-10">
@@ -109,11 +117,17 @@ export default async function ListPage({
         </p>
       ) : null}
 
-      <form className="mt-6 flex max-w-sm gap-2">
-        <Input name="q" defaultValue={q} placeholder={`Search ${def.columns[0].label.toLowerCase()}…`} />
+      <form className="mt-6 flex flex-wrap items-center gap-2">
+        <Input
+          name="q"
+          defaultValue={q}
+          placeholder={`Search ${def.columns[0].label.toLowerCase()}…`}
+          className="max-w-xs"
+        />
         <Button type="submit" variant="outline">
           <Search /> Search
         </Button>
+        <SortSelect value={sort} />
       </form>
 
       <div className="mt-4 rounded-xl border">

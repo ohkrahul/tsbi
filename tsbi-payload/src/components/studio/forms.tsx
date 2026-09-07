@@ -410,6 +410,26 @@ export function CollectionForm({
   )
 }
 
+/**
+ * Sort picker for the list views. Submits its own form on change so picking an
+ * option applies immediately, rather than needing the Search button.
+ */
+export function SortSelect({ value }: { value: string }) {
+  return (
+    <select
+      name="sort"
+      defaultValue={value}
+      aria-label="Sort order"
+      className={cn(ctl, 'w-auto cursor-pointer')}
+      onChange={(e) => e.currentTarget.form?.requestSubmit()}
+    >
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="display">In display order</option>
+    </select>
+  )
+}
+
 export function DeleteButton({ collection, id }: { collection: string; id: string | number }) {
   return (
     <form action={deleteDoc}>
