@@ -430,17 +430,33 @@ export function SortSelect({ value }: { value: string }) {
   )
 }
 
-export function DeleteButton({ collection, id }: { collection: string; id: string | number }) {
+export function DeleteButton({
+  collection,
+  id,
+  label,
+  compact = false,
+}: {
+  collection: string
+  id: string | number
+  /** Named in the confirmation, so a row delete says what it is deleting. */
+  label?: string
+  /** Text-style button, for use inside a table row. */
+  compact?: boolean
+}) {
+  const confirmText = label
+    ? `Delete “${label}”? This cannot be undone.`
+    : 'Delete this permanently? This cannot be undone.'
   return (
-    <form action={deleteDoc}>
+    <form action={deleteDoc} className={compact ? 'inline' : undefined}>
       <input type="hidden" name="__collection" value={collection} />
       <input type="hidden" name="__id" value={String(id)} />
       <Button
         type="submit"
-        variant="destructive"
+        variant={compact ? 'ghost' : 'destructive'}
         size="sm"
+        className={compact ? 'text-muted-foreground hover:text-destructive h-auto px-0 text-xs font-normal' : undefined}
         onClick={(e) => {
-          if (!confirm('Delete this permanently?')) e.preventDefault()
+          if (!confirm(confirmText)) e.preventDefault()
         }}
       >
         Delete

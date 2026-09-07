@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { SortSelect } from '@/components/studio/forms'
+import { DeleteButton, SortSelect } from '@/components/studio/forms'
 
 const PER_PAGE = 25
 
@@ -164,10 +164,18 @@ export default async function ListPage({
                         )}
                       </TableCell>
                     ))}
-                    <TableCell className="text-right">
-                      <Link href={href} className="text-muted-foreground hover:text-foreground text-xs">
-                        Edit
-                      </Link>
+                    <TableCell className="text-right whitespace-nowrap">
+                      <span className="inline-flex items-center gap-3">
+                        <Link href={href} className="text-muted-foreground hover:text-foreground text-xs">
+                          Edit
+                        </Link>
+                        <DeleteButton
+                          collection={def.slug}
+                          id={String(d.id)}
+                          label={String(d[def.columns[0].key] ?? d.id)}
+                          compact
+                        />
+                      </span>
                     </TableCell>
                   </TableRow>
                 )
