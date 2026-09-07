@@ -99,8 +99,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'service-digital-transformation': ServiceDigitalTransformation;
+  };
+  globalsSelect: {
+    'service-digital-transformation': ServiceDigitalTransformationSelect<false> | ServiceDigitalTransformationSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -645,6 +649,191 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-digital-transformation".
+ */
+export interface ServiceDigitalTransformation {
+  id: number;
+  /**
+   * Small label above the hero headline.
+   */
+  eyebrow?: string | null;
+  /**
+   * Hero headline text before the coloured words.
+   */
+  heroTitleBefore?: string | null;
+  /**
+   * The coloured words in the headline, in order. Colour is a hex value.
+   */
+  heroWords?:
+    | {
+        text?: string | null;
+        color?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Hero headline text after the coloured words.
+   */
+  heroTitleAfter?: string | null;
+  heroBody?: string | null;
+  heroPrimaryLabel?: string | null;
+  heroPrimaryHref?: string | null;
+  heroSecondaryLabel?: string | null;
+  heroSecondaryHref?: string | null;
+  /**
+   * Line above the client logos.
+   */
+  logosLabel?: string | null;
+  /**
+   * Client logos shown in the hero.
+   */
+  logos?:
+    | {
+        name?: string | null;
+        color?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Rows in the hero phone mockup: image path, label, percentage.
+   */
+  phoneRows?:
+    | {
+        img?: string | null;
+        name?: string | null;
+        v?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  offerHeading?: string | null;
+  /**
+   * Icon keys: web, app, mobile, micro, cart, game, dash, api, seo, support.
+   */
+  offerings?:
+    | {
+        icon?: string | null;
+        title?: string | null;
+        desc?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  buildHeading?: string | null;
+  /**
+   * Icon keys: globe, mega, layers, growth. Tint is a hex colour.
+   */
+  whatWeBuild?:
+    | {
+        icon?: string | null;
+        tint?: string | null;
+        title?: string | null;
+        desc?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  workHeading?: string | null;
+  workLinkLabel?: string | null;
+  processHeading?: string | null;
+  /**
+   * Icon keys: search, pen, code, rocket.
+   */
+  steps?:
+    | {
+        n?: string | null;
+        color?: string | null;
+        icon?: string | null;
+        title?: string | null;
+        desc?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Use a line break for the second line.
+   */
+  ctaHeading?: string | null;
+  ctaBody?: string | null;
+  ctaPrimaryLabel?: string | null;
+  ctaSecondaryLabel?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-digital-transformation_select".
+ */
+export interface ServiceDigitalTransformationSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heroTitleBefore?: T;
+  heroWords?:
+    | T
+    | {
+        text?: T;
+        color?: T;
+        id?: T;
+      };
+  heroTitleAfter?: T;
+  heroBody?: T;
+  heroPrimaryLabel?: T;
+  heroPrimaryHref?: T;
+  heroSecondaryLabel?: T;
+  heroSecondaryHref?: T;
+  logosLabel?: T;
+  logos?:
+    | T
+    | {
+        name?: T;
+        color?: T;
+        id?: T;
+      };
+  phoneRows?:
+    | T
+    | {
+        img?: T;
+        name?: T;
+        v?: T;
+        id?: T;
+      };
+  offerHeading?: T;
+  offerings?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        desc?: T;
+        id?: T;
+      };
+  buildHeading?: T;
+  whatWeBuild?:
+    | T
+    | {
+        icon?: T;
+        tint?: T;
+        title?: T;
+        desc?: T;
+        id?: T;
+      };
+  workHeading?: T;
+  workLinkLabel?: T;
+  processHeading?: T;
+  steps?:
+    | T
+    | {
+        n?: T;
+        color?: T;
+        icon?: T;
+        title?: T;
+        desc?: T;
+        id?: T;
+      };
+  ctaHeading?: T;
+  ctaBody?: T;
+  ctaPrimaryLabel?: T;
+  ctaSecondaryLabel?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

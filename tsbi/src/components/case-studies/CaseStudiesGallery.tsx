@@ -51,7 +51,7 @@ function GridCard({ study }: { study: CaseStudyGalleryItem }) {
 
       <div style={{ position:'absolute', top:10, left:12, opacity: hov ? 1 : 0, transition:'opacity 0.3s ease', pointerEvents:'none' }}>
         <span style={{ fontFamily:'var(--fm)', fontSize:8, letterSpacing:'0.14em', textTransform:'uppercase', color:'rgba(255,255,255,0.7)' }}>
-          {study.category.split(' · ').join(' • ')}
+          {study.category?.split(' · ').join(' • ') ?? ''}
         </span>
       </div>
 
@@ -141,16 +141,16 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
     .filter(matchesFilter)
     .filter((s) =>
       !q ||
-      s.title.toLowerCase().includes(q) ||
-      s.clientName.toLowerCase().includes(q) ||
-      s.category.toLowerCase().includes(q),
+      (s.title ?? '').toLowerCase().includes(q) ||
+      (s.clientName ?? '').toLowerCase().includes(q) ||
+      (s.category ?? '').toLowerCase().includes(q),
     )
     .sort((a, b) => {
       const dir = sortOrder === 'newest' ? -1 : 1;
       return (
         ((a.year ?? 0) - (b.year ?? 0)) * dir ||
         (a.order ?? 0) - (b.order ?? 0) ||
-        a.title.localeCompare(b.title)
+        (a.title ?? '').localeCompare(b.title ?? '')
       );
     });
 
@@ -217,7 +217,7 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
                 {/* Content overlay */}
                 <div style={{ position:'absolute', bottom:0, left:0, right:0, padding: isAct ? '20px 18px 16px' : '12px 12px 10px' }}>
                   {/* <div style={{ fontFamily:'var(--fm)', fontSize: isAct?10:8, letterSpacing:'0.1em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:5 }}>
-                    {study.category.split(' · ').join(' • ')}
+                    {study.category?.split(' · ').join(' • ') ?? ''}
                   </div> */}
                   {/* <div style={{ fontFamily:'var(--fd)', fontSize: isAct?'clamp(18px,2vw,24px)':'clamp(11px,1.1vw,14px)', fontWeight:700, color:'#fff', lineHeight:1.1, marginBottom:3 }}>
                     {study.title}

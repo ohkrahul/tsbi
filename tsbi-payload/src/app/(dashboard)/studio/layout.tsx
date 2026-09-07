@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { COLLECTIONS } from '@/lib/collections'
+import { PAGE_GLOBALS } from '@/lib/page-globals'
 import { currentUser } from '@/lib/auth'
 import { SidebarNav } from '@/components/studio/sidebar-nav'
 import { LogoutButton, ThemeToggle } from '@/components/studio/forms'
@@ -15,6 +16,7 @@ export default async function StudioLayout({ children }: { children: React.React
     ...COLLECTIONS.map((c) => ({ href: `/studio/${c.slug}`, label: c.label })),
     { href: '/studio/media', label: 'Media Library' },
   ]
+  const pageItems = PAGE_GLOBALS.map((g) => ({ href: `/studio/pages/${g.slug}`, label: g.label }))
 
   return (
     <div className="bg-background flex min-h-svh">
@@ -26,6 +28,14 @@ export default async function StudioLayout({ children }: { children: React.React
           <span className="text-sm font-semibold tracking-tight">TSBI Studio</span>
         </Link>
         <SidebarNav items={navItems} />
+        {pageItems.length ? (
+          <>
+            <p className="text-muted-foreground mt-5 mb-1 px-6 text-[10px] font-semibold tracking-wider uppercase">
+              Service pages
+            </p>
+            <SidebarNav items={pageItems} />
+          </>
+        ) : null}
         <div className="mt-auto grid gap-1 px-3 pt-4">
           <ThemeToggle />
           <div className="px-3 pt-2">

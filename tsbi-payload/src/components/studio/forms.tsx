@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import type { CollectionDef, FieldDef } from '@/lib/collections'
+import type { FieldDef } from '@/lib/collections'
 import { deleteDoc, login, logout, saveDoc, uploadMedia } from '@/app/(dashboard)/studio/actions'
 
 export type MediaOption = { id: string | number; filename: string; url: string; mimeType?: string }
@@ -247,11 +247,16 @@ export function CollectionForm({
   doc,
   media = [],
   relations = {},
+  isGlobal = false,
+  cancelHref,
 }: {
-  def: CollectionDef
+  /** A CollectionDef, or a page global — both just need a slug and fields. */
+  def: { slug: string; singular?: string; fields: FieldDef[] }
   doc?: Doc
   media?: MediaOption[]
   relations?: Record<string, RelationOption[]>
+  isGlobal?: boolean
+  cancelHref?: string
 }) {
   const [state, formAction, pending] = useActionState(saveDoc, null)
   const docId = doc?.id
@@ -266,8 +271,11 @@ export function CollectionForm({
 
   return (
     <form action={formAction} className="grid max-w-3xl gap-5">
-      <input type="hidden" name="__collection" value={def.slug} />
-      {docId != null ? <input type="hidden" name="__id" value={String(docId)} /> : null}
+      <input type="hidden" name={isGlobal ? '__global' : '__collection'} value={def.slug} />
+      {/* Tells the action which fields this form actually rendered, so an
+          untouched field is never written as null. */}
+      <input type="hidden" name="__fields" value={def.fields.map((f) => f.name).join(',')} />
+      {!isGlobal && docId != null ? <input type="hidden" name="__id" value={String(docId)} /> : null}
 
       <Err>{state?.error}</Err>
 
@@ -293,10 +301,10 @@ export function CollectionForm({
 
       <div className="flex items-center gap-2 border-t pt-5">
         <Button type="submit" disabled={pending}>
-          {pending ? 'Saving…' : docId != null ? 'Save changes' : `Create ${def.singular}`}
+          {pending ? 'Saving…' : isGlobal || docId != null ? 'Save changes' : `Create ${def.singular}`}
         </Button>
         <Button variant="ghost" asChild>
-          <Link href={`/studio/${def.slug}`}>Cancel</Link>
+          <Link href={cancelHref ?? `/studio/${def.slug}`}>Cancel</Link>
         </Button>
       </div>
     </form>

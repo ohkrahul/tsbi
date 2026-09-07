@@ -12,10 +12,23 @@ const blankToNull = (v: FormDataEntryValue | null) => {
   return s === '' ? null : s
 }
 
-/** FormData -> Payload document data, driven by the registry's field schema. */
+/**
+ * FormData -> Payload document data, driven by the registry's field schema.
+ *
+ * The form posts `__fields` listing what it actually rendered, and only those
+ * fields are written. Without it a submission that omits a field would write
+ * null over it: checkbox and checkbox-group fields are absent from FormData
+ * when nothing is ticked, so "absent" can't be read as "clear this". A rendered
+ * field that is present but empty is still cleared, which is what an editor
+ * blanking an input expects.
+ */
 export function parseFields(fields: FieldDef[], fd: FormData) {
+  const rendered = fd.get('__fields')
+  const only = typeof rendered === 'string' ? new Set(rendered.split(',').filter(Boolean)) : null
+
   const data: Record<string, unknown> = {}
   for (const f of fields) {
+    if (only && !only.has(f.name)) continue
     const raw = fd.get(f.name)
     switch (f.type) {
       case 'checkbox':

@@ -172,6 +172,25 @@ https://vimeo.com/1
 )
 assert.deepEqual(parseFields(listField, fd([])), { youtubeFilms: [] })
 
+// __fields scopes the write: a field the form didn't render is left alone, so a
+// partial submission can't blank out unrelated columns.
+const partial = new FormData()
+partial.append('__fields', 'title,order')
+partial.append('title', 'Only this')
+assert.deepEqual(parseFields(fields, partial), { title: 'Only this', order: null })
+
+// A rendered but empty field is still cleared.
+const cleared = new FormData()
+cleared.append('__fields', 'title,body')
+cleared.append('title', '')
+cleared.append('body', '')
+assert.deepEqual(parseFields(fields, cleared), { title: null, body: null })
+
+// An unticked checkbox that WAS rendered still becomes false.
+const box = new FormData()
+box.append('__fields', 'live')
+assert.deepEqual(parseFields(fields, box), { live: false })
+
 // Registry sanity: unique slugs, every column has a field, rows declare subFields.
 const slugs = COLLECTIONS.map((c) => c.slug)
 assert.equal(new Set(slugs).size, slugs.length, 'collection slugs must be unique')

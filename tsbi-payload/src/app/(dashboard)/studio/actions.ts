@@ -7,6 +7,7 @@ import { getPayloadClient } from '@/lib/payload-client'
 import { currentUser } from '@/lib/auth'
 import { parseFields } from '@/lib/form-data'
 import { collectionBySlug, WRITABLE } from '@/lib/collections'
+import { pageGlobalBySlug } from '@/lib/page-globals'
 
 export type ActionState = { error?: string; ok?: boolean } | null
 
@@ -18,8 +19,26 @@ async function assertUser() {
   return user
 }
 
-/** Create (no `__id`) or update a document, then bounce back to the list. */
+/**
+ * Create (no `__id`) or update a document, then bounce back to the list. Also
+ * handles the page globals, which post `__global` instead of `__collection`.
+ */
 export async function saveDoc(_prev: ActionState, fd: FormData): Promise<ActionState> {
+  const globalSlug = String(fd.get('__global') ?? '')
+  if (globalSlug) {
+    const def = pageGlobalBySlug(globalSlug)
+    if (!def) return { error: `Unknown page "${globalSlug}"` }
+    try {
+      await assertUser()
+      const payload = await getPayloadClient()
+      await payload.updateGlobal({ slug: globalSlug as never, data: parseFields(def.fields, fd) as never })
+    } catch (e) {
+      return { error: (e as Error).message }
+    }
+    revalidatePath(`/studio/pages/${globalSlug}`)
+    redirect(`/studio/pages/${globalSlug}?saved=1`)
+  }
+
   const slug = String(fd.get('__collection') ?? '')
   const id = String(fd.get('__id') ?? '')
   const def = collectionBySlug(slug)
