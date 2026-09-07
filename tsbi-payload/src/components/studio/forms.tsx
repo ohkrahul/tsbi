@@ -411,6 +411,64 @@ export function CollectionForm({
 }
 
 /**
+ * One-shot banner for ?saved / ?deleted / ?error. Strips the parameter from the
+ * URL as soon as it mounts, so a refresh or a back-navigation doesn't announce
+ * a save that already happened, and fades itself after a few seconds. Uses
+ * history.replaceState rather than router.replace, which would re-run the
+ * page's queries just to tidy the URL.
+ */
+export function FlashMessage({
+  kind,
+  children,
+}: {
+  kind: 'success' | 'info' | 'error'
+  children: React.ReactNode
+}) {
+  const [show, setShow] = useState(true)
+
+  useEffect(() => {
+    const url = new URL(window.location.href)
+    let changed = false
+    for (const key of ['saved', 'deleted', 'error']) {
+      if (url.searchParams.has(key)) {
+        url.searchParams.delete(key)
+        changed = true
+      }
+    }
+    if (changed) window.history.replaceState(null, '', `${url.pathname}${url.search}`)
+
+    const timer = setTimeout(() => setShow(false), 4000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (!show) return null
+
+  const tone =
+    kind === 'success'
+      ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+      : kind === 'error'
+        ? 'border-destructive/40 bg-destructive/10 text-destructive'
+        : 'text-muted-foreground'
+
+  return (
+    <div
+      role="status"
+      className={cn('mt-6 flex items-start justify-between gap-3 rounded-md border px-3 py-2 text-sm', tone)}
+    >
+      <span>{children}</span>
+      <button
+        type="button"
+        onClick={() => setShow(false)}
+        aria-label="Dismiss"
+        className="shrink-0 opacity-60 hover:opacity-100"
+      >
+        <X className="size-4" />
+      </button>
+    </div>
+  )
+}
+
+/**
  * Sort picker for the list views. Submits its own form on change so picking an
  * option applies immediately, rather than needing the Search button.
  */
@@ -454,7 +512,9 @@ export function DeleteButton({
         type="submit"
         variant={compact ? 'ghost' : 'destructive'}
         size="sm"
-        className={compact ? 'text-muted-foreground hover:text-destructive h-auto px-0 text-xs font-normal' : undefined}
+        className={
+          compact ? 'text-destructive hover:text-destructive hover:bg-destructive/10 h-7 px-2.5 text-xs' : undefined
+        }
         onClick={(e) => {
           if (!confirm(confirmText)) e.preventDefault()
         }}

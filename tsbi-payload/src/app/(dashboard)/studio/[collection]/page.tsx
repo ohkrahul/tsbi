@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { DeleteButton, SortSelect } from '@/components/studio/forms'
+import { DeleteButton, FlashMessage, SortSelect } from '@/components/studio/forms'
 
 const PER_PAGE = 25
 
@@ -103,19 +103,9 @@ export default async function ListPage({
         </Button>
       </div>
 
-      {one('saved') ? (
-        <p className="mt-6 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-400">
-          Saved.
-        </p>
-      ) : null}
-      {one('deleted') ? (
-        <p className="text-muted-foreground mt-6 rounded-md border px-3 py-2 text-sm">Deleted.</p>
-      ) : null}
-      {one('error') ? (
-        <p className="border-destructive/40 bg-destructive/10 text-destructive mt-6 rounded-md border px-3 py-2 text-sm">
-          {one('error')}
-        </p>
-      ) : null}
+      {one('saved') ? <FlashMessage kind="success">Saved.</FlashMessage> : null}
+      {one('deleted') ? <FlashMessage kind="info">Deleted.</FlashMessage> : null}
+      {one('error') ? <FlashMessage kind="error">{one('error')}</FlashMessage> : null}
 
       <form className="mt-6 flex flex-wrap items-center gap-2">
         <Input
@@ -165,10 +155,10 @@ export default async function ListPage({
                       </TableCell>
                     ))}
                     <TableCell className="text-right whitespace-nowrap">
-                      <span className="inline-flex items-center gap-3">
-                        <Link href={href} className="text-muted-foreground hover:text-foreground text-xs">
-                          Edit
-                        </Link>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Button variant="outline" size="sm" asChild className="h-7 px-2.5 text-xs">
+                          <Link href={href}>Edit</Link>
+                        </Button>
                         <DeleteButton
                           collection={def.slug}
                           id={String(d.id)}
