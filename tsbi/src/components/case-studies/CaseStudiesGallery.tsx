@@ -6,6 +6,14 @@ import { motion } from 'framer-motion';
 import { caseStudies } from '@/lib/caseStudies';
 import type { CaseStudyGalleryItem } from '@/lib/caseStudies';
 
+/* Newest-first is by the day a study was added, not its exact timestamp: the
+   original set was all imported in one run with timestamps milliseconds apart,
+   so sorting on the raw value would reverse the curated running order. Day
+   precision floats anything added later to the top and leaves same-day studies
+   to `order`, which is what that field is for. */
+const dayAdded = (c: CaseStudyGalleryItem) => (c.createdAt ?? '').slice(0, 10);
+const cmp = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+
 /* Collapse same-brand variants into one chip (e.g. Zydus Lifesciences / Zydus India /
    Zydus Vaxiflu → "Zydus"). */
 const brandOf = (clientName: string) =>
@@ -148,6 +156,7 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
     .sort((a, b) => {
       const dir = sortOrder === 'newest' ? -1 : 1;
       return (
+        cmp(dayAdded(a), dayAdded(b)) * dir ||
         ((a.year ?? 0) - (b.year ?? 0)) * dir ||
         (a.order ?? 0) - (b.order ?? 0) ||
         (a.title ?? '').localeCompare(b.title ?? '')

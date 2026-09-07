@@ -24,6 +24,8 @@ export type CaseStudyGalleryItem = {
   youtubeFilms?: string[] | null;
   /** Which /services/<slug> pages list this study. */
   serviceAreas?: string[] | null;
+  /** Set by Payload; absent on the bundled fallback data. */
+  createdAt?: string | null;
   /** CMS-managed filter tags (Payload `tags` relationship, populated). */
   tags?: { id: number | string; name: string; order?: number | null }[];
   /** 'tech' studies use the rich section fields below + a /tech image. */
