@@ -62,6 +62,14 @@ export default buildConfig({
                 folder: 'tsbi',
                 useFilename: true,
                 uniqueFilename: true,
+                // Deliberately no incoming transformation. Re-encoding on
+                // upload was measured on a 1.5 MB H.264 clip: q_auto +24%,
+                // q_auto:eco +7%, a 1080p cap +7% (it re-encodes even when the
+                // clip is already under the cap). Only q_auto:low shrank it
+                // (-16%) and that is visibly lossy. Images are already
+                // compressed by sharp before they get here, so an incoming
+                // transformation could only make things worse.
+                transformations: { preserveOriginal: true },
               },
             },
           }),
