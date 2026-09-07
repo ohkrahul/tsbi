@@ -50,7 +50,22 @@ export default buildConfig({
     // without them falls back to Payload's local disk storage instead of
     // failing every upload.
     ...(cloudinary.cloud_name && cloudinary.api_key && cloudinary.api_secret
-      ? [cloudinaryStorage({ cloudConfig: cloudinary, collections: { media: true } })]
+      ? [
+          cloudinaryStorage({
+            cloudConfig: cloudinary,
+            collections: {
+              // Must be an object, not `true`: the adapter's delete handler
+              // returns early on a boolean config, which silently orphans the
+              // asset on Cloudinary when media is deleted here.
+              media: {
+                deleteFromCloudinary: true,
+                folder: 'tsbi',
+                useFilename: true,
+                uniqueFilename: true,
+              },
+            },
+          }),
+        ]
       : []),
   ],
 })

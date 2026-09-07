@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 import type { CollectionDef, FieldDef } from '@/lib/collections'
 import { deleteDoc, login, logout, saveDoc, uploadMedia } from '@/app/(dashboard)/studio/actions'
 
-export type MediaOption = { id: string | number; filename: string; url: string }
+export type MediaOption = { id: string | number; filename: string; url: string; mimeType?: string }
 export type RelationOption = { id: string | number; label: string }
 type Doc = Record<string, unknown>
 
@@ -106,8 +106,12 @@ function UploadField({ f, value, media }: { f: FieldDef; value: string; media: M
         ))}
       </select>
       {picked?.url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={picked.url} alt="" className="bg-muted mt-2 h-24 w-auto rounded-md border object-contain" />
+        picked.mimeType?.startsWith('video/') ? (
+          <video src={picked.url} controls preload="metadata" className="bg-muted mt-2 h-24 w-auto rounded-md border" />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={picked.url} alt="" className="bg-muted mt-2 h-24 w-auto rounded-md border object-contain" />
+        )
       ) : null}
       {!media.length ? (
         <p className="text-muted-foreground text-xs">

@@ -33,5 +33,6 @@ export async function getMediaOptions() {
     id: d.id as string | number,
     filename: String(d.filename ?? d.id),
     url: String(d.url ?? ''),
+    mimeType: String(d.mimeType ?? ''),
   }))
 }
