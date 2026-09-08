@@ -1,14 +1,13 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Plus, Search } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { collectionBySlug } from '@/lib/collections'
 import { getPayloadClient } from '@/lib/payload-client'
 import { requireUser } from '@/lib/auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { DeleteButton, FlashMessage, SortSelect } from '@/components/studio/forms'
+import { DeleteButton, FlashMessage, SearchBox, SortSelect } from '@/components/studio/forms'
 
 const PER_PAGE = 25
 
@@ -70,6 +69,14 @@ export default async function ListPage({
   const sort = one('sort') === 'oldest' ? 'oldest' : 'newest'
   const sortBy = sort === 'oldest' ? 'createdAt' : '-createdAt'
 
+  // Search every free-text field, not just the title: a client name, a category
+  // or a phrase from the concept is how an editor actually looks something up.
+  // `select` is excluded on purpose — it is a postgres enum column and `like`
+  // against one is a hard query error, not an empty result.
+  const searchable = def.fields
+    .filter((f) => ['text', 'textarea', 'combo', 'email'].includes(f.type))
+    .map((f) => f.name)
+
   const payload = await getPayloadClient()
   const res = await payload.find({
     collection: def.slug as never,
@@ -77,8 +84,9 @@ export default async function ListPage({
     page,
     sort: sortBy,
     depth: 0,
-    // Search the first column — the only field worth free-texting on these collections.
-    ...(q ? { where: { [def.columns[0].key]: { like: q } } as never } : {}),
+    ...(q && searchable.length
+      ? { where: { or: searchable.map((name) => ({ [name]: { like: q } })) } as never }
+      : {}),
   })
 
   const pageHref = (p: number) =>
@@ -90,7 +98,8 @@ export default async function ListPage({
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{def.label}</h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            {res.totalDocs} {res.totalDocs === 1 ? def.singular.toLowerCase() : `${def.singular.toLowerCase()}s`}
+            {/* `label` is already plural, which avoids "40 case studys". */}
+            {res.totalDocs} {res.totalDocs === 1 ? def.singular.toLowerCase() : def.label.toLowerCase()}
             {q ? ` matching “${q}”` : ''}
           </p>
         </div>
@@ -105,16 +114,10 @@ export default async function ListPage({
       {one('deleted') ? <FlashMessage kind="info">Deleted.</FlashMessage> : null}
       {one('error') ? <FlashMessage kind="error">{one('error')}</FlashMessage> : null}
 
+      {/* GET form so the sort select can submit `q` with it; the search box also
+          updates the URL on its own as you type. */}
       <form className="mt-6 flex flex-wrap items-center gap-2">
-        <Input
-          name="q"
-          defaultValue={q}
-          placeholder={`Search ${def.columns[0].label.toLowerCase()}…`}
-          className="max-w-xs"
-        />
-        <Button type="submit" variant="outline">
-          <Search /> Search
-        </Button>
+        <SearchBox placeholder={`Search ${def.label.toLowerCase()}…`} />
         <SortSelect value={sort} />
       </form>
 
@@ -132,7 +135,7 @@ export default async function ListPage({
             {res.docs.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={def.columns.length + 1} className="text-muted-foreground py-10 text-center">
-                  Nothing here yet.
+                  {q ? `Nothing matches “${q}”.` : 'Nothing here yet.'}
                 </TableCell>
               </TableRow>
             ) : (

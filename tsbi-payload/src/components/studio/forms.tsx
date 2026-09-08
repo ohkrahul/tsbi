@@ -1,9 +1,10 @@
 'use client'
 
 import * as React from 'react'
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useEffect, useState, useTransition } from 'react'
 import Link from 'next/link'
-import { LogOut, Moon, Plus, Sun, X } from 'lucide-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { Loader2, LogOut, Moon, Plus, Search, Sun, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -464,6 +465,66 @@ export function FlashMessage({
       >
         <X className="size-4" />
       </button>
+    </div>
+  )
+}
+
+/**
+ * Live search for the list views. Debounced, so typing costs one query rather
+ * than one per keystroke, and the term goes into the URL so a search survives
+ * a reload and can be linked. Every other param (sort, flash messages) is
+ * carried over; `page` is dropped because a new search starts at page 1.
+ */
+export function SearchBox({ placeholder }: { placeholder: string }) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const params = useSearchParams()
+  const active = params.get('q') ?? ''
+  const qs = params.toString()
+  const [value, setValue] = useState(active)
+  const [pending, start] = useTransition()
+
+  // Follow the URL when it moves on its own — back button, or a cleared search.
+  useEffect(() => setValue(active), [active])
+
+  useEffect(() => {
+    if (value === active) return
+    const id = setTimeout(() => {
+      const sp = new URLSearchParams(qs)
+      if (value) sp.set('q', value)
+      else sp.delete('q')
+      sp.delete('page')
+      start(() => router.replace(`${pathname}?${sp}`, { scroll: false }))
+    }, 300)
+    return () => clearTimeout(id)
+  }, [value, active, qs, pathname, router])
+
+  return (
+    <div className="relative w-full max-w-sm">
+      <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+      <Input
+        name="q"
+        type="search"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={placeholder}
+        aria-label={placeholder}
+        className="px-9 [&::-webkit-search-cancel-button]:hidden"
+      />
+      <span className="absolute top-1/2 right-2.5 -translate-y-1/2">
+        {pending ? (
+          <Loader2 className="text-muted-foreground size-4 animate-spin" />
+        ) : value ? (
+          <button
+            type="button"
+            onClick={() => setValue('')}
+            aria-label="Clear search"
+            className="text-muted-foreground hover:text-foreground grid place-items-center"
+          >
+            <X className="size-4" />
+          </button>
+        ) : null}
+      </span>
     </div>
   )
 }
