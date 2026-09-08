@@ -10,17 +10,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 type Tab = 'all' | 'entertainment' | 'non-entertainment';
 
-/**
- * Which A-Z bucket a client falls in. Anything not starting with a letter
- * ("&TV") goes under #, which is also where localeCompare sorts it.
- */
-const letterOf = (name: string) => {
-  const ch = name.trim().charAt(0).toUpperCase();
-  return ch >= 'A' && ch <= 'Z' ? ch : '#';
-};
-
-const ALPHABET = ['#', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
-
 /* fonts — same as the home page */
 const FA = 'font-fa'; // display headings — maps to Space Grotesk
 const FM = 'font-fm'; // Space Grotesk — labels & body
@@ -94,7 +83,6 @@ function LogoCard({ client }: { client: ClientCard }) {
 /* ── Page component ── */
 export default function ClientsPageClient({ clients }: { clients: ClientCard[] }) {
   const [tab, setTab] = useState<Tab>('all');
-  const [letter, setLetter] = useState('');
   const heroRef = useRef<HTMLHeadingElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -144,7 +132,7 @@ export default function ClientsPageClient({ clients }: { clients: ClientCard[] }
       });
     }, grid);
     return () => ctx.revert();
-  }, [tab, letter]);
+  }, [tab]);
 
   const tabs: { key: Tab; label: string }[] = [
     { key: 'all',               label: 'All Clients'              },
@@ -157,13 +145,8 @@ export default function ClientsPageClient({ clients }: { clients: ClientCard[] }
     : tab === 'entertainment'   ? clients.filter((c) =>  c.isEntertainment)
     :                             clients.filter((c) => !c.isEntertainment);
 
-  // Only offer letters that exist in the section being shown.
-  const available = new Set(filtered.map((c) => letterOf(c.name)));
-
   // Sort alphabetically
-  const current = [...filtered]
-    .filter((c) => !letter || letterOf(c.name) === letter)
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const current = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <>
@@ -188,50 +171,13 @@ export default function ClientsPageClient({ clients }: { clients: ClientCard[] }
         {tabs.map((t) => (
           <button
             key={t.key}
-            onClick={() => { setTab(t.key); setLetter(''); }}
+            onClick={() => setTab(t.key)}
             className={`shrink-0 whitespace-nowrap border-b-2 px-4 py-4 text-[10px] uppercase tracking-[0.1em] transition-colors sm:px-5 ${FM} ${tab === t.key ? 'border-magenta text-magenta' : 'border-transparent text-black/45 hover:text-[var(--ink)]'}`}
           >
             {t.label}
           </button>
         ))}
       </div>
-
-      {/* A–Z filter */}
-      <section className="border-b border-[var(--border)] bg-white px-5 py-4 sm:px-10 lg:px-12">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <button
-            onClick={() => setLetter('')}
-            className={`${FM} rounded-md px-2.5 py-1 text-[10px] uppercase tracking-[0.1em] transition-colors ${!letter ? 'bg-magenta text-white' : 'text-black/50 hover:bg-black/[0.04] hover:text-[var(--ink)]'}`}
-          >
-            All
-          </button>
-          <span className="mx-1 h-4 w-px bg-black/10" />
-          {ALPHABET.map((l) => {
-            const has = available.has(l);
-            return (
-              <button
-                key={l}
-                onClick={() => setLetter(letter === l ? '' : l)}
-                disabled={!has}
-                aria-pressed={letter === l}
-                aria-label={l === '#' ? 'Clients starting with a symbol or number' : `Clients starting with ${l}`}
-                className={`${FM} grid size-7 place-items-center rounded-md text-[11px] font-semibold transition-colors ${
-                  letter === l
-                    ? 'bg-magenta text-white'
-                    : has
-                      ? 'text-[var(--ink)] hover:bg-magenta/10 hover:text-magenta'
-                      : 'cursor-not-allowed text-black/15'
-                }`}
-              >
-                {l}
-              </button>
-            );
-          })}
-          <span className={`${FM} ml-auto text-[10px] uppercase tracking-[0.12em] text-black/40`}>
-            {current.length} {current.length === 1 ? 'client' : 'clients'}
-          </span>
-        </div>
-      </section>
 
       {/* Logo grid */}
       <section className="bg-[var(--off)] px-5 py-12 sm:px-10 sm:py-16 lg:px-12 lg:py-20">
@@ -242,11 +188,6 @@ export default function ClientsPageClient({ clients }: { clients: ClientCard[] }
             </div>
           ))}
         </div>
-        {current.length === 0 && (
-          <p className={`${FM} py-16 text-center text-sm text-black/35`}>
-            No clients under “{letter}” in this section.
-          </p>
-        )}
       </section>
 
       {/* CTA */}
