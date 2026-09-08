@@ -657,9 +657,11 @@ function mark(text: string, term: string) {
 
 /**
  * Sort picker for the list views. Submits its own form on change so picking an
- * option applies immediately, rather than needing the Search button.
+ * option applies immediately, rather than needing a button. `label` names the
+ * column A-Z sorts on, so the option reads "Name A - Z" on clients and
+ * "Title A - Z" on case studies.
  */
-export function SortSelect({ value }: { value: string }) {
+export function SortSelect({ value, label }: { value: string; label: string }) {
   return (
     <select
       name="sort"
@@ -670,6 +672,8 @@ export function SortSelect({ value }: { value: string }) {
     >
       <option value="newest">Newest first</option>
       <option value="oldest">Oldest first</option>
+      <option value="az">{label} A – Z</option>
+      <option value="za">{label} Z – A</option>
     </select>
   )
 }

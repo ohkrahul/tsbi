@@ -64,10 +64,17 @@ export default async function ListPage({
   const q = (one('q') ?? '').trim()
   const page = Math.max(1, Number(one('page') ?? 1) || 1)
 
-  // Newest first by default. There is no manual ordering any more, so these are
-  // the only two arrangements worth offering.
-  const sort = one('sort') === 'oldest' ? 'oldest' : 'newest'
-  const sortBy = sort === 'oldest' ? 'createdAt' : '-createdAt'
+  // Newest first by default; A-Z runs on the first column, which is the name
+  // of the thing in every collection (Title, Name, Role, Email).
+  const titleKey = def.columns[0].key
+  const SORTS: Record<string, string> = {
+    newest: '-createdAt',
+    oldest: 'createdAt',
+    az: titleKey,
+    za: `-${titleKey}`,
+  }
+  const sort = SORTS[one('sort') ?? ''] ? one('sort')! : 'newest'
+  const sortBy = SORTS[sort]
 
   const searchable = searchableFields(def)
 
@@ -112,7 +119,7 @@ export default async function ListPage({
           updates the URL on its own as you type. */}
       <form className="mt-6 flex flex-wrap items-center gap-2">
         <SearchBox collection={def.slug} placeholder={`Search ${def.label.toLowerCase()}…`} />
-        <SortSelect value={sort} />
+        <SortSelect value={sort} label={def.columns[0].label} />
       </form>
 
       <div className="mt-4 rounded-xl border">
