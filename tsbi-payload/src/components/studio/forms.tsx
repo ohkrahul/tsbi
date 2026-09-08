@@ -624,8 +624,14 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
 export function LogoutButton({ email }: { email?: string }) {
   return (
-    <form action={logout} className="flex items-center justify-between gap-2">
-      <span className="text-muted-foreground truncate text-xs">{email}</span>
+    <form action={logout} className="flex items-center gap-2">
+      <span className="bg-brand/10 text-brand grid size-8 shrink-0 place-items-center rounded-full text-xs font-bold uppercase">
+        {email?.[0] ?? '?'}
+      </span>
+      <span className="min-w-0 flex-1 leading-tight">
+        <span className="block truncate text-xs font-medium">{email}</span>
+        <span className="text-muted-foreground block text-[11px]">Signed in</span>
+      </span>
       <Button type="submit" variant="ghost" size="icon" title="Sign out">
         <LogOut />
       </Button>
