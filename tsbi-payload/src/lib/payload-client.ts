@@ -64,12 +64,16 @@ export async function getFieldSuggestions(
 /** Options for the studio's image picker (upload fields). */
 export async function getMediaOptions() {
   const payload = await getPayloadClient()
+  // Deliberately no `select`. `url` is built by the storage adapter's afterRead
+  // hook out of its own fields (cloudinaryPublicId, Version, Format), so
+  // narrowing the query starved it and produced a URL with no version, folder
+  // or extension — the picker preview came back blank. Media rows are small
+  // metadata, so there is nothing to win here anyway.
   const { docs } = await payload.find({
     collection: 'media',
     limit: 200,
     sort: '-createdAt',
     depth: 0,
-    select: { filename: true, url: true, mimeType: true },
   })
   return docs.map((d) => ({
     id: d.id as string | number,
