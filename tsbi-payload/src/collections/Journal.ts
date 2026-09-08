@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateHooks } from '../lib/revalidate'
 import { archivedField } from './archived'
 
 /** Media / News — editorial articles (mirrors JournalArticle in strapi.ts). */
@@ -8,6 +9,8 @@ export const Journal: CollectionConfig = {
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'category', 'publishedAt'] },
   access: { read: () => true },
   defaultSort: '-publishedAt',
+  // Push every change to the website's cache straight away.
+  hooks: revalidateHooks('journal'),
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'slug', type: 'text', required: true, unique: true, index: true },

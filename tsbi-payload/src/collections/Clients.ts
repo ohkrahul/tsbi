@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateHooks } from '../lib/revalidate'
 import { archivedField } from './archived'
 
 /** Clients — client brands (mirrors ClientBrand in strapi.ts). */
@@ -8,6 +9,8 @@ export const Clients: CollectionConfig = {
   admin: { useAsTitle: 'name', defaultColumns: ['name', 'type', 'showOnHome', 'order'] },
   access: { read: () => true },
   defaultSort: 'order',
+  // Push every change to the website's cache straight away.
+  hooks: revalidateHooks('clients'),
   fields: [
     { name: 'name', type: 'text', required: true },
     { name: 'type', type: 'text' },

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateHooks } from '../lib/revalidate'
 import { archivedField } from './archived'
 
 /** Careers — job listings (mirrors JobListing in strapi.ts). */
@@ -8,6 +9,8 @@ export const Careers: CollectionConfig = {
   admin: { useAsTitle: 'role', defaultColumns: ['role', 'department', 'location', 'order'] },
   access: { read: () => true },
   defaultSort: 'order',
+  // Push every change to the website's cache straight away.
+  hooks: revalidateHooks('careers'),
   fields: [
     { name: 'role', type: 'text', required: true },
     { name: 'department', type: 'text' },

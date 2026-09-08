@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateHooks } from '../lib/revalidate'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -11,6 +12,8 @@ export const Media: CollectionConfig = {
     resizeOptions: { width: 2400, height: 2400, fit: 'inside', withoutEnlargement: true },
     formatOptions: { format: 'webp', options: { quality: 82 } },
   },
+  // Push every change to the website's cache straight away.
+  hooks: revalidateHooks('media'),
   fields: [
     { name: 'alt', type: 'text' },
   ],

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateHooks } from '../lib/revalidate'
 import { archivedField } from './archived'
 
 /**
@@ -13,6 +14,8 @@ export const CaseStudies: CollectionConfig = {
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'clientName', 'order', 'track'] },
   access: { read: () => true },
   defaultSort: 'order',
+  // Push every change to the website's cache straight away.
+  hooks: revalidateHooks('case-studies'),
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'slug', type: 'text', required: true, unique: true, index: true },

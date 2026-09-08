@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateHooks } from '../lib/revalidate'
 import { archivedField } from './archived'
 
 /**
@@ -11,6 +12,8 @@ export const Tags: CollectionConfig = {
   admin: { useAsTitle: 'name', defaultColumns: ['name', 'order'] },
   access: { read: () => true },
   defaultSort: 'name',
+  // Push every change to the website's cache straight away.
+  hooks: revalidateHooks('tags'),
   fields: [
     { name: 'name', type: 'text', required: true, unique: true, index: true },
     // Not editable in the studio any more — lists are newest-first. Kept

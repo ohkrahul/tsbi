@@ -104,8 +104,13 @@ async function payloadGet<T = Record<string, unknown>>(
   // ANDed with anything the caller asked for.
   if (ARCHIVABLE.has(collection)) url.searchParams.set('where[archived][not_equals]', 'true');
   try {
-    // ISR: refresh every 60s so edits propagate without a redeploy.
-    const res = await fetch(url.toString(), { next: { revalidate: 60 } });
+    // Tagged so the CMS can clear exactly this collection the moment it
+    // changes (see app/api/revalidate). The 60s window stays as the safety
+    // net: if a revalidate call is ever missed, the site still catches up on
+    // its own rather than serving a stale page until the next deploy.
+    const res = await fetch(url.toString(), {
+      next: { revalidate: 60, tags: ['cms', `cms:${collection}`] },
+    });
     if (!res.ok) return [];
     const json = (await res.json()) as { docs?: T[] };
     return json.docs ?? [];

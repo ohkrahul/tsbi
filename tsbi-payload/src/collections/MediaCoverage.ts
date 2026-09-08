@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateHooks } from '../lib/revalidate'
 import { archivedField } from './archived'
 
 /** Media page — external press coverage links (mirrors public/media/articles.json). */
@@ -8,6 +9,8 @@ export const MediaCoverage: CollectionConfig = {
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'source', 'order'] },
   access: { read: () => true },
   defaultSort: 'order',
+  // Push every change to the website's cache straight away.
+  hooks: revalidateHooks('media-coverage'),
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'source', type: 'text', admin: { description: 'Publication name.' } },
