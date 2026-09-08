@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useActionState, useEffect, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { Loader2, LogOut, Moon, Plus, Search, Sun, X } from 'lucide-react'
+import { CornerDownLeft, Loader2, LogOut, Moon, Plus, Search, Sun, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,7 +17,9 @@ import {
   requestPasswordReset,
   resetPassword,
   saveDoc,
+  suggest,
   uploadMedia,
+  type Suggestion,
 } from '@/app/(dashboard)/studio/actions'
 
 export type MediaOption = { id: string | number; filename: string; url: string; mimeType?: string }
@@ -475,7 +477,7 @@ export function FlashMessage({
  * a reload and can be linked. Every other param (sort, flash messages) is
  * carried over; `page` is dropped because a new search starts at page 1.
  */
-export function SearchBox({ placeholder }: { placeholder: string }) {
+export function SearchBox({ placeholder, collection }: { placeholder: string; collection: string }) {
   const router = useRouter()
   const pathname = usePathname()
   const params = useSearchParams()
@@ -484,9 +486,16 @@ export function SearchBox({ placeholder }: { placeholder: string }) {
   const [value, setValue] = useState(active)
   const [pending, start] = useTransition()
 
+  const [hits, setHits] = useState<Suggestion[]>([])
+  const [open, setOpen] = useState(false)
+  const [cursor, setCursor] = useState(-1)
+  const term = value.trim()
+
   // Follow the URL when it moves on its own — back button, or a cleared search.
   useEffect(() => setValue(active), [active])
 
+  // The list itself follows a slower debounce than the dropdown: re-querying
+  // the whole table on every keystroke is the expensive half.
   useEffect(() => {
     if (value === active) return
     const id = setTimeout(() => {
@@ -499,16 +508,79 @@ export function SearchBox({ placeholder }: { placeholder: string }) {
     return () => clearTimeout(id)
   }, [value, active, qs, pathname, router])
 
+  // Suggestions. `live` drops a slow response that a newer keystroke has
+  // already superseded, so the dropdown can't flash stale rows.
+  useEffect(() => {
+    if (term.length < 2) {
+      setHits([])
+      return
+    }
+    let live = true
+    const id = setTimeout(() => {
+      suggest(collection, term).then((rows) => {
+        if (!live) return
+        setHits(rows)
+        setCursor(-1)
+      })
+    }, 150)
+    return () => {
+      live = false
+      clearTimeout(id)
+    }
+  }, [term, collection])
+
+  const showList = open && hits.length > 0
+  const go = (id: string) => {
+    setOpen(false)
+    router.push(`/studio/${collection}/${id}`)
+  }
+
   return (
-    <div className="relative w-full max-w-sm">
+    <div
+      className="relative w-full max-w-sm"
+      // Closes when focus leaves the box entirely, but not while it moves from
+      // the input to a suggestion — otherwise the click never lands.
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpen(false)
+      }}
+    >
       <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
       <Input
         name="q"
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        onFocus={() => setOpen(true)}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            if (!hits.length) return
+            e.preventDefault()
+            setOpen(true)
+            setCursor((c) =>
+              e.key === 'ArrowDown' ? (c + 1) % hits.length : c <= 0 ? hits.length - 1 : c - 1,
+            )
+          } else if (e.key === 'Enter') {
+            // Enter on a highlighted suggestion opens it; plain Enter falls
+            // through to the form and filters the list, the way Google splits
+            // "go to this result" from "search for this".
+            const pick = showList ? hits[cursor] : undefined
+            if (pick) {
+              e.preventDefault()
+              go(pick.id)
+            } else {
+              setOpen(false)
+            }
+          } else if (e.key === 'Escape') {
+            setOpen(false)
+          }
+        }}
         placeholder={placeholder}
         aria-label={placeholder}
+        role="combobox"
+        aria-expanded={showList}
+        aria-controls="search-suggestions"
+        aria-activedescendant={showList && cursor >= 0 ? `suggestion-${cursor}` : undefined}
+        autoComplete="off"
         className="px-9 [&::-webkit-search-cancel-button]:hidden"
       />
       <span className="absolute top-1/2 right-2.5 -translate-y-1/2">
@@ -525,7 +597,61 @@ export function SearchBox({ placeholder }: { placeholder: string }) {
           </button>
         ) : null}
       </span>
+
+      {showList && (
+        <ul
+          id="search-suggestions"
+          role="listbox"
+          className="bg-popover absolute top-full right-0 left-0 z-30 mt-1.5 max-h-80 overflow-y-auto rounded-lg border py-1 shadow-lg"
+        >
+          {hits.map((h, i) => (
+            <li key={h.id} role="option" id={`suggestion-${i}`} aria-selected={i === cursor}>
+              <button
+                type="button"
+                onMouseEnter={() => setCursor(i)}
+                onClick={() => go(h.id)}
+                className={cn(
+                  'flex w-full items-center gap-2.5 px-3 py-2 text-left',
+                  i === cursor && 'bg-accent',
+                )}
+              >
+                <Search className="text-muted-foreground size-3.5 shrink-0" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm">{mark(h.title, term)}</span>
+                  {h.sub && (
+                    <span className="text-muted-foreground block truncate text-xs">
+                      {mark(h.sub, term)}
+                    </span>
+                  )}
+                </span>
+                <CornerDownLeft
+                  className={cn('size-3.5 shrink-0', i === cursor ? 'text-muted-foreground' : 'text-transparent')}
+                />
+              </button>
+            </li>
+          ))}
+          <li className="text-muted-foreground border-t px-3 pt-2 pb-1 text-[11px]">
+            ↑↓ to pick · Enter to open · Enter alone filters the list
+          </li>
+        </ul>
+      )}
     </div>
+  )
+}
+
+/**
+ * Bolds the matched run inside a suggestion, so it is obvious *why* a row
+ * matched — it is often a field the list doesn't even show.
+ */
+function mark(text: string, term: string) {
+  const at = term ? text.toLowerCase().indexOf(term.toLowerCase()) : -1
+  if (at < 0) return text
+  return (
+    <>
+      {text.slice(0, at)}
+      <span className="text-foreground font-semibold">{text.slice(at, at + term.length)}</span>
+      {text.slice(at + term.length)}
+    </>
   )
 }
 

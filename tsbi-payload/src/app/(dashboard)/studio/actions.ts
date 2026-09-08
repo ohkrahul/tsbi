@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { getPayloadClient } from '@/lib/payload-client'
 import { currentUser } from '@/lib/auth'
 import { parseFields } from '@/lib/form-data'
-import { collectionBySlug, WRITABLE } from '@/lib/collections'
+import { collectionBySlug, searchableFields, WRITABLE } from '@/lib/collections'
 
 export type ActionState = { error?: string; ok?: boolean } | null
 
@@ -16,6 +16,47 @@ async function assertUser() {
   const user = await currentUser()
   if (!user) throw new Error('Unauthorized')
   return user
+}
+
+export type Suggestion = { id: string; title: string; sub: string }
+
+/**
+ * Autocomplete for the list search boxes: the handful of documents matching
+ * what has been typed so far, labelled with the same columns the list shows.
+ * Read-only, but still behind the auth check — a server action is a public
+ * endpoint regardless of who can reach the page that calls it.
+ */
+export async function suggest(slug: string, q: string): Promise<Suggestion[]> {
+  const def = collectionBySlug(slug)
+  const term = q.trim()
+  // One letter matches most of the table; not worth a round trip.
+  if (!def || term.length < 2) return []
+  await assertUser()
+
+  const fields = searchableFields(def)
+  if (!fields.length) return []
+
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection: slug as never,
+    limit: 7,
+    depth: 0,
+    sort: def.defaultSort ?? '-createdAt',
+    where: { or: fields.map((name) => ({ [name]: { like: term } })) } as never,
+  })
+
+  const [titleKey, ...rest] = def.columns.map((c) => c.key)
+  return docs.map((doc) => {
+    const d = doc as Record<string, unknown>
+    return {
+      id: String(d.id),
+      title: String(d[titleKey] ?? 'Untitled'),
+      sub: rest
+        .map((k) => d[k])
+        .filter((v): v is string => typeof v === 'string' && v !== '')
+        .join(' · '),
+    }
+  })
 }
 
 /** Create (no `__id`) or update a document, then bounce back to the list. */

@@ -223,5 +223,15 @@ export const COLLECTIONS: CollectionDef[] = [
 
 export const collectionBySlug = (slug: string) => COLLECTIONS.find((c) => c.slug === slug)
 
+/**
+ * The fields a free-text search runs against — every field that holds prose, so
+ * a client name, a category or a phrase from the concept all find the record.
+ *
+ * `select` is excluded on purpose: it is a postgres enum column and `like`
+ * against one is a hard query error, not an empty result.
+ */
+export const searchableFields = (def: CollectionDef) =>
+  def.fields.filter((f) => ['text', 'textarea', 'combo', 'email'].includes(f.type)).map((f) => f.name)
+
 /** Slugs the studio server actions may write to. */
 export const WRITABLE = new Set<string>([...COLLECTIONS.map((c) => c.slug), 'media'])

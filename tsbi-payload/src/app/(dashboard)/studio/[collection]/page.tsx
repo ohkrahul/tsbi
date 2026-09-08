@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Plus } from 'lucide-react'
-import { collectionBySlug } from '@/lib/collections'
+import { collectionBySlug, searchableFields } from '@/lib/collections'
 import { getPayloadClient } from '@/lib/payload-client'
 import { requireUser } from '@/lib/auth'
 import { Badge } from '@/components/ui/badge'
@@ -69,13 +69,7 @@ export default async function ListPage({
   const sort = one('sort') === 'oldest' ? 'oldest' : 'newest'
   const sortBy = sort === 'oldest' ? 'createdAt' : '-createdAt'
 
-  // Search every free-text field, not just the title: a client name, a category
-  // or a phrase from the concept is how an editor actually looks something up.
-  // `select` is excluded on purpose — it is a postgres enum column and `like`
-  // against one is a hard query error, not an empty result.
-  const searchable = def.fields
-    .filter((f) => ['text', 'textarea', 'combo', 'email'].includes(f.type))
-    .map((f) => f.name)
+  const searchable = searchableFields(def)
 
   const payload = await getPayloadClient()
   const res = await payload.find({
@@ -117,7 +111,7 @@ export default async function ListPage({
       {/* GET form so the sort select can submit `q` with it; the search box also
           updates the URL on its own as you type. */}
       <form className="mt-6 flex flex-wrap items-center gap-2">
-        <SearchBox placeholder={`Search ${def.label.toLowerCase()}…`} />
+        <SearchBox collection={def.slug} placeholder={`Search ${def.label.toLowerCase()}…`} />
         <SortSelect value={sort} />
       </form>
 
