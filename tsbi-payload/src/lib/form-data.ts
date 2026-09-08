@@ -35,6 +35,14 @@ export function parseFields(fields: FieldDef[], fd: FormData) {
         // Unchecked boxes are simply absent from the submission.
         data[f.name] = raw !== null
         break
+      // A two-option select over a boolean column. The form marks it required,
+      // so a blank only reaches here if the field wasn't rendered at all —
+      // leave the stored value alone rather than guessing one.
+      case 'boolSelect': {
+        const s = blankToNull(raw)
+        if (s !== null) data[f.name] = s === 'true'
+        break
+      }
       case 'number': {
         const s = blankToNull(raw)
         data[f.name] = s === null ? null : Number(s)

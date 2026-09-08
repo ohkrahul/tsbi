@@ -10,7 +10,8 @@ export type FieldDef = {
    * `youtube` = any YouTube link normalized to its id, `coverUrl` = image URL
    * that falls back to the video's thumbnail, `password` = write-only,
    * `combo` = free text with a dropdown of the values already in use, so a new
-   * one is created just by typing it.
+   * one is created just by typing it, `boolSelect` = a required either/or that
+   * stores a boolean, for a choice that must be made rather than defaulted.
    */
   type:
     | 'text'
@@ -18,6 +19,7 @@ export type FieldDef = {
     | 'number'
     | 'select'
     | 'checkbox'
+    | 'boolSelect'
     | 'date'
     | 'tags'
     | 'rows'
@@ -189,7 +191,17 @@ const DEFS: CollectionDef[] = [
       t('accent', 'Accent', { half: true }),
       { name: 'image', label: 'Logo', type: 'upload' },
       { name: 'cells', label: 'Cells', type: 'tags' },
-      { name: 'isEntertainment', label: 'Entertainment client', type: 'checkbox', half: true },
+      {
+        // A choice, not a checkbox: an unticked box is indistinguishable from
+        // "hasn't decided yet", and quietly files a new client under
+        // Non-Entertainment. This one has to be answered to save.
+        name: 'isEntertainment', label: 'Section on /clients', type: 'boolSelect', required: true, half: true,
+        options: [
+          { label: 'Entertainment', value: 'true' },
+          { label: 'Non-Entertainment', value: 'false' },
+        ],
+        hint: 'Which tab this logo appears under. Both tabs also show under All Clients.',
+      },
       { name: 'showOnHome', label: 'Show on home', type: 'checkbox', half: true },
     ],
   },

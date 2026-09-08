@@ -308,6 +308,18 @@ function Field({
             </option>
           ))}
         </select>
+      ) : f.type === 'boolSelect' ? (
+        // Keeps its blank option even though it is required — that is the
+        // point: a new record starts unanswered and the browser blocks the
+        // save until someone picks a side.
+        <select id={id} name={f.name} defaultValue={value} required className={ctl}>
+          <option value="">— choose —</option>
+          {asChoices(f).map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
       ) : f.type === 'upload' ? (
         <UploadField f={f} value={value} media={media} />
       ) : f.type === 'multiselect' ? (

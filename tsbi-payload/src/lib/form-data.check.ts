@@ -197,6 +197,19 @@ assert.deepEqual(parseFields(comboField, fd([['category', '']])), { category: nu
 // __fields scopes the write: a field the form didn't render is left alone, so a
 // partial submission can't blank out unrelated columns.
 const partial = new FormData()
+// boolSelect: a two-option select stored as a boolean, and a blank (only
+// possible when the field wasn't rendered) must not invent a value.
+{
+  const seg: FieldDef[] = [
+    { name: 'isEntertainment', label: 'Section', type: 'boolSelect', required: true,
+      options: [{ label: 'Entertainment', value: 'true' }, { label: 'Non-Entertainment', value: 'false' }] },
+  ]
+  assert.deepEqual(parseFields(seg, fd([['isEntertainment', 'true']])), { isEntertainment: true })
+  assert.deepEqual(parseFields(seg, fd([['isEntertainment', 'false']])), { isEntertainment: false })
+  assert.deepEqual(parseFields(seg, fd([['isEntertainment', '']])), {}, 'blank leaves the stored value alone')
+  assert.deepEqual(parseFields(seg, fd([])), {}, 'absent leaves the stored value alone')
+}
+
 partial.append('__fields', 'title,order')
 partial.append('title', 'Only this')
 assert.deepEqual(parseFields(fields, partial), { title: 'Only this', order: null })
