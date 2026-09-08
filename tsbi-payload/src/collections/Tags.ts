@@ -12,6 +12,9 @@ export const Tags: CollectionConfig = {
   defaultSort: 'name',
   fields: [
     { name: 'name', type: 'text', required: true, unique: true, index: true },
+    // Not editable in the studio any more — lists are newest-first. Kept
+    // because it still holds the arrangement the original import
+    // established, which is what orders same-day records.
     { name: 'order', type: 'number', defaultValue: 100, admin: { description: 'Lower numbers sort first in the filter dropdown.' } },
   ],
 }

@@ -11,6 +11,9 @@ export const MediaCoverage: CollectionConfig = {
     { name: 'title', type: 'text', required: true },
     { name: 'source', type: 'text', admin: { description: 'Publication name.' } },
     { name: 'url', type: 'text', required: true, admin: { description: 'Link to the article.' } },
+    // Not editable in the studio any more — lists are newest-first. Kept
+    // because it still holds the arrangement the original import
+    // established, which is what orders same-day records.
     { name: 'order', type: 'number', defaultValue: 100 },
     { name: 'logo', type: 'upload', relationTo: 'media',
       admin: { description: 'Publication logo. Only needed when the site has no logo for this publication yet.' } },

@@ -483,7 +483,6 @@ export function SortSelect({ value }: { value: string }) {
     >
       <option value="newest">Newest first</option>
       <option value="oldest">Oldest first</option>
-      <option value="display">In display order</option>
     </select>
   )
 }

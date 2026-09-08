@@ -18,6 +18,9 @@ export const Clients: CollectionConfig = {
       { name: 'isEntertainment', type: 'checkbox', admin: { width: '50%' } },
       { name: 'showOnHome', type: 'checkbox', admin: { width: '50%' } },
     ] },
+    // Not editable in the studio any more — lists are newest-first. Kept
+    // because it still holds the arrangement the original import
+    // established, which is what orders same-day records.
     { name: 'order', type: 'number', defaultValue: 100 },
   ],
 }

@@ -65,12 +65,10 @@ export default async function ListPage({
   const q = (one('q') ?? '').trim()
   const page = Math.max(1, Number(one('page') ?? 1) || 1)
 
-  // Newest first by default: a freshly added record should be the first thing
-  // you see, not buried wherever its `order` puts it. "In display order" keeps
-  // the collection's own arrangement available.
-  const sort = one('sort') ?? 'newest'
-  const sortBy =
-    sort === 'oldest' ? 'createdAt' : sort === 'display' ? (def.defaultSort ?? '-createdAt') : '-createdAt'
+  // Newest first by default. There is no manual ordering any more, so these are
+  // the only two arrangements worth offering.
+  const sort = one('sort') === 'oldest' ? 'oldest' : 'newest'
+  const sortBy = sort === 'oldest' ? 'createdAt' : '-createdAt'
 
   const payload = await getPayloadClient()
   const res = await payload.find({

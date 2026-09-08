@@ -12,6 +12,9 @@ export const Careers: CollectionConfig = {
     { name: 'department', type: 'text' },
     { name: 'location', type: 'text' },
     { name: 'experience', type: 'text' },
+    // Not editable in the studio any more — lists are newest-first. Kept
+    // because it still holds the arrangement the original import
+    // established, which is what orders same-day records.
     { name: 'order', type: 'number', defaultValue: 100 },
     { name: 'skills', type: 'text', hasMany: true },
     { name: 'responsibilities', type: 'text', hasMany: true },

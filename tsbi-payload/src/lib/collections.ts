@@ -65,10 +65,10 @@ const CARD = 'Service-page card (optional)'
 
 export const COLLECTIONS: CollectionDef[] = [
   {
-    slug: 'case-studies', label: 'Case Studies', singular: 'Case Study', defaultSort: 'order',
+    slug: 'case-studies', label: 'Case Studies', singular: 'Case Study', defaultSort: '-createdAt',
     columns: [
       { key: 'title', label: 'Title' }, { key: 'clientName', label: 'Client' },
-      { key: 'category', label: 'Category' }, { key: 'track', label: 'Track' }, { key: 'order', label: 'Order' },
+      { key: 'category', label: 'Category' }, { key: 'track', label: 'Track' },
     ],
     fields: [
       t('title', 'Title', { required: true }),
@@ -79,7 +79,6 @@ export const COLLECTIONS: CollectionDef[] = [
         hint: 'Pick one already in use, or type a new one — it is created as you type. e.g. Film Marketing · Romantic Comedy',
       },
       { name: 'track', label: 'Track', type: 'select', options: ['film', 'tech'], half: true, defaultValue: 'film', required: true },
-      { name: 'order', label: 'Order', type: 'number', half: true, defaultValue: '100', hint: 'Lower numbers show first.' },
       { name: 'year', label: 'Year', type: 'number', half: true },
       {
         name: 'tags', label: 'Tags', type: 'relation', relationTo: 'tags', relationLabel: 'name',
@@ -153,15 +152,14 @@ export const COLLECTIONS: CollectionDef[] = [
     ],
   },
   {
-    slug: 'media-coverage', label: 'Media Coverage', singular: 'Press Item', defaultSort: 'order',
-    columns: [{ key: 'title', label: 'Title' }, { key: 'source', label: 'Publication' }, { key: 'order', label: 'Order' }],
+    slug: 'media-coverage', label: 'Media Coverage', singular: 'Press Item', defaultSort: '-createdAt',
+    columns: [{ key: 'title', label: 'Title' }, { key: 'source', label: 'Publication' }],
     fields: [
       t('title', 'Title', { required: true }),
       {
         name: 'source', label: 'Publication', type: 'combo', half: true,
         hint: 'Pick a publication already in use so its logo is recognised, or type a new one.',
       },
-      { name: 'order', label: 'Order', type: 'number', half: true, defaultValue: '100' },
       t('url', 'URL', { required: true, hint: 'Link to the article.' }),
       {
         name: 'logo', label: 'Publication logo', type: 'upload',
@@ -170,27 +168,25 @@ export const COLLECTIONS: CollectionDef[] = [
     ],
   },
   {
-    slug: 'careers', label: 'Careers', singular: 'Job Listing', defaultSort: 'order',
+    slug: 'careers', label: 'Careers', singular: 'Job Listing', defaultSort: '-createdAt',
     columns: [{ key: 'role', label: 'Role' }, { key: 'department', label: 'Department' }, { key: 'location', label: 'Location' }],
     fields: [
       t('role', 'Role', { required: true }),
       t('department', 'Department', { half: true }),
       t('location', 'Location', { half: true }),
       t('experience', 'Experience', { half: true }),
-      { name: 'order', label: 'Order', type: 'number', half: true },
       { name: 'skills', label: 'Skills', type: 'tags' },
       { name: 'responsibilities', label: 'Responsibilities', type: 'tags' },
     ],
   },
   {
-    slug: 'clients', label: 'Clients', singular: 'Client', defaultSort: 'order',
-    columns: [{ key: 'name', label: 'Name' }, { key: 'type', label: 'Type' }, { key: 'showOnHome', label: 'On Home' }, { key: 'order', label: 'Order' }],
+    slug: 'clients', label: 'Clients', singular: 'Client', defaultSort: '-createdAt',
+    columns: [{ key: 'name', label: 'Name' }, { key: 'type', label: 'Type' }, { key: 'showOnHome', label: 'On Home' }],
     fields: [
       t('name', 'Name', { required: true }),
       t('type', 'Type', { half: true }),
       t('caption', 'Caption', { half: true }),
       t('accent', 'Accent', { half: true }),
-      { name: 'order', label: 'Order', type: 'number', half: true },
       { name: 'image', label: 'Logo', type: 'upload' },
       { name: 'cells', label: 'Cells', type: 'tags' },
       { name: 'isEntertainment', label: 'Entertainment client', type: 'checkbox', half: true },
@@ -199,10 +195,9 @@ export const COLLECTIONS: CollectionDef[] = [
   },
   {
     slug: 'tags', label: 'Tags', singular: 'Tag', defaultSort: 'name',
-    columns: [{ key: 'name', label: 'Name' }, { key: 'order', label: 'Order' }],
+    columns: [{ key: 'name', label: 'Name' }],
     fields: [
       t('name', 'Name', { required: true, half: true, hint: 'Shown as-is in the public filter dropdown.' }),
-      { name: 'order', label: 'Order', type: 'number', half: true, defaultValue: '100', hint: 'Lower numbers sort first.' },
     ],
   },
   {

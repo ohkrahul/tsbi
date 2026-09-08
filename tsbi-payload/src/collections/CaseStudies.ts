@@ -27,6 +27,9 @@ export const CaseStudies: CollectionConfig = {
       { label: 'Influencer Management', value: 'influencer-management' },
       { label: 'Digital Transformation', value: 'digital-transformation' },
     ], admin: { description: 'Which service pages this case study is listed on.' } },
+    // Not editable in the studio any more — lists are newest-first. Kept
+    // because it still holds the arrangement the original import
+    // established, which is what orders same-day records.
     { name: 'order', type: 'number', defaultValue: 100 },
     { name: 'track', type: 'select', options: ['film', 'tech'], defaultValue: 'film' },
     { name: 'year', type: 'number' },

@@ -124,12 +124,35 @@ export function mediaUrl(img: StrapiImage | null | undefined): string {
   return img.url.startsWith('http') ? img.url : `${CMS}${img.url}`;
 }
 
+/**
+ * Newest first, older at the bottom — the ordering every list on the site uses
+ * now that `order` is no longer edited in the CMS.
+ *
+ * Day precision first, because the original content was all imported in single
+ * runs with timestamps milliseconds apart: sorting on the raw value would
+ * reverse the arrangement those imports established. Within the same day the
+ * imported `order` still decides, which is what keeps /media and the
+ * case-study grid looking exactly as they were curated. Anything added later
+ * lands on a later day and goes straight to the top, and two things added on
+ * the same day fall back to the actual time.
+ */
+function newestFirst(a: Record<string, unknown>, b: Record<string, unknown>): number {
+  const day = (d: Record<string, unknown>) => String(d.createdAt ?? '').slice(0, 10);
+  const rank = (d: Record<string, unknown>) => (typeof d.order === 'number' ? d.order : 0);
+  const at = (d: Record<string, unknown>) => String(d.createdAt ?? '');
+  return (
+    (day(a) < day(b) ? 1 : day(a) > day(b) ? -1 : 0) ||
+    rank(a) - rank(b) ||
+    at(b).localeCompare(at(a))
+  );
+}
+
 // ─── API functions ────────────────────────────────────────────────────────────
 
 /** Case studies for the /case-studies list + detail pages (matches CaseStudyGalleryItem). */
 export async function getCaseStudiesGallery(): Promise<CaseStudyGalleryItem[]> {
-  const docs = await payloadGet('case-studies', { sort: 'order' });
-  return docs as unknown as CaseStudyGalleryItem[];
+  const docs = await payloadGet<Record<string, unknown>>('case-studies', { sort: 'order' });
+  return [...docs].sort(newestFirst) as unknown as CaseStudyGalleryItem[];
 }
 
 /**
@@ -137,11 +160,11 @@ export async function getCaseStudiesGallery(): Promise<CaseStudyGalleryItem[]> {
  * 'digital-transformation'. Ordered by the curated `order` field.
  */
 export async function getCaseStudiesForService(service: string): Promise<CaseStudyGalleryItem[]> {
-  const docs = await payloadGet('case-studies', {
+  const docs = await payloadGet<Record<string, unknown>>('case-studies', {
     sort: 'order',
     where: { 'where[serviceAreas][contains]': service },
   });
-  return docs as unknown as CaseStudyGalleryItem[];
+  return [...docs].sort(newestFirst) as unknown as CaseStudyGalleryItem[];
 }
 
 /** Films for a card: the full campaign list if set, else the single video. */
@@ -213,7 +236,8 @@ export async function getJournalArticles(): Promise<JournalArticle[]> {
 }
 
 export async function getJobListings(): Promise<JobListing[]> {
-  const docs = await payloadGet<Record<string, unknown>>('careers', { sort: 'order', limit: 50 });
+  const raw = await payloadGet<Record<string, unknown>>('careers', { sort: 'order', limit: 50 });
+  const docs = [...raw].sort(newestFirst);
   return docs.map((d) => ({
     id: Number(d.id),
     role: String(d.role ?? ''),
@@ -229,7 +253,8 @@ export async function getJobListings(): Promise<JobListing[]> {
 export async function getClientBrands(homeOnly = false): Promise<ClientBrand[]> {
   const opts: QueryOpts = { sort: 'order', limit: 100 };
   if (homeOnly) opts.where = { 'where[showOnHome][equals]': 'true' };
-  const docs = await payloadGet<Record<string, unknown>>('clients', opts);
+  const raw = await payloadGet<Record<string, unknown>>('clients', opts);
+  const docs = [...raw].sort(newestFirst);
   return docs.map((d) => ({
     id: Number(d.id),
     name: String(d.name ?? ''),
@@ -245,7 +270,8 @@ export async function getClientBrands(homeOnly = false): Promise<ClientBrand[]> 
 }
 
 export async function getMediaCoverage(): Promise<MediaCoverageItem[]> {
-  const docs = await payloadGet<Record<string, unknown>>('media-coverage', { sort: 'order', limit: 200 });
+  const raw = await payloadGet<Record<string, unknown>>('media-coverage', { sort: 'order', limit: 200 });
+  const docs = [...raw].sort(newestFirst);
   return docs.map((d) => ({
     id: String(d.id),
     title: String(d.title ?? ''),
