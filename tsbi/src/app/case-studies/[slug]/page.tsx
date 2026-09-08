@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { caseStudies } from '@/lib/caseStudies';
 import { getCaseStudiesGallery } from '@/lib/cms';
+import { clientSlug, siblingStudies } from '@/lib/clients';
 
 /* Small typographic helpers for the rich (tech) case-study layout. */
 function Heading({ children }: { children: string }) {
@@ -40,6 +41,11 @@ export default async function CaseStudyDetailPage({
   const study = list[idx];
 
   if (!study) notFound();
+
+  // The rest of this client's work, so a visitor who landed on one film can
+  // find the other six without going back to the full grid.
+  const { client, studies: siblings } = siblingStudies(study, list);
+  const clientLabel = client?.name ?? study.clientName;
 
   const prev = idx > 0                 ? list[idx - 1] : null;
   const next = idx < list.length - 1   ? list[idx + 1] : null;
@@ -240,6 +246,48 @@ export default async function CaseStudyDetailPage({
           </div>
         )}
       </section>
+
+      {/* ── MORE WORK FOR THIS CLIENT ── */}
+      {siblings.length > 0 && (
+        <section style={{ background: 'var(--off)', padding: 'clamp(44px,7vw,64px) clamp(20px,5vw,64px)' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: 22 }}>
+              <div>
+                <div style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--magenta)', marginBottom: 8 }}>
+                  More from this client
+                </div>
+                <h2 style={{ fontFamily: 'var(--fm)', fontSize: 'clamp(20px,2.6vw,30px)', fontWeight: 700, color: 'var(--ink)', margin: 0, lineHeight: 1.15 }}>
+                  {clientLabel}
+                </h2>
+              </div>
+              {client && siblings.length > 3 && (
+                <Link href={`/case-studies?client=${clientSlug(client.name)}`} className="btn-border" style={{ fontSize: 11 }}>
+                  All {siblings.length + 1} case studies →
+                </Link>
+              )}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(220px,1fr))', gap: 14 }}>
+              {siblings.slice(0, 3).map((s) => (
+                <Link key={s.slug} href={`/case-studies/${s.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+                  <div style={{ position: 'relative', aspectRatio: '16/9', borderRadius: 10, overflow: 'hidden', background: '#0e0e12' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={s.image} alt={s.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <div style={{ fontFamily: 'var(--fm)', fontSize: 13, fontWeight: 600, color: 'var(--ink)', marginTop: 10, lineHeight: 1.3 }}>
+                    {s.title}
+                  </div>
+                  {s.category && (
+                    <div style={{ fontFamily: 'var(--fm)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)', marginTop: 4 }}>
+                      {s.category}
+                    </div>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── PREV / NEXT NAVIGATION ── */}
       <div style={{

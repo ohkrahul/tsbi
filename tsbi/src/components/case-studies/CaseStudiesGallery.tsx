@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { addedDay, caseStudies } from '@/lib/caseStudies';
 import type { CaseStudyGalleryItem } from '@/lib/caseStudies';
+import { studiesForClient } from '@/lib/clients';
 
 /* Collapse same-brand variants into one chip (e.g. Zydus Lifesciences / Zydus India /
    Zydus Vaxiflu → "Zydus"). */
@@ -68,7 +69,18 @@ function GridCard({ study }: { study: CaseStudyGalleryItem }) {
   );
 }
 
-export default function CaseStudiesGallery({ studies = caseStudies }: { studies?: CaseStudyGalleryItem[] }) {
+export default function CaseStudiesGallery({
+  studies = caseStudies,
+  client,
+}: {
+  studies?: CaseStudyGalleryItem[];
+  /** Set from `?client=` — the page then shows only this client's work. */
+  client?: string;
+}) {
+  // Arriving from a client logo with several case studies: the page becomes
+  // that client's work, so the visitor lands on all of it at once.
+  const scoped = useMemo(() => (client ? studiesForClient(client, studies) : studies), [client, studies]);
+
   const [active, setActive]           = useState(0);
   const [activeTag, setActiveTag]       = useState('');
   const [sortOrder, setSortOrder]     = useState<'newest' | 'oldest'>('newest');
@@ -82,7 +94,7 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
      bundled studies, which carry no tags — so fall back to client brands there
      and the filter keeps working either way. */
   const FILTER_OPTIONS = useMemo(() => {
-    const tagged = studies.flatMap((c) => c.tags ?? []);
+    const tagged = scoped.flatMap((c) => c.tags ?? []);
     if (tagged.length) {
       const byName = new Map<string, number>();
       for (const t of tagged) if (!byName.has(t.name)) byName.set(t.name, t.order ?? 100);
@@ -90,8 +102,8 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
         .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name))
         .map((t) => t.name);
     }
-    return Array.from(new Set(studies.map((c) => brandOf(c.clientName)))).sort((a, b) => a.localeCompare(b));
-  }, [studies]);
+    return Array.from(new Set(scoped.map((c) => brandOf(c.clientName)))).sort((a, b) => a.localeCompare(b));
+  }, [scoped]);
 
   const matchesFilter = (c: CaseStudyGalleryItem) =>
     !activeTag ||
@@ -138,7 +150,7 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
 
   const cmp = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
   const q = query.trim().toLowerCase();
-  const filteredGrid = studies
+  const filteredGrid = scoped
     .filter(matchesFilter)
     .filter((s) =>
       !q ||
@@ -162,18 +174,31 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
       {/* ── HEADER ── */}
       <div style={{ textAlign:'center', padding: isMobile ? '32px 20px 28px' : '52px 48px 40px' }}>
         <div style={{ fontFamily:'var(--fm)', fontSize:10, letterSpacing:'0.28em', textTransform:'uppercase', color:'#e0197d', marginBottom:12 }}>
-          Our Work in Action
+          {client ? 'Client Work' : 'Our Work in Action'}
         </div>
         <h1 style={{ fontFamily:'var(--fa)', fontSize:'clamp(44px,7vw,88px)', fontWeight:600, textTransform:'uppercase', color:'#fff', lineHeight:1.0, letterSpacing:'0.01em', margin:'0 0 16px' }}>
-          Case Studies
+          {client ?? 'Case Studies'}
         </h1>
         <p style={{ fontFamily:'var(--fm)', fontSize:15, color:'rgba(255,255,255,0.4)', fontWeight:300, maxWidth:480, margin:'0 auto', lineHeight:1.7 }}>
-          Explore how we craft powerful stories, build cultural moments,<br/>
-          and deliver measurable impact for our partners.
+          {client ? (
+            <>
+              {scoped.length} case stud{scoped.length === 1 ? 'y' : 'ies'} for {client}.
+              <br/>
+              <Link href="/case-studies" style={{ color:'#e0197d', textDecoration:'none', borderBottom:'1px solid rgba(224,25,125,0.4)' }}>
+                ← All case studies
+              </Link>
+            </>
+          ) : (
+            <>
+              Explore how we craft powerful stories, build cultural moments,<br/>
+              and deliver measurable impact for our partners.
+            </>
+          )}
         </p>
       </div>
 
-      {/* ── INFINITE CIRCULAR SLIDER ── */}
+      {/* ── INFINITE CIRCULAR SLIDER (all-work view only) ── */}
+      {!client && (
       <div style={{ position:'relative' }}>
         <div
           ref={containerRef}
@@ -270,13 +295,17 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
         </div>
       </div>
 
+      )}
+
       {/* ── NETFLIX GRID ── */}
       <div style={{ padding: isMobile ? '40px 20px 60px' : '60px 48px 80px' }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:18, flexWrap:'wrap', gap:20 }}>
           <div>
-            <div style={{ fontFamily:'var(--fm)', fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#e0197d', marginBottom:10 }}>All Case Studies</div>
+            <div style={{ fontFamily:'var(--fm)', fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:'#e0197d', marginBottom:10 }}>
+              {client ? `Work for ${client}` : 'All Case Studies'}
+            </div>
             <h2 style={{ fontFamily:'var(--fa)', fontSize:'clamp(26px,3.4vw,44px)', fontWeight:600, color:'#fff', lineHeight:1.05, letterSpacing:'0.01em', margin:0 }}>
-              More Work.<br/>More Impact.
+              {client ? <>Every Campaign,<br/>One Place.</> : <>More Work.<br/>More Impact.</>}
             </h2>
           </div>
           {/* filter dropdown (options are CMS tags) + search bar */}
@@ -334,8 +363,17 @@ export default function CaseStudiesGallery({ studies = caseStudies }: { studies?
         <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:24, flexWrap:'wrap' }}>
           <span style={{ fontFamily:'var(--fm)', fontSize:11, color:'rgba(255,255,255,0.42)' }}>
             {filteredGrid.length} {filteredGrid.length === 1 ? 'case study' : 'case studies'}
-            {activeTag ? ' in' : ''}
+            {client || activeTag ? ' in' : ''}
           </span>
+          {client && (
+            <Link href="/case-studies"
+              style={{ display:'inline-flex', alignItems:'center', gap:7, fontFamily:'var(--fm)', fontSize:11, fontWeight:600, color:'#fff', background:'rgba(224,25,125,0.18)', border:'1px solid rgba(224,25,125,0.5)', borderRadius:999, padding:'5px 12px', textDecoration:'none' }}
+              aria-label={`Clear the ${client} filter`}
+            >
+              {client}
+              <svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
+            </Link>
+          )}
           {activeTag && (
             <button onClick={()=>setActiveTag('')}
               style={{ display:'inline-flex', alignItems:'center', gap:7, fontFamily:'var(--fm)', fontSize:11, fontWeight:600, color:'#fff', background:'rgba(224,25,125,0.18)', border:'1px solid rgba(224,25,125,0.5)', borderRadius:999, padding:'5px 12px', cursor:'pointer' }}

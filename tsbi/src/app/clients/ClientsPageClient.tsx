@@ -3,42 +3,29 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import gsap from 'gsap';
+import type { ClientCard } from '@/lib/clients';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export interface ClientEntry {
-  name: string;
-  type: string;
-  accent: string;
-  isEntertainment: boolean;
-  logo?: string;   // path relative to /public  e.g. /images/clients/loreal.png
-  slug?: string;   // case study slug — card becomes a link when set
-}
-
-/* ── client name → case study slug ── */
-const CASE_STUDY_MAP: Record<string, string> = {
-  'Dharma Productions':       '/case-studies/dharma-production',
-  'Devgn Films':              '/case-studies/son-of-sardaar-2',
-  'Disney India':             '/case-studies/disney-india',
-  'GSK':                      '/case-studies/gsk-yeh-science-hai',
-  'Mumbai Indians':           '/case-studies/mumbai-indians',
-  'DHL':                      '/case-studies/mumbai-indians',
-  'Ashok Leyland':            '/case-studies/ashok-leyland-diwali',
-  'Zydus':                    '/case-studies/zydus-liver-ki-suno',
-  'Aamir Khan Productions':   '/case-studies/sitaare-zameen-par',
-};
-
-type Tab = 'all' | 'entertainment' | 'non-entertainment';
+type Tab = 'all' | 'work' | 'entertainment' | 'non-entertainment';
 
 /* fonts — same as the home page */
 const FA = 'font-fa'; // display headings — maps to Space Grotesk
 const FM = 'font-fm'; // Space Grotesk — labels & body
 
 /* ── Single logo card ── */
-function LogoCard({ client }: { client: ClientEntry }) {
+function LogoCard({ client }: { client: ClientCard }) {
   const [imgErr, setImgErr] = useState(false);
-  const caseUrl = CASE_STUDY_MAP[client.name];
+  const work = client.work;
+  // One case study opens directly; several land on the case-studies page
+  // filtered to this client, rather than picking one of them arbitrarily.
+  const caseUrl =
+    work.length === 0
+      ? null
+      : work.length === 1
+        ? `/case-studies/${work[0].slug}`
+        : `/case-studies?client=${client.slug}`;
 
   const initials = client.name
     .split(/[\s&·]+/)
@@ -50,8 +37,16 @@ function LogoCard({ client }: { client: ClientEntry }) {
     <div className={`group relative flex h-full flex-col items-center gap-3.5 overflow-hidden rounded-2xl border border-black/[0.07] bg-white px-5 pb-[22px] pt-7 text-center shadow-[0_4px_20px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.1)] ${caseUrl ? 'cursor-pointer hover:border-magenta/30' : ''}`}>
       {caseUrl && (
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-magenta/90 to-transparent pb-2.5 pt-5 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <span className={`text-[10px] font-bold uppercase tracking-[0.12em] text-white ${FM}`}>View Case Study →</span>
+          <span className={`text-[10px] font-bold uppercase tracking-[0.12em] text-white ${FM}`}>
+            {work.length > 1 ? `View ${work.length} Case Studies →` : 'View Case Study →'}
+          </span>
         </div>
+      )}
+
+      {work.length > 1 && (
+        <span className={`absolute right-2.5 top-2.5 rounded-full bg-magenta/[0.09] px-2 py-[3px] text-[8px] font-bold uppercase tracking-[0.1em] text-magenta ${FM}`}>
+          {work.length} case studies
+        </span>
       )}
 
       <div className="flex h-24 w-full items-center justify-center px-2">
@@ -86,7 +81,7 @@ function LogoCard({ client }: { client: ClientEntry }) {
 }
 
 /* ── Page component ── */
-export default function ClientsPageClient({ clients }: { clients: ClientEntry[] }) {
+export default function ClientsPageClient({ clients }: { clients: ClientCard[] }) {
   const [tab, setTab] = useState<Tab>('all');
   const heroRef = useRef<HTMLHeadingElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -139,14 +134,18 @@ export default function ClientsPageClient({ clients }: { clients: ClientEntry[] 
     return () => ctx.revert();
   }, [tab]);
 
+  const withWork = clients.filter((c) => c.work.length > 0).length;
+
   const tabs: { key: Tab; label: string }[] = [
-    { key: 'all',               label: 'All Clients'              },
-    { key: 'entertainment',     label: 'Entertainment'            },
-    { key: 'non-entertainment', label: 'Non-Entertainment'         },
+    { key: 'all',               label: 'All Clients'                      },
+    { key: 'work',              label: `With Case Studies (${withWork})`   },
+    { key: 'entertainment',     label: 'Entertainment'                    },
+    { key: 'non-entertainment', label: 'Non-Entertainment'                },
   ];
 
   const filtered =
     tab === 'all'               ? clients
+    : tab === 'work'            ? clients.filter((c) =>  c.work.length > 0)
     : tab === 'entertainment'   ? clients.filter((c) =>  c.isEntertainment)
     :                             clients.filter((c) => !c.isEntertainment);
 
