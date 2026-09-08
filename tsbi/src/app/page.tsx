@@ -601,7 +601,7 @@ export default function HomePage() {
       <section className="movie-connect-section" aria-label="Connect — featured productions ">
         <span className="movie-connect-dot" aria-hidden />
         <div className="connect-text-block">
-          <span className="connect-kicker uppercase">TSBI Studios</span>
+          <span className="connect-kicker uppercase">TSBI Films</span>
           <h2 className="connect-title ">Stories crafted for screens, shares and second looks.</h2>
           <p className="connect-sub">Lights, lenses, locations and everything in between to bring stories to life frame by frame, shot by shot.</p>
           <Link href="/services/content-production" className="btn-border connect-cta">
