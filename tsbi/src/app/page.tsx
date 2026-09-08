@@ -36,11 +36,13 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 // on the empty left side of the banner — mobile only (see hero markup). Edit freely.
 type Slide = { src: string; alt: string; tag?: string; caption?: string };
 const SLIDES: Slide[] = [
-  { src: '/herobanner/dfdfdfdfz.webp', alt: 'Tsbi Family', tag: 'Family', caption: 'Tsbi Family' },
+  { src: '/herobanner/13.jpeg', alt: 'Mumbai Indians', tag: 'Official Partner', caption: 'Mumbai Indians' },
+
   { src: '/herobanner/yeh-science-hai-shingles-and-diabetes.webp', alt: 'Yeh Science Hai Shingles and Diabetes', tag: 'Featured', caption: 'Yeh Science Hai Shingles and Diabetes' },
   { src: '/herobanner/11.jpeg', alt: 'Ashish Vidyarthi', tag: 'Featured', caption: 'Ashish Vidyarthi' },
   { src: '/herobanner/12.jpeg', alt: 'MS Dhoni', tag: 'Featured', caption: 'MS Dhoni' },
-  { src: '/herobanner/13.jpeg', alt: 'Mumbai Indians', tag: 'Official Partner', caption: 'Mumbai Indians' },
+    { src: '/herobanner/dfdfdfdfz.webp', alt: 'Tsbi Family', tag: 'Family', caption: 'Tsbi Family' },
+  
   
   
 ];
