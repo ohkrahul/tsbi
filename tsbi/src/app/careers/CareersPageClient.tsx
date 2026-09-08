@@ -65,12 +65,12 @@ function CheckRow({ label, count, checked, onChange }: { label: string; count: n
   return (
     <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
       <div onClick={onChange}
-        style={{ width: 16, height: 16, borderRadius: 3, border: `1.5px solid ${checked ? '#e0197d' : 'rgba(0,0,0,0.25)'}`, background: checked ? '#e0197d' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.15s' }}
+        style={{ width: 16, height: 16, borderRadius: 3, border: `1.5px solid ${checked ? '#e0197d' : 'rgba(0,0,0,0.4)'}`, background: checked ? '#e0197d' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.15s' }}
       >
         {checked && <svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6 8 1" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
       </div>
       <span style={{ fontFamily: 'var(--fm)', fontSize: 13, color: 'rgba(0,0,0,0.7)', flex: 1 }}>{label}</span>
-      <span style={{ fontFamily: 'var(--fm)', fontSize: 11, color: 'rgba(0,0,0,0.4)' }}>{count}</span>
+      <span style={{ fontFamily: 'var(--fm)', fontSize: 11, color: 'rgba(0,0,0,0.6)' }}>{count}</span>
     </label>
   );
 }
@@ -105,8 +105,8 @@ function JobCard({ job, expanded, onToggle, isMobile }: { job: Job; expanded: bo
             <h3 style={{ fontFamily: 'var(--fm)', fontSize: 18, fontWeight: 700, color: '#0a0a0a', margin: '0 0 8px', lineHeight: 1.25 }}>{job.role}</h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
               {[job.department, 'Full-time', 'Mumbai'].map(tag => (
-                <span key={tag} style={{ fontFamily: 'var(--fm)', fontSize: 11, color: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(0,0,0,0.25)', display: 'inline-block' }} />{tag}
+                <span key={tag} style={{ fontFamily: 'var(--fm)', fontSize: 11, color: 'rgba(0,0,0,0.68)', display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(0,0,0,0.45)', display: 'inline-block' }} />{tag}
                 </span>
               ))}
             </div>
@@ -123,10 +123,10 @@ function JobCard({ job, expanded, onToggle, isMobile }: { job: Job; expanded: bo
         </div>
         {!expanded && (
           <div style={{ marginTop: 14 }}>
-            <div style={{ fontFamily: 'var(--fm)', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.45)', marginBottom: 8 }}>Minimum qualifications</div>
+            <div style={{ fontFamily: 'var(--fm)', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.62)', marginBottom: 8 }}>Minimum qualifications</div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 5 }}>
               {job.skills.slice(0, 2).map((s, i) => (
-                <li key={i} style={{ fontFamily: 'var(--fm)', fontSize: 13, color: 'rgba(0,0,0,0.65)', display: 'flex', gap: 8, alignItems: 'flex-start', lineHeight: 1.5 }}>
+                <li key={i} style={{ fontFamily: 'var(--fm)', fontSize: 13, color: 'rgba(0,0,0,0.72)', display: 'flex', gap: 8, alignItems: 'flex-start', lineHeight: 1.5 }}>
                   <span style={{ color: '#e0197d', marginTop: 3, flexShrink: 0 }}>•</span>{s}
                 </li>
               ))}
@@ -143,10 +143,10 @@ function JobCard({ job, expanded, onToggle, isMobile }: { job: Job; expanded: bo
                 <div>
                   {[{ title: 'Key Responsibilities', items: job.responsibilities }, { title: 'Selection Criteria', items: job.skills }].map(({ title, items }, si) => (
                     <div key={title} style={{ marginBottom: si === 0 ? 28 : 0 }}>
-                      <div style={{ fontFamily: 'var(--fm)', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.45)', marginBottom: 12 }}>{title}</div>
+                      <div style={{ fontFamily: 'var(--fm)', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.62)', marginBottom: 12 }}>{title}</div>
                       <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
                         {items.map((item, i) => (
-                          <li key={i} style={{ fontFamily: 'var(--fm)', fontSize: 13, color: 'rgba(0,0,0,0.7)', display: 'flex', gap: 10, alignItems: 'flex-start', lineHeight: 1.6 }}>
+                          <li key={i} style={{ fontFamily: 'var(--fm)', fontSize: 13, color: 'rgba(0,0,0,0.75)', display: 'flex', gap: 10, alignItems: 'flex-start', lineHeight: 1.6 }}>
                             <span style={{ color: '#e0197d', marginTop: 4, flexShrink: 0 }}>•</span>{item}
                           </li>
                         ))}
@@ -174,7 +174,7 @@ function JobCard({ job, expanded, onToggle, isMobile }: { job: Job; expanded: bo
                       <button type="submit" disabled={submitting}
                         style={{ background: '#e0197d', color: '#fff', border: 'none', borderRadius: 999, padding: '13px', fontFamily: 'var(--fm)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
                       >{submitting ? 'Submitting...' : 'Submit Application'}</button>
-                      <button type="button" onClick={() => setApplying(false)} style={{ background: 'none', border: 'none', fontSize: 11, color: 'rgba(0,0,0,0.4)', cursor: 'pointer', fontFamily: 'var(--fm)' }}>Cancel</button>
+                      <button type="button" onClick={() => setApplying(false)} style={{ background: 'none', border: 'none', fontSize: 11, color: 'rgba(0,0,0,0.6)', cursor: 'pointer', fontFamily: 'var(--fm)' }}>Cancel</button>
                       {err && <div style={{ fontSize: 12, color: '#c0392b', fontFamily: 'var(--fm)', textAlign: 'center', lineHeight: 1.5 }}>{err}</div>}
                     </form>
                   )}
@@ -303,18 +303,18 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
       {/* ── JOBS MATCHED BAR ── */}
       <div id="jobs" style={{ background: '#fff', borderBottom: '1px solid rgba(0,0,0,0.08)', padding: isMobile ? '14px 16px' : '16px 40px', display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 20, flexWrap: 'wrap' }}>
         <span style={{ fontFamily: 'var(--fm)', fontSize: 15, fontWeight: 700, color: '#e0197d' }}>{filtered.length}</span>
-        <span style={{ fontFamily: 'var(--fm)', fontSize: 15, color: 'rgba(0,0,0,0.6)', fontWeight: 400 }}>
+        <span style={{ fontFamily: 'var(--fm)', fontSize: 15, color: 'rgba(0,0,0,0.7)', fontWeight: 400 }}>
           {filtered.length === 1 ? 'job' : 'jobs'} matched
         </span>
         {(deptFilter.length > 0 || expFilter.length > 0 || search) && (
           <button onClick={() => { setDeptFilter([]); setExpFilter([]); setSearch(''); }}
-            style={{ marginLeft: 'auto', fontFamily: 'var(--fm)', fontSize: 12, color: 'rgba(0,0,0,0.5)', background: 'none', border: '1px solid rgba(0,0,0,0.15)', borderRadius: 999, padding: '5px 14px', cursor: 'pointer' }}
+            style={{ marginLeft: 'auto', fontFamily: 'var(--fm)', fontSize: 12, color: 'rgba(0,0,0,0.65)', background: 'none', border: '1px solid rgba(0,0,0,0.15)', borderRadius: 999, padding: '5px 14px', cursor: 'pointer' }}
           >
             Clear filters
           </button>
         )}
         <div style={{ marginLeft: isMobile ? 0 : 'auto', width: isMobile ? '100%' : undefined, position: 'relative', display: 'flex', alignItems: 'center' }}>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ position: 'absolute', left: 12, color: 'rgba(0,0,0,0.35)' }}>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ position: 'absolute', left: 12, color: 'rgba(0,0,0,0.5)' }}>
             <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.4"/>
             <path d="M11 11l3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
           </svg>
@@ -348,7 +348,7 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
         {/* Job list */}
         <main style={{ padding: isMobile ? '20px 16px' : '28px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {filtered.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: 'var(--fm)', color: 'rgba(0,0,0,0.4)', fontSize: 14 }}>
+            <div style={{ textAlign: 'center', padding: '80px 0', fontFamily: 'var(--fm)', color: 'rgba(0,0,0,0.6)', fontSize: 14 }}>
               No jobs match your filters.
             </div>
           ) : (
@@ -370,7 +370,7 @@ export default function CareersPageClient({ jobs }: { jobs: Job[] }) {
             </div>
             <div>
               <span style={{ fontFamily: 'var(--fm)', fontSize: 13, fontWeight: 600, color: '#0a0a0a' }}>Don&apos;t see the right role?</span>
-              <span style={{ fontFamily: 'var(--fm)', fontSize: 13, color: 'rgba(0,0,0,0.5)', marginLeft: 8 }}>Send us your profile and we&apos;ll reach out when a role opens up.</span>
+              <span style={{ fontFamily: 'var(--fm)', fontSize: 13, color: 'rgba(0,0,0,0.65)', marginLeft: 8 }}>Send us your profile and we&apos;ll reach out when a role opens up.</span>
             </div>
             <a href="mailto:careers@tsbi.in" style={{ marginLeft: 'auto', fontFamily: 'var(--fm)', fontSize: 13, color: '#e0197d', textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
               Send Your Profile
