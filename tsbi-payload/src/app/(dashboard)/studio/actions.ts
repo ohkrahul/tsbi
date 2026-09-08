@@ -100,7 +100,13 @@ export async function deleteDoc(fd: FormData) {
     if (blocked) redirect(`/studio/users?error=${encodeURIComponent(blocked)}`)
   }
 
-  await payload.delete({ collection: slug as never, id })
+  // A throw here would replace the whole studio with an error page, because
+  // this runs during the server action. Report it on the list instead.
+  try {
+    await payload.delete({ collection: slug as never, id })
+  } catch (e) {
+    redirect(`/studio/${slug}?error=${encodeURIComponent(`Could not delete: ${(e as Error).message}`)}`)
+  }
 
   revalidatePath(`/studio/${slug}`)
   redirect(`/studio/${slug}?deleted=1`)
@@ -119,7 +125,12 @@ export async function setArchived(fd: FormData) {
 
   await assertUser()
   const payload = await getPayloadClient()
-  await payload.update({ collection: slug as never, id, data: { archived } as never })
+  try {
+    await payload.update({ collection: slug as never, id, data: { archived } as never })
+  } catch (e) {
+    const what = archived ? 'archive' : 'restore'
+    redirect(`/studio/${slug}?error=${encodeURIComponent(`Could not ${what}: ${(e as Error).message}`)}`)
+  }
 
   revalidatePath(`/studio/${slug}`)
   redirect(`/studio/${slug}?${archived ? 'archived' : 'restored'}=1`)
