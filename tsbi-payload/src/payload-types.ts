@@ -255,6 +255,10 @@ export interface CaseStudy {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Hidden from the website but kept here. Untick to put it back.
+   */
+  archived?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -269,6 +273,10 @@ export interface Tag {
    * Lower numbers sort first in the filter dropdown.
    */
   order?: number | null;
+  /**
+   * Hidden from the website but kept here. Untick to put it back.
+   */
+  archived?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -290,6 +298,10 @@ export interface Journal {
   gradient?: string | null;
   coverImage?: (number | null) | Media;
   content?: string | null;
+  /**
+   * Hidden from the website but kept here. Untick to put it back.
+   */
+  archived?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -313,6 +325,10 @@ export interface MediaCoverage {
    * Publication logo. Only needed when the site has no logo for this publication yet.
    */
   logo?: (number | null) | Media;
+  /**
+   * Hidden from the website but kept here. Untick to put it back.
+   */
+  archived?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -329,6 +345,10 @@ export interface Career {
   order?: number | null;
   skills?: string[] | null;
   responsibilities?: string[] | null;
+  /**
+   * Hidden from the website but kept here. Untick to put it back.
+   */
+  archived?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -347,6 +367,10 @@ export interface Client {
   isEntertainment?: boolean | null;
   showOnHome?: boolean | null;
   order?: number | null;
+  /**
+   * Hidden from the website but kept here. Untick to put it back.
+   */
+  archived?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -536,6 +560,7 @@ export interface CaseStudiesSelect<T extends boolean = true> {
         label?: T;
         id?: T;
       };
+  archived?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -553,6 +578,7 @@ export interface JournalSelect<T extends boolean = true> {
   gradient?: T;
   coverImage?: T;
   content?: T;
+  archived?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -566,6 +592,7 @@ export interface MediaCoverageSelect<T extends boolean = true> {
   url?: T;
   order?: T;
   logo?: T;
+  archived?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -581,6 +608,7 @@ export interface CareersSelect<T extends boolean = true> {
   order?: T;
   skills?: T;
   responsibilities?: T;
+  archived?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -598,6 +626,7 @@ export interface ClientsSelect<T extends boolean = true> {
   isEntertainment?: T;
   showOnHome?: T;
   order?: T;
+  archived?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -608,6 +637,7 @@ export interface ClientsSelect<T extends boolean = true> {
 export interface TagsSelect<T extends boolean = true> {
   name?: T;
   order?: T;
+  archived?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { archivedField } from './archived'
 
 /** Media / News — editorial articles (mirrors JournalArticle in strapi.ts). */
 export const Journal: CollectionConfig = {
@@ -17,5 +18,6 @@ export const Journal: CollectionConfig = {
     { name: 'gradient', type: 'text', admin: { description: 'CSS gradient for the card background.' } },
     { name: 'coverImage', type: 'upload', relationTo: 'media' },
     { name: 'content', type: 'textarea' },
+    archivedField,
   ],
 }

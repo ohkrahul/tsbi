@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { archivedField } from './archived'
 
 /** Clients — client brands (mirrors ClientBrand in strapi.ts). */
 export const Clients: CollectionConfig = {
@@ -22,5 +23,6 @@ export const Clients: CollectionConfig = {
     // because it still holds the arrangement the original import
     // established, which is what orders same-day records.
     { name: 'order', type: 'number', defaultValue: 100 },
+    archivedField,
   ],
 }

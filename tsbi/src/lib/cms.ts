@@ -82,6 +82,14 @@ export interface LeadershipSlide {
 
 type QueryOpts = { sort?: string; limit?: number; depth?: number; where?: Record<string, string> };
 
+/**
+ * Collections whose documents can be archived in the CMS. Archived means kept
+ * there and hidden here, so the filter belongs in the fetch helper rather than
+ * in each caller — one of a dozen queries forgetting it is how archived content
+ * leaks back onto the site.
+ */
+const ARCHIVABLE = new Set(['case-studies', 'journal', 'media-coverage', 'careers', 'clients', 'tags']);
+
 async function payloadGet<T = Record<string, unknown>>(
   collection: string,
   opts: QueryOpts = {},
@@ -93,6 +101,8 @@ async function payloadGet<T = Record<string, unknown>>(
   if (opts.where) {
     for (const [k, v] of Object.entries(opts.where)) url.searchParams.set(k, v);
   }
+  // ANDed with anything the caller asked for.
+  if (ARCHIVABLE.has(collection)) url.searchParams.set('where[archived][not_equals]', 'true');
   try {
     // ISR: refresh every 60s so edits propagate without a redeploy.
     const res = await fetch(url.toString(), { next: { revalidate: 60 } });

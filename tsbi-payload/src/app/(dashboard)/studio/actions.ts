@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { getPayloadClient } from '@/lib/payload-client'
 import { currentUser } from '@/lib/auth'
 import { parseFields } from '@/lib/form-data'
-import { collectionBySlug, searchableFields, WRITABLE } from '@/lib/collections'
+import { ARCHIVABLE, collectionBySlug, searchableFields, WRITABLE } from '@/lib/collections'
 
 export type ActionState = { error?: string; ok?: boolean } | null
 
@@ -104,6 +104,25 @@ export async function deleteDoc(fd: FormData) {
 
   revalidatePath(`/studio/${slug}`)
   redirect(`/studio/${slug}?deleted=1`)
+}
+
+/**
+ * Take something off the website without destroying it, or put it back.
+ * Separate from `saveDoc` so it can be one button on a list row rather than
+ * an edit-page round trip.
+ */
+export async function setArchived(fd: FormData) {
+  const slug = String(fd.get('__collection') ?? '')
+  const id = String(fd.get('__id') ?? '')
+  const archived = fd.get('__archived') === '1'
+  if (!ARCHIVABLE.has(slug) || !id) throw new Error('Bad archive request')
+
+  await assertUser()
+  const payload = await getPayloadClient()
+  await payload.update({ collection: slug as never, id, data: { archived } as never })
+
+  revalidatePath(`/studio/${slug}`)
+  redirect(`/studio/${slug}?${archived ? 'archived' : 'restored'}=1`)
 }
 
 export async function uploadMedia(_prev: ActionState, fd: FormData): Promise<ActionState> {

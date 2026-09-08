@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { archivedField } from './archived'
 
 /** Media page — external press coverage links (mirrors public/media/articles.json). */
 export const MediaCoverage: CollectionConfig = {
@@ -17,5 +18,6 @@ export const MediaCoverage: CollectionConfig = {
     { name: 'order', type: 'number', defaultValue: 100 },
     { name: 'logo', type: 'upload', relationTo: 'media',
       admin: { description: 'Publication logo. Only needed when the site has no logo for this publication yet.' } },
+    archivedField,
   ],
 }

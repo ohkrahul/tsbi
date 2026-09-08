@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { archivedField } from './archived'
 
 /** Careers — job listings (mirrors JobListing in strapi.ts). */
 export const Careers: CollectionConfig = {
@@ -18,5 +19,6 @@ export const Careers: CollectionConfig = {
     { name: 'order', type: 'number', defaultValue: 100 },
     { name: 'skills', type: 'text', hasMany: true },
     { name: 'responsibilities', type: 'text', hasMany: true },
+    archivedField,
   ],
 }

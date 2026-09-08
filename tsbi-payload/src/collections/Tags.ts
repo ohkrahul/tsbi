@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { archivedField } from './archived'
 
 /**
  * Tags — the filter options on the public /case-studies page. Editors own this
@@ -16,5 +17,6 @@ export const Tags: CollectionConfig = {
     // because it still holds the arrangement the original import
     // established, which is what orders same-day records.
     { name: 'order', type: 'number', defaultValue: 100, admin: { description: 'Lower numbers sort first in the filter dropdown.' } },
+    archivedField,
   ],
 }

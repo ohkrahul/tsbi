@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { archivedField } from './archived'
 
 /**
  * Mirrors CaseStudyGalleryItem in the frontend (tsbi/src/lib/caseStudies.ts),
@@ -62,5 +63,6 @@ export const CaseStudies: CollectionConfig = {
       { name: 'value', type: 'text' },
       { name: 'label', type: 'text', required: true },
     ] },
+    archivedField,
   ],
 }

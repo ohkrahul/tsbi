@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useActionState, useEffect, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { CornerDownLeft, Loader2, LogOut, Moon, Plus, Search, Sun, X } from 'lucide-react'
+import { Archive, ArchiveRestore, CornerDownLeft, Loader2, LogOut, Moon, Plus, Search, Sun, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,6 +17,7 @@ import {
   requestPasswordReset,
   resetPassword,
   saveDoc,
+  setArchived,
   suggest,
   uploadMedia,
   type Suggestion,
@@ -712,6 +713,63 @@ export function DeleteButton({
         Delete
       </Button>
     </form>
+  )
+}
+
+/**
+ * Archive / restore for a list row. No confirmation on archiving — it is
+ * reversible, and a prompt on a safe action just trains people to click
+ * through prompts.
+ */
+export function ArchiveButton({
+  collection,
+  id,
+  archived,
+}: {
+  collection: string
+  id: string | number
+  archived: boolean
+}) {
+  return (
+    <form action={setArchived} className="inline">
+      <input type="hidden" name="__collection" value={collection} />
+      <input type="hidden" name="__id" value={String(id)} />
+      <input type="hidden" name="__archived" value={archived ? '0' : '1'} />
+      <Button
+        type="submit"
+        variant="ghost"
+        size="sm"
+        className="h-7 px-2.5 text-xs"
+        title={archived ? 'Put back on the website' : 'Hide from the website, keep it here'}
+      >
+        {archived ? (
+          <>
+            <ArchiveRestore className="size-3.5" /> Restore
+          </>
+        ) : (
+          <>
+            <Archive className="size-3.5" /> Archive
+          </>
+        )}
+      </Button>
+    </form>
+  )
+}
+
+/** Live / Archived / All picker for the list views. */
+export function StatusSelect({ value, archivedCount }: { value: string; archivedCount: number }) {
+  return (
+    <select
+      name="status"
+      defaultValue={value}
+      aria-label="Show live or archived"
+      className={cn(ctl, 'w-auto cursor-pointer')}
+      onChange={(e) => e.currentTarget.form?.requestSubmit()}
+    >
+      <option value="live">On the website</option>
+      <option value="archived">Archived{archivedCount ? ` (${archivedCount})` : ''}</option>
+      <option value="all">Both</option>
+    </select>
   )
 }
 

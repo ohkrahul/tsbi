@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Plus } from 'lucide-react'
-import { collectionBySlug, searchableFields } from '@/lib/collections'
+import { ARCHIVABLE, collectionBySlug, searchableFields } from '@/lib/collections'
 import { getPayloadClient } from '@/lib/payload-client'
 import { requireUser } from '@/lib/auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { DeleteButton, FlashMessage, SearchBox, SortSelect } from '@/components/studio/forms'
+import { ArchiveButton, DeleteButton, FlashMessage, SearchBox, SortSelect, StatusSelect } from '@/components/studio/forms'
 
 const PER_PAGE = 25
 
@@ -78,20 +78,37 @@ export default async function ListPage({
 
   const searchable = searchableFields(def)
 
+  // Archived documents are hidden from the website but kept here, so the list
+  // shows what is live by default and archived is a deliberate look.
+  const archivable = ARCHIVABLE.has(def.slug)
+  const status = archivable && ['archived', 'all'].includes(one('status') ?? '') ? one('status')! : 'live'
+  const statusWhere =
+    !archivable || status === 'all'
+      ? []
+      : [{ archived: status === 'archived' ? { equals: true } : { not_equals: true } }]
+
+  const search = q && searchable.length ? [{ or: searchable.map((name) => ({ [name]: { like: q } })) }] : []
+  const where = [...statusWhere, ...search]
+
   const payload = await getPayloadClient()
-  const res = await payload.find({
-    collection: def.slug as never,
-    limit: PER_PAGE,
-    page,
-    sort: sortBy,
-    depth: 0,
-    ...(q && searchable.length
-      ? { where: { or: searchable.map((name) => ({ [name]: { like: q } })) } as never }
-      : {}),
-  })
+  const [res, archivedCount] = await Promise.all([
+    payload.find({
+      collection: def.slug as never,
+      limit: PER_PAGE,
+      page,
+      sort: sortBy,
+      depth: 0,
+      ...(where.length ? { where: { and: where } as never } : {}),
+    }),
+    archivable
+      ? payload
+          .count({ collection: def.slug as never, where: { archived: { equals: true } } as never })
+          .then((r) => r.totalDocs)
+      : Promise.resolve(0),
+  ])
 
   const pageHref = (p: number) =>
-    `/studio/${def.slug}?${new URLSearchParams({ ...(q ? { q } : {}), sort, page: String(p) })}`
+    `/studio/${def.slug}?${new URLSearchParams({ ...(q ? { q } : {}), sort, status, page: String(p) })}`
 
   return (
     <div className="mx-auto max-w-6xl p-6 md:p-10">
@@ -113,6 +130,10 @@ export default async function ListPage({
 
       {one('saved') ? <FlashMessage kind="success">Saved.</FlashMessage> : null}
       {one('deleted') ? <FlashMessage kind="info">Deleted.</FlashMessage> : null}
+      {one('archived') ? (
+        <FlashMessage kind="info">Archived — hidden from the website, still here.</FlashMessage>
+      ) : null}
+      {one('restored') ? <FlashMessage kind="success">Restored — back on the website.</FlashMessage> : null}
       {one('error') ? <FlashMessage kind="error">{one('error')}</FlashMessage> : null}
 
       {/* GET form so the sort select can submit `q` with it; the search box also
@@ -120,6 +141,7 @@ export default async function ListPage({
       <form className="mt-6 flex flex-wrap items-center gap-2">
         <SearchBox collection={def.slug} placeholder={`Search ${def.label.toLowerCase()}…`} />
         <SortSelect value={sort} label={def.columns[0].label} />
+        {archivable ? <StatusSelect value={status} archivedCount={archivedCount} /> : null}
       </form>
 
       <div className="mt-4 rounded-xl border">
@@ -136,7 +158,11 @@ export default async function ListPage({
             {res.docs.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={def.columns.length + 1} className="text-muted-foreground py-10 text-center">
-                  {q ? `Nothing matches “${q}”.` : 'Nothing here yet.'}
+                  {q
+                    ? `Nothing matches “${q}”.`
+                    : status === 'archived'
+                      ? 'Nothing archived.'
+                      : 'Nothing here yet.'}
                 </TableCell>
               </TableRow>
             ) : (
@@ -148,9 +174,16 @@ export default async function ListPage({
                     {def.columns.map((c, i) => (
                       <TableCell key={c.key} className={i === 0 ? 'font-medium' : 'text-muted-foreground'}>
                         {i === 0 ? (
-                          <Link href={href} className="hover:underline">
-                            {cell(d[c.key])}
-                          </Link>
+                          <span className="flex items-center gap-2">
+                            <Link href={href} className="hover:underline">
+                              {cell(d[c.key])}
+                            </Link>
+                            {d.archived ? (
+                              <Badge variant="secondary" className="shrink-0 font-normal">
+                                Archived
+                              </Badge>
+                            ) : null}
+                          </span>
                         ) : (
                           cell(d[c.key])
                         )}
@@ -161,6 +194,9 @@ export default async function ListPage({
                         <Button variant="outline" size="sm" asChild className="h-7 px-2.5 text-xs">
                           <Link href={href}>Edit</Link>
                         </Button>
+                        {archivable ? (
+                          <ArchiveButton collection={def.slug} id={String(d.id)} archived={Boolean(d.archived)} />
+                        ) : null}
                         <DeleteButton
                           collection={def.slug}
                           id={String(d.id)}

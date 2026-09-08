@@ -63,7 +63,7 @@ const THEME = 'Theme colours (optional)'
 const TECH = 'Tech-track long-form sections (optional)'
 const CARD = 'Service-page card (optional)'
 
-export const COLLECTIONS: CollectionDef[] = [
+const DEFS: CollectionDef[] = [
   {
     slug: 'case-studies', label: 'Case Studies', singular: 'Case Study', defaultSort: '-createdAt',
     columns: [
@@ -220,6 +220,25 @@ export const COLLECTIONS: CollectionDef[] = [
     ],
   },
 ]
+
+/**
+ * Archive instead of delete — hidden from the website, kept here, restorable.
+ * Appended to every content collection from one place so none can forget it.
+ * `users` is left out: those are login accounts, not website content.
+ */
+const ARCHIVED: FieldDef = {
+  name: 'archived',
+  label: 'Archived',
+  type: 'checkbox',
+  half: true,
+  hint: 'Hidden from the website but kept here. Untick to put it back.',
+}
+
+export const ARCHIVABLE = new Set(DEFS.map((d) => d.slug).filter((slug) => slug !== 'users'))
+
+export const COLLECTIONS: CollectionDef[] = DEFS.map((def) =>
+  ARCHIVABLE.has(def.slug) ? { ...def, fields: [...def.fields, ARCHIVED] } : def,
+)
 
 export const collectionBySlug = (slug: string) => COLLECTIONS.find((c) => c.slug === slug)
 
