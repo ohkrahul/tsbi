@@ -251,7 +251,7 @@ export async function getJobListings(): Promise<JobListing[]> {
 }
 
 export async function getClientBrands(homeOnly = false): Promise<ClientBrand[]> {
-  const opts: QueryOpts = { sort: 'order', limit: 100 };
+  const opts: QueryOpts = { sort: 'order', limit: 300 };
   if (homeOnly) opts.where = { 'where[showOnHome][equals]': 'true' };
   const raw = await payloadGet<Record<string, unknown>>('clients', opts);
   const docs = [...raw].sort(newestFirst);

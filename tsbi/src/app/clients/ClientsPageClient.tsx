@@ -8,7 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-type Tab = 'all' | 'work' | 'entertainment' | 'non-entertainment';
+type Tab = 'all' | 'entertainment' | 'non-entertainment';
 
 /* fonts — same as the home page */
 const FA = 'font-fa'; // display headings — maps to Space Grotesk
@@ -134,18 +134,14 @@ export default function ClientsPageClient({ clients }: { clients: ClientCard[] }
     return () => ctx.revert();
   }, [tab]);
 
-  const withWork = clients.filter((c) => c.work.length > 0).length;
-
   const tabs: { key: Tab; label: string }[] = [
-    { key: 'all',               label: 'All Clients'                      },
-    { key: 'work',              label: `With Case Studies (${withWork})`   },
-    { key: 'entertainment',     label: 'Entertainment'                    },
-    { key: 'non-entertainment', label: 'Non-Entertainment'                },
+    { key: 'all',               label: 'All Clients'              },
+    { key: 'entertainment',     label: 'Entertainment'            },
+    { key: 'non-entertainment', label: 'Non-Entertainment'         },
   ];
 
   const filtered =
     tab === 'all'               ? clients
-    : tab === 'work'            ? clients.filter((c) =>  c.work.length > 0)
     : tab === 'entertainment'   ? clients.filter((c) =>  c.isEntertainment)
     :                             clients.filter((c) => !c.isEntertainment);
 

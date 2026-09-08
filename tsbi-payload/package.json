@@ -17,7 +17,8 @@
     "seed:cards": "payload run src/seed-service-cards.ts",
     "repair:case-studies": "payload run src/repair-case-studies.ts",
     "reset:password": "payload run src/reset-password.ts",
-    "seed:logos": "payload run src/seed-publication-logos.ts"
+    "seed:logos": "payload run src/seed-publication-logos.ts",
+    "seed:clients": "payload run src/seed-clients.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3",
