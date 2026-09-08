@@ -3,8 +3,9 @@
 import * as React from 'react'
 import { useActionState, useEffect, useState, useTransition } from 'react'
 import Link from 'next/link'
+import { useFormStatus } from 'react-dom'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { Archive, ArchiveRestore, CornerDownLeft, Loader2, LogOut, Moon, Plus, Search, Sun, X } from 'lucide-react'
+import { Archive, ArchiveRestore, CornerDownLeft, Loader2, LogOut, Moon, Plus, Search, Sun, Trash2, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -699,20 +700,72 @@ export function DeleteButton({
     <form action={deleteDoc} className={compact ? 'inline' : undefined}>
       <input type="hidden" name="__collection" value={collection} />
       <input type="hidden" name="__id" value={String(id)} />
-      <Button
-        type="submit"
-        variant={compact ? 'ghost' : 'destructive'}
-        size="sm"
-        className={
-          compact ? 'text-destructive hover:text-destructive hover:bg-destructive/10 h-7 px-2.5 text-xs' : undefined
-        }
-        onClick={(e) => {
-          if (!confirm(confirmText)) e.preventDefault()
-        }}
-      >
-        Delete
-      </Button>
+      {compact ? (
+        <RowSubmit
+          variant="ghost"
+          busy="Deleting"
+          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          onClick={(e) => {
+            if (!confirm(confirmText)) e.preventDefault()
+          }}
+        >
+          <Trash2 className="size-3.5" /> Delete
+        </RowSubmit>
+      ) : (
+        <Button
+          type="submit"
+          variant="destructive"
+          size="sm"
+          onClick={(e) => {
+            if (!confirm(confirmText)) e.preventDefault()
+          }}
+        >
+          Delete
+        </Button>
+      )}
     </form>
+  )
+}
+
+/**
+ * Submit button for a row action. Both of these are server round trips that
+ * take a moment, so the button has to say it is working — otherwise the only
+ * feedback a click gives is a focus ring, which reads as nothing happening.
+ */
+function RowSubmit({
+  children,
+  busy,
+  variant,
+  className,
+  title,
+  onClick,
+}: {
+  children: React.ReactNode
+  busy: string
+  variant: 'outline' | 'ghost'
+  className?: string
+  title?: string
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+}) {
+  const { pending } = useFormStatus()
+  return (
+    <Button
+      type="submit"
+      variant={variant}
+      size="sm"
+      title={title}
+      disabled={pending}
+      onClick={onClick}
+      className={cn('h-7 gap-1.5 px-2.5 text-xs', className)}
+    >
+      {pending ? (
+        <>
+          <Loader2 className="size-3.5 animate-spin" /> {busy}
+        </>
+      ) : (
+        children
+      )}
+    </Button>
   )
 }
 
@@ -735,11 +788,12 @@ export function ArchiveButton({
       <input type="hidden" name="__collection" value={collection} />
       <input type="hidden" name="__id" value={String(id)} />
       <input type="hidden" name="__archived" value={archived ? '0' : '1'} />
-      <Button
-        type="submit"
-        variant="ghost"
-        size="sm"
-        className="h-7 px-2.5 text-xs"
+      {/* Outline, matching Edit: a borderless button next to a bordered one
+          reads as broken, and its focus ring after a click looks like a stray
+          box rather than a button. */}
+      <RowSubmit
+        variant="outline"
+        busy={archived ? 'Restoring' : 'Archiving'}
         title={archived ? 'Put back on the website' : 'Hide from the website, keep it here'}
       >
         {archived ? (
@@ -751,7 +805,7 @@ export function ArchiveButton({
             <Archive className="size-3.5" /> Archive
           </>
         )}
-      </Button>
+      </RowSubmit>
     </form>
   )
 }
