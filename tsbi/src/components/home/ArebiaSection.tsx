@@ -100,23 +100,22 @@ export default function ArebiaSection() {
   return (
     <section
       aria-label="TSBI Arabia — Middle East work"
-      className="relative overflow-hidden px-6 py-16 sm:px-10 sm:py-20 lg:px-14"
-      style={{ background: 'radial-gradient(circle at 78% 8%, rgba(224,25,125,.16), transparent 42%), radial-gradient(circle at 6% 88%, rgba(26,106,255,.12), transparent 44%), #080b14' }}
+      className="relative overflow-hidden bg-[#f01891] px-6 py-16 sm:px-10 sm:py-20 lg:px-14"
     >
       <style dangerouslySetInnerHTML={{ __html: `
-        .arebia-thumbs { scrollbar-width: thin; scrollbar-color: rgba(224,25,125,0.55) transparent; }
+        .arebia-thumbs { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.6) transparent; }
         .arebia-thumbs::-webkit-scrollbar { width: 6px; }
-        .arebia-thumbs::-webkit-scrollbar-thumb { background: rgba(224,25,125,0.55); border-radius: 6px; }
+        .arebia-thumbs::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.6); border-radius: 6px; }
         .arebia-thumbs::-webkit-scrollbar-track { background: transparent; }
       ` }} />
       <div className="mx-auto grid max-w-[1440px] items-start gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
         {/* ── LEFT: headline + filters + thumbnail picker ── */}
         <div>
-          <div className="font-fm text-[11px] font-bold uppercase tracking-[0.3em] text-magenta">TSBI Arabia</div>
+          <div className="font-fm text-[11px] font-bold uppercase tracking-[0.3em] text-[var(--ink)]">TSBI Arabia</div>
           <h2 className="mt-4 font-fm text-[clamp(38px,6vw,74px)] font-bold uppercase leading-[0.94] tracking-[-0.01em] text-white">
-            Made for the <span className="italic text-magenta">Middle East</span>
+            Made for the <span className="italic text-[var(--ink)]">Middle East</span>
           </h2>
-          <p className="mt-5 max-w-[440px] text-sm font-light leading-[1.8] text-white/55 sm:text-[15px]">
+          <p className="mt-5 max-w-[440px] text-sm font-light leading-[1.8] text-[var(--ink)]/80 sm:text-[15px]">
             From Mumbai to MENA — 3D &amp; CGI, brand films, games, digital hoardings and influencer
             work for the region&apos;s biggest brands.
           </p>
@@ -131,7 +130,7 @@ export default function ArebiaSection() {
                   type="button"
                   onClick={() => setFilter(f.id)}
                   className={`rounded-full px-4 py-2 font-fm text-[11px] font-semibold uppercase tracking-[0.06em] transition ${
-                    active ? 'bg-magenta text-white' : 'border border-white/15 bg-white/5 text-white/65 hover:border-white/40 hover:text-white'
+                    active ? 'bg-[var(--ink)] text-white' : 'border border-white/45 bg-white/10 text-white hover:bg-white/20'
                   }`}
                 >
                   {f.label}
@@ -152,7 +151,7 @@ export default function ArebiaSection() {
                   onClick={() => pick(i)}
                   aria-label={`Show ${it.brand}`}
                   className={`group relative aspect-[4/3] overflow-hidden rounded-lg bg-black text-left transition ${
-                    active ? 'ring-2 ring-magenta' : 'ring-1 ring-white/10 hover:ring-white/30'
+                    active ? 'ring-2 ring-white' : 'ring-1 ring-white/30 hover:ring-white/60'
                   }`}
                 >
                   {p ? (
@@ -170,7 +169,7 @@ export default function ArebiaSection() {
             })}
           </div>
 
-          <Link href="/case-studies" className="mt-6 inline-flex items-center gap-2 font-fm text-[12px] font-semibold uppercase tracking-[0.1em] text-magenta transition hover:gap-3">
+          <Link href="/case-studies" className="mt-6 inline-flex items-center gap-2 font-fm text-[12px] font-semibold uppercase tracking-[0.1em] text-[var(--ink)] transition hover:gap-3">
             View all projects <span aria-hidden>→</span>
           </Link>
         </div>
@@ -245,16 +244,16 @@ export default function ArebiaSection() {
                     type="button"
                     onClick={() => pick(i)}
                     aria-label={`Go to item ${i + 1}`}
-                    className={`h-2 rounded-full transition-all ${i === idx ? 'w-6 bg-magenta' : 'w-2 bg-white/25 hover:bg-white/55'}`}
+                    className={`h-2 rounded-full transition-all ${i === idx ? 'w-6 bg-[var(--ink)]' : 'w-2 bg-white/50 hover:bg-white/80'}`}
                   />
                 ))}
               </div>
             ) : (
-              <div className="font-fm text-[13px] font-semibold tracking-[0.12em] text-white/55">
-                <span className="text-magenta">{String(idx + 1).padStart(2, '0')}</span> / {String(pool.length).padStart(2, '0')}
+              <div className="font-fm text-[13px] font-semibold tracking-[0.12em] text-[var(--ink)]/70">
+                <span className="text-[var(--ink)]">{String(idx + 1).padStart(2, '0')}</span> / {String(pool.length).padStart(2, '0')}
               </div>
             )}
-            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-magenta/60 px-5 py-2.5 font-fm text-[12px] font-semibold uppercase tracking-[0.08em] text-magenta transition hover:bg-magenta hover:text-white">
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-white/70 px-5 py-2.5 font-fm text-[12px] font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-white hover:text-[#f01891]">
               Connect with Us <span aria-hidden>→</span>
             </Link>
           </div>
