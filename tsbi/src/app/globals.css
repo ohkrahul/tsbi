@@ -1769,6 +1769,18 @@ body {
   max-width: 520px;
   margin: 12px auto 0;
   line-height: 1.7;
+  hyphens: none;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* GSAP SplitText rebuilds these two as one box per character, and a line is
+   allowed to break between any two boxes — "life" came out as "l / ife".
+   Making the word wrapper an atomic inline-block restores normal wrapping:
+   a word that doesn't fit moves to the next line whole. */
+.mc-word {
+  display: inline-block;
+  white-space: nowrap;
 }
 .connect-cta {
   position: relative;

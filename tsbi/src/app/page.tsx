@@ -298,12 +298,14 @@ export default function HomePage() {
       const sub = document.querySelector<HTMLElement>('.connect-sub');
       if (!title || reduce) return;
 
-      // 'words,chars' keeps whole words together (no mid-word wrap like "SC REENS")
-      // while still animating per character.
-      titleSplit = SplitText.create(title, { type: 'words,chars' });
+      // 'words,chars' alone is not enough: every character becomes its own box,
+      // and a line may break between any two of them — which is how "life"
+      // rendered as "l / ife". `mc-word` makes each word one atomic inline-block
+      // (see globals.css), so a word that doesn't fit moves down whole.
+      titleSplit = SplitText.create(title, { type: 'words,chars', wordsClass: 'mc-word' });
       // aria:'none' — the sub is a <p>, and SplitText's default aria-label is
       // prohibited on paragraphs (a11y). The text stays in the DOM for readers.
-      if (sub) subSplit = SplitText.create(sub, { type: 'words,chars', aria: 'none' });
+      if (sub) subSplit = SplitText.create(sub, { type: 'words,chars', wordsClass: 'mc-word', aria: 'none' });
       const titleChars = titleSplit.chars as HTMLElement[];
       const subChars = (subSplit?.chars ?? []) as HTMLElement[];
 
