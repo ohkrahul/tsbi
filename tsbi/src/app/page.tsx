@@ -902,18 +902,20 @@ export default function HomePage() {
    
 
       {/* ── DIGITAL TRANSFORMATION (tech) — data mirrored from the service page ── */}
+      {/* Same #f2f2f2 as the TSBI Films / services band. The radial glows go with
+          the dark: they were built to bloom out of near-black. */}
       <section
-        className="relative overflow-hidden px-6 py-20 text-white sm:px-10 sm:py-28 lg:px-14"
-        style={{ background: 'radial-gradient(circle at 85% 12%, rgba(224,25,125,.20), transparent 46%), radial-gradient(circle at 10% 92%, rgba(26,106,255,.16), transparent 46%), #0a0e1a' }}
+        className="relative overflow-hidden px-6 py-20 text-[var(--ink)] sm:px-10 sm:py-28 lg:px-14"
+        style={{ background: '#f2f2f2' }}
         aria-label="Digital Transformation"
       >
         <div className="mx-auto max-w-[1680px]">
           <div className="reveal mb-12 text-center sm:mb-16">
             <span className="mb-5 inline-block rounded-full bg-magenta px-4 py-1.5 font-fm text-[11px] font-bold uppercase tracking-[0.18em] text-white">Digital Transformation</span>
-            <h2 className="font-fm text-[clamp(30px,5vw,58px)] font-bold leading-[1.08] tracking-[-0.01em] uppercase text-white">
+            <h2 className="font-fm text-[clamp(30px,5vw,58px)] font-bold leading-[1.08] tracking-[-0.01em] uppercase text-[var(--ink)]">
               We&apos;re not another agency.<br />We&apos;re <span className="text-magenta italic">problem solvers.</span>
             </h2>
-            <p className="mx-auto mt-4 max-w-[560px] text-sm font-light leading-[1.8] text-white/60 sm:text-base">
+            <p className="mx-auto mt-4 max-w-[560px] text-sm font-light leading-[1.8] text-[var(--muted)] sm:text-base">
               Websites, apps, campaign tech, commerce and platforms — engineered to solve real
               business problems and built to scale.
             </p>
@@ -927,10 +929,10 @@ export default function HomePage() {
               { tint: '#4d8bff', title: 'Business Platforms', desc: 'Custom platforms & portals that streamline operations and boost efficiency.' },
               { tint: '#22c55e', title: 'Commerce & Growth', desc: 'Ecommerce & digital products designed to acquire, engage and scale revenue.' },
             ].map((b) => (
-              <div key={b.title} className="reveal rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors duration-200 hover:border-white/25">
+              <div key={b.title} className="reveal rounded-2xl border border-black/10 bg-white p-6 transition-colors duration-200 hover:border-black/25">
                 <span className="mb-4 block h-2.5 w-2.5 rounded-full" style={{ background: b.tint }} />
-                <div className="font-fm mb-2 text-[19px] font-bold text-white uppercase">{b.title}</div>
-                <p className="text-[13px] font-light leading-[1.65] text-white/55">{b.desc}</p>
+                <div className="font-fm mb-2 text-[19px] font-bold text-[var(--ink)] uppercase">{b.title}</div>
+                <p className="text-[13px] font-light leading-[1.65] text-[var(--muted)]">{b.desc}</p>
               </div>
             ))}
           </div>
@@ -938,7 +940,7 @@ export default function HomePage() {
           {/* tech-work showcase moved below into two designs: TechWorkCarousel + TechWorkTube */}
 
           <div className="reveal mt-12 text-center">
-            <Link href="/services/digital-transformation" className="btn-border" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.4)' }}>
+            <Link href="/services/digital-transformation" className="btn-border">
               Explore Digital Transformation <span className="arr">→</span>
             </Link>
           </div>
