@@ -298,16 +298,19 @@ export default function HomePage() {
       const sub = document.querySelector<HTMLElement>('.connect-sub');
       if (!title || reduce) return;
 
-      // 'words,chars' alone is not enough: every character becomes its own box,
-      // and a line may break between any two of them — which is how "life"
-      // rendered as "l / ife". `mc-word` makes each word one atomic inline-block
-      // (see globals.css), so a word that doesn't fit moves down whole.
+      // Splitting to chars gives the browser a break opportunity between every
+      // letter, so a line can end mid-word — "life" came out as "l / ife".
+      // `mc-word` (globals.css) makes each word one atomic box again.
       titleSplit = SplitText.create(title, { type: 'words,chars', wordsClass: 'mc-word' });
+      // The sub is split by word, not character. It is a wrapping paragraph, so
+      // it is where mid-word breaks actually bite — and a hundred letters flying
+      // in separately reads as noise next to the heading anyway. Whole words
+      // animate just as well and cannot be broken apart.
       // aria:'none' — the sub is a <p>, and SplitText's default aria-label is
       // prohibited on paragraphs (a11y). The text stays in the DOM for readers.
-      if (sub) subSplit = SplitText.create(sub, { type: 'words,chars', wordsClass: 'mc-word', aria: 'none' });
+      if (sub) subSplit = SplitText.create(sub, { type: 'words', wordsClass: 'mc-word', aria: 'none' });
       const titleChars = titleSplit.chars as HTMLElement[];
-      const subChars = (subSplit?.chars ?? []) as HTMLElement[];
+      const subWords = (subSplit?.words ?? []) as HTMLElement[];
 
       // Scattered + rotated start state — the "pull" springs each char back to 0.
       const scattered = {
@@ -316,7 +319,7 @@ export default function HomePage() {
         rotation: () => gsap.utils.random(-60, 60),
         opacity: 0,
       };
-      gsap.set([...titleChars, ...subChars], scattered);
+      gsap.set([...titleChars, ...subWords], scattered);
       gsap.set(['.connect-kicker', '.connect-cta'], { y: 20, opacity: 0 });
 
       let revealed = false;
@@ -328,8 +331,8 @@ export default function HomePage() {
           x: 0, y: 0, rotation: 0, opacity: 1,
           duration: 0.5, ease: 'power3.out', stagger: 0.008,
         });
-        // The sub has many more chars — cap the total stagger so it doesn't drag on.
-        gsap.to(subChars, {
+        // Cap the total stagger so the sub doesn't drag on behind the heading.
+        gsap.to(subWords, {
           x: 0, y: 0, rotation: 0, opacity: 1,
           duration: 0.45, ease: 'power3.out', stagger: { amount: 0.3, from: 'random' }, delay: 0.15,
         });
@@ -364,7 +367,9 @@ export default function HomePage() {
       const h2 = document.querySelector<HTMLElement>('.bic-h2');
       if (!h2 || reduce) return;
 
-      split = SplitText.create(h2, { type: 'chars' });
+      // words,chars, not chars: see the note on the connect split above —
+      // char-only leaves a line-break opportunity between every letter.
+      split = SplitText.create(h2, { type: 'words,chars', wordsClass: 'mc-word' });
       const chars = split.chars as HTMLElement[];
       gsap.set(chars, {
         x: () => gsap.utils.random(-200, 200),

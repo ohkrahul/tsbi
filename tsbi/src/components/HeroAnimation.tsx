@@ -323,10 +323,15 @@ export default function HeroAnimation() {
           // Reset states
           gsap.set('.connect-cta', { opacity: 0, y: 12 });
           gsap.set('.connect-text-block', { opacity: 1 });
-          // Split kicker + headline + sub into chars and pendulum-swing them in
+          // Split kicker + headline + sub into chars and pendulum-swing them in.
+          // 'words,chars' rather than 'chars': chars alone leaves every letter a
+          // free-standing box with a line-break opportunity between each pair, so
+          // the sub wrapped mid-word ("life" -> "l / ife"). Adding words keeps each
+          // word in one `mc-word` box (globals.css) while .chars still drives the
+          // animation below, unchanged.
           splitConnect = SplitText.create(
             '.connect-kicker, .connect-title, .connect-sub',
-            { type: 'chars' },
+            { type: 'words,chars', wordsClass: 'mc-word' },
           );
           gsap.from(splitConnect.chars, {
             rotation: 90,
@@ -379,7 +384,8 @@ export default function HeroAnimation() {
           // Pendulum-swing the headline chars
           const bicH2 = q<HTMLElement>('.bic-h2');
           if (bicH2) {
-            splitBic = SplitText.create(bicH2, { type: 'chars' });
+            // words,chars for the same reason as the connect split above.
+            splitBic = SplitText.create(bicH2, { type: 'words,chars', wordsClass: 'mc-word' });
             gsap.from(splitBic.chars, {
               rotation: 90,
               transformOrigin: 'top center',

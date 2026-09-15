@@ -1774,13 +1774,15 @@ body {
   word-break: normal;
 }
 
-/* GSAP SplitText rebuilds these two as one box per character, and a line is
+/* GSAP SplitText rebuilds the heading as one box per character, and a line is
    allowed to break between any two boxes — "life" came out as "l / ife".
-   Making the word wrapper an atomic inline-block restores normal wrapping:
-   a word that doesn't fit moves to the next line whole. */
+   Making the word wrapper an atomic box restores normal wrapping: a word that
+   doesn't fit moves to the next line whole.
+   !important because SplitText writes display straight onto the element's
+   style attribute, which a plain class cannot outrank. */
 .mc-word {
-  display: inline-block;
-  white-space: nowrap;
+  display: inline-block !important;
+  white-space: nowrap !important;
 }
 .connect-cta {
   position: relative;
