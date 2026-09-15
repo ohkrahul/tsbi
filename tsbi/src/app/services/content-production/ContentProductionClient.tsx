@@ -578,51 +578,7 @@ export default function ContentProductionClient({ campaigns }: { campaigns: Camp
         </div>
       </section>
 
-      {/* ── STAT BAR ── */}
-      <div
-        className="cp-reveal"
-        style={{
-          background: 'var(--ink)',
-          display: 'flex',
-          opacity: 0,
-        }}
-      >
-        {stats.map((stat, i) => (
-          <div
-            key={stat.label}
-            style={{
-              flex: 1,
-              textAlign: 'center',
-              padding: '40px 20px',
-              borderRight: i < stats.length - 1 ? '1px solid rgba(255,255,255,.08)' : 'none',
-            }}
-          >
-            <div
-              style={{
-                fontFamily: 'var(--fa)',
-                fontSize: 'clamp(40px,6vw,72px)',
-                fontWeight: 700,
-                color: '#fff',
-                lineHeight: 1,
-              }}
-            >
-              {stat.val}
-            </div>
-            <div
-              style={{
-                fontFamily: 'var(--fm)',
-                fontSize: 9,
-                letterSpacing: '.18em',
-                textTransform: 'uppercase',
-                color: 'rgba(255,255,255,.4)',
-                marginTop: 8,
-              }}
-            >
-              {stat.label}
-            </div>
-          </div>
-        ))}
-      </div>
+      
 
       {/* ── CTA ── */}
       <section

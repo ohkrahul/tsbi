@@ -237,7 +237,7 @@ export default function Footer() {
           {/* copyright */}
           <div className="font-fm text-[11px] leading-5 lg:text-right">
             <p className="text-white/70">© {year} TSBI. All Rights Reserved.</p>
-            <p className="text-magenta">All Wrong Reversed.</p>
+
           </div>
         </div>
       </div>

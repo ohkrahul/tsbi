@@ -494,7 +494,7 @@ export default function InfluencerManagementClient({ campaigns }: { campaigns: C
               maxWidth: 450, marginBottom: 28,
             }}>
               Full-service influencer marketing and talent management from
-              micro-communities to mega-reach — every tier, every category, end-to-end.
+              micro-communities to mega-reach, every tier, every category, end-to-end.
             </p>
 
             {/* Pills */}
@@ -619,40 +619,7 @@ export default function InfluencerManagementClient({ campaigns }: { campaigns: C
         </div>
       </section>
 
-      {/* ── TALENT STAT BAND ── */}
-      <div style={{
-        background: '#070e1e',
-        borderTop: '1px solid rgba(255,255,255,.06)',
-        borderBottom: '1px solid rgba(255,255,255,.06)',
-        padding: isMobile ? '32px 14px' : '40px 48px',
-        display: 'flex', gap: 0,
-      }}>
-        {[
-          { val: '150+',           label: 'Active Talents' },
-          { val: 'All Categories', label: 'Covered'        },
-          { val: 'End-to-End',     label: 'Managed'        },
-        ].map((stat, i) => (
-          <div key={stat.label} style={{
-            flex: 1, textAlign: 'center',
-            borderRight: i < 2 ? '1px solid rgba(255,255,255,.08)' : 'none',
-            padding: isMobile ? '0 6px' : '0 20px',
-          }}>
-            <div style={{
-              fontFamily: 'var(--fd)',
-              fontSize: isMobile ? 22 : 'clamp(32px,4vw,56px)',
-              fontWeight: 900, color: '#fff', lineHeight: 1, marginBottom: 8,
-            }}>
-              {stat.val}
-            </div>
-            <div style={{
-              fontFamily: 'var(--fm)', fontSize: 9,
-              letterSpacing: '.18em', textTransform: 'uppercase', color: MAGENTA,
-            }}>
-              {stat.label}
-            </div>
-          </div>
-        ))}
-      </div>
+      
 
       {/* ── FEATURE CARDS ── */}
       <section style={{ background: 'var(--navy)', padding: '80px 48px' }}>
