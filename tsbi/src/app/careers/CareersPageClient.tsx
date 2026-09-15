@@ -124,9 +124,12 @@ function JobCard({ job, expanded, onToggle, isMobile }: { job: Job; expanded: bo
         {!expanded && (
           <div style={{ marginTop: 14 }}>
             <div style={{ fontFamily: 'var(--fm)', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.62)', marginBottom: 8 }}>Minimum qualifications</div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 5 }}>
+            {/* Body copy belongs in DM Sans (--fb). Space Grotesk is the
+                display/UI face and reads thin and wide at 13px across a full
+                line of prose — which is what made these hard to read. */}
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
               {job.skills.slice(0, 2).map((s, i) => (
-                <li key={i} style={{ fontFamily: 'var(--fm)', fontSize: 13, color: 'rgba(0,0,0,0.72)', display: 'flex', gap: 8, alignItems: 'flex-start', lineHeight: 1.5 }}>
+                <li key={i} style={{ fontFamily: 'var(--fb)', fontSize: 14, color: 'rgba(0,0,0,0.8)', display: 'flex', gap: 9, alignItems: 'flex-start', lineHeight: 1.65 }}>
                   <span style={{ color: '#e0197d', marginTop: 3, flexShrink: 0 }}>•</span>{s}
                 </li>
               ))}
@@ -144,9 +147,9 @@ function JobCard({ job, expanded, onToggle, isMobile }: { job: Job; expanded: bo
                   {[{ title: 'Key Responsibilities', items: job.responsibilities }, { title: 'Selection Criteria', items: job.skills }].map(({ title, items }, si) => (
                     <div key={title} style={{ marginBottom: si === 0 ? 28 : 0 }}>
                       <div style={{ fontFamily: 'var(--fm)', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.62)', marginBottom: 12 }}>{title}</div>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
                         {items.map((item, i) => (
-                          <li key={i} style={{ fontFamily: 'var(--fm)', fontSize: 13, color: 'rgba(0,0,0,0.75)', display: 'flex', gap: 10, alignItems: 'flex-start', lineHeight: 1.6 }}>
+                          <li key={i} style={{ fontFamily: 'var(--fb)', fontSize: 15, color: 'rgba(0,0,0,0.82)', display: 'flex', gap: 10, alignItems: 'flex-start', lineHeight: 1.7, maxWidth: '68ch' }}>
                             <span style={{ color: '#e0197d', marginTop: 4, flexShrink: 0 }}>•</span>{item}
                           </li>
                         ))}
