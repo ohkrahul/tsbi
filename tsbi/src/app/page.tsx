@@ -766,17 +766,22 @@ export default function HomePage() {
       </section>
 
       {/* ── OUR SERVICES — card grid (AI imagery in /public/services · hover reveals copy) ── */}
+      {/* Same grey as the TSBI Films section above (.movie-connect-section), so the
+          two read as one light band. The cards keep their own dark gradient, so
+          only the type around them needed recolouring. */}
       <section
-        className="px-6 py-20 text-white sm:px-10 sm:py-28 lg:px-14"
-        style={{ background: 'radial-gradient(circle at 50% -10%, rgba(47,107,255,0.12), transparent 45%), #0a0e17' }}
+        className="px-6 py-20 text-[var(--ink)] sm:px-10 sm:py-28 lg:px-14"
+        style={{ background: '#f2f2f2' }}
         aria-label="Our Services"
       >
         <div className="mx-auto max-w-[1600px]">
-          <div className="reveal mb-3 flex items-center justify-center gap-2 font-fm text-[11px] font-semibold uppercase tracking-[0.28em] text-[#4d8bff]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#4d8bff]" /> Our Services
+          {/* The darker in-palette blue: #4d8bff was picked against near-black and
+              washes out on grey. */}
+          <div className="reveal mb-3 flex items-center justify-center gap-2 font-fm text-[11px] font-semibold uppercase tracking-[0.28em] text-[#2f6bff]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#2f6bff]" /> Our Services
           </div>
-          <h2 className="reveal text-center font-fm text-[clamp(30px,5vw,60px)] font-bold uppercase leading-[1.05] tracking-[-0.01em] text-white">
-            Conceptualising <span className="text-white/30">/</span> Produce <span className="text-white/30">/</span> Perform
+          <h2 className="reveal text-center font-fm text-[clamp(30px,5vw,60px)] font-bold uppercase leading-[1.05] tracking-[-0.01em] text-[var(--ink)]">
+            Conceptualising <span className="text-black/25">/</span> Produce <span className="text-black/25">/</span> Perform
           </h2>
 
           <div className="reveal mt-12 grid grid-cols-2 gap-4 sm:mt-16 sm:grid-cols-3 lg:grid-cols-6 lg:gap-5">
