@@ -165,9 +165,47 @@ function newestFirst(a: Record<string, unknown>, b: Record<string, unknown>): nu
 // ─── API functions ────────────────────────────────────────────────────────────
 
 /** Case studies for the /case-studies list + detail pages (matches CaseStudyGalleryItem). */
+/**
+ * Payload returns null for every field an editor left blank, but
+ * CaseStudyGalleryItem declares the text fields as always present — and these
+ * functions used a blind `as unknown as` cast, so the nulls went straight
+ * through a type that promised strings. `study.concept.split('
+
+')` then
+ * took the whole detail page down for any case study written in the studio
+ * without a concept.
+ *
+ * Filling them here, at the one place raw docs become typed, makes the type
+ * honest and covers every consumer — rather than each page having to remember
+ * which of a dozen fields might be null.
+ *
+ * `year` is deliberately left alone: it renders nothing when null, whereas a 0
+ * default would publish a wrong year.
+ */
+function asCaseStudy(d: Record<string, unknown>): CaseStudyGalleryItem {
+  const str = (v: unknown) => (typeof v === 'string' ? v : '');
+  return {
+    ...d,
+    slug: str(d.slug),
+    title: str(d.title),
+    clientName: str(d.clientName),
+    category: str(d.category),
+    shortDescription: str(d.shortDescription),
+    concept: str(d.concept),
+    image: str(d.image),
+    services: Array.isArray(d.services) ? d.services.map(String) : [],
+    // The studio calls these optional, so the site owes them a usable default:
+    // an empty gradient renders a blank hero, not a neutral one.
+    colorTheme: str(d.colorTheme) || '#e0197d',
+    accent: str(d.accent) || '#e0197d',
+    gradFrom: str(d.gradFrom) || '#2a0a1c',
+    gradTo: str(d.gradTo) || '#14060e',
+  } as unknown as CaseStudyGalleryItem;
+}
+
 export async function getCaseStudiesGallery(): Promise<CaseStudyGalleryItem[]> {
   const docs = await payloadGet<Record<string, unknown>>('case-studies', { sort: 'order' });
-  return [...docs].sort(newestFirst) as unknown as CaseStudyGalleryItem[];
+  return [...docs].sort(newestFirst).map(asCaseStudy);
 }
 
 /**
@@ -179,7 +217,7 @@ export async function getCaseStudiesForService(service: string): Promise<CaseStu
     sort: 'order',
     where: { 'where[serviceAreas][contains]': service },
   });
-  return [...docs].sort(newestFirst) as unknown as CaseStudyGalleryItem[];
+  return [...docs].sort(newestFirst).map(asCaseStudy);
 }
 
 /** Films for a card: the full campaign list if set, else the single video. */
@@ -231,7 +269,7 @@ export async function getServiceYouTubeWork(service: string): Promise<YTWork[]> 
 /** Single case study by slug (for /case-studies/[slug]); null if not found. */
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyGalleryItem | null> {
   const docs = await payloadGet('case-studies', { where: { 'where[slug][equals]': slug }, limit: 1 });
-  return (docs[0] as unknown as CaseStudyGalleryItem) ?? null;
+  return docs[0] ? asCaseStudy(docs[0]) : null;
 }
 
 export async function getJournalArticles(): Promise<JournalArticle[]> {

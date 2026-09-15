@@ -47,6 +47,10 @@ export default async function CaseStudyDetailPage({
   const { client, studies: siblings } = siblingStudies(study, list);
   const clientLabel = client?.name ?? study.clientName;
 
+  // Split once rather than once per paragraph, and drop the empty entry an
+  // unwritten concept produces.
+  const paragraphs = study.concept.split('\n\n').filter((p) => p.trim() !== '');
+
   const prev = idx > 0                 ? list[idx - 1] : null;
   const next = idx < list.length - 1   ? list[idx + 1] : null;
   const total = list.length;
@@ -231,14 +235,14 @@ export default async function CaseStudyDetailPage({
         ) : (
           /* ── Film / campaign layout (single concept block) ── */
           <div style={{ maxWidth: 780 }}>
-            {study.concept.split('\n\n').map((para, i) => (
+            {paragraphs.map((para, i) => (
               <p key={i} style={{
                 fontFamily: 'var(--fm)',
                 fontSize: 15,
                 lineHeight: 1.85,
                 color: 'rgba(10,10,10,0.72)',
                 fontWeight: 300,
-                marginBottom: i < study.concept.split('\n\n').length - 1 ? 24 : 0,
+                marginBottom: i < paragraphs.length - 1 ? 24 : 0,
               }}>
                 {para}
               </p>
